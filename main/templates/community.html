@@ -1,0 +1,251 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+
+<div class="communityCard">
+            <div class="jumbotron">
+                <h2 style="margin-bottom: 1rem;">Manage <b>Community</b>
+                    <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right;">
+                        <span class="material-symbols-sharp" style="float: right;">add</span>
+                    </button>
+                </h2> 
+                <table class="table" id="data-table">
+                    <tr>
+                        <th>ID</th>
+                        <th>Community</th>
+                        <th>Program</th>
+                        <th>Sub-Program</th>                    
+                        <th>Week</th>
+                        <th>Total Week</th>
+                        <th>Coordinator</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for row in community %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.community }}</td>
+                        <td>{{ row.program }}</td>
+                        <td>{{ row.subprogram }}</td>
+                        <td>{{ row.week }}</td>
+                        <td>{{ row.totalWeek }}</td>
+                        <td>{{ row.user }}</td>
+                        <td>
+                            <a href="{{ url_for('dbModel.delete_community', id=row.id, program=row.program, subprogram=row.subprogram) }}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table> 
+            
+                 <!-- Modal -->
+                 <div id="mymodal" class="modal" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Add Project</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form class="uploading" action="{{ url_for('dbModel.add_community') }}" method="POST" enctype="multipart/form-data" id="upload-form">
+                                     <!-- PPA -->
+                                    <label class="PPA">PPA (Program, Project, Activity)</label>
+                                        <div class="form-group">
+                                            <label>Community:</label>
+                                            <input type="text" class="form-control" name="community" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Program:</label>
+                                            {{ form.program(class="form-select", value=form.program.default) }}
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Sub-program:</label>
+                                            <input type="text" class="form-control" name="subprogram" required >
+                                        </div>
+                                    <!-- TIMEFRAME -->
+                                    <label class="timeframe">TIMEFRAME</label>
+                                        <div class="form-group">
+                                            <label>Start date:</label>
+                                            <input type="text" class="form-control" name="start_date" id="start_date_input" placeholder="Select Date..." required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>End date:</label>
+                                            <input type="text" class="form-control" name="end_date" id="end_date_input" placeholder="Select Date..." required>
+                                        </div>  
+                                        <div class="form-group">
+                                            <label>Total Week:</label>
+                                            <input type="text" class="form-control" name="totalWeek" required>
+                                        </div>
+                                    <!-- ACCOUNTABILITY -->
+                                    <label class="accountability">ACCOUNTABILITY</label><br>
+                                        <div class="form-group">
+                                            <label>Coordinator:</label>
+                                            <select class="form-select" name="user" id="userSelect" required>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>LEAD:</label>
+                                            <input type="text" class="form-control" name="lead" required >
+                                        </div>
+                                        <div class="form-group">
+                                            <label>SUPPORT:</label>
+                                            <input type="text" class="form-control" name="support" required >
+                                        </div>
+                                       
+                                    <!-- FILE -->
+                                    <label class="file">CESU FILE</label><br>
+                                        <div class="form-group">
+                                            <label for="CPF">CPF</label>
+                                            <input class="CPF" type="file" name="CPF" id="CPF" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="CESAP">CESAP</label>
+                                            <input class="CESAP" type="file" name="CESAP" id="CESAP" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn-submit" type="submit" value="Upload" >Add community</button>
+                                        </div>
+
+                                       
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"><span class="material-symbols-sharp">close</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end add modal account-->
+            </div> <!--end jumbotron-->
+</div>
+
+<div class="insights">
+    <div class="insights-div">
+        <span class="material-symbols-sharp">analytics</span>
+        <div class="middle">
+            <div class="left">
+                <h3></h3>
+                <h1></h1>
+            </div>
+            <div class="progress">
+                <svg>
+                    <circle cx='38' cy='38' r='36'></circle>
+                </svg>
+                <div class="number">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <small class="text-muted"></small>
+    </div>
+    
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script>
+    flatpickr("#start_date_input", {
+        dateFormat: "Y-m-d",
+        altInput: true,
+        altFormat: "F j, Y",
+        minDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            // Enable the "End date" input and set the minimum date to the selected "Start date"
+            flatpickr("#end_date_input", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y",
+            minDate: dateStr,
+            });
+            
+        }
+    });
+
+   flatpickr("#end_date_input", {
+        disable: [({day, month, year}) => startDateInput.selectedDates.length === 0 || startDateInput.selectedDates[0].getTime() !== new Date(year, month, day).getTime()],
+    });
+    </script>
+
+<script>
+        
+        program_select = document.getElementById('program')
+        program_select.onchange = function(){
+        var program = program_select.value;
+
+        fetch('/subprogram1/' + program).then(function (response) {
+            response.json().then(function (data) {
+                var optionHTML = '';
+                var selectElement = document.getElementById('userSelect');
+
+                for (user of data.user) {
+                    optionHTML += '<option value="' + user + '">' + user + '</option>'
+                }
+
+                selectElement.innerHTML = optionHTML;
+            });
+        });
+    }
+
+        // for the the coordinator monitoring
+        $.ajax({
+        url: "/get_community_data",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+        data = data.reverse();
+            // Get the container where you want to append the generated divs
+        var insightsContainer = $(".insights");
+    
+        // Iterate through the data and generate div elements for each record
+        data.forEach(function(record) {
+        // Clone the template .insights-div element for each record
+        var insightsDiv = $(".insights-div").clone();
+
+        // Update the content within the newly created insights-div
+        insightsDiv.find("h3").text(record.community);
+        insightsDiv.find("h1").text(record.program);
+        insightsDiv.find(".text-muted").text(record.subprogram);
+     
+         // Calculate the percentage and format it as a whole number with a percentage sign
+        var percentage = Math.floor((record.week * 100 / record.totalWeek));
+        insightsDiv.find(".number").text(percentage + "%") ;
+
+    
+        // Calculate the circumference of the circle
+        var circle = insightsDiv.find("circle");
+        var circumference = 2 * Math.PI * parseInt(circle.attr("r"));
+
+        // Calculate the dash-offset based on the percentage
+        var dashOffset = circumference * (1 - percentage / 100);
+
+        // Set the 'stroke-dasharray' and 'stroke-dashoffset' properties
+        circle.attr("stroke-dasharray", circumference);
+        circle.attr("stroke-dashoffset", dashOffset);
+
+        // Set color based on percentage
+        if (percentage >= 85) {
+            circle.attr("stroke", "#41f1b6"); // Green
+            } else if (percentage >= 70) {
+            circle.attr("stroke", "#ffbb55"); // Orange
+            } else if (percentage >= 40) {
+            circle.attr("stroke", "#ff7782"); // Pink
+            } else {
+            circle.attr("stroke", "red"); // Red
+            }
+
+        insightsContainer.append(insightsDiv);
+        insightsDiv.removeClass("insights-div");
+    });
+
+        //hide the dafault container
+        insightsContainer.find("> div:first-child").css("display", "none");
+  },
+  error: function() {
+    // Handle errors here if the request fails
+    console.log("Failed to load community data.");
+  }
+});
+
+
+</script>
+
+
+{% endblock %}

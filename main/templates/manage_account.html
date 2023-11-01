@@ -1,0 +1,164 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+
+<div class="manageUser">
+    <div class="jumbotron">
+        <h2 style="margin-bottom: 1rem;">Manage <b>Accounts</b> 
+            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right;"><span class="material-symbols-sharp" style="float: right;">add</span></button></h2>
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Firstname</th> 
+                    <th>Lastname</th> 
+                    <th>Password</th>    
+                    <th>Role</th>         
+                    <th>Program</th>              
+                    <th>Action</th>
+                </tr>
+                 {% for row in users %}
+                 <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.username }}</td>
+                    <td>{{ row.firstname }}</td>
+                    <td>{{ row.lastname }}</td>
+                    <td><span class="password-placeholder">{{ row.password }}</span></td>
+                    <td>{{ row.role }}</td>
+                    <td>{{ row.program }}</td>
+                    <td>
+                        <a href="{{ url_for('dbModel.edit_account', id=row.id) }}" class="btn-edit" data-bs-toggle="modal" data-bs-target="#modaledit{{row.id}}">Update</a>
+                        <a href="{{ url_for('dbModel.delete_account', id=row.id)}}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                    </td>
+                </tr>
+
+                <!-- Modal for Edit -->
+                <div id="modaledit{{row.id}}" class="modal">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Account</h4>
+                            </div> 
+
+                            <div class="modal-body">
+                                <form action="{{ url_for('dbModel.edit_account') }}" method="POST">
+                                    <div class="form-group">
+                                        <label>Username:</label>
+                                        <input type="text" class="form-control" name="new_username" value="{{row.username}}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Firstname:</label>
+                                        <input type="text" class="form-control" name="new_firstname" value="{{row.firstname}}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Lastname:</label>
+                                        <input type="text" class="form-control" name="new_lastname" value="{{row.lastname}}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Password:</label>
+                                        <input type="text" class="form-control" name="new_password" value="{{row.password}}" required>
+                                    </div>
+                                    <div class="form-group" >
+                                    <label for="new_role">Role:</label>
+                                    <select class="form-select" name="new_role"required>
+                                        <option value="{{row.role}}" selected style="display: none;">{{row.role}}</option>
+                                        {% for r in role %}
+                                            <option value="{{ r.role }}">{{ r.role }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    </div>
+                                    <div class="form-group">
+                                    <label for="new_program">Program:</label>
+                                    <select class="form-select" name="new_program" required>
+                                        <option value="{{row.program}}" selected style="display: none;">{{row.program}}</option>
+                                            {% for p in program8 %}
+                                            <option value="{{ p.program }}">{{ p.program }}</option>
+                                            {% endfor %}
+                                    </select>
+                                    </div>
+                                    <input type="hidden" name="id" id="edit-id" value="{{row.id}}">
+                                        <div class="form-group">
+                                            <button class="btn-submit" type="submit">Save Changes</button>
+                                        </div>
+                                </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn-close btn-secondary" data-bs-dismiss="modal"><span class="material-symbols-sharp">close</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--end edit modal-->
+                {% endfor %}
+            </table>
+
+                <!--Modal for adding -->
+                <div id="mymodal" class="modal">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">User information</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('dbModel.add_account') }}" method="POST">
+                                        <div class="form-group">
+                                            <label>Username:</label>
+                                            <input type="text" class="form-control" name="username" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Firstname:</label>
+                                            <input type="text" class="form-control" name="firstname" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Lastname:</label>
+                                            <input type="text" class="form-control" name="lastname" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Password:</label>
+                                            <input type="password" class="form-control" name="password" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="role">Role:</label>
+                                            <select class="form-control" name="role" required>
+                                                <option selected disabled>-- s e l e c t --</option>  <!-- Placeholder option -->
+                                                {% for r in role %}
+                                                    <option value="{{ r.role }}">{{ r.role }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="program">Program:</label>
+                                            <select class="form-control" name="program" required>
+                                                <option selected disabled >-- s e l e c t --</option>  <!-- Placeholder option -->
+                                                {% for p in program8 %}
+                                                    <option value="{{ p.program }}">{{ p.program }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <button class="btn-submit btn-primary" type="submit">Add account</button>
+                                        </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"><span class="material-symbols-sharp">close</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!--end add modal-->
+    </div><!--end jumbotronnnn-->   
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script>
+ var passwordPlaceholders = document.querySelectorAll('.password-placeholder');
+    passwordPlaceholders.forEach(function(placeholder) {
+        var password = placeholder.textContent;
+        var maskedPassword = "*".repeat(8);
+        placeholder.textContent = maskedPassword;
+    });
+</script>
+{% endblock %}

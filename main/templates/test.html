@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Community Data</title>
+</head>
+<body>
+    <h1>Community Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Community</th>
+                <th>Program</th>
+                <th>Subprogram</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Week</th>
+                <th>Total Week</th>
+                <th>User</th>
+                <th>Department</th>
+                <th>SubDepartment</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for community in community_data %}
+            <tr>
+                <td>{{ community.id }}</td>
+                <td>{{ community.community }}</td>
+                <td>{{ community.program }}</td>
+                <td>{{ community.subprogram }}</td>
+                <td>{{ community.start_date }}</td>
+                <td>{{ community.end_date }}</td>
+                <td>{{ community.week }}</td>
+                <td>{{ community.totalWeek }}</td>
+                <td>{{ community.user }}</td>
+                <td>{{ community.department }}</td>
+                <td>{{ community.subDepartment }}</td>
+                <td>{{ community.status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table >
+        <thead>
+            <tr>
+                <th>File name</th>
+                <th>Program</th>
+                <th>Subprogram</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for file1 in CPF_data %}
+            <tr>
+                <td class="file-td">{{ file1.filename }}</td>
+                <td class="file-td">{{ file1.program }}</td>
+                <td class="file-td">{{ file1.subprogram }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <table >
+        <thead>
+            <tr>
+                <th>File name</th>
+                <th>Program</th>
+                <th>Subprogram</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for file2 in CESAP_data %}
+            <tr>
+                <td class="file-td">{{ file2.filename }}</td>
+                <td class="file-td">{{ file2.program }}</td>
+                <td class="file-td">{{ file2.subprogram }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

@@ -1,0 +1,281 @@
+{% extends "admin_dashboard.html" %}
+{% block content %}
+<style>
+    .checked {
+    text-decoration: line-through;
+}
+</style>
+<div class="coordinatorCard">
+    <div class="insights-div">
+       
+        <span class="material-symbols-sharp ">analytics </span>
+        <h2 style="display:inline;" class="ml-4 lh-base text-capitalize fs-2 fw-medium " ></h2>
+        
+        <div class="middle">
+            <div class="left">
+                <h3></h3>
+                <h1></h1>
+            </div>
+            <div class="progress">
+                <svg>
+                    <circle cx='38' cy='38' r='36'></circle>
+                </svg>
+                <div class="number">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <small class="text-muted"></small>
+          <!-- Add checkboxes and labels here -->
+          
+        <div class="checkboxes">
+            <form>
+            <div class="form-group">
+                <label for=""> <br>Comment </label>
+                <textarea class="form-control" id="textarea" rows="1"></textarea>
+                <br>
+              </div>
+            <div class="checkbox-group">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="" value="">
+                    <label class="label" ></label>
+                </div>
+            </div>
+            
+         </form>
+        </div>
+       
+        <button class="btn btn-primary save-button">Save</button>
+    </div>
+    
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    
+    $(document).ready(function(){
+        function_name();
+    });
+
+    function function_name(){
+        $.ajax({
+        url: "/get_community_data",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+        data = data.reverse();
+            // Get the container where you want to append the generated divs
+        var insightsContainer = $(".coordinatorCard");
+    
+        // Iterate through the data and generate div elements for each record
+        data.forEach(function(record) {
+        // Clone the template .insights-div element for each record
+        var insightsDiv = $(".insights-div").clone();
+
+        // Update the content within the newly created insights-div
+        insightsDiv.find("h3").text(record.community);
+        insightsDiv.find("h2").text(record.user);
+        insightsDiv.find("h1").text(record.program);
+        insightsDiv.find(".text-muted").text(record.subprogram);
+     
+
+        // Generate checkboxes based on the totalWeek value
+        var checkboxGroup = insightsDiv.find(".checkbox-group");
+        checkboxGroup.empty(); // Clear any existing checkboxes
+
+        var lastCheckedIndex = 0; // Keep track of the last checked checkbox index
+
+        for (var i = 1; i <= record.totalWeek; i++) {
+            var checkboxContainer = $('<div class="form-check form-check-inline">');
+            var checkbox = $('<input class="form-check-input" type="checkbox">');
+            var label = $('<label class="label">Week ' + i + '</label>');
+                
+            // Set a unique ID for each checkbox, e.g., "checkbox1", "checkbox2", ...
+            var checkboxId = record.subprogram;
+            checkbox.attr("id", checkboxId);
+                
+            // Set the "for" attribute of the label to match the checkbox's ID
+            label.attr("for", checkboxId);
+
+            // Append the checkbox to the container, and the container to the checkboxGroup
+            checkboxContainer.append(checkbox);
+            checkboxContainer.append(label);
+
+
+            // Add a class to the label for easier selection
+            label.addClass("checkbox-label");
+
+            // Check and disable checkboxes up to record.week
+            if (i <= record.week) {
+                checkbox.prop("checked", true);
+                label.addClass("checked");
+            } else {
+                checkbox.prop("disabled", true);
+            }
+
+            
+            // Use event delegation to handle changes to checkboxes
+            checkboxGroup.on("change", ".form-check-input", function() {
+                var checkbox = $(this);
+                var label = checkbox.siblings(".checkbox-label");
+
+                if (checkbox.prop("checked")) {
+                    label.addClass("checked");
+                } else {
+                    label.removeClass("checked");
+                }
+
+                
+            });
+            checkbox.on("change", function() {
+                if (this.checked) {
+                    var currentIndex = i;
+                    lastCheckedIndex = currentIndex;
+                } else {
+                    this.checked = true;
+                }
+            });
+            
+            checkboxGroup.append(checkboxContainer);
+        } //end for
+
+        var checkboxes = checkboxGroup.find("input:checkbox");
+        checkboxes.on("change", function () {
+       
+       
+        if (this.checked) {
+            var currentIndex = checkboxes.index(this);
+            console.log(currentIndex);
+
+                // Enable the next checkbox if it exists and is not already checked
+                if (currentIndex < checkboxes.length - 1) {
+                    var nextCheckbox = checkboxes.eq(currentIndex + 1);
+                    if (!nextCheckbox.prop("checked")) {
+                        nextCheckbox.prop("disabled", false);
+                    }
+                }
+            }
+        });
+
+         // Add a click event handler for saving data to the database
+         insightsDiv.find(".save-button").click(function () {
+            // Get the value of the textarea
+            var textareaValue = insightsDiv.find("#textarea").val();
+
+            // Check if textarea is empty
+            if (textareaValue.trim() === "") {
+                alert("Please input data in the textarea before saving.");
+            } else {
+                updatePercentage();
+                // Proceed with saving data to the database
+                saveDataToDatabase(textareaValue);
+            }
+        });
+
+        function saveDataToDatabase(textareaValue) {
+             setTimeout(function () {
+        // Clear the textarea
+        insightsDiv.find("#textarea").val("");
+
+        // Create the "Save Success" alert
+        var alertElement = '<div class="alert alert-success" role="alert">' +
+            '<h4 class="alert-heading">Save Success</h4>' +
+            '</div>';
+
+        // Append the alert to the insightsDiv
+        insightsDiv.append(alertElement);
+
+        // Remove the alert after a specified duration (in this case, 3 seconds)
+        setTimeout(function () {
+            insightsDiv.find(".alert.alert-success").remove();
+        }, 3000); // Remove the alert after 3 seconds
+    }, 1000); // Simulate a 1-second delay before success
+        }
+
+
+        //calculate the checked box
+        var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
+        var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
+        var percentage = Math.floor((checkedCheckboxes * 100) / totalCheckboxes);
+        insightsDiv.find(".number").text(percentage + "%");
+
+        function updatePercentage() {
+            var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
+            var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
+            var percentage = Math.floor((checkedCheckboxes * 100) / totalCheckboxes);
+            insightsDiv.find(".number").text(percentage + "%");
+
+            // Calculate the circumference of the circle
+            var circle = insightsDiv.find("circle");
+            var circumference = 2 * Math.PI * parseInt(circle.attr("r"));
+
+            // Calculate the dash-offset based on the percentage
+            var dashOffset = circumference * (1 - percentage / 100);
+
+            // Set the 'stroke-dasharray' and 'stroke-dashoffset' properties
+            circle.attr("stroke-dasharray", circumference);
+            circle.attr("stroke-dashoffset", dashOffset);
+
+            // Set color based on percentage
+            if (percentage >= 85) {
+                circle.attr("stroke", "#41f1b6"); // Green
+                } else if (percentage >= 70) {
+                circle.attr("stroke", "#ffbb55"); // Orange
+                } else if (percentage >= 40) {
+                circle.attr("stroke", "#ff7782"); // Pink
+                } else {
+                circle.attr("stroke", "red"); // Red
+                }
+            
+            //update week
+        
+            $.ajax({
+                url: "/update_week",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    subprogram: record.subprogram, // Use the provided subprogram parameter
+                    totalCheckboxes: checkedCheckboxes
+                }),
+                success: function(response) {
+                    console.log("Week updated successfully.");
+                },
+                    error: function(error) {
+                        console.error("Failed to update week: " + error);
+                    }
+            });
+
+
+            }
+
+            var circle = insightsDiv.find("circle");
+            var circumference = 2 * Math.PI * parseInt(circle.attr("r"));
+
+            var dashOffset = circumference * (1 - percentage / 100);
+
+            circle.attr("stroke-dasharray", circumference);
+            circle.attr("stroke-dashoffset", dashOffset);
+
+            if (percentage >= 85) {
+                circle.attr("stroke", "#41f1b6"); // Green
+                } else if (percentage >= 70) {
+                circle.attr("stroke", "#ffbb55"); // Orange
+                } else if (percentage >= 40) {
+                circle.attr("stroke", "#ff7782"); // Pink
+                } else {
+                circle.attr("stroke", "red"); // Red
+                }
+
+                insightsContainer.append(insightsDiv);
+                insightsDiv.removeClass("insights-div");
+            });
+
+            insightsContainer.find("> div:first-child").css("display", "none");
+    },
+        error: function() {
+            console.log("Failed to load community data.");
+        }
+    });
+    }
+</script>
+{% endblock %}

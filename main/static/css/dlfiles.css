@@ -1,0 +1,167 @@
+/* -----Root Variable */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+
+/* Root Variable */
+:root {
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light)
+}
+
+/* -------------------- MAIN CONTAINER ------------------- */
+main .file-container{
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    padding-bottom: 2.5rem;
+    position: relative;
+}
+hr{
+    width: 100%;
+    height: 0.5px;
+    background-color: #ababab;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+.uploadings{
+    margin-top: 100rem;
+}
+
+.title{
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+main .file-container:hover{
+    box-shadow: none;
+}
+
+/* -------------------- MAIN CONTAINER ------------------- */
+
+/* VIEW */
+.btn-view {
+    background-color: #4b8ed7;
+    color: #fff; /* White text color */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btn-view:hover {
+    background-color: #007bff;
+}
+
+ .file-container table td {
+    height: 2.8rem; 
+    text-align: center;
+}
+.file-container table{
+    width: 100%;
+}
+
+/* DELETE */
+.table .btn-delete{
+    background-color: #ff5555; /* Red background color */
+    color: #fff; /* White text color */
+    padding: 3px 6px; /* Adjust padding as needed */
+    border: none;
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.table .btn-delete:hover {
+    background-color: #ff3333; /* Red background color on hover */
+}
+
+/* upload BUTTON */
+.file-container .btn-submit{
+    background-color: #49a14f;
+    color: #fff;
+    padding: 4px 6px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    right: 8.8rem;
+}
+
+.file-container .btn-submit:hover{
+    background-color: #05ae11;
+
+}
+
+
+.file-container td {
+    height: 2.8rem;
+    border-bottom: 1px solid lightgray;
+    color: var(--color-dark);
+}
+.file-container table tr:last-child td{
+    border: none;
+}
+.file-container td a {
+    padding: 4px 6px;
+    border: none;
+}
+.file-container td a:hover {
+    background-color: #49a14f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
+.file-container .file-td{
+    width: 49rem;
+}
+
+@media screen and (max-width: 1200px){
+    .file-container{
+        width: 40rem;
+        margin: 1rem auto;
+    }
+    .title{
+        margin: 1rem auto;
+        margin-left: 2.5rem;
+    }
+
+    .file-container .btn-submit{
+        right: 1.9rem;
+    }
+}
+
+@media screen and (max-width: 760px){
+    .file-container{
+        width: 97%;
+        margin-top: 2rem;
+    }
+    .title{
+        margin: 1rem auto;
+        margin-left: 2.5rem;
+    }
+
+}
