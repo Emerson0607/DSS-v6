@@ -33,7 +33,7 @@ main .kaakbay_container{
     font-family: poppins, sans-serif;
 }
 
-main .kaakbay_container > div{
+main .kaakbay_container > a{
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--border-radius-3);

@@ -5,6 +5,16 @@
     text-decoration: line-through;
 }
 </style>
+<div class="notfound">
+<div class="coordinatorCard1 ">
+    <div class="no-data">
+        <h1>No Data Found</h1>
+       
+        <p>Sorry, but there is no data available at the moment. Go back to the<a href="{{url_for('dbModel.kaakbay_program')}}"> Community Project</a> page.</p>
+    </div>
+</div>
+</div>
+
 <div class="coordinatorCard">
     <div class="insights-div">
        
@@ -49,6 +59,7 @@
     </div>
     
 </div>
+<div id="program-data" data-program="{{ data }}"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -59,11 +70,19 @@
     });
 
     function function_name(){
+        var program = $("#program-data").data("program");
+        console.log(program);
         $.ajax({
         url: "/get_community_data",
         method: "GET",
         dataType: "json",
+        data: { program: program },
         success: function(data) {
+            if (data.message === 'No data found for the program.') {
+            console.log('No data found.');
+            $(".notfound").css("display", "block");
+            return;
+        } else {
         data = data.reverse();
             // Get the container where you want to append the generated divs
         var insightsContainer = $(".coordinatorCard");
@@ -264,10 +283,11 @@
             });
 
             insightsContainer.find("> div:first-child").css("display", "none");
-    },
-        error: function() {
-            console.log("Failed to load community data.");
         }
+    },
+    error: function() {
+        console.log("Failed to load community data.");
+    }
     });
     }
 </script>

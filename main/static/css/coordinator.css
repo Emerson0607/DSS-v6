@@ -200,3 +200,42 @@ main .coordinatorCard .insights-div{
 .checked {
     text-decoration: line-through;
 }
+
+.coordinatorCard .insights-div:first-child {
+    display: none;
+}
+
+/*FOR NO DATA FOUND*/
+.coordinatorCard1 {
+    display: flex;
+    justify-content: center;
+    height: 15rem;
+    margin-top: 5rem;
+}
+
+.notfound{
+    display: none;
+}
+
+.coordinatorCard1 .no-data {
+    text-align: center;
+    width: 35rem;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.coordinatorCard1 h1 {
+    font-size: 2rem;
+    color: #333;
+    margin: 0;
+    margin-top: 2rem;
+}
+
+.coordinatorCard1 p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #777;
+}

@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g
+from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
 from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP
 from main import db
 from main import Form
@@ -161,30 +161,44 @@ def delete_account(id):
 
 
 ##################  FOR COORDINATOR  #######################
-@dbModel_route.route("/coordinator")
-def coordinator():
+@dbModel_route.route('/coordinator/<data>')
+def coordinator(data):
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-    return render_template("coordinator.html")
+    return render_template("coordinator.html", data=data)
 
 
 ##################  FOR COMMUNITY CRUD  #######################
-@dbModel_route.route("/get_community_data")
+@dbModel_route.route("/get_community_data", methods=['GET'])
 def get_community_data():
     try:
-        community_data = [
-        {
-            'community': record.community,
-            'program': record.program,
-            'subprogram': record.subprogram,
-            'week': record.week,
-            'totalWeek': record.totalWeek,
-            'user': record.user
-        }
-        for record in Community.query.all()
-        ]
-        return jsonify(community_data)
+        # Retrieve the "program" parameter from the query string
+        program = request.args.get("program")
+
+        if program:
+            community_data = [
+                {
+                    'community': record.community,
+                    'program': record.program,
+                    'subprogram': record.subprogram,
+                    'week': record.week,
+                    'totalWeek': record.totalWeek,
+                    'user': record.user
+                }
+                for record in Community.query.filter_by(program=program).all()
+            ]
+            if community_data:
+                return jsonify(community_data)
+            else:
+                # Handle the case when no data is found
+                return jsonify({'message': 'No data found for the program.'}), 200
+          
+        else:
+            # Handle the case when "program" is not provided
+            return make_response("Program not specified", 400)
+
+
     except Exception as e:
         # Log the error for debugging
         print(str(e))
@@ -516,7 +530,4 @@ def kaakbay_program():
                       disaster_completed_count = program_completed_counts.get('Disaster Management', 0),
                       gender_ongoing_count = program_ongoing_counts.get('Gender and Development', 0),
                       gender_completed_count = program_completed_counts.get('Gender and Development', 0),
-                      
-                      
-                      
                       )

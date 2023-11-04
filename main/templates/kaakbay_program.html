@@ -3,7 +3,7 @@
 
 
 <div class="kaakbay_container">
-    <div class="literacy kaakbay_card">
+    <a class="literacy kaakbay_card" href="{{url_for('dbModel.coordinator', data='Literacy')}}">
         <div class="kaakbay_title">
             <h1>Literacy</h1>
         </div>
@@ -23,9 +23,9 @@
                 <h2>{{literacy_completed_count}}</h2>
             </div>
         </div>
-        
-    </div>
-    <div class="economic kaakbay_card">
+    </a>
+
+    <a class="economic kaakbay_card" href="{{url_for('dbModel.coordinator', data='Socio-economic')}}">
         <div class="kaakbay_title"><h1>Socio-economic</h1></div>
        
         <div class="kaakbay_content">
@@ -43,8 +43,8 @@
                 <h2>{{economic_completed_count}}</h2>
             </div>
         </div>
-    </div>
-    <div class="environment kaakbay_card">
+    </a>
+    <a class="environment kaakbay_card" href="{{url_for('dbModel.coordinator', data='Environmental Stewardship')}}">
         <div class="kaakbay_title"> <h1>Environmental Stewardship</h1></div>
        
         <div class="kaakbay_content">
@@ -62,8 +62,8 @@
                 <h2>{{environmental_completed_count}}</h2>
             </div>
         </div>
-    </div>
-    <div class="health kaakbay_card">
+    </a>
+    <a class="health kaakbay_card" href="{{url_for('dbModel.coordinator', data='Health and Wellness')}}">
         <div class="kaakbay_title"><h1>Health and Wellness</h1></div>
         
         <div class="kaakbay_content">
@@ -81,8 +81,8 @@
                 <h2>{{health_completed_count}}</h2>
             </div>
         </div>
-    </div>
-    <div class="cultural kaakbay_card">
+    </a>
+    <a class="cultural kaakbay_card" href="{{url_for('dbModel.coordinator', data='Cultural Enhancement')}}">
         <div class="kaakbay_title"><h1>Cultural Enhancement</h1></div>
         
         <div class="kaakbay_content">
@@ -100,8 +100,8 @@
                 <h2>{{cultural_completed_count}}</h2>
             </div>
         </div>
-    </div>
-    <div class="values kaakbay_card">
+    </a>
+    <a class="values kaakbay_card" href="{{url_for('dbModel.coordinator', data='Values Formation')}}">
         <div class="kaakbay_title"> <h1>Values Formation</h1></div>
        
         <div class="kaakbay_content">
@@ -119,8 +119,8 @@
                 <h2>{{values_completed_count}}</h2>
             </div>
         </div>>
-    </div>
-    <div class="disaster kaakbay_card">
+    </a>
+    <a class="disaster kaakbay_card" href="{{url_for('dbModel.coordinator', data='Disaster Management')}}">
         <div class="kaakbay_title"> <h1>Disaster Management</h1></div>
       
         <div class="kaakbay_content">
@@ -138,8 +138,8 @@
                 <h2>{{disaster_completed_count}}</h2>
             </div>
         </div>
-    </div>
-    <div class="gender kaakbay_card">
+    </a>
+    <a class="gender kaakbay_card" href="{{url_for('dbModel.coordinator', data='Gender and Development')}}">
         <div class="kaakbay_title">  <h1>Gender and Development</h1></div>
        
         <div class="kaakbay_content">
@@ -157,12 +157,14 @@
                 <h2>{{gender_completed_count}}</h2>
             </div>
         </div>
-    </div>
+    </a>
     
         
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
+<script>
+    
+</script>
 {% endblock %}
