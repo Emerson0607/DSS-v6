@@ -136,8 +136,18 @@
         <small class="text-muted"></small>
     </div>
 </div>
-<div class="show-more" style="display: none;">
-    <label>Show More</label>
+<div class="show-card">
+<div class="show-more">
+    <span class="material-symbols-sharp showMore">
+        expand_more
+        </span> 
+</div>
+
+<div class="show-less" style="display: none;">
+    <span class="material-symbols-sharp showLess">
+        keyboard_arrow_up
+        </span> 
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -145,6 +155,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 <script>
+    
      $(document).ready(function(){
         loadInitialInsights();
         coordinator_name();
@@ -152,16 +163,24 @@
 
          // Show More button click handler
         $(".show-more").on("click", function () {
-          
             loadAllInsights();
             $(this).hide();
+            $(".show-less").show();
+        });
+           // Show More button click handler
+           $(".show-less").on("click", function () {
+            $(this).hide();
+            $(".show-more").show();
+            location.reload();
         });
 
     });
 </script>
+
 <script>
  var counter = 3;
  function loadInitialInsights() {
+
         $.ajax({
             url: "/get_community_data",
             method: "GET",
@@ -170,7 +189,6 @@
                 data = data.reverse();
                 var insightsContainer = $(".insights");
                 var insightsCount = 0;
-                
 
                 data.forEach(function (record) {
                     if (insightsCount < counter) {
@@ -206,21 +224,16 @@
                     }
                     
                 });
-                
-                // Check if there are more insights to show
+
                 if (insightsCount < data.length) {
                     $(".show-more").show();
                 }
-               
             },
             error: function () {
                 console.log("Failed to load community data.");
             }
-            
         });
-        
     }
-
 
     function loadAllInsights() {
     $.ajax({
@@ -270,10 +283,8 @@
     });
 }
 
-
-//for coordinator
-
-function coordinator_name(){
+    //for coordinator
+    function coordinator_name(){
     program_select = document.getElementById('program')
         program_select.onchange = function(){
         var program = program_select.value;
@@ -291,9 +302,10 @@ function coordinator_name(){
             });
         }
 }
-var startDateInput;
-//date picker
-function date_picker(){
+
+    //date picker
+    var startDateInput;
+    function date_picker(){
 
     flatpickr("#start_date_input", {
 

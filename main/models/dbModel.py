@@ -2,7 +2,7 @@ from main import db, app
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-
+from sqlalchemy import func
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community = db.Column(db.String(255), nullable=False) 

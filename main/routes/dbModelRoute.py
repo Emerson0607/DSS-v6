@@ -4,7 +4,7 @@ from main import db
 from main import Form
 from flask import Response
 from datetime import datetime
-
+from sqlalchemy import func, case
 
 dbModel_route = Blueprint('dbModel', __name__)
 
@@ -237,7 +237,7 @@ def add_community():
         user = request.form.get("user")
         department = request.form.get("lead")
         subDepartment = request.form.get("support")
-        status = "Ongoing"
+        status = "Completed"
 
         #Convert date
         start_date = convert_date(start_date1)
@@ -361,7 +361,7 @@ def delete_community(id):
      # First, find and delete records from the database
     cpf_record = CPF.query.filter_by(program=program, subprogram=subprogram).first()
     cesap_record = CESAP.query.filter_by(program=program, subprogram=subprogram).first()
-
+    subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
     if cpf_record:
         # Delete the file associated with the CPF record
         try:
@@ -383,7 +383,15 @@ def delete_community(id):
         except Exception as e:
             db.session.rollback()
 
-    db.session.commit()
+    if subprogram_record:
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(subprogram_record)
+            db.session.commit()
+            
+            flash('File data and record deleted successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
     return redirect(url_for('dbModel.manage_community'))
 
 
@@ -404,3 +412,102 @@ def update_week():
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
 
+#display kaakbay program and coordinator
+
+def get_ongoing_count(session, program_name):
+    result = db.session.query(
+        Community.program,
+        func.sum(case((Community.status == 'Ongoing', 1), else_=0)).label('ongoing_count')
+    ).filter(Community.program == program_name).group_by(Community.program).all()
+    
+    if result:
+        return result[0][1]
+    else:
+        return 0
+def get_completed_count(session, program_name):
+    result = db.session.query(
+        Community.program,
+        func.sum(case((Community.status == 'Completed', 1), else_=0)).label('completed_count')
+    ).filter(Community.program == program_name).group_by(Community.program).all()
+    
+    if result:
+        return result[0][1]
+    else:
+        return 0
+
+
+@dbModel_route.route("/kaakbay_program")
+def kaakbay_program():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    literacy_program_data = User.query.filter_by(program="Literacy").first()
+    economic_program_data = User.query.filter_by(program="Socio-economic").first()
+    environmental_program_data = User.query.filter_by(program="Environmental Stewardship").first()
+    health_program_data = User.query.filter_by(program="Health and Wellness").first()
+    cultural_program_data = User.query.filter_by(program="Cultural Enhancement").first()
+    values_program_data = User.query.filter_by(program="Values Formation").first()
+    disaster_program_data = User.query.filter_by(program="Disaster Management").first()
+    gender_program_data = User.query.filter_by(program="Gender and Development").first()
+
+    literacy_firstname = literacy_program_data.firstname if literacy_program_data else None
+    literacy_lastname = literacy_program_data.lastname if literacy_program_data else None
+
+    economic_firstname = economic_program_data.firstname if economic_program_data else None
+    economic_lastname = economic_program_data.lastname if economic_program_data else None
+
+    environmental_firstname = environmental_program_data.firstname if environmental_program_data else None
+    environmental_lastname = environmental_program_data.lastname if environmental_program_data else None
+
+    health_firstname = health_program_data.firstname if health_program_data else None
+    health_lastname = health_program_data.lastname if health_program_data else None
+
+    cultural_firstname = cultural_program_data.firstname if cultural_program_data else None
+    cultural_lastname = cultural_program_data.lastname if cultural_program_data else None
+
+    values_firstname = values_program_data.firstname if values_program_data else None
+    values_lastname = values_program_data.lastname if values_program_data else None
+
+    disaster_firstname = disaster_program_data.firstname if disaster_program_data else None
+    disaster_lastname = disaster_program_data.lastname if disaster_program_data else None
+
+    gender_firstname = gender_program_data.firstname if gender_program_data else None
+    gender_lastname = gender_program_data.lastname if gender_program_data else None
+
+
+
+    program_names = ['Literacy', 'Socio-economic', 'Health and Wellness', ]
+    program_ongoing_counts = {}
+    program_completed_counts = {}
+
+
+    for program_name in program_names:
+        ongoing_count = get_ongoing_count(session, program_name)
+        program_ongoing_counts[program_name] = ongoing_count
+        
+    for program_name in program_names:
+        completed_count = get_completed_count(session, program_name)
+        program_completed_counts[program_name] = completed_count
+
+    
+                
+    return render_template("kaakbay_program.html", literacy_firstname=literacy_firstname, literacy_lastname=literacy_lastname,
+                      economic_firstname=economic_firstname, economic_lastname=economic_lastname,
+                      environmental_firstname=environmental_firstname, environmental_lastname=environmental_lastname,
+                      health_firstname=health_firstname, health_lastname=health_lastname,
+                      cultural_firstname=cultural_firstname, cultural_lastname=cultural_lastname,
+                      values_firstname=values_firstname, values_lastname=values_lastname,
+                      disaster_firstname=disaster_firstname, disaster_lastname=disaster_lastname,
+                      gender_firstname=gender_firstname, gender_lastname=gender_lastname,
+                      literacy_ongoing_count = program_ongoing_counts.get('Literacy', 0),
+                      literacy_completed_count = program_completed_counts.get('Literacy', 0),
+                      socio_ongoing_count = program_ongoing_counts.get('Socio-economic', 0),
+                      socio_completed_count = program_completed_counts.get('Socio-economic', 0),
+
+                      health_ongoing_count = program_ongoing_counts.get('Health and Wellness', 0),
+                      health_completed_count = program_completed_counts.get('Health and Wellness', 0),
+                      
+                      
+                      
+                      )

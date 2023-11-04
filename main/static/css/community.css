@@ -316,4 +316,28 @@ main .communityCard table tr:last-child td{
     display: none;
 }
 
+.show-card{
+    position: relative;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+}
+.show-more{
+    margin-top: 4rem;
+    position: absolute;
+}
 
+.show-more .showMore{
+    cursor: pointer;
+}
+
+.show-more .showMore:hover {
+    color: var(--color-primary); 
+}
+
+.show-less .showLess{
+    cursor: pointer;
+}
+.show-less .showLess:hover {
+    color: var(--color-primary); 
+}
