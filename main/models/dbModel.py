@@ -3,8 +3,6 @@ from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-
-
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community = db.Column(db.String(255), nullable=False) 
@@ -76,16 +74,13 @@ class CESAP(db.Model):
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
 
+# --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
 
 # Create the database tables
 with app.app_context():
     db.create_all()
 
-
-
-
 ###################### QUERIES #########################
-
 
 def multiple_insert():
     # Create a list of Program instances
@@ -164,8 +159,9 @@ def initialize_database():
 def display_community_data():
     CPF_data = CPF.query.all()
     CESAP_data = db.session.query(CESAP).all()
+    subprogram_data = db.session.query(Subprogram).all()
     # Query and retrieve all records from the "community" table
     all_community_data = db.session.query(Community).all()
 
 
-    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data)
+    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data)

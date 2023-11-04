@@ -80,5 +80,23 @@
             {% endfor %}
         </tbody>
     </table>
+    <table >
+        <thead>
+            <tr>
+               
+                <th>Program</th>
+                <th>Subprogram</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for file3 in subprogram_data %}
+            <tr>
+                <td class="file-td">{{ file3.program }}</td>
+                <td class="file-td">{{ file3.subprogram }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

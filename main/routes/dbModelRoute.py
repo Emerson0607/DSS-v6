@@ -258,6 +258,17 @@ def add_community():
             db.session.commit()
         else:
             return redirect(url_for('dbModel.manage_community'))
+
+        #FOR SUBPROGRAM
+        existing_subprogram = Subprogram.query.filter_by(program = program, subprogram=subprogram).first()
+
+        if existing_subprogram is None:
+            new_subprogram = Subprogram(program=program, subprogram=subprogram)
+
+            db.session.add(new_subprogram)
+            db.session.commit()
+        else:
+            return redirect(url_for('dbModel.manage_community'))
         
         
         if cpf_file and cesap_file:
