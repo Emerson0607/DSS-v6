@@ -477,7 +477,7 @@ def kaakbay_program():
 
 
 
-    program_names = ['Literacy', 'Socio-economic', 'Health and Wellness', ]
+    program_names = ['Literacy', 'Socio-economic', 'Environmental Stewardship', 'Health and Wellness', 'Cultural Enhancement', 'Values Formation', 'Disaster Management', 'Gender and Development' ]
     program_ongoing_counts = {}
     program_completed_counts = {}
 
@@ -504,9 +504,18 @@ def kaakbay_program():
                       literacy_completed_count = program_completed_counts.get('Literacy', 0),
                       socio_ongoing_count = program_ongoing_counts.get('Socio-economic', 0),
                       socio_completed_count = program_completed_counts.get('Socio-economic', 0),
-
+                      environmental_ongoing_count = program_ongoing_counts.get('Environmental Stewardship', 0),
+                      environmental_completed_count = program_completed_counts.get('Environmental Stewardship', 0),
                       health_ongoing_count = program_ongoing_counts.get('Health and Wellness', 0),
                       health_completed_count = program_completed_counts.get('Health and Wellness', 0),
+                      cultural_ongoing_count = program_ongoing_counts.get('Cultural Enhancement', 0),
+                      cultural_completed_count = program_completed_counts.get('Cultural Enhancement', 0),
+                      values_ongoing_count = program_ongoing_counts.get('Values Formation', 0),
+                      values_completed_count = program_completed_counts.get('Values Formation', 0),
+                      disaster_ongoing_count = program_ongoing_counts.get('Disaster Management', 0),
+                      disaster_completed_count = program_completed_counts.get('Disaster Management', 0),
+                      gender_ongoing_count = program_ongoing_counts.get('Gender and Development', 0),
+                      gender_completed_count = program_completed_counts.get('Gender and Development', 0),
                       
                       
                       
