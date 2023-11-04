@@ -312,4 +312,8 @@ main .communityCard table tr:last-child td{
         gap: 0;
     }
 }
+.insights .insights-div:first-child {
+    display: none;
+}
+
 
