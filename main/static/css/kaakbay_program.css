@@ -39,14 +39,14 @@ main .kaakbay_container > a{
     border-radius: var(--border-radius-3);
     margin-top: 1rem;
     box-shadow: var(--box-shadow);
-    transition: all 300ms ease;
+    transition: all 400ms ease;
     height: 20rem;
     cursor: pointer;
-
 }
 
-main .kaakbay_container > div:hover{
+main .kaakbay_container > a:hover{
     box-shadow: none;
+    transform: scale(1.02);
 }
 
 .kaakbay_container .kaakbay_title {
@@ -112,3 +112,4 @@ main .kaakbay_container .statusNumber h2{
 main .kaakbay_container .status span{
     font-size: 3rem;
 }
+

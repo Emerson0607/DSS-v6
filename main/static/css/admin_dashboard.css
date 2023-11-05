@@ -44,6 +44,7 @@
 
 html{
     font-size: 14px;
+    scroll-behavior: smooth;
 }
 
 body{
@@ -287,28 +288,71 @@ main{
     display: none;
     position: absolute;  
     background-color: var(--color-white);
-    min-width: 2rem;
+    min-width: 0.5rem;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     right: 1rem;
     border-radius: 0.3rem;
-   
+    height: 5.1rem;
+    padding-top: 0.7rem;
 }
 
 .logout-button {
     cursor: pointer;
     padding: 10px;
+    border-radius: 0.3rem;
+    text-decoration: none;
+    width: 100%;
+    text-decoration: none;
+    color: #000000;
+    padding-right: 3.3rem;
+    padding-left: 3.3rem;
+}
+
+
+.logout-hover {
+    width: 100%;
+}
+
+
+.logout-button:hover {
+    background-color: #087830;
+    color: #ffffff;
+    transition: background-color 0.35s;
+}
+
+.logout-button a:hover {
+    color: #ffffff;
+}
+.password-div{
+    margin-bottom: 1.1rem;
+}
+.password-button {
+    cursor: pointer;
+    padding: 10px;
     text-align: left;
     border-radius: 0.3rem;
     text-decoration: none;
+    margin-bottom: 5rem;
+    padding-left: 1rem;
 }
-.logout-button a{
+.password-button a{
     text-decoration: none;
+    color: #000000;
+    text-align: center;
+
 }
 
-.logout-button:hover {
-    background-color: #f0efef;
+.password-button:hover {
+    background-color: #087830;
+    color: #ffffff;
+    transition: background-color 0.35s;
 }
+.password-button a:hover {
+    color: #ffffff;
+}
+
+
 
 .theme-toggler{
     display: none;

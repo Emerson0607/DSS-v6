@@ -184,7 +184,12 @@ def get_community_data():
                     'subprogram': record.subprogram,
                     'week': record.week,
                     'totalWeek': record.totalWeek,
-                    'user': record.user
+                    'user': record.user,
+                    'department': record.department,
+                    'subDepartment': record.subDepartment,
+                    'start_date': record.start_date,
+                    'end_date': record.end_date,
+                    'status': record.status
                 }
                 for record in Community.query.filter_by(program=program).all()
             ]
@@ -203,6 +208,27 @@ def get_community_data():
         # Log the error for debugging
         print(str(e))
         return make_response("Internal Server Error", 500)
+
+@dbModel_route.route("/community_data_list")
+def community_data_list():
+    try:
+        community_data = [
+            {
+                'community': record.community,
+                'program': record.program,
+                'subprogram': record.subprogram,
+                'week': record.week,
+                'totalWeek': record.totalWeek,
+                'user': record.user
+            }
+                for record in Community.query.all()
+            ]
+        return jsonify(community_data)
+    except Exception as e:
+        # Log the error for debugging
+        print(str(e))
+        return make_response("Internal Server Error", 500)
+
 
 @dbModel_route.route("/manage_community")
 def manage_community():
@@ -531,3 +557,39 @@ def kaakbay_program():
                       gender_ongoing_count = program_ongoing_counts.get('Gender and Development', 0),
                       gender_completed_count = program_completed_counts.get('Gender and Development', 0),
                       )
+
+
+############# changepassword ##############
+@dbModel_route.route("/change_password")
+def change_password():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+   
+    return render_template("change_password.html")
+
+############# changepassword ##############
+@dbModel_route.route("/new_password", methods=["GET", "POST"])
+def new_password():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    if request.method == "POST":
+        old_password = request.form['old_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+
+        user = User.query.filter_by(id=session['user_id'], password = old_password).first()
+
+        if user:
+            if new_password == confirm_password:
+                user.password = new_password
+                db.session.commit()
+                flash('Password successfully changed.', 'success')
+                return render_template("change_password.html")
+            else:
+                flash('New password and confirmation do not match.', 'error')
+        else:
+            flash('Invalid current password.', 'error')
+    return render_template("change_password.html")

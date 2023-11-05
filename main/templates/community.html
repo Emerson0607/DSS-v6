@@ -3,11 +3,13 @@
 
 <div class="communityCard">
             <div class="jumbotron">
+              
                 <h2 style="margin-bottom: 1rem;">Manage <b>Community</b>
                     <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right;">
                         <span class="material-symbols-sharp" style="float: right;">add</span>
                     </button>
                 </h2> 
+                <div class="table-card">
                 <table class="table" id="data-table">
                     <tr>
                         <th>ID</th>
@@ -70,7 +72,7 @@
                                         </div>  
                                         <div class="form-group">
                                             <label>Total Week:</label>
-                                            <input type="text" class="form-control" name="totalWeek" required>
+                                            <input type="number" class="form-control" name="totalWeek"  required>
                                         </div>
                                     <!-- ACCOUNTABILITY -->
                                     <label class="accountability">ACCOUNTABILITY</label><br>
@@ -92,11 +94,11 @@
                                     <label class="file">CESU FILE</label><br>
                                         <div class="form-group">
                                             <label for="CPF">CPF</label>
-                                            <input class="CPF" type="file" name="CPF" id="CPF" required>
+                                            <input class="CPF" type="file" name="CPF" id="CPF" accept=".pdf, .docx" required>
                                         </div>
                                         <div class="form-group">
                                             <label for="CESAP">CESAP</label>
-                                            <input class="CESAP" type="file" name="CESAP" id="CESAP" required>
+                                            <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx" required>
                                         </div>
                                         <div class="form-group">
                                             <button class="btn-submit" type="submit" value="Upload" >Add community</button>
@@ -112,6 +114,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
                 <!--end add modal account-->
             </div> <!--end jumbotron-->
 </div>
@@ -138,13 +141,13 @@
 </div>
 <div class="show-card">
 <div class="show-more">
-    <span class="material-symbols-sharp showMore">
+    <span class="material-symbols-sharp showMore1">
         expand_more
         </span> 
 </div>
 
 <div class="show-less" style="display: none;">
-    <span class="material-symbols-sharp showLess">
+    <span class="material-symbols-sharp showLess1">
         keyboard_arrow_up
         </span> 
 </div>
@@ -155,34 +158,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 <script>
-    
      $(document).ready(function(){
         loadInitialInsights();
         coordinator_name();
         date_picker();
-
-         // Show More button click handler
-        $(".show-more").on("click", function () {
-            loadAllInsights();
-            $(this).hide();
-            $(".show-less").show();
-        });
-           // Show More button click handler
-           $(".show-less").on("click", function () {
-            $(this).hide();
-            $(".show-more").show();
-            location.reload();
-        });
-
+        smoothScroll();
     });
 </script>
 
 <script>
- var counter = 3;
  function loadInitialInsights() {
-
         $.ajax({
-            url: "/get_community_data",
+            url: "/community_data_list",
             method: "GET",
             dataType: "json",
             success: function (data) {
@@ -191,7 +178,6 @@
                 var insightsCount = 0;
 
                 data.forEach(function (record) {
-                    if (insightsCount < counter) {
                         var insightsDiv = $(".insights-div").clone();
 
                         insightsDiv.find("h3").text(record.community);
@@ -221,67 +207,36 @@
                         insightsContainer.append(insightsDiv);
                         insightsDiv.removeClass("insights-div");
                         insightsCount++;
-                    }
+                        //hide the dafault container
+                        insightsContainer.find("> div:nth-child(n+5)").css("display", "none");
                     
                 });
 
                 if (insightsCount < data.length) {
                     $(".show-more").show();
                 }
+                
+                // Show More button click handler
+                $(".show-more").on("click", function () {
+                    insightsContainer.find("> div").css("display", "block");
+                    insightsContainer.find("> div:first-child").css("display", "none");
+                    $(this).hide();
+                    $(".show-less").show();
+                });
+                // Show More button click handler
+                $(".show-less").on("click", function () {
+                    $(this).hide();
+                    $(".show-more").show();
+                    //hide the dafault container
+                    insightsContainer.find("> div:nth-child(n+5)").css("display", "none");
+                   
+                });
             },
             error: function () {
                 console.log("Failed to load community data.");
             }
         });
     }
-
-    function loadAllInsights() {
-    $.ajax({
-        url: "/get_community_data",
-        method: "GET",
-        dataType: "json",
-        success: function (data) {
-            data = data.reverse();
-            var insightsContainer = $(".insights");
-
-            for (var i = 3; i < data.length; i++) { // Start from the fourth record
-                var record = data[i]; // Define 'record' within the loop
-
-                var insightsDiv = $(".insights-div").clone();
-
-                insightsDiv.find("h3").text(record.community);
-                insightsDiv.find("h1").text(record.program);
-                insightsDiv.find(".text-muted").text(record.subprogram);
-
-                var percentage = Math.floor((record.week * 100 / record.totalWeek));
-                insightsDiv.find(".number").text(percentage + "%");
-
-                var circle = insightsDiv.find("circle");
-                var circumference = 2 * Math.PI * parseInt(circle.attr("r"));
-                var dashOffset = circumference * (1 - percentage / 100);
-
-                circle.attr("stroke-dasharray", circumference);
-                circle.attr("stroke-dashoffset", dashOffset);
-
-                if (percentage >= 85) {
-                    circle.attr("stroke", "#41f1b6"); // Green
-                } else if (percentage >= 70) {
-                    circle.attr("stroke", "#ffbb55"); // Orange
-                } else if (percentage >= 40) {
-                    circle.attr("stroke", "#ff7782"); // Pink
-                } else {
-                    circle.attr("stroke", "red"); // Red
-                }
-
-                insightsContainer.append(insightsDiv);
-                insightsDiv.removeClass("insights-div");
-            }
-        },
-        error: function () {
-            console.log("Failed to load community data.");
-        }
-    });
-}
 
     //for coordinator
     function coordinator_name(){

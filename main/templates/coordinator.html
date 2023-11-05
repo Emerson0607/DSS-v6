@@ -14,17 +14,22 @@
     </div>
 </div>
 </div>
-
+<div class="kaakbay-subprogram-title">
+    
+    <h1>{{data}}</h1>
+    <svg class="kaakbay-design-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#2f9e36" fill-opacity="1" d="M0,256L48,240C96,224,192,192,288,202.7C384,213,480,267,576,266.7C672,267,768,213,864,197.3C960,181,1056,203,1152,224C1248,245,1344,267,1392,277.3L1440,288L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>
+</div>
 <div class="coordinatorCard">
+    
     <div class="insights-div">
-       
-        <span class="material-symbols-sharp ">analytics </span>
-        <h2 style="display:inline;" class="ml-4 lh-base text-capitalize fs-2 fw-medium " ></h2>
+        <p class="community-status"></p>
+        <span class="material-symbols-sharp ">analytics</span>
+        <h2 style="display:inline;" class="community-subprogram"></h2>
         
         <div class="middle">
             <div class="left">
-                <h3></h3>
-                <h1></h1>
+                <h3 class="community-department"></h3>
+                <h1 class="community-subDepartment"></h1>
             </div>
             <div class="progress">
                 <svg>
@@ -35,7 +40,23 @@
                 </div>
             </div>
         </div>
-        <small class="text-muted"></small>
+        <div class="date-card">
+            <div class="date-title start-title-green">START DATE</div>
+            <div class="date-title end-title-red" >END DATE</div>
+
+            <div class="date-card-content start-date-card">
+                <div class="box-color-green"></div>
+                <div class="date-content">
+                    <small class="text-muted community-start_date"></small>
+                </div>
+            </div>
+            <div class="date-card-content end-date-card">
+                <div class="box-color-red"></div>
+                <div class="date-content">
+                    <small class="text-muted community-end_date"></small>
+                </div>
+            </div>
+        </div>
           <!-- Add checkboxes and labels here -->
           
         <div class="checkboxes">
@@ -63,10 +84,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    
     $(document).ready(function(){
         function_name();
-
     });
 
     function function_name(){
@@ -81,43 +100,50 @@
             if (data.message === 'No data found for the program.') {
             console.log('No data found.');
             $(".notfound").css("display", "block");
+            $(".kaakbay-subprogram-title").css("display", "none");
+            
             return;
         } else {
         data = data.reverse();
-            // Get the container where you want to append the generated divs
         var insightsContainer = $(".coordinatorCard");
-    
-        // Iterate through the data and generate div elements for each record
+
         data.forEach(function(record) {
-        // Clone the template .insights-div element for each record
-        var insightsDiv = $(".insights-div").clone();
+            var insightsDiv = $(".insights-div").clone();
+            var startDate = new Date(record.start_date);
+            var endDate = new Date(record.end_date);
+            // Format the dates to display only the date portion
+            var startDateString = startDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            var endDateString = endDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            
+            var statusText = record.status;
+            var colorClass = statusText === 'Ongoing' ? 'text-orange' : 'text-green';
 
-        // Update the content within the newly created insights-div
-        insightsDiv.find("h3").text(record.community);
-        insightsDiv.find("h2").text(record.user);
-        insightsDiv.find("h1").text(record.program);
-        insightsDiv.find(".text-muted").text(record.subprogram);
-     
 
-        // Generate checkboxes based on the totalWeek value
-        var checkboxGroup = insightsDiv.find(".checkbox-group");
-        checkboxGroup.empty(); // Clear any existing checkboxes
 
-        var lastCheckedIndex = 0; // Keep track of the last checked checkbox index
+
+            // Update the content within the newly created insights-div
+            insightsDiv.find(".community-title").text(record.community);
+            insightsDiv.find(".community-department").text(record.department);
+            insightsDiv.find(".community-subDepartment").text(record.subDepartment);
+            insightsDiv.find(".community-subprogram").text(record.subprogram);
+            insightsDiv.find(".community-start_date").text(startDateString);
+            insightsDiv.find(".community-end_date").text(endDateString);
+            insightsDiv.find(".community-status").text(statusText).addClass(colorClass);
+            
+        
+            var checkboxGroup = insightsDiv.find(".checkbox-group");
+            checkboxGroup.empty(); // Clear any existing checkboxes
+
+            var lastCheckedIndex = 0; // Keep track of the last checked checkbox index
 
         for (var i = 1; i <= record.totalWeek; i++) {
             var checkboxContainer = $('<div class="form-check form-check-inline">');
             var checkbox = $('<input class="form-check-input" type="checkbox">');
             var label = $('<label class="label">Week ' + i + '</label>');
-                
-            // Set a unique ID for each checkbox, e.g., "checkbox1", "checkbox2", ...
             var checkboxId = record.subprogram;
             checkbox.attr("id", checkboxId);
-                
-            // Set the "for" attribute of the label to match the checkbox's ID
             label.attr("for", checkboxId);
 
-            // Append the checkbox to the container, and the container to the checkboxGroup
             checkboxContainer.append(checkbox);
             checkboxContainer.append(label);
 
@@ -153,8 +179,6 @@
                 } else {
                     label.removeClass("checked");
                 }
-
-                
             });
 
             checkbox.on("change", function() {
@@ -170,9 +194,6 @@
         } //end for
 
         /* # This is use if there's a default value of week*/
-
-
-        
         var checkboxes = checkboxGroup.find("input:checkbox");
         checkboxes.on("change", function () {
             if (this.checked) {
@@ -214,8 +235,6 @@
                 }, 3000); 
             }, 1000); 
         }
-
-
         var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
         var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
         var percentage = Math.floor((checkedCheckboxes * 100) / totalCheckboxes);
