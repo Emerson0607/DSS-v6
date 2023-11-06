@@ -16,7 +16,7 @@
     --color-primary-variant: #111e88;
     --color-dark-variant: #677483;
     --color-background: #f6f6f9;
-
+    --color-kaakbay: #087830;
     --card-border-radius: 2rem;
     --border-radius-1: 0.4rem;
     --border-radius-2: 0.8rem;
@@ -27,6 +27,30 @@
 
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
+.program_recommendation_title{
+    margin-top: 1rem;
+    background-color: var(--color-kaakbay);
+    color: #ffffff;
+    padding: 10px;
+    border-top-left-radius: var(--border-radius-2); /* Top left corner radius */
+    border-top-right-radius: var(--border-radius-2); /* Top right corner radius */
+    display: flex; /* Use flexbox to control alignment */
+    align-items: center; /* Vertically center the content */
+    justify-content: flex-start; /* Align content to the start */
+    height:6rem;
+}
+.program_recommendation_title span{
+    padding-right: 0.5rem; /* Add some right padding to the lock icon */
+    font-size: 2.3rem; /* Adjust the icon size as needed */
+    padding-left: 1.6rem;
+}
+
+.program_recommendation_title .programtxt{
+    padding-left: 0.5rem;
+    font-size: 2.3rem;
+    font-family: Lato, sans-serif;
+}
+
 
 
 .programCard{
@@ -38,12 +62,11 @@
 .program-form{
     background: var(--color-white);
     padding: 0.8rem;
-    border-radius: var(--card-border-radius);
-    margin-top: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
     padding: var(--card-padding);
-   
+    border-bottom-left-radius: var(--border-radius-2); /* Top left corner radius */
+    border-bottom-right-radius: var(--border-radius-2); /* Top right corner radius */
 }
 /* upload BUTTON */
 .program-form .btn-submit{

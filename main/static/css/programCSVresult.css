@@ -47,16 +47,47 @@ main .program-row{
 
 
 
-
 main .program-row > div{
     background: var(--color-white);
     padding: 0.8rem;
-    border-radius: var(--card-border-radius);
+    border-radius: var(--border-radius-3);
     margin-top: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
   
 }
+
+.program-row .subprogram-recommend{
+    color: rgb(65, 241, 109);
+}
+
+.program-row .top-card1, .top-card2 , .top-card3{
+    padding-left: 2rem;
+}
+
+.program-row .subprogram-list{
+    margin-top: 1rem;
+    position: relative;
+
+}
+.program-row .subprogram-list .drop-down{
+    position: absolute;
+    left: 0;
+}
+
+.program-row .subprogram-list .other1, .other2, .other3{
+    position: absolute;
+    margin-top: .4rem;
+    margin-left: .5rem;
+}
+
+.program-row .subprogram-list .other-list1, .other-list2, .other-list3{
+    margin-top: .5rem;
+    margin-left: .5rem;
+    display: none;
+    }
+
+
 
 main .program-row .sub-programs li{
     background: var(--color-success);
@@ -86,7 +117,7 @@ main .program-row > div:hover{
 
 .datas .graph2{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 20rem 20rem auto;
  
     gap: 1.6rem;
 }
@@ -97,6 +128,9 @@ main .program-row > div:hover{
     margin-bottom: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
+    border: .01rem solid rgb(167, 167, 167);
+
+    
 } 
 
 .datas .graph2 > div:hover {
@@ -118,6 +152,7 @@ main .program-row > div:hover{
     margin-bottom: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
+    border: .01rem solid rgb(167, 167, 167);
 } 
 
 .datas .graph3 > div:hover {
@@ -150,24 +185,30 @@ main .program-row > div:hover{
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-}
-.result {
-    padding:1rem;
-    border-radius: var(--card-border-radius);
-    margin-top: 0.3rem;
+    border-radius: var(--border-radius-1);
+    margin-top: 2rem;
     margin-bottom: 1rem;
-    box-shadow: var(--box-shadow);
+    background: var(--color-white);
+    padding: 0.8rem;
+    padding-left: 2rem;
+    box-shadow:  0 2rem 3rem var(--color-light);
     transition: all 300ms ease;
-} 
-
-.result:hover {
-    box-shadow: none;
 }
 
+.result h1{
+    font-size: 1rem;
+}
 
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 760px){
     .datas .graph2{
         grid-template-columns: 1fr;
     }
+}
+
+.result .green{
+    color: #19be87;
+}
+.result .orange{
+    color: rgb(214, 122, 23);
 }

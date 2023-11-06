@@ -32,6 +32,24 @@ main .insights{
     margin-top: 2rem;
 }
 
+.insights .community-subprogram-title{
+    display: grid;
+    grid-template-columns: 4rem auto;
+}
+
+
+.insights .community-subprogram-title{
+    position: relative;
+}
+
+
+.insights .community-status{
+    position: absolute;
+    right: -1rem;
+    top: -1rem;
+    font-size: .8rem;
+}
+
 main .insights > div{
     background: var(--color-white);
     padding: var(--card-padding);
@@ -288,11 +306,12 @@ main .communityCard table tr:last-child td{
     text-align: center;
 }
 
+.communityCard .file-box{
+    margin-bottom: 1rem; /* Adjust as needed */
+}
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px){.communityCard 
-    
-    
     .communityCard .modal-content{
         position: relative;
     }

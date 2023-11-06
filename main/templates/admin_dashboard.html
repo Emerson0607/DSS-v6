@@ -127,6 +127,11 @@
       // Prevent the default behavior of the link temporarily
       event.preventDefault();
 
+      // Remove "active" class from all links
+      sidebarLinks.forEach(function(link) {
+        link.classList.remove("active");
+      });
+
       // Add "active" class to the clicked link
       link.classList.add("active");
 
@@ -135,24 +140,26 @@
 
       // Wait for a short period (e.g., 500 milliseconds) to let the styles apply
       setTimeout(() => {
-        // Remove the "active" class
-        link.classList.remove("active");
-
-        // Perform the navigation to the link's href after a delay
         window.location.href = link.getAttribute("href");
-      }, 10); // Adjust the delay as needed
+      }, 10);
     });
   });
 
-  // Check if there is an active link in local storage and apply the "active" class
   const activeLink = localStorage.getItem("activeLink");
   if (activeLink) {
     const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
     if (activeLinkElement) {
       activeLinkElement.classList.add("active");
+    } else {
+      // If the stored active link is not found, activate the first link
+      sidebarLinks[0].classList.add("active");
     }
+  } else {
+    // If there is no stored active link, activate the first link
+    sidebarLinks[0].classList.add("active");
   }
 });
+
 </script>
 
 <!-- ON CLICK CESU-->

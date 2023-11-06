@@ -2,83 +2,71 @@
 {% block results %}
 
 <div class="program-row">
-
-    <div class="top1">
-                <ul>
-                    <li>
-                        <span class="prediction" data-program="{{ top1.program }}">
-                            {{ top1.program }} <div>({{ top1.quantity }} rows)</div>
-                        </span>
-                    </li>
-                    <li class="sub-programs">
-                        <ol class="subprogram-list">
-                            <li>
-                                <span data-program="{{ top1_2.program }}">
-                                    {{ top1_2.program }} <div>({{ top1_2.quantity }} rows)</div>
-                                </span>
-                            </li>
-                            {% for sub_program in top1.sub_programs %}
-                            <li>{{ sub_program }}</li>
-                            {% endfor %}
-                        </ol>
-                    </li>
-                </ul>
+    <!--Top 1-->
+    <div class="top-card1">
+        <h2 class="prediction" data-program="{{ top1.program }}">
+            {{ top1.program }} <small class="text-muted">({{ top1.quantity }} rows)</small>
+        </h2>
+        <div data-program="{{ top1_2.program }}" class="subprogram-recommend">
+            <h4>{{ top1_2.program }}</h4>
+        </div>
+        <div class="subprogram-list">
+            <span class="material-symbols-sharp drop-down1">
+                expand_circle_down
+            </span> <small class="other1">Other Kaakbay programs</small>
+            <div class="other-list1">
+                {% for sub_program in top1.sub_programs %}
+                    <li>{{ sub_program }}</li>
+                {% endfor %}
             </div>
-<!--top2-->
-    <div class="top2">
-                  <ul>
-                    <li>
-                        <span class="prediction" data-program="{{ top1.program }}">
-                            {{ top2.program }} <div>({{ top2.quantity }} rows)</div>
-                        </span>
-                    </li>
-                    <li class="sub-programs">
-                        
-                        <ol class="subprogram-list">
-                            <li>
-                                <span data-program="{{ top3_2.program }}">
-                                    {{ top2_2.program }} <div>({{ top1_2.quantity }} rows)</div>
-                                </span>
-                            </li>
-                            {% for sub_program in top2.sub_programs %}
-                            <li>{{ sub_program }}</li>
-                            {% endfor %}
-                        </ol>
-                    </li>
-                </ul>
+        </div>      
     </div>
-
-    <div class="top3">
-        <ul>
-            <li>
-                <span class="prediction" data-program="{{ top1.program }}">
-                    {{ top3.program }} <div>({{ top3.quantity }} rows)</div>
-                </span>
-            </li>
-            <li class="sub-programs">
-                
-                <ol class="subprogram-list">
-                    <li>
-                        <span data-program="{{ top3_2.program }}">
-                            {{ top3_2.program }} <div>({{ top3_2.quantity }} rows)</div>
-                        </span>
-                    </li>
-                    {% for sub_program in top3.sub_programs %}
-                        <li>{{ sub_program }}</li>
-                    {% endfor %}
-                </ol>
-            </li>
-        </ul>
+    <!--Top 2-->
+    <div class="top-card2">
+        <h2 class="prediction" data-program="{{ top2.program }}">
+            {{ top2.program }} <small class="text-muted">({{ top2.quantity }} rows)</small>
+        </h2>
+        <div data-program="{{ top2_2.program }}" class="subprogram-recommend">
+            <h4>{{ top2_2.program }}</h4>
+        </div>
+        <div class="subprogram-list">
+            <span class="material-symbols-sharp drop-down2">
+                expand_circle_down
+            </span> <small class="other2">Other Kaakbay programs</small>
+            <div class="other-list2">
+            {% for sub_program in top2.sub_programs %}
+                <li>{{ sub_program }}</li>
+            {% endfor %}
+            </div>
+        </div>       
+    </div>
+    <!--Top 3-->
+    <div class="top-card3">
+        <h2 class="prediction" data-program="{{ top3.program }}">
+            {{ top3.program }} <small class="text-muted">({{ top3.quantity }} rows)</small>
+        </h2>
+        <div data-program="{{ top1_2.program }}" class="subprogram-recommend">
+            <h4>{{ top3_2.program }}</h4>
+        </div>
+        <div class="subprogram-list">
+            <span class="material-symbols-sharp drop-down3">
+                expand_circle_down
+            </span> <small class="other3">Other Kaakbay programs</small>
+            <div class="other-list3">
+                {% for sub_program in top3.sub_programs %}
+                    <li>{{ sub_program }}</li>
+                {% endfor %}
+            </div>
+        </div>       
     </div>
 </div>
 
 <div class="result">
-    <h1>The category with the highest number of requests is <span id="max_category">{{ max_category }}</span> with <span id="highest_count">{{ highest_count }}</span> requests.</h1>
-    <h1>Recommended Program: <b><span id="program_ces">{{ program_ces }}</span></b></h1>
+    <h1>The category with the highest number of requests is <span id="max_category" class="green">{{ max_category }}</span> with <span id="highest_count">{{ highest_count }}</span> requests.</h1>
+    <h1>Recommended Program: <span id="program_ces" class="orange">{{ program_ces }}</span></h1>
 </div>
 
 <div class="datas">
-
     <div class="graph2">
             <!--------------------- KASARIAN ------------------------>
         <div class="kasarianChart">
@@ -87,13 +75,14 @@
         <div class="trabahoChart">
                 <canvas id="trabahochart"></canvas>
             </div>  
-    </div>
-
-    <div class="graph3">
-          <!--------------------- EDAD ------------------------>
+               <!--------------------- EDAD ------------------------>
         <div class="edadChart">
             <canvas id="edadchart"></canvas>
         </div>
+    </div>
+
+    <div class="graph3">
+       
         <!--------------------- TINAPOS NA DEGREE ------------------------>
         <div class="tinaposChart">
             <canvas id="tinaposchart"></canvas>
@@ -106,13 +95,47 @@
    
     
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-
-
 <script>
-    document.addEventListener("DOMContentLoaded", function () 
-    {
+    $(document).ready(function(){
+
+        $(".drop-down1").on("click", function () {
+            console.log("Element clicked");
+            $(this).siblings(".other-list1").toggle();
+        });
+        $(".other1").on("click", function () {
+            console.log("Element clicked");
+            $(this).siblings(".other-list1").toggle();
+        });
+
+        $(".drop-down2").on("click", function () {
+            console.log("Element clicked");
+            $(this).siblings(".other-list2").toggle();
+        });
+        $(".other2").on("click", function () {
+            console.log("Element clicked");
+            $(this).siblings(".other-list2").toggle();
+        });
+
+        $(".drop-down3").on("click", function () {
+            console.log("Element clicked");
+            $(this).siblings(".other-list3").toggle();
+        });
+        $(".other3").on("click", function () {
+            console.log("Element clicked");
+            $(this).siblings(".other-list3").toggle();
+        });
+
+
+    });
+
+
+</script>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function (){
+
     /* --------------------------------------- KASARIAN ---------------------------------*/
     let kasarian_lbl = ['Lalake', 'Babae',]
     let kasarian_data =['{{ kasarian_counts.get(0, 0) }}', '{{ kasarian_counts.get(1, 0) }}']
@@ -389,8 +412,5 @@
 
     });
 </script>
-
-    
-
 
 {% endblock %}

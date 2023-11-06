@@ -214,12 +214,15 @@ def community_data_list():
     try:
         community_data = [
             {
-                'community': record.community,
-                'program': record.program,
-                'subprogram': record.subprogram,
-                'week': record.week,
-                'totalWeek': record.totalWeek,
-                'user': record.user
+                    'community': record.community,
+                    'program': record.program,
+                    'subprogram': record.subprogram,
+                    'week': record.week,
+                    'totalWeek': record.totalWeek,
+                    'user': record.user,
+                    'department': record.department,
+                    'subDepartment': record.subDepartment,
+                    'status': record.status
             }
                 for record in Community.query.all()
             ]
@@ -277,7 +280,7 @@ def add_community():
         user = request.form.get("user")
         department = request.form.get("lead")
         subDepartment = request.form.get("support")
-        status = "Completed"
+        status = "Ongoing"
 
         #Convert date
         start_date = convert_date(start_date1)
@@ -436,21 +439,39 @@ def delete_community(id):
 
 
 ############# UPDATE WEEK BASED FROM Subprogram ##############
-# Flask Route
+
 @dbModel_route.route('/update_week', methods=['POST'])
 def update_week():
     data = request.get_json()
     subprogram = data['subprogram']
     totalCheckboxes = data['totalCheckboxes']
+    program = data['program']
 
     # Query the database to get records with the specified subprogram
-    communities = Community.query.filter_by(subprogram=subprogram).all()
+    communities = Community.query.filter_by(program=program, subprogram=subprogram).all()
 
     for community in communities:
         # Update the "week" column to match the totalCheckboxes
         community.week = totalCheckboxes
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
+
+############# UPDATE Status BASED FROM Subprogram ##############
+@dbModel_route.route('/update_status', methods=['POST'])
+def update_status():
+    data = request.get_json()
+    subprogram = data['subprogram']
+    program = data['program']
+    status = data['status']
+
+    # Query the database to get records with the specified subprogram
+    communities = Community.query.filter_by(program=program, subprogram=subprogram).all()
+
+    for community in communities:
+        community.status = status
+    db.session.commit()
+    return jsonify({'message': 'Week column updated for the specified subprogram.'})
+
 
 #display kaakbay program and coordinator
 

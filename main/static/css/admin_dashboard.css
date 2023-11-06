@@ -352,12 +352,9 @@ main{
     color: #ffffff;
 }
 
-
-
 .theme-toggler{
     display: none;
 }
-
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px){
@@ -378,38 +375,83 @@ main{
         width: 5.6rem;
     }
 
-  
+    .profile-photo{
+        cursor: pointer;
+    }
 
-.profile-photo{
-    cursor: pointer;
-}
-.dropdown-content {
-    display: none;
-    position: absolute;  
-    background-color: var(--color-white);
-    min-width: 2rem;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    right: 1rem;
-    border-radius: 0.3rem;
-   
-}
+    aside .cesu{
+        display: none;
+    }
 
-.logout-button {
-    cursor: pointer;
-    padding: 10px;
-    text-align: left;
-    border-radius: 0.3rem;
-}
+    /* Initially hide the dropdown content */
+    .profile-photo{
+        cursor: pointer;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;  
+        background-color: var(--color-white);
+        min-width: 0.5rem;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 1rem;
+        border-radius: 0.3rem;
+        height: 5.1rem;
+        padding-top: 0.7rem;
+    }
 
-.logout-button:hover {
-    background-color: #f0efef;
-}
+    .logout-button {
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        width: 100%;
+        text-decoration: none;
+        color: #000000;
+        padding-right: 3.3rem;
+        padding-left: 3.3rem;
+    }
 
-aside .cesu{
-    display: none;
-}
+    .logout-hover {
+        width: 100%;
+    }
 
+    .logout-button:hover {
+        background-color: #087830;
+        color: #ffffff;
+        transition: background-color 0.35s;
+    }
+
+    .logout-button a:hover {
+        color: #ffffff;
+    }
+    .password-div{
+        margin-bottom: 1.1rem;
+    }
+    .password-button {
+        cursor: pointer;
+        padding: 10px;
+        text-align: left;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        margin-bottom: 5rem;
+        padding-left: 1rem;
+    }
+    .password-button a{
+        text-decoration: none;
+        color: #000000;
+        text-align: center;
+
+    }
+
+    .password-button:hover {
+        background-color: #087830;
+        color: #ffffff;
+        transition: background-color 0.35s;
+    }
+    .password-button a:hover {
+        color: #ffffff;
+    }
 }
 
 /*Mobile*/
@@ -440,9 +482,6 @@ aside .cesu{
         }
     }
 
-
-
-    
     aside .logo{
         margin-left: 1rem;
 
@@ -472,7 +511,6 @@ aside .cesu{
         padding: 0 1rem;
     }
   
-
     .right{
         width: 94%;
         margin: 0 auto 4rem;
@@ -515,30 +553,76 @@ aside .cesu{
     
 
     /* Initially hide the dropdown content */
-.profile-photo{
-    cursor: pointer;
-}
-.dropdown-content {
-    display: none;
-    position: absolute;  
-    background-color: var(--color-white);
-    min-width: 2rem;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    right: 1rem;
-    border-radius: 0.3rem;
-   
-}
+    .profile-photo{
+        cursor: pointer;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;  
+        background-color: var(--color-white);
+        min-width: 0.5rem;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 1rem;
+        border-radius: 0.3rem;
+        height: 5.1rem;
+        padding-top: 0.7rem;
+    }
 
-.logout-button {
-    cursor: pointer;
-    padding: 10px;
-    text-align: left;
-    border-radius: 0.3rem;
-}
+    .logout-button {
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        width: 100%;
+        text-decoration: none;
+        color: #000000;
+        padding-right: 3.3rem;
+        padding-left: 3.3rem;
+    }
 
-.logout-button:hover {
-    background-color: #f0efef;
-}
+    .logout-hover {
+        width: 100%;
+    }
 
+    .logout-button:hover {
+        background-color: #087830;
+        color: #ffffff;
+        transition: background-color 0.35s;
+    }
+
+    .logout-button a:hover {
+        color: #ffffff;
+    }
+    .password-div{
+        margin-bottom: 1.1rem;
+    }
+    .password-button {
+        cursor: pointer;
+        padding: 10px;
+        text-align: left;
+        border-radius: 0.3rem;
+        text-decoration: none;
+        margin-bottom: 5rem;
+        padding-left: 1rem;
+    }
+    .password-button a{
+        text-decoration: none;
+        color: #000000;
+        text-align: center;
+
+    }
+
+    .password-button:hover {
+        background-color: #087830;
+        color: #ffffff;
+        transition: background-color 0.35s;
+    }
+    .password-button a:hover {
+        color: #ffffff;
+    }
+
+    .recent-updates{
+        margin: 1rem auto;
+    }
 }

@@ -42,7 +42,7 @@
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title">Add Project</h4>
+                                <h4 class="modal-title">Project details</h4>
                             </div>
                             <div class="modal-body">
                                 <form class="uploading" action="{{ url_for('dbModel.add_community') }}" method="POST" enctype="multipart/form-data" id="upload-form">
@@ -60,6 +60,7 @@
                                             <label>Sub-program:</label>
                                             <input type="text" class="form-control" name="subprogram" required >
                                         </div>
+                                        <br>
                                     <!-- TIMEFRAME -->
                                     <label class="timeframe">TIMEFRAME</label>
                                         <div class="form-group">
@@ -74,6 +75,7 @@
                                             <label>Total Week:</label>
                                             <input type="number" class="form-control" name="totalWeek"  required>
                                         </div>
+                                        <br>
                                     <!-- ACCOUNTABILITY -->
                                     <label class="accountability">ACCOUNTABILITY</label><br>
                                         <div class="form-group">
@@ -89,19 +91,19 @@
                                             <label>SUPPORT:</label>
                                             <input type="text" class="form-control" name="support" required >
                                         </div>
-                                       
+                                        <br>
                                     <!-- FILE -->
                                     <label class="file">CESU FILE</label><br>
-                                        <div class="form-group">
+                                        <div class="form-group file-box">
                                             <label for="CPF">CPF</label>
                                             <input class="CPF" type="file" name="CPF" id="CPF" accept=".pdf, .docx" required>
                                         </div>
-                                        <div class="form-group">
+                                        <div class="form-group file-box">
                                             <label for="CESAP">CESAP</label>
                                             <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx" required>
                                         </div>
                                         <div class="form-group">
-                                            <button class="btn-submit" type="submit" value="Upload" >Add community</button>
+                                            <button class="btn-submit" type="submit" value="Upload" >Add project</button>
                                         </div>
 
                                        
@@ -117,15 +119,22 @@
             </div>
                 <!--end add modal account-->
             </div> <!--end jumbotron-->
-</div>
+        </div>
 
 <div class="insights">
     <div class="insights-div">
-        <span class="material-symbols-sharp">analytics</span>
+        
+        <div class="community-subprogram-title">
+            <p class="community-status"></p>
+            <div class="subLogo">
+                <span class="material-symbols-sharp ">analytics</span>
+            </div>
+            <h2 class="community-subprogram"></h2>
+        </div>
         <div class="middle">
             <div class="left">
-                <h3></h3>
-                <h1></h1>
+                <h3 class="community-department"></h3>
+                <h1 class="community-subDepartment"></h1>
             </div>
             <div class="progress">
                 <svg>
@@ -136,8 +145,9 @@
                 </div>
             </div>
         </div>
-        <small class="text-muted"></small>
     </div>
+
+
 </div>
 <div class="show-card">
 <div class="show-more">
@@ -178,12 +188,18 @@
                 var insightsCount = 0;
 
                 data.forEach(function (record) {
-                        var insightsDiv = $(".insights-div").clone();
-
-                        insightsDiv.find("h3").text(record.community);
-                        insightsDiv.find("h1").text(record.program);
-                        insightsDiv.find(".text-muted").text(record.subprogram);
-
+                    var insightsDiv = $(".insights-div").clone();
+   
+                    var statusText = record.status;
+                    var colorClass = statusText === 'Ongoing' ? 'text-orange' : 'text-green';
+            
+                         // Update the content within the newly created insights-div
+                        insightsDiv.find(".community-title").text(record.community);
+                        insightsDiv.find(".community-department").text(record.department);
+                        insightsDiv.find(".community-subDepartment").text(record.subDepartment);
+                        insightsDiv.find(".community-subprogram").text(record.subprogram);
+                        insightsDiv.find(".community-status").text(statusText).addClass(colorClass);
+        
                         var percentage = Math.floor((record.week * 100 / record.totalWeek));
                         insightsDiv.find(".number").text(percentage + "%");
 

@@ -1,6 +1,14 @@
 {% extends "admin_dashboard.html" %}
 {% block content %}
 
+<div class="program_recommendation_title">
+    <h1>
+        <span class="material-symbols-sharp">
+            recommend
+            </span> <h3 class="programtxt">Kaakbay Program Recommendation</h3>
+    </h1>
+</div>
+
 <div class="programCard">
             <div class="program-form">
                 <form method="POST" action="{{ url_for('randomForest.programWithCSV') }}" enctype="multipart/form-data" id="upload-form">

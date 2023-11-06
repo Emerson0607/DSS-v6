@@ -23,9 +23,12 @@
     
     <div class="insights-div">
         <p class="community-status"></p>
-        <span class="material-symbols-sharp ">analytics</span>
-        <h2 style="display:inline;" class="community-subprogram"></h2>
-        
+        <div class="community-subprogram-title">
+            <div class="subLogo">
+                <span class="material-symbols-sharp ">analytics</span>
+            </div>
+            <h2 class="community-subprogram"></h2>
+        </div>
         <div class="middle">
             <div class="left">
                 <h3 class="community-department"></h3>
@@ -76,6 +79,8 @@
          </form>
         </div>
        
+       
+        <button class="btn btn-primary archive-button">Archive</button>
         <button class="btn btn-primary save-button">Save</button>
     </div>
     
@@ -117,9 +122,16 @@
             
             var statusText = record.status;
             var colorClass = statusText === 'Ongoing' ? 'text-orange' : 'text-green';
-
-
-
+            
+            if (statusText === 'Ongoing') {
+                // If the status is 'Ongoing', hide the archive-button and show the save-button
+                insightsDiv.find(".archive-button").css("display", "none");
+                insightsDiv.find(".save-button").css("display", "block");
+            } else if (statusText === 'Completed') {
+                // If the status is 'Completed', show the archive-button and hide the save-button
+                insightsDiv.find(".archive-button").css("display", "block");
+                insightsDiv.find(".save-button").css("display", "none");
+            }
 
             // Update the content within the newly created insights-div
             insightsDiv.find(".community-title").text(record.community);
@@ -129,12 +141,11 @@
             insightsDiv.find(".community-start_date").text(startDateString);
             insightsDiv.find(".community-end_date").text(endDateString);
             insightsDiv.find(".community-status").text(statusText).addClass(colorClass);
-            
         
             var checkboxGroup = insightsDiv.find(".checkbox-group");
             checkboxGroup.empty(); // Clear any existing checkboxes
-
             var lastCheckedIndex = 0; // Keep track of the last checked checkbox index
+            
 
         for (var i = 1; i <= record.totalWeek; i++) {
             var checkboxContainer = $('<div class="form-check form-check-inline">');
@@ -146,7 +157,6 @@
 
             checkboxContainer.append(checkbox);
             checkboxContainer.append(label);
-
 
             // Add a class to the label for easier selection
             label.addClass("checkbox-label");
@@ -209,8 +219,6 @@
             }
         });
 
-       
-
          // Add a click event handler for saving data to the database
         insightsDiv.find(".save-button").click(function () {
             var textareaValue = insightsDiv.find("#textarea").val();
@@ -218,6 +226,7 @@
             if (textareaValue.trim() === "") {
                 alert("Please input data in the textarea before saving.");
             } else {
+                update_status();
                 updatePercentage();
                 saveDataToDatabase(textareaValue);
             }
@@ -269,7 +278,8 @@
                 contentType: "application/json",
                 data: JSON.stringify({
                     subprogram: record.subprogram,
-                    totalCheckboxes: checkedCheckboxes
+                    totalCheckboxes: checkedCheckboxes,
+                    program: record.program
                 }),
                 success: function(response) {
                     console.log("Week updated successfully.");
@@ -280,6 +290,36 @@
             }); 
         }
 
+
+        function update_status(){
+
+            var recordStatus = "";
+            if (record.week === record.totalWeek) {
+                recordStatus = "Completed";
+            } else {
+                recordStatus = "Ongoing"; // Set status to "Ongoing" if not equal
+            }
+
+            $.ajax({
+                url: "/update_status", // Use an appropriate URL for updating the status
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    program: record.program,
+                    subprogram: record.subprogram,
+                    status: recordStatus
+                }),
+                success: function(response) {
+                    console.log("Status updated successfully.");
+                },
+                error: function(error) {
+                    console.error("Failed to update status: " + error);
+                }
+            });
+            
+        }
+
+        
             var circle = insightsDiv.find("circle");
             var circumference = 2 * Math.PI * parseInt(circle.attr("r"));
             var dashOffset = circumference * (1 - percentage / 100);

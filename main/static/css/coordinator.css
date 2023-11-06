@@ -45,6 +45,11 @@ main .coordinatorCard{
    
 }
 
+.coordinatorCard .community-subprogram-title{
+    display: grid;
+    grid-template-columns: 4rem auto;
+}
+
 
 main .coordinatorCard svg circle{
     fill: none;
@@ -82,7 +87,6 @@ main .coordinatorCard > div span{
     border-radius: 50%;
     color: var(--color-white);
     font-size: 2rem;
-
 }
 main .coordinatorCard > div .middle{
     display: flex;
@@ -161,7 +165,8 @@ main .coordinatorCard .insights-div{
     position: relative;
 }
 
-  main .coordinatorCard .save-button{
+  /* Save Button Styles */
+main .coordinatorCard .save-button {
     background-color: #49a14f;
     color: #fff;
     padding: 10px 12px;
@@ -170,12 +175,32 @@ main .coordinatorCard .insights-div{
     position: absolute;
     bottom: 2rem;
     right: 2rem;
-  }
+}
 
-  main .coordinatorCard .save-button:hover{
+main .coordinatorCard .save-button:hover {
     background-color: #05ae11;
     cursor: pointer;
-  }
+}
+
+/* Archive Button Styles */
+main .coordinatorCard .archive-button {
+    background-color: #e73838; /* Change to the desired color for the archive button */
+    color: #fff;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+}
+
+main .coordinatorCard .archive-button:hover {
+    background-color: #ff0000; /* Change to the desired hover color for the archive button */
+    cursor: pointer;
+}
+
+
+
 
  
   /* textarea*/

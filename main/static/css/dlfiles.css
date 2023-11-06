@@ -32,17 +32,49 @@
 main .file-container{
     background: var(--color-white);
     padding: var(--card-padding);
-    border-radius: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
     padding-bottom: 2.5rem;
+    border-bottom-left-radius: var(--border-radius-2); /* Top left corner radius */
+    border-bottom-right-radius: var(--border-radius-2); /* Top right corner radius */
+    padding-bottom: 2.5rem;
     position: relative;
+    overflow-x: auto; /* Horizontal scroll if needed */
+    max-height: 350px; /* Set a maximum height for vertical scroll */
+    
 }
+
+.file_title{
+    margin-top: 1rem;
+    background-color: #087830;
+    color: #ffffff;
+    padding: 10px;
+    border-top-left-radius: var(--border-radius-2); /* Top left corner radius */
+    border-top-right-radius: var(--border-radius-2); /* Top right corner radius */
+    display: flex; /* Use flexbox to control alignment */
+    align-items: center; /* Vertically center the content */
+    justify-content: flex-start; /* Align content to the start */
+    height:6rem;
+}
+
+.file_title span{
+    padding-right: 0.5rem; /* Add some right padding to the lock icon */
+    font-size: 2.3rem; /* Adjust the icon size as needed */
+    padding-left: 1.6rem;
+
+}
+.file_title .changetxt{
+    padding-left: 0.5rem;
+    font-size: 2.3rem;
+    font-family: Lato, sans-serif;
+
+}
+
 hr{
     width: 100%;
     height: 0.5px;
     background-color: #ababab;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     margin-top: 1rem;
 }
 
@@ -50,10 +82,6 @@ hr{
     margin-top: 100rem;
 }
 
-.title{
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-}
 
 main .file-container:hover{
     box-shadow: none;
@@ -75,13 +103,22 @@ main .file-container:hover{
     background-color: #007bff;
 }
 
- .file-container table td {
+ .file-container table td{
     height: 2.8rem; 
-    text-align: center;
+    text-align: left;
 }
 .file-container table{
     width: 100%;
 }
+
+.file-container table tr td:nth-child(2) {
+    text-align: center;
+}
+.file-container table th:first-child{
+    text-align: left;
+    padding-left: .3rem;
+}
+
 
 /* DELETE */
 .table .btn-delete{
@@ -98,6 +135,32 @@ main .file-container:hover{
     background-color: #ff3333; /* Red background color on hover */
 }
 
+.upfiles{
+    margin-top: 1rem;
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    padding-bottom: 2.5rem;
+    position: relative;
+    height: 5rem; /* Set a maximum height for vertical scroll */
+}
+
+/* upload BUTTON */
+.upfiles .btn-submit{
+    background-color: #49a14f;
+    color: #fff;
+    padding: 4px 6px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    right: 2rem;
+}
+
+
+
 /* upload BUTTON */
 .file-container .btn-submit{
     background-color: #49a14f;
@@ -109,6 +172,8 @@ main .file-container:hover{
     position: absolute;
     right: 8.8rem;
 }
+
+
 
 .file-container .btn-submit:hover{
     background-color: #05ae11;
@@ -140,28 +205,28 @@ main .file-container:hover{
 }
 
 @media screen and (max-width: 1200px){
-    .file-container{
+    .file-container, .file_title, .upfiles{
         width: 40rem;
-        margin: 1rem auto;
+        margin: 0 auto;
     }
-    .title{
-        margin: 1rem auto;
-        margin-left: 2.5rem;
-    }
-
+  
     .file-container .btn-submit{
         right: 1.9rem;
+    }
+    .upfiles{
+        margin-top: 1rem;
     }
 }
 
 @media screen and (max-width: 760px){
-    .file-container{
-        width: 97%;
-        margin-top: 2rem;
+     .file-container , .file_title, .upfiles{
+        margin: 0 auto;
     }
-    .title{
-        margin: 1rem auto;
-        margin-left: 2.5rem;
+
+    .upfiles{
+        margin-top: 1rem;
     }
+
+  
 
 }
