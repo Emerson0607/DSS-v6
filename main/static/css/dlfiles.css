@@ -236,15 +236,25 @@ main .file-container:hover{
     }
 }
 
-@media screen and (max-width: 760px){
-     .file-container , .file_title, .upfiles{
+@media screen and (max-width: 400px){
+    
+    .margin-top{
+        height: 5rem;
+    }
+ 
+    .file-container , .file_title, .upfiles{
         margin: 0 auto;
+        width: 90%;
     }
 
     .upfiles{
         margin-top: 1rem;
+        padding-top: .5rem;
+        padding-bottom: 1rem;
+    }
+    .file_title .changetxt{
+        font-size: 1.7rem;
     }
 
-  
-
 }
+

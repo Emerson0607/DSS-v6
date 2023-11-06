@@ -163,6 +163,8 @@ aside .close{
     display: none;
 }
 
+
+
 /*=================SIDEBAR===================*/
 
 aside .sidebar{
@@ -482,6 +484,9 @@ main{
         }
     }
 
+    aside .close span:hover{
+        background-color: var(--color-danger);
+     }
     aside .logo{
         margin-left: 1rem;
 
@@ -506,13 +511,12 @@ main{
     }
 
     main{
-        
-        margin-top: 8rem;
+      
         padding: 0 1rem;
     }
   
     .right{
-        width: 94%;
+        width: 90%;
         margin: 0 auto 4rem;
     }
     .right .top{
@@ -624,5 +628,6 @@ main{
 
     .recent-updates{
         margin: 1rem auto;
+        width: 90%;
     }
 }

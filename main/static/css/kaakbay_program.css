@@ -119,3 +119,34 @@ main .kaakbay_card .status .green{
 main .kaakbay_card .status .orange{
     color: rgb(214, 122, 23);
 }
+
+@media screen and (max-width: 400px){
+    main .kaakbay_container{
+        grid-template-columns: 1fr;
+        padding-top: 3rem;
+        width: 90%;
+        margin: 2rem auto;
+    }
+
+    main .kaakbay_container > a{
+        height: 15rem;
+    }
+
+    main .kaakbay_container .kaakbay_title {
+        width: 100%;
+        height: 3.5rem;
+    }  
+    main .kaakbay_container .kaakbay_title h1{
+        font-size: 1.5rem;
+        margin-left: 1rem;
+    }
+    main .kaakbay_container .status h2{ 
+        margin-top: 1rem;
+      text-align: center;
+      
+    }
+   
+   
+    
+    
+}

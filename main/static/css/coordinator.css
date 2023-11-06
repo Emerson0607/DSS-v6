@@ -198,11 +198,6 @@ main .coordinatorCard .archive-button:hover {
     background-color: #ff0000; /* Change to the desired hover color for the archive button */
     cursor: pointer;
 }
-
-
-
-
- 
   /* textarea*/
 .form-control {
     width: 100%;
@@ -217,18 +212,12 @@ main .coordinatorCard .archive-button:hover {
     height: 5rem;
   }
  
-
-
 /*smaller laptop*/
 @media screen and (max-width: 1200px){
-
-
     main .coordinatorCard{
         grid-template-columns: 1fr;
         gap: 0;
     }
-
-
 
 }
 .checked {
@@ -291,7 +280,6 @@ main .coordinatorCard .date-card .date-card-content{
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
     position: relative;
-
 }
 
 main .coordinatorCard .date-card .date-title{
@@ -362,6 +350,47 @@ main .coordinatorCard .community-status{
     
 }
 
+
+@media screen and (max-width: 400px){
+    .kaakbay-subprogram-title{
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .coordinatorCard{
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .kaakbay-subprogram-title h1{
+        color: white;
+        margin-left: 2rem;
+        font-size: 2rem;
+        top: 4.5rem;
+    }
+        /* For Checkboxes */
+    main .coordinatorCard .checkbox-group{
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+
+    main .coordinatorCard .form-check .label {
+        font-weight:normal; 
+        font-size: 1rem; 
+        color: #242424; 
+        position: absolute;
+        margin-top: 1rem;
+    }
+    
+    
+    main .coordinatorCard .form-check input {
+        width: 1.5rem; 
+        height: 1.5rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        margin-right: 2px;
+    }
+}
 
 
 

@@ -359,18 +359,42 @@ main .communityCard table tr:last-child td{
     }
 }  
 /* ------------------- MOBILE -------------------- */
-@media screen and (max-width: 760px){.communityCard 
-    
-    .modal-content{
-        width: 70%;
-        margin-top: 10rem;
+@media screen and (max-width: 400px){
+    .communityCard{ 
+        margin: 0 auto;
+        padding-top: 2rem;
+        
     }
+    .communityCard .jumbotron{ 
+       width: 90%;
+       margin: 0 auto;
+    }
+
+    .communityCard .modal-content{
+        width:90%;
+    }
+
+    .communityCard .table-card{
+        width: 20rem;
+        overflow: auto;
+    }
+    .communityCard .table-card th{
+        padding-right: 1rem;
+    }
+    
     .communityCard .btn-close{
-        margin-left: 23rem;
+        height: 2rem;
+        right: .5rem;
     }
     main .insights{
         grid-template-columns: 1fr;
-        gap: 0;
+        gap: 1rem;
+        
+    }
+
+    main .insights > div{
+        width: 90%;
+        margin: 0 auto;
     }
 }
 

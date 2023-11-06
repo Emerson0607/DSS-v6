@@ -82,9 +82,6 @@ main .manageUser table tr:last-child td{
     border-radius: 7px;
     width: 50%;
     position: relative;
-    
-    
-
 }
 
 .manageUser .modal h4{
@@ -122,7 +119,6 @@ main .manageUser table tr:last-child td{
     border-radius: 5px;
 }
 
-
 /* Style for submit button */
 .manageUser .btn-submit {
     background-color: #49a14f;
@@ -137,7 +133,6 @@ main .manageUser table tr:last-child td{
     background-color: #05ae11;
 }
 
-
 .manageUser .btn-add {
     background-color: #49a14f; /* Change this to your desired color */
     color: #fff; /* Change the text color */
@@ -147,7 +142,6 @@ main .manageUser table tr:last-child td{
 .manageUser .btn-add:hover{
     background-color: #05ae11;
     cursor: pointer;
-
 }
 
 .manageUser .btn-edit {
@@ -170,7 +164,6 @@ main .manageUser table tr:last-child td{
     border: none;
     border-radius: 4px; /* Rounded corners */
     cursor: pointer;
-   
 }
 
 .manageUser .btn-delete1:hover {
@@ -191,7 +184,6 @@ main .manageUser table tr:last-child td{
 }
 
 .manageUser .btn-close:hover {
-    
     color: var(--color-danger);
 }
 
@@ -213,4 +205,45 @@ main .manageUser table tr:last-child td{
 }
 .manageUser table td{
     text-align: center;
+}
+
+@media screen and (max-width: 400px){
+
+    .manageUser{ 
+        margin: 0 auto;
+        padding-top: 1rem;
+        width: 90%;
+    }
+
+    .manageUser .modal-content{
+        width:90%;
+    }
+    .manageUser .jumbo{
+        overflow: auto;
+        width: 20rem;  
+    }
+    main .manageUser table td{
+        height: 3rem;
+        border-bottom: 1px solid lightgray;
+        color: var(--color-dark);
+        width: 100%; 
+    }
+    main .manageUser table th{
+        padding-right: 1rem;
+    }
+
+    .manageUser .btn-delete1{
+        padding-top: 1px;
+        padding-bottom: 1px;
+        padding-left: 5px;  /* Adjust padding as needed */
+        padding-right: 5px;
+ 
+    }
+    .manageUser .btn-edit {
+        padding-top: 1px;
+        padding-bottom: 1px;
+        padding-left: 3px;  /* Adjust padding as needed */
+        padding-right: 3px;
+    }
+
 }

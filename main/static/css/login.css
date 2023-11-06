@@ -120,4 +120,29 @@ h2{
         background-image: none;
         justify-items: center;
     }
+    .login-container {
+        margin: 0 auto;
+       
+    }
+    .login {
+   
+        margin: 0 auto;
+
+    }
+}
+
+@media screen and (max-width: 400px){
+    .login-container {
+        width: 100vw;
+        height: 100vh;
+       
+    }
+    .login {
+        width: 100vw;
+        height: 100vh;
+        margin: 0 auto;
+        border-radius: 0;
+        box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0);
+    }
+
 }

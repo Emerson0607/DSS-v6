@@ -28,14 +28,7 @@
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
 
-.dark-theme-variables{
-    --color-background:#181a1e;
-    --color-white: #202528;
-    --color-dark: #edeffd;
-    --color-dark-variant: #a3bdcc;
-    --color-light: rgba(0,0,0,0.4);
-    --box-shadow: 0 2rem 3rem var(var(--color-light));
-}
+
 /*============ MAIN ====================*/
 
 main .program-row{
@@ -54,7 +47,6 @@ main .program-row > div{
     margin-top: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
-  
 }
 
 .program-row .subprogram-recommend{
@@ -159,25 +151,6 @@ main .program-row > div:hover{
     box-shadow: none;
 }
 
-/*Graph 4*/
-.datas .graph4{
-    display: grid;
-    /*grid-template-columns: repeat(2, 1fr);*/
-    grid-template-columns: 1fr;
- 
-}
-.datas .graph4 > div {
-    padding:1rem;
-    border-radius: var(--card-border-radius);
-    margin-top: 0.3rem;
-    margin-bottom: 1rem;
-    box-shadow: var(--box-shadow);
-    transition: all 300ms ease;
-} 
-
-.datas .graph4 > div:hover {
-    box-shadow: none;
-}
 
 /* ---------- RESULT ----------------*/
 
@@ -200,9 +173,32 @@ main .program-row > div:hover{
 }
 
 /* ------------------- MOBILE -------------------- */
-@media screen and (max-width: 760px){
+@media screen and (max-width: 400px){
     .datas .graph2{
         grid-template-columns: 1fr;
+        width: 90%;
+        margin: 0 auto;
+    }
+  
+    .datas .graph3 > div {
+        width: 90%;
+        margin: 0 auto;
+        gap: 1.6rem;
+        margin-bottom: 1rem;
+    } 
+
+    main .program-row > div{
+        width: 90%;
+        margin: 0 auto;
+        gap: 1.6rem;
+        margin-top: 1rem;
+    }
+
+    .result{
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
     }
 }
 
