@@ -98,5 +98,42 @@
             {% endfor %}
         </tbody>
     </table>
+    <table >
+        <thead>
+            <tr>
+                <th>File name</th>
+                <th>Program</th>
+                <th>Subprogram</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for file4 in CNA_data %}
+            <tr>
+                <td class="file-td">{{ file4.filename }}</td>
+                <td class="file-td">{{ file4.program }}</td>
+                <td class="file-td">{{ file4.subprogram }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table >
+        <thead>
+            <tr>
+                <th>File name</th>
+
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for file5 in CSV_data %}
+            <tr>
+                <td class="file-td">{{ file5.filename }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

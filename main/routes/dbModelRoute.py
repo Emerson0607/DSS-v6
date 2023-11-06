@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP
+from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA
 from main import db
 from main import Form
 from flask import Response
@@ -289,6 +289,7 @@ def add_community():
          # Access uploaded files
         cpf_file = request.files['CPF']
         cesap_file = request.files['CESAP']
+        cna_file = request.files['CNA']
       
 
         existing_community = Community.query.filter_by(user= user, program = program, subprogram=subprogram).first()
@@ -314,10 +315,11 @@ def add_community():
             return redirect(url_for('dbModel.manage_community'))
         
         
-        if cpf_file and cesap_file:
+        if cpf_file and cesap_file and cna_file :
             # Read the file data
             cpf_data = cpf_file.read()
             cesap_data = cesap_file.read()
+            cna_date = cna_file.read()
 
             # Create records in the database
             cpf_record = CPF(
@@ -334,8 +336,16 @@ def add_community():
                 data=cesap_data
             )
 
+            cna_record = CNA(
+                program=program,
+                subprogram=subprogram,
+                filename=cesap_file.filename,
+                data=cesap_data
+            )
+
             db.session.add(cpf_record)
             db.session.add(cesap_record)
+            db.session.add(cna_record)
             db.session.commit()
         return redirect(url_for('dbModel.manage_community'))
        
@@ -405,6 +415,7 @@ def delete_community(id):
     cpf_record = CPF.query.filter_by(program=program, subprogram=subprogram).first()
     cesap_record = CESAP.query.filter_by(program=program, subprogram=subprogram).first()
     subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
+    cna_record = CNA.query.filter_by(program=program, subprogram=subprogram).first()
     if cpf_record:
         # Delete the file associated with the CPF record
         try:
@@ -420,6 +431,15 @@ def delete_community(id):
         try:
             # Delete the 'Upload' record from the database
             db.session.delete(cesap_record)
+            db.session.commit()
+            
+            flash('File data and record deleted successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+    if cna_record:
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(cna_record)
             db.session.commit()
             
             flash('File data and record deleted successfully!', 'success')

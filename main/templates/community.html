@@ -47,7 +47,7 @@
                             <div class="modal-body">
                                 <form class="uploading" action="{{ url_for('dbModel.add_community') }}" method="POST" enctype="multipart/form-data" id="upload-form">
                                      <!-- PPA -->
-                                    <label class="PPA">PPA (Program, Project, Activity)</label>
+                                    <label class="PPA label-category">PPA (Program, Project, Activity)</label>
                                         <div class="form-group">
                                             <label>Community:</label>
                                             <input type="text" class="form-control" name="community" required>
@@ -62,7 +62,7 @@
                                         </div>
                                         <br>
                                     <!-- TIMEFRAME -->
-                                    <label class="timeframe">TIMEFRAME</label>
+                                    <label class="timeframe label-category">TIMEFRAME</label>
                                         <div class="form-group">
                                             <label>Start date:</label>
                                             <input type="text" class="form-control" name="start_date" id="start_date_input" placeholder="Select Date..." required>
@@ -77,7 +77,7 @@
                                         </div>
                                         <br>
                                     <!-- ACCOUNTABILITY -->
-                                    <label class="accountability">ACCOUNTABILITY</label><br>
+                                    <label class="accountability label-category">ACCOUNTABILITY</label><br>
                                         <div class="form-group">
                                             <label>Coordinator:</label>
                                             <select class="form-select" name="user" id="userSelect" required>
@@ -93,14 +93,22 @@
                                         </div>
                                         <br>
                                     <!-- FILE -->
-                                    <label class="file">CESU FILE</label><br>
+                                    <label class="file label-category">CESU FILE</label><br>
+                                        <label for="CPF">Community Profiling Form</label>
                                         <div class="form-group file-box">
-                                            <label for="CPF">CPF</label>
+                                            
                                             <input class="CPF" type="file" name="CPF" id="CPF" accept=".pdf, .docx" required>
                                         </div>
+
+                                        <label for="CESAP">CES Activity Proposal</label>
                                         <div class="form-group file-box">
-                                            <label for="CESAP">CESAP</label>
                                             <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx" required>
+                                        </div>
+
+                                        
+                                        <label for="CNA">Community Needs Assessment</label>
+                                        <div class="form-group file-box">
+                                            <input class="CNA" type="file" name="CNA" id="CNA" accept=".csv" required>
                                         </div>
                                         <div class="form-group">
                                             <button class="btn-submit" type="submit" value="Upload" >Add project</button>

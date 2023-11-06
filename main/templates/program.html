@@ -10,22 +10,23 @@
 </div>
 
 <div class="programCard">
-            <div class="program-form">
-                <form method="POST" action="{{ url_for('randomForest.programWithCSV') }}" enctype="multipart/form-data" id="upload-form">
-                    <label for="formFile" class="programForm">Upload CESU CSV file</label>
-                    
-                        {% if error_message %}
-                            <script>
-                                alert("{{ error_message }}");
-                            </script>
-                        {% endif %}
-                        <input class="form-submit" type="file" name="csv_file" id="formFile" accept=".csv" required>
-                        <input class="btn-submit" type="submit" style="float: right;" value="Upload" id="submit-button" onclick="myfunction(); return false;">
-                
-                </form>
-                
-            </div>
+    <div class="program-form">
+        <form method="POST" action="{{ url_for('randomForest.programWithCSV') }}" enctype="multipart/form-data" id="upload-form">
+            <label for="formFile" class="programForm">Upload CESU CSV file</label>
+                {% if error_message %}
+                    <script>
+                        alert("{{ error_message }}");
+                    </script>
+                    {% endif %}
+                    <input class="form-submit" type="file" name="csv_file" id="formFile" accept=".csv" required>
+                    <input class="btn-submit" type="submit" style="float: right;" value="Upload" id="submit-button" onclick="myfunction(); return false;">
+        </form>
+    </div>
+    {% for file5 in temporaryCSV %}
+    <span class="file-td">Download result csv file <a class="download-file" href="/viewTemporary/{{ file5.id }}">{{file5.filename }}</a></span>
+{% endfor %}
 </div>
+
 
 <script>
     // Attach an event handler for the form submission

@@ -74,6 +74,18 @@ class CESAP(db.Model):
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
 
+class CNA(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=False)
+    subprogram = db.Column(db.String(255), nullable=False)
+    filename = db.Column(db.String(50))
+    data = db.Column(db.LargeBinary)
+
+class CSV(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(50))
+    data = db.Column(db.LargeBinary)
+
 # --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
 
 # Create the database tables
@@ -132,7 +144,6 @@ def insert_community():
         db.session.commit()
 
 def insert_user():
-
     username = 'admin'
     firstname = 'Emerson'
     lastname = 'Martinez'
@@ -140,19 +151,22 @@ def insert_user():
     role = 'Admin'
     program = 'CESU'
     
-   
     user_insert = User(username=username,firstname=firstname,lastname=lastname, password=password,
     role=role, program=program)
     if user_insert:
         # If a row with the specified program value is found, delete it
         db.session.add(user_insert)
         db.session.commit()
+
+def delete_subprogram():
+ # Delete all records in the Subprogram table
+    Subprogram.query.delete()
+    db.session.commit()
     
     
 @app.route('/dbawdasadsdasdawqq')
 def initialize_database():
-    multiple_insert()
-    insert_user()
+    delete_subprogram()
     return 'Program.'
 
 @app.route('/test')
@@ -162,6 +176,6 @@ def display_community_data():
     subprogram_data = db.session.query(Subprogram).all()
     # Query and retrieve all records from the "community" table
     all_community_data = db.session.query(Community).all()
-
-
-    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data)
+    CNA_data = CNA.query.all()
+    CSV_data = CSV.query.all()
+    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, CSV_data=CSV_data )
