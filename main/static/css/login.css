@@ -87,6 +87,7 @@ h2{
 .form-group label{
     display: block;
     text-align: left;
+    margin-left: .5rem;
 }
 
 .form-group input{
@@ -96,6 +97,8 @@ h2{
     border: 1px solid var(--color-info-dark);
     border-radius: var(--border-radius-1);
     height: 2.5rem;
+    margin-left: .5rem;
+    padding-left: 1rem;
 }
 
 .btn {
@@ -104,7 +107,7 @@ h2{
     color: var(--color-white);
     padding: 0.4rem 0.4rem;
     border: none;
-    width: 90%;
+    width: 86%;
     border-radius: var(--border-radius-1);
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -138,6 +141,8 @@ h2{
        
     }
     .login {
+        padding-top: 5rem;
+        
         width: 100vw;
         height: 100vh;
         margin: 0 auto;

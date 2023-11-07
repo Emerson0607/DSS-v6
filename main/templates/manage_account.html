@@ -159,8 +159,9 @@
  var passwordPlaceholders = document.querySelectorAll('.password-placeholder');
     passwordPlaceholders.forEach(function(placeholder) {
         var password = placeholder.textContent;
-        var maskedPassword = "*".repeat(8);
+        var maskedPassword = "\u25CF".repeat(8);
         placeholder.textContent = maskedPassword;
+        placeholder.style.color = 'rgb(92 92 92)';
     });
 </script>
 {% endblock %}

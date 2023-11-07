@@ -517,7 +517,7 @@ main{
   
     .right{
         width: 90%;
-        margin: 0 auto 4rem;
+        margin: 0 auto;
     }
     .right .top{
         position: fixed;
@@ -626,8 +626,10 @@ main{
         color: #ffffff;
     }
 
+}
+
+@media screen and (max-width: 400px){
     .recent-updates{
-        margin: 1rem auto;
-        width: 90%;
+       display: none;
     }
 }

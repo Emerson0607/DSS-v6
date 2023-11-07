@@ -229,35 +229,35 @@ main .coordinatorCard .archive-button:hover {
 }
 
 /*FOR NO DATA FOUND*/
-.coordinatorCard1 {
-    display: flex;
-    justify-content: center;
-    height: 15rem;
-    margin-top: 5rem;
-}
 
 .notfound{
     display: none;
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+    margin-top: 4rem;
 }
 
-.coordinatorCard1 .no-data {
+.notfound .no-data {
     text-align: center;
     width: 35rem;
+    height: 20rem;
     padding: 20px;
     border: 1px solid #ddd;
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
 }
 
-.coordinatorCard1 h1 {
+.notfound h1 {
     font-size: 2rem;
     color: #333;
     margin: 0;
     margin-top: 2rem;
 }
 
-.coordinatorCard1 p {
+.notfound p {
     font-size: 1.2rem;
     margin: 10px 0;
     color: #777;
@@ -390,6 +390,25 @@ main .coordinatorCard .community-status{
         margin-top: 1rem;
         margin-right: 2px;
     }
+
+    /*FOR NO DATA FOUND*/
+
+    .notfound{
+        display: none;
+    }
+    .notfound .no-data {
+        width: 90%;
+        height: 13rem;
+        margin: 0 auto;
+        margin-top: 7rem;
+    }
+
+    .notfound h1 {
+        margin: 0;
+    }
+
+    
+   
 }
 
 

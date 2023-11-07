@@ -13,7 +13,7 @@
     --color-primary-variant: #111e88;
     --color-dark-variant: #677483;
     --color-background: #f6f6f9;
-    --color-kaakbay: #087830;
+    --color-kaakbay: #2f9e36;
     --card-border-radius: 2rem;
     --border-radius-1: 0.4rem;
     --border-radius-2: 0.8rem;
@@ -110,14 +110,14 @@ main .kaakbay_container .statusNumber h2{
 }
 
 main .kaakbay_container .status span{
-    font-size: 3rem;
+    font-size: 3rem;    
 }
 
 main .kaakbay_card .status .green{
-    color: #41f1b6;
+    color: #0dc286;
 }
 main .kaakbay_card .status .orange{
-    color: rgb(214, 122, 23);
+    color: rgb(220, 140, 55);
 }
 
 @media screen and (max-width: 400px){
