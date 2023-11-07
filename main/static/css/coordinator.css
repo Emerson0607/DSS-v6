@@ -230,8 +230,10 @@ main .coordinatorCard .archive-button:hover {
 
 /*FOR NO DATA FOUND*/
 
-.notfound{
+.notfound1{
     display: none;
+}
+.notfound{
     display: grid;
     width: 100%;
     grid-template-columns: 1fr;
@@ -248,6 +250,7 @@ main .coordinatorCard .archive-button:hover {
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
+
 }
 
 .notfound h1 {
@@ -393,9 +396,7 @@ main .coordinatorCard .community-status{
 
     /*FOR NO DATA FOUND*/
 
-    .notfound{
-        display: none;
-    }
+
     .notfound .no-data {
         width: 90%;
         height: 13rem;

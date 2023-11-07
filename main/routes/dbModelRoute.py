@@ -21,11 +21,13 @@ def login():
 
         if user:
             session['user_id'] = user.id
-            flash('Login successful!', 'success')
-            return redirect(url_for('dbModel.dashboard'))
+            if user.role == 'Admin': #Admin
+                flash('Login successful!', 'success')
+                return redirect(url_for('dbModel.dashboard'))
+            else:      #------------------------- COORDINATOR PAGE ---------------------
+                return redirect(url_for('coordinator.coordinator_dashboard'))
         else:
             flash('Invalid username or password. Please try again.', 'error')
-
     return render_template('login.html')
 
 @dbModel_route.route("/admin_dashboard")
@@ -36,7 +38,6 @@ def dashboard():
         return redirect(url_for('dbModel.login'))
     return render_template("dashboard.html")
 
-
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
@@ -44,6 +45,7 @@ def get_current_user():
         if user:
             return user.firstname, user.role
     return None, None
+
 @dbModel_route.before_request
 def before_request():
     g.current_user, g.current_role = get_current_user()
@@ -168,7 +170,6 @@ def coordinator(data):
         return redirect(url_for('dbModel.login'))
     return render_template("coordinator.html", data=data)
 
-
 ##################  FOR COMMUNITY CRUD  #######################
 @dbModel_route.route("/get_community_data", methods=['GET'])
 def get_community_data():
@@ -256,12 +257,9 @@ def get_program(get_program):
     subArray = [user.username for user in sub]  
     return jsonify({'user': subArray})
 
-
-
 # Function to convert date strings to Python date objects
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date() 
-
 
 @dbModel_route.route("/add_community", methods=["POST"])
 def add_community():
@@ -350,8 +348,6 @@ def add_community():
         return redirect(url_for('dbModel.manage_community'))
        
     return redirect(url_for('dbModel.manage_community'))
-
-
 
 @dbModel_route.route('/edit_community', methods=['POST'])
 def edit_community():
@@ -457,7 +453,6 @@ def delete_community(id):
             db.session.rollback()
     return redirect(url_for('dbModel.manage_community'))
 
-
 ############# UPDATE WEEK BASED FROM Subprogram ##############
 
 @dbModel_route.route('/update_week', methods=['POST'])
@@ -494,7 +489,6 @@ def update_status():
 
 
 #display kaakbay program and coordinator
-
 def get_ongoing_count(session, program_name):
     result = db.session.query(
         Community.program,
@@ -562,7 +556,6 @@ def kaakbay_program():
     program_ongoing_counts = {}
     program_completed_counts = {}
 
-
     for program_name in program_names:
         ongoing_count = get_ongoing_count(session, program_name)
         program_ongoing_counts[program_name] = ongoing_count
@@ -570,9 +563,7 @@ def kaakbay_program():
     for program_name in program_names:
         completed_count = get_completed_count(session, program_name)
         program_completed_counts[program_name] = completed_count
-
     
-                
     return render_template("kaakbay_program.html", literacy_firstname=literacy_firstname, literacy_lastname=literacy_lastname,
                       economic_firstname=economic_firstname, economic_lastname=economic_lastname,
                       environmental_firstname=environmental_firstname, environmental_lastname=environmental_lastname,

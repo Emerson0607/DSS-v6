@@ -21,7 +21,7 @@ def before_request():
 def inject_current_user():
     return dict(current_user=g.current_user, current_role=g.current_role)
 
-# -------------------------   DL FILES
+# -------------------------   DL FILES for admin
 @file_route.route('/files')
 def files():
     if 'user_id' not in session:
@@ -90,3 +90,40 @@ def delete_file(id):
     else:
         flash('User not found. Please try again.', 'error')
     return redirect(url_for('file.files'))
+
+# -------------------------   DL FILES for COORDINATOR
+@file_route.route('/cFiles')
+def cFiles():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    upload_data = Upload.query.all()
+    return render_template("cDlfiles.html", upload_data=upload_data)
+
+
+@file_route.route('/cView/<int:file_id>')
+def cView(file_id):
+    upload_entry = Upload.query.get(file_id)
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.data, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.data,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404

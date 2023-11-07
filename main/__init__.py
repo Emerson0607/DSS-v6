@@ -24,9 +24,11 @@ from main.routes.dbModelRoute import dbModel_route
 from main.routes.adminRoute import admin_route
 from main.routes.randomForestRoute import randomForest_Route
 from main.routes.fileRoute import file_route
+from main.routes.coordinatorRoute import coordinator_route
 
 app.register_blueprint(file_route)
 app.register_blueprint(index_route)
 app.register_blueprint(dbModel_route)
 app.register_blueprint(admin_route)
 app.register_blueprint(randomForest_Route)
+app.register_blueprint(coordinator_route)

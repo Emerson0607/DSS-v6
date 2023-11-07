@@ -1,10 +1,12 @@
 {% extends "admin_dashboard.html" %}
+{% block title %}Community Programs{% endblock %}
 {% block content %}
 <style>
     .checked {
     text-decoration: line-through;
 }
 </style>
+<div class="notfound1">
 <div class="notfound">
 
     <div class="no-data">
@@ -13,6 +15,7 @@
         <p>Sorry, but there is no data available at the moment. Go back to the<a href="{{url_for('dbModel.kaakbay_program')}}"> Community Project</a> page.</p>
     </div>
 
+</div>
 </div>
 <div class="margin-top"></div>
 <div class="kaakbay-subprogram-title">
@@ -105,7 +108,7 @@
         success: function(data) {
             if (data.message === 'No data found for the program.') {
             console.log('No data found.');
-            $(".notfound").css("display", "block");
+            $(".notfound1").css("display", "block");
             $(".kaakbay-subprogram-title").css("display", "none");
             
             return;
