@@ -375,7 +375,7 @@ main .communityCard table tr:last-child td{
     }
 
     .communityCard .table-card{
-        width: 20rem;
+        width: 19rem;
         overflow: auto;
     }
     .communityCard .table-card th{

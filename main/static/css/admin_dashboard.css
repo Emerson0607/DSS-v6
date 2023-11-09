@@ -16,7 +16,7 @@
     --color-primary-variant: #111e88;
     --color-dark-variant: #677483;
     --color-background: #f6f6f9;
-
+    --color-kaakbay: #2f9e36;
     --card-border-radius: 2rem;
     --border-radius-1: 0.4rem;
     --border-radius-2: 0.8rem;
@@ -148,6 +148,18 @@ aside .cesu .su{
     margin-left: -0.3rem;
     color: #49a14f;
 }
+
+aside .cesu-mobile{
+    font-size: 2rem;
+    font-weight: bold;
+    display: none;
+}
+aside .cesu-mobile .su-mobile{
+    margin-left: -0.3rem;
+    color: #49a14f;
+}
+
+
 aside .logo{
     display: flex;
     margin-left: 0.3rem;
@@ -510,6 +522,19 @@ main{
         cursor: pointer
     }
 
+
+    aside .cesu-mobile{
+        font-size: 2rem;
+        font-weight: bold;
+        display: block;
+       margin-left: -3rem;
+    }
+    aside .cesu-mobile .su-mobile{
+        margin-left: -0.3rem;
+        color: #49a14f;
+    }
+
+
     main{
       
         padding: 0 1rem;
@@ -531,7 +556,15 @@ main{
         margin: 0;
         z-index: 2;
         box-shadow:0 1rem 1rem var(--color-light);
+        background-color:var(--color-kaakbay)
     }
+    
+    .right .top #menu-btn span{
+        color: white;
+    }
+
+   
+
 
     .right .top .theme-toggler{
         display: none;

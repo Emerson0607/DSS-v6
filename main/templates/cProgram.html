@@ -14,6 +14,7 @@
     <div class="program-form">
         <form method="POST" action="{{ url_for('randomForest.cProgramWithCSV') }}" enctype="multipart/form-data" id="upload-form">
             <label for="formFile" class="programForm">Upload CESU CSV file</label>
+            
                 {% if error_message %}
                     <script>
                         alert("{{ error_message }}");

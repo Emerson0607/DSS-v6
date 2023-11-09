@@ -130,12 +130,30 @@
         margin: 0 auto;
         width: 90%;
     }
-    
 
+    .programCard .program-form{
+        padding-right: 0;
+        position: relative;
+    }
+
+    .programCard .program-form .form-submit{
+        width: 90%;
+        padding-right: 0;
+    }
+    .programCard .program-form .btn-submit{
+        position: absolute;
+        right: 1rem;
+        bottom: 2.5rem;
+    }
     .program_recommendation_title .programtxt{
         padding-left: 0.5rem;
         font-size: 1.7rem;
+        line-height: 1.7rem;
     }
   
+
+    .program_recommendation_title span{
+        padding-left: .5rem;
+    }
    
 }

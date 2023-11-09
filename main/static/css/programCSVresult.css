@@ -53,7 +53,13 @@ main .program-row > div{
     color: rgb(65, 241, 109);
 }
 
-.program-row .top-card1, .top-card2 , .top-card3{
+.program-row .top-card1{
+    padding-left: 2rem;
+}
+.program-row .top-card2{
+    padding-left: 2rem;
+}
+.program-row .top-card3{
     padding-left: 2rem;
 }
 
@@ -176,6 +182,10 @@ main .program-row > div:hover{
 @media screen and (max-width: 400px){
     .datas .graph2{
         grid-template-columns: 1fr;
+        margin: 0 auto;
+        margin-bottom: 1.5rem;
+    }
+    .datas .graph2 > div{
         width: 90%;
         margin: 0 auto;
     }
@@ -208,3 +218,5 @@ main .program-row > div:hover{
 .result .orange{
     color: rgb(214, 122, 23);
 }
+
+

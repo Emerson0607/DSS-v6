@@ -8,5 +8,3 @@ def index():
     #return render_template("testdashboard.html")
     return redirect(url_for('dbModel.login'))
     
-
-

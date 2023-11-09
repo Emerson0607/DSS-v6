@@ -218,6 +218,7 @@ main .manageUser table tr:last-child td{
     .manageUser .modal-content{
         width:90%;
     }
+    
     .manageUser .jumbo{
         overflow: auto;
         width: 20rem;  
@@ -246,4 +247,11 @@ main .manageUser table tr:last-child td{
         padding-right: 3px;
     }
 
+}
+
+@media screen and (max-width: 380px){
+    .manageUser .jumbo{
+        overflow: auto;
+        width: 18rem;  
+    }
 }
