@@ -290,7 +290,7 @@ def add_community():
         cna_file = request.files['CNA']
       
 
-        existing_community = Community.query.filter_by(user= user, program = program, subprogram=subprogram).first()
+        existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
             new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,

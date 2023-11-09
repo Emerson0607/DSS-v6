@@ -146,7 +146,7 @@ aside .cesu{
 }
 aside .cesu .su{
     margin-left: -0.3rem;
-    color: #49a14f;
+    color: var(--color-kaakbay);
 }
 
 aside .cesu-mobile{

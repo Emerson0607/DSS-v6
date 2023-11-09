@@ -30,6 +30,7 @@ def before_request():
 
 @coordinator_route.context_processor
 def inject_current_user():
+    current_program_coordinator = g.current_program
     return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program)
 
 @coordinator_route.route("/cClear_session")
@@ -37,14 +38,13 @@ def cClear_session():
     session.clear()
     return redirect(url_for('dbModel.login'))
 
-
 ##################  FOR COORDINATOR  #######################
-@coordinator_route.route('/cCoordinator/<data>')
-def cCoordinator(data):
+@coordinator_route.route('/cCoordinator')
+def cCoordinator():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-    return render_template("cCoordinator.html", data=data)
+    return render_template("cCoordinator.html")
 
 ##################  FOR COMMUNITY CRUD  #######################
 @coordinator_route.route("/cGet_community_data", methods=['GET'])
@@ -68,7 +68,7 @@ def cGet_community_data():
                     'end_date': record.end_date,
                     'status': record.status
                 }
-                for record in Community.query.filter_by(program=program).all()
+                for record in Community.query.filter_by(program=g.current_program).all()
             ]
             if community_data:
                 return jsonify(community_data)
@@ -101,7 +101,7 @@ def cCommunity_data_list():
                     'subDepartment': record.subDepartment,
                     'status': record.status
             }
-                for record in Community.query.all()
+                for record in Community.query.filter_by(program=g.current_program).all()
             ]
         return jsonify(community_data)
     except Exception as e:
@@ -112,26 +112,14 @@ def cCommunity_data_list():
 
 @coordinator_route.route("/cManage_community")
 def cManage_community():
-    form = Form()
-    placeholder_choice = ("", "-- Select Program --")
-    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
-    form.program.default = ""
-    form.process()
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Community.query.all()
-    program8 = Program.query.all()
-    user1 = User.query.all()
-    return render_template("cCommunity.html", community = all_data, form=form, program8=program8, user1 = user1)
+    all_data = Community.query.filter_by(program=g.current_program).all()
 
-#fetch for user
-@coordinator_route.route("/cSubprogram1/<get_program>")
-def get_program(get_program):
-    sub = User.query.filter_by(program=get_program).all()
-    subArray = [user.username for user in sub]  
-    return jsonify({'user': subArray})
+    return render_template("cCommunity.html", community = all_data)
+
 
 # Function to convert date strings to Python date objects
 def convert_date(date_str):
@@ -166,7 +154,7 @@ def cAdd_community():
         cna_file = request.files['CNA']
       
 
-        existing_community = Community.query.filter_by(user= user, program = program, subprogram=subprogram).first()
+        existing_community = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
             new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,
