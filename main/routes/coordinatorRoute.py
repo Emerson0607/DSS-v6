@@ -209,6 +209,7 @@ def cAdd_community():
             db.session.add(cesap_record)
             db.session.add(cna_record)
             db.session.commit()
+        flash('New community project added!', 'add_community')
         return redirect(url_for('coordinator.cManage_community'))
        
     return redirect(url_for('coordinator.cManage_community'))
@@ -363,6 +364,7 @@ def cChange_password():
     return render_template("cChange_password.html")
 
 ############# changepassword ##############
+############# changepassword ##############
 @coordinator_route.route("/cNew_password", methods=["GET", "POST"])
 def cNew_password():
     if 'user_id' not in session:
@@ -374,16 +376,18 @@ def cNew_password():
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
 
-        user = User.query.filter_by(id=session['user_id'], password = old_password).first()
-
+        user = User.query.filter_by(id=session['user_id'], password=old_password).first()
+        if ' ' in new_password:
+            flash('Password cannot contain spaces.', 'newpassword_space')
+            return redirect(url_for('coordinator.cChange_password'))
         if user:
             if new_password == confirm_password:
                 user.password = new_password
                 db.session.commit()
-                flash('Password successfully changed.', 'success')
-                return render_template("cChange_password.html")
+                flash('Password successfully changed.', 'new_password')
+                return redirect(url_for('coordinator.cChange_password'))
             else:
-                flash('New password and confirmation do not match.', 'error')
+                flash('New password and confirmation do not match.', 'not_match')
         else:
-            flash('Invalid current password.', 'error')
-    return render_template("cChange_password.html")
+            flash('Wrong old password.', 'wrong_old')
+    return redirect(url_for('coordinator.cChange_password'))

@@ -28,7 +28,7 @@
 
 
 main .manageUser{
-    margin-top: 2.9rem;
+
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;

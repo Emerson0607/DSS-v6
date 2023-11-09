@@ -6,6 +6,7 @@ from flask import Response
 from datetime import datetime
 from sqlalchemy import func, case
 
+
 dbModel_route = Blueprint('dbModel', __name__)
 
 @dbModel_route.route("/login", methods=["GET", "POST"])
@@ -22,12 +23,13 @@ def login():
         if user:
             session['user_id'] = user.id
             if user.role == 'Admin': #Admin
-                flash('Login successful!', 'success')
+                flash(f'Login successful!', 'success')
                 return redirect(url_for('dbModel.dashboard'))
             else:      #------------------------- COORDINATOR PAGE ---------------------
                 return redirect(url_for('coordinator.coordinator_dashboard'))
         else:
-            flash('Invalid username or password. Please try again.', 'error')
+            flash(f'Invalid username or password.', 'login_error')
+            return redirect(url_for('dbModel.login'))
     return render_template('login.html')
 
 @dbModel_route.route("/admin_dashboard")
@@ -94,19 +96,30 @@ def add_account():
         role = request.form.get("role")
         program = request.form.get("program")
         # Check if the username already exists in the database
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
-            flash('Username already exists. Please choose a different username.', 'error')
+        existing_username = User.query.filter_by(username=username).first()
+        existing_program = User.query.filter_by(program=program).first()
+
+        if ' ' in password:
+            flash('Password cannot contain spaces.', 'password_space')
+            return redirect(url_for('dbModel.manage_account'))
+        if ' ' in username:
+            flash('Password cannot contain spaces.', 'username_space')
+            return redirect(url_for('dbModel.manage_account'))
+
+        if existing_program:
+            flash(f"Sorry, '{program}' is already taken. Please choose another name or check existing programs.", 'existing_program')
         else:
-            new_user = User(username=username, firstname=firstname, lastname=lastname, 
-            password=password, role = role, program = program)
-            try: 
-                db.session.add(new_user)
-                db.session.commit()
-                flash('Account created successfully!', 'success')
-            except Exception as e:
-                db.session.rollback()
-                flash('An error occurred while creating the account. Please try again.', 'error')
+            if existing_username:
+                flash('Username already exists. Please choose a different username.', 'existing_username')
+            else:
+                new_user = User(username=username, firstname=firstname, lastname=lastname, 
+                password=password, role = role, program = program)
+                try: 
+                    db.session.add(new_user)
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                flash('User added successfully!', 'add_account')
     return redirect(url_for('dbModel.manage_account'))
 
 @dbModel_route.route('/edit_account', methods=['POST'])
@@ -124,6 +137,14 @@ def edit_account():
         new_role = request.form['new_role']
         new_program = request.form['new_program']
         
+        if ' ' in new_password:
+            flash('Password cannot contain spaces.', 'password_space')
+            return redirect(url_for('dbModel.manage_account'))
+        if ' ' in new_username:
+            flash('Password cannot contain spaces.', 'username_space')
+            return redirect(url_for('dbModel.manage_account'))
+        
+
         user = User.query.get(user_id)
         
         if user:
@@ -135,9 +156,7 @@ def edit_account():
             user.program = new_program
 
             db.session.commit()
-            flash('Account updated successfully!', 'success')
-        else:
-            flash('User not found. Please try again.', 'error')
+            flash('Account updated successfully!', 'edit_account')
 
         return redirect(url_for('dbModel.manage_account'))
 
@@ -153,12 +172,9 @@ def delete_account(id):
         try:
             db.session.delete(user)
             db.session.commit()
-            flash('Account deleted successfully!', 'success')
+            flash('Account deleted successfully!', 'delete_account')
         except Exception as e:
             db.session.rollback()
-            flash('An error occurred while deleting the account. Please try again.', 'error')
-    else:
-        flash('User not found. Please try again.', 'error')
     return redirect(url_for('dbModel.manage_account'))
 
 
@@ -298,8 +314,9 @@ def add_community():
 
             db.session.add(new_community)
             db.session.commit()
+            flash('New community project added!', 'add_community')
         else:
-            return redirect(url_for('dbModel.manage_community'))
+            flash(f"Sorry, '{subprogram}' is already taken in {{community}}.", 'existing_community')
 
         #FOR SUBPROGRAM
         existing_subprogram = Subprogram.query.filter_by(program = program, subprogram=subprogram).first()
@@ -345,6 +362,7 @@ def add_community():
             db.session.add(cesap_record)
             db.session.add(cna_record)
             db.session.commit()
+        
         return redirect(url_for('dbModel.manage_community'))
        
     return redirect(url_for('dbModel.manage_community'))
@@ -399,10 +417,8 @@ def delete_community(id):
             # Delete the user from the database
             db.session.delete(community)
             db.session.commit()
-            flash('Account deleted successfully!', 'success')
         except Exception as e:
             db.session.rollback()
-            flash('An error occurred while deleting the account. Please try again.', 'error')
             # You may want to log the exception for debugging purposes
     else:
         flash('User not found. Please try again.', 'error')
@@ -419,7 +435,6 @@ def delete_community(id):
             db.session.delete(cpf_record)
             db.session.commit()
             
-            flash('File data and record deleted successfully!', 'success')
         except Exception as e:
             db.session.rollback()
 
@@ -429,7 +444,6 @@ def delete_community(id):
             db.session.delete(cesap_record)
             db.session.commit()
             
-            flash('File data and record deleted successfully!', 'success')
         except Exception as e:
             db.session.rollback()
     if cna_record:
@@ -438,7 +452,6 @@ def delete_community(id):
             db.session.delete(cna_record)
             db.session.commit()
             
-            flash('File data and record deleted successfully!', 'success')
         except Exception as e:
             db.session.rollback()
 
@@ -448,9 +461,9 @@ def delete_community(id):
             db.session.delete(subprogram_record)
             db.session.commit()
             
-            flash('File data and record deleted successfully!', 'success')
         except Exception as e:
             db.session.rollback()
+    flash('Delete successfully!', 'delete_account')
     return redirect(url_for('dbModel.manage_community'))
 
 ############# UPDATE WEEK BASED FROM Subprogram ##############
@@ -597,7 +610,6 @@ def change_password():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-   
     return render_template("change_password.html")
 
 ############# changepassword ##############
@@ -612,16 +624,18 @@ def new_password():
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
 
-        user = User.query.filter_by(id=session['user_id'], password = old_password).first()
-
+        user = User.query.filter_by(id=session['user_id'], password=old_password).first()
+        if ' ' in new_password:
+            flash('Password cannot contain spaces.', 'newpassword_space')
+            return redirect(url_for('dbModel.change_password'))
         if user:
             if new_password == confirm_password:
                 user.password = new_password
                 db.session.commit()
-                flash('Password successfully changed.', 'success')
-                return render_template("change_password.html")
+                flash('Password successfully changed.', 'new_password')
+                return redirect(url_for('dbModel.change_password'))
             else:
-                flash('New password and confirmation do not match.', 'error')
+                flash('New password and confirmation do not match.', 'not_match')
         else:
-            flash('Invalid current password.', 'error')
-    return render_template("change_password.html")
+            flash('Wrong old password.', 'wrong_old')
+    return redirect(url_for('dbModel.change_password'))

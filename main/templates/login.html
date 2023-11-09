@@ -25,23 +25,38 @@
                 </div>
                 <button type="submit" class="btn">Login</button>
                  <!-- Add this code below the form -->
-                <small class="error-message">
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            {% for message in messages %}
-                            <p class="alert {% if 'error' in message %}alert-danger{% elif 'success' in message %}alert-success{% endif %}">
-                                {{ message }}
-                            </p>
-                            
-                            
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
-                </small>
+                 <small>
+                 {% with messages = get_flashed_messages(category_filter=['login_error'], with_categories=true) %}
+                 {% if messages %}
+                     <div>
+                         {% for category, message in messages %}
+                             <div class="flash-login flash-{{ category }}">
+                                 {{ message }}
+                             </div>
+                         {% endfor %}
+                     </div>
+                 {% endif %}
+                {% endwith %}
+            </small>
             </form>
 
         </div>
     </div>
+    <script>
+         document.addEventListener('DOMContentLoaded', function() {
+        var flashes = document.querySelectorAll('.flash-login');
+        
+        flashes.forEach(function(flash) {
+            setTimeout(function() {
+                flash.style.opacity = 0;
 
+                // Reload the page after the fade-out effect is completed
+                setTimeout(function() {
+                    location.reload();
+                }, 0); // Adjust the duration if needed
+            }, 3000); // 5000 milliseconds (5 seconds)
+        });
+    });
+    </script>
 </body>
 </html>

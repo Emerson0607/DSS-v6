@@ -28,21 +28,39 @@
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
 
-.alert {
-    width: 80%;
-    margin: 20px auto; /* Adjust margin as needed */
+.flash-login {
+   
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    width: 85%;
+    text-align: center;
+    margin: 1rem auto;
 }
 
-
-.alert-danger {
-    color: #721c24 !important;
-    background-color: #f8d7da !important;
-    border: 1px solid #f5c6cb !important;
+.flash-login .flash-login_error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    
 }
 
+.flash {
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+}
 
-.alert-success {
+.flash-add_community, .flash-edit_account, .flash-add_account, .flash-new_password, .flash-upload_file {
     color: #155724;
     background-color: #d4edda;
-    border-color: #c3e6cb;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-delete_account, .flash-existing_username, .flash-existing_program, .flash-delete_account, .flash-existing_community, .flash-not_match, .flash-wrong_old, .flash-delete_file, .flash-login_error, .flash-password_space, .flash-newpassword_space, .flash-username_space {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
 }

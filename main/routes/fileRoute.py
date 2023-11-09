@@ -40,6 +40,7 @@ def upload():
             upload_entry = Upload(filename=file.filename, data=data)
             db.session.add(upload_entry)
             db.session.commit()
+            flash('File uploaded successfully!', 'upload_file')
     return redirect(url_for('file.files'))
 
 
@@ -82,13 +83,9 @@ def delete_file(id):
             # Delete the user from the database
             db.session.delete(upload)
             db.session.commit()
-            flash('Account deleted successfully!', 'success')
+            flash('File deleted successfully!', 'delete_file')
         except Exception as e:
             db.session.rollback()
-            flash('An error occurred while deleting the account. Please try again.', 'error')
-            # You may want to log the exception for debugging purposes
-    else:
-        flash('User not found. Please try again.', 'error')
     return redirect(url_for('file.files'))
 
 # -------------------------   DL FILES for COORDINATOR

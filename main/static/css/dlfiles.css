@@ -240,6 +240,8 @@ main .file-container:hover{
         height: 5rem;
     }
 
+
+
     .file-container , .file_title, .upfiles{
         margin: 0 auto;
         width: 90%;
@@ -262,6 +264,10 @@ main .file-container:hover{
 
     .file-container .btn-submit{
         margin-top: 4rem;
+    }
+
+    .file_title{
+        margin-top: 2rem;
     }
 }
 

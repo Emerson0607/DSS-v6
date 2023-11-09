@@ -42,3 +42,22 @@ dateContainer.innerHTML = getCurrentDateAndDay();
         dropdownContent.style.display = 'block';
     }
 }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var flashes = document.querySelectorAll('.flash');
+        
+        flashes.forEach(function(flash) {
+            setTimeout(function() {
+                flash.style.opacity = 0;
+
+                // Reload the page after the fade-out effect is completed
+                setTimeout(function() {
+                    location.reload();
+                }, 0); // Adjust the duration if needed
+            }, 2500); // 5000 milliseconds (5 seconds)
+        });
+    });
+
+   
+
+

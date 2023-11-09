@@ -126,7 +126,6 @@ main .insights small{
 }
 
 main .communityCard{
-    margin-top: 2.5rem;
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;

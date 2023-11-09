@@ -1,7 +1,16 @@
 {% extends "admin_dashboard.html" %}
 {% block title %}Manage Account{% endblock %}
 {% block content %}
-
+<div class="margin-top"></div>
+{% with messages = get_flashed_messages(category_filter=['existing_username', 'existing_program', 'edit_account', 'delete_account', 'add_account', 'password_space', 'username_space'], with_categories=true) %}
+{% if messages %}
+        {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+{% endif %}
+{% endwith %}
 <div class="manageUser">
     <div class="jumbotron">
         <h2 style="margin-bottom: 1rem;">Manage <b>Accounts</b> 
@@ -57,7 +66,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Password:</label>
-                                        <input type="text" class="form-control" name="new_password" value="{{row.password}}" required>
+                                        <input type="text" class="form-control" name="new_password" value="{{row.password}}" id="pass" minlength="8" required>
                                     </div>
                                     <div class="form-group" >
                                     <label for="new_role">Role:</label>
@@ -117,7 +126,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label>Password:</label>
-                                            <input type="password" class="form-control" name="password" required>
+                                            <input type="password" class="form-control" name="password" minlength="8" id="pass" required>
                                         </div>
 
                                         <div class="form-group">
@@ -164,5 +173,24 @@
         placeholder.textContent = maskedPassword;
         placeholder.style.color = 'rgb(92 92 92)';
     });
+
+
+    document.getElementById("pass").addEventListener("input", function() {
+        const password = this.value;
+        
+        // Use regular expressions to check for the required criteria
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasDigit = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(password);
+    
+        // Check if all criteria are met
+        if (hasUppercase && hasLowercase && hasDigit && hasSpecialChar) {
+            this.setCustomValidity("");
+        } else {
+            this.setCustomValidity("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+        }
+    });
+
 </script>
 {% endblock %}

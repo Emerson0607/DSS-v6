@@ -2,6 +2,17 @@
 {% block title %}Files{% endblock %}
 {% block content %}
 <div class="margin-top"></div>
+{% with messages = get_flashed_messages(category_filter=['upload_file', 'delete_file'], with_categories=true) %}
+        {% if messages %}
+            <div>
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 <div class="file_title">
     <h1>
         <span class="material-symbols-sharp">

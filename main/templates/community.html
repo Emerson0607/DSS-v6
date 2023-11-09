@@ -1,6 +1,16 @@
 {% extends "admin_dashboard.html" %}
 {% block title %}Community{% endblock %}
 {% block content %}
+<div class="margin-top"></div>
+    {% with messages = get_flashed_messages(category_filter=['delete_account', 'add_community', 'existing_community'], with_categories=true) %}
+        {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+        {% endif %}
+    {% endwith %}
 
 <div class="communityCard">
             <div class="jumbotron">
@@ -182,7 +192,7 @@
         loadInitialInsights();
         coordinator_name();
         date_picker();
-        smoothScroll();
+       
     });
 </script>
 

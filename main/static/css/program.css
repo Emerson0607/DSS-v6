@@ -129,6 +129,7 @@
     .program_recommendation_title{
         margin: 0 auto;
         width: 90%;
+        margin-top: 2rem;
     }
 
     .programCard .program-form{

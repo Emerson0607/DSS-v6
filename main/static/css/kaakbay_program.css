@@ -29,7 +29,7 @@ main .kaakbay_container{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1.6rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
     font-family: poppins, sans-serif;
 }
 

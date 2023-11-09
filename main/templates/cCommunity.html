@@ -1,6 +1,19 @@
 {% extends "coordinator_dashboard.html" %}
 {% block title %}Community{% endblock %}
 {% block content %}
+<div class="margin-top"></div>
+
+    {% with messages = get_flashed_messages(category_filter=['add_community'], with_categories=true) %}
+        {% if messages %}
+            <div>
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
 <div class="communityCard">
             <div class="jumbotron">
@@ -204,7 +217,7 @@
      $(document).ready(function(){
         loadInitialInsights();
         date_picker();
-        smoothScroll();
+      
     });
 </script>
 
