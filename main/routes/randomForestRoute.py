@@ -12,11 +12,11 @@ sub_model_path = 'subprogram6.pkl'
 
 model = joblib.load(model_path_cesu)
 model2 = joblib.load(sub_model_path)
-
+"""
 @randomForest_Route.errorhandler(Exception)
 def handle_error(e):
     return render_template("error.html"), 500  # You can customize the error page and status code
-
+"""
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
@@ -56,26 +56,18 @@ def programWithCSV():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
+    # delete the temporary csv
+    CSV.query.delete()
+    db.session.commit()
 
     if request.method == "POST":
         csv_file = request.files["csv_file"]
+      
         if csv_file:
             df = pd.read_csv(csv_file)
             df = df.iloc[:, 3:]
             columns_with_strings = df.select_dtypes(include=['object']).columns
-
-            # delete the temporary csv
-            CSV.query.delete()
-            db.session.commit()
-
-            # temporary save to database
-            csv_data = csv_file.read()
-            csv_record = CSV(
-                filename=csv_file.filename,
-                data=csv_data
-            )
-            db.session.add(csv_record)
-            db.session.commit()
 
             sub_programs_dict = {
                 "Literacy": db.session.query(Subprogram).filter(Subprogram.program == "Literacy").all(),
@@ -87,7 +79,6 @@ def programWithCSV():
                 "Disaster Management": db.session.query(Subprogram).filter(Subprogram.program == "Disaster Management").all(),
                 "Gender and Development": db.session.query(Subprogram).filter(Subprogram.program == "Gender and Development").all()
             }
-            db.session.close()
 
             if not columns_with_strings.empty:
                 encoding_dict_kasarian = {'Lalake': 0, 'Babae': 1}
@@ -226,9 +217,20 @@ def programWithCSV():
             elif max_category == "Pagkain":
                 program_ces = "Disaster Management"   
             else:
-                program_ces = "Gender Development"  
+                program_ces = "Gender Development" 
 
-            temporaryCSV = CSV.query.all()
+            if 'csv_file' in request.files:
+                file = request.files["csv_file"]
+                csv_data = file.read()
+                csv_record = CSV(
+                    filename=file.filename,
+                    data=csv_data
+                )
+                db.session.add(csv_record)
+                db.session.commit()
+            else:
+                return redirect(url_for('dbModel.login'))
+
             return render_template("resultCSV.html",
                 top1=top_programs_with_subprograms[0] if len(top_programs_with_subprograms) >= 1 else {},
                 top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) >= 2 else {},
@@ -252,8 +254,7 @@ def programWithCSV():
                 Teknolohiya_counts=Teknolohiya_counts,
                 max_category = max_category,
                 highest_count=highest_count,
-                program_ces = program_ces,
-                temporaryCSV = temporaryCSV)
+                program_ces = program_ces)
         
     return render_template("program.html")
 
@@ -302,19 +303,6 @@ def cProgramWithCSV():
             df = df.iloc[:, 3:]
             columns_with_strings = df.select_dtypes(include=['object']).columns
 
-            # delete the temporary csv
-            CSV.query.delete()
-            db.session.commit()
-
-            # temporary save to database
-            csv_data = csv_file.read()
-            csv_record = CSV(
-                filename=csv_file.filename,
-                data=csv_data
-            )
-            db.session.add(csv_record)
-            db.session.commit()
-
             sub_programs_dict = {
                 "Literacy": db.session.query(Subprogram).filter(Subprogram.program == "Literacy").all(),
                 "Socio-economic": db.session.query(Subprogram).filter(Subprogram.program == "Socio-economic").all(),
@@ -466,7 +454,6 @@ def cProgramWithCSV():
             else:
                 program_ces = "Gender Development"  
 
-            temporaryCSV = CSV.query.all()
             return render_template("cResultCSV.html",
                 top1=top_programs_with_subprograms[0] if len(top_programs_with_subprograms) >= 1 else {},
                 top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) >= 2 else {},
@@ -490,7 +477,6 @@ def cProgramWithCSV():
                 Teknolohiya_counts=Teknolohiya_counts,
                 max_category = max_category,
                 highest_count=highest_count,
-                program_ces = program_ces,
-                temporaryCSV = temporaryCSV)
+                program_ces = program_ces)
         
     return render_template("cProgram.html")

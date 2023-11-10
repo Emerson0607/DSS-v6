@@ -24,9 +24,6 @@
                     <input class="btn-submit" type="submit" style="float: right;" value="Upload" id="submit-button" onclick="myfunction(); return false;">
         </form>
     </div>
-    {% for file5 in temporaryCSV %}
-    <span class="file-td">Download result csv file <a class="download-file" href="/viewTemporary/{{ file5.id }}">{{file5.filename }}</a></span>
-{% endfor %}
 </div>
 
 

@@ -107,15 +107,6 @@
   }
   
 
-  .programCard .file-td{
-    margin-top: 1rem;
-  }
-
-  .programCard .file-td a{
-    color: rgb(36, 56, 205);
-   font-weight: 500;
-  }
-
   @media screen and (max-width: 400px){
     .margin-top{
         height: 4rem;

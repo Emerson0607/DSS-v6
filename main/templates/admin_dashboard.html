@@ -32,7 +32,7 @@
                         <span class="su">SU</span>
                     </span>
                 </div>
-                <span class="cesu-mobile" id="dashboardLink">CE
+                <span class="cesu-mobile" id="dashboardLink2">CE
                     <span class="su-mobile">SU</span>
                 </span>
                 <div class="close" id="close-btn">
@@ -97,7 +97,7 @@
                         <img src="/static/images/CESO.png" alt="">
                         <div class="dropdown-content" id="dropdown-content">
                             <div class="password-div"><a class="password-button"  href="{{ url_for('dbModel.change_password') }}" id="password-button">Change Password</a></div>
-                            <div class="logout-hover"><a class="logout-button" href="{{ url_for('dbModel.clear_session') }}" id="logout-button">Logout</a></div>
+                            <div class="logout-hover"><a class="logout-button" href="{{ url_for('dbModel.clear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>
                         </div>
                     </div>
                     
@@ -121,52 +121,62 @@
  <script src="/static/js/admin_dashboard.js"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-  const sidebarLinks = document.querySelectorAll(".sidebar-link");
+document.addEventListener("DOMContentLoaded", function() {
+    const sidebarLinks = document.querySelectorAll(".sidebar-link");
 
-  sidebarLinks.forEach(function(link) {
-    link.addEventListener("click", function(event) {
-      // Prevent the default behavior of the link temporarily
-      event.preventDefault();
+    sidebarLinks.forEach(function(link) {
+        link.addEventListener("click", function(event) {
+            // Prevent the default behavior of the link temporarily
+            event.preventDefault();
 
-      // Remove "active" class from all links
-      sidebarLinks.forEach(function(link) {
-        link.classList.remove("active");
-      });
+            // Remove "active" class from all links
+            sidebarLinks.forEach(function(link) {
+                link.classList.remove("active");
+            });
 
-      // Add "active" class to the clicked link
-      link.classList.add("active");
+            // Add "active" class to the clicked link
+            link.classList.add("active");
 
-      // Store the active link information in local storage
-      localStorage.setItem("activeLink", link.getAttribute("href"));
+            // Store the active link information in local storage
+            localStorage.setItem("activeLink", link.getAttribute("href"));
 
-      // Wait for a short period (e.g., 500 milliseconds) to let the styles apply
-      setTimeout(() => {
-        window.location.href = link.getAttribute("href");
-      }, 10);
+            setTimeout(() => {
+                window.location.href = link.getAttribute("href");
+            }, 10);
+        });
     });
-  });
 
-  const activeLink = localStorage.getItem("activeLink");
-  if (activeLink) {
-    const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
-    if (activeLinkElement) {
-      activeLinkElement.classList.add("active");
-    } else {
-      // If the stored active link is not found, activate the first link
-      sidebarLinks[0].classList.add("active");
-    }
-  } else {
-    // If there is no stored active link, activate the first link
-    sidebarLinks[0].classList.add("active");
-  }
+    const activeLink = localStorage.getItem("activeLink");
+    if (activeLink) {
+        const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
+        if (activeLinkElement) {
+            activeLinkElement.classList.add("active");
+        }
+    } 
 });
 
+function clearAndSetFirstLinkActive() {
+    const sidebarLinks = document.querySelectorAll(".sidebar-link");
+
+    // Remove "active" class from all links
+    sidebarLinks.forEach(function(link) {
+        link.classList.remove("active");
+    });
+
+    // Set the first link as active
+    if (sidebarLinks.length > 0) {
+        sidebarLinks[0].classList.add("active");
+        localStorage.setItem("activeLink", sidebarLinks[0].getAttribute("href"));
+    }
+}
 </script>
 
 <!-- ON CLICK CESU-->
 <script>
     document.getElementById("dashboardLink").addEventListener("click", function() {
+        window.location.href = "{{ url_for('dbModel.dashboard') }}";
+    });
+    document.getElementById("dashboardLink2").addEventListener("click", function() {
         window.location.href = "{{ url_for('dbModel.dashboard') }}";
     });
 </script>
