@@ -7,11 +7,12 @@ from main import db
 
 randomForest_Route = Blueprint('randomForest', __name__)
 
-model_path_cesu = 'combined_modelCESU6.pkl'
-sub_model_path = 'subprogram6.pkl'
+model_path_cesu = 'trained_modelCESU7.pkl'
+sub_model_path = 'subprogram7.pkl'
 
 model = joblib.load(model_path_cesu)
 model2 = joblib.load(sub_model_path)
+
 """
 @randomForest_Route.errorhandler(Exception)
 def handle_error(e):
