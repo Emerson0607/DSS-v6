@@ -3,6 +3,7 @@ from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from sqlalchemy import func
+
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community = db.Column(db.String(255), nullable=False) 
@@ -15,20 +16,6 @@ class Community(db.Model):
     user = db.Column(db.String(255), nullable=False)
     department  = db.Column(db.String(255), nullable=False) #LEAD
     subDepartment = db.Column(db.String(255), nullable=False) #SUPPORT
-    status = db.Column(db.String(255), nullable=False)
-
-class Pending(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    community = db.Column(db.String(255), nullable=False) 
-    program = db.Column(db.String(255), nullable=False)
-    subprogram = db.Column(db.String(255), nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
-    week = db.Column(db.Integer, nullable=True)
-    totalWeek = db.Column(db.Integer, nullable=False)
-    user = db.Column(db.String(255), nullable=False)
-    department  = db.Column(db.String(255), nullable=False)
-    subDepartment = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(255), nullable=False)
 
 class User(db.Model):
@@ -62,6 +49,7 @@ class Upload(db.Model):
 
 class CPF(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
     program = db.Column(db.String(255), nullable=False)
     subprogram = db.Column(db.String(255), nullable=False)
     filename = db.Column(db.String(50))
@@ -69,6 +57,7 @@ class CPF(db.Model):
 
 class CESAP(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
     program = db.Column(db.String(255), nullable=False)
     subprogram = db.Column(db.String(255), nullable=False)
     filename = db.Column(db.String(50))
@@ -76,13 +65,50 @@ class CESAP(db.Model):
 
 class CNA(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
     program = db.Column(db.String(255), nullable=False)
     subprogram = db.Column(db.String(255), nullable=False)
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
 
-class CSV(db.Model):
+# For pending projects
+
+class Pending_project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
+    program = db.Column(db.String(255), nullable=False)
+    subprogram = db.Column(db.String(255), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    week = db.Column(db.Integer, nullable=True)
+    totalWeek = db.Column(db.Integer, nullable=False)
+    user = db.Column(db.String(255), nullable=False)
+    department  = db.Column(db.String(255), nullable=False)
+    subDepartment = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.String(255), nullable=False)
+    pending = db.Column(db.String(255), nullable=False)
+
+class CPFp(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
+    program = db.Column(db.String(255), nullable=False)
+    subprogram = db.Column(db.String(255), nullable=False)
+    filename = db.Column(db.String(50))
+    data = db.Column(db.LargeBinary)
+
+class CESAPp(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
+    program = db.Column(db.String(255), nullable=False)
+    subprogram = db.Column(db.String(255), nullable=False)
+    filename = db.Column(db.String(50))
+    data = db.Column(db.LargeBinary)
+
+class CNAp(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
+    program = db.Column(db.String(255), nullable=False)
+    subprogram = db.Column(db.String(255), nullable=False)
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
 
@@ -162,11 +188,38 @@ def delete_subprogram():
  # Delete all records in the Subprogram table
     Subprogram.query.delete()
     db.session.commit()
-    
-    
-@app.route('/dbawdasadsdasdawqq')
+
+def delete_pending_files():
+ # Delete all records in the Subprogram table
+    CNAp.query.delete()
+    CPFp.query.delete()
+    CESAPp.query.delete()
+    Pending_project.query.delete()
+    db.session.commit()
+
+def delete_CPF():
+ # Delete all records in the Subprogram table
+    CPF.query.delete()
+    db.session.commit()
+def delete_CNA():
+ # Delete all records in the Subprogram table
+    CNA.query.delete()
+    db.session.commit()
+def delete_CESAP():
+ # Delete all records in the Subprogram table
+    CESAP.query.delete()
+    db.session.commit()
+
+@app.route('/db')
 def initialize_database():
-    delete_subprogram()
+    #delete_subprogram()
+    #multiple_insert()
+    #insert_user()
+    #delete_pending_files()
+    #delete_CNA()
+    #delete_CESAP()
+    #delete_CPF()
+    
     return 'Program.'
 
 @app.route('/test')
@@ -177,5 +230,9 @@ def display_community_data():
     # Query and retrieve all records from the "community" table
     all_community_data = db.session.query(Community).all()
     CNA_data = CNA.query.all()
-    CSV_data = CSV.query.all()
-    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, CSV_data=CSV_data )
+    Pending_project_data = Pending_project.query.all()
+
+    CPFp_data = CPFp.query.all()
+    CESAPp_data = db.session.query(CESAPp).all()
+    CNAp_data = CNAp.query.all()
+    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, Pending_project_data = Pending_project_data, CPFp_data=CPFp_data, CESAPp_data=CESAPp_data,CNAp_data=CNAp_data  )

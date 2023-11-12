@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="/static/css/change_password.css">
     <link rel="stylesheet" href="/static/css/flash.css">
+    <link rel="stylesheet" href="/static/css/pending.css">
+    <link rel="stylesheet" href="/static/css/pending_details.css">
  
 </head>
 <body>
@@ -47,6 +49,13 @@
                 <a href="{{ url_for('dbModel.manage_community') }} " class="sidebar-link">
                     <span class="material-symbols-sharp" >groups</span>
                     <h3>Community</h3>
+                </a>
+                <a href="{{ url_for('dbModel.manage_pending') }}" class="sidebar-link pending-container">
+                    <span class="material-symbols-sharp">
+                        pending
+                        </span>
+                    <h3>Pending</h3>
+                    <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
                 </a>
                 <a href="{{ url_for('dbModel.kaakbay_program') }} " class="sidebar-link">
                     <span class="material-symbols-sharp">
@@ -118,8 +127,16 @@
     </div>
 
    
- <script src="/static/js/admin_dashboard.js"></script>
-
+<script src="/static/js/admin_dashboard.js"></script>
+<script>
+    var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
+  
+    // Get the element by ID
+    var pendingBadge = document.getElementById('pending-badge');
+  
+    // Set the display property based on the value of pendingCount
+    pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
+  </script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const sidebarLinks = document.querySelectorAll(".sidebar-link");

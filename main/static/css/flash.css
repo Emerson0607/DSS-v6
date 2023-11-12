@@ -53,13 +53,13 @@
     text-align: center;
 }
 
-.flash-add_community, .flash-edit_account, .flash-add_account, .flash-new_password, .flash-upload_file {
+.flash-add_community, .flash-edit_account, .flash-add_account, .flash-new_password, .flash-upload_file, .flash-add_pending {
     color: #155724;
     background-color: #d4edda;
     border: 1px solid #c3e6cb;
 }
 
-.flash-delete_account, .flash-existing_username, .flash-existing_program, .flash-delete_account, .flash-existing_community, .flash-not_match, .flash-wrong_old, .flash-delete_file, .flash-login_error, .flash-password_space, .flash-newpassword_space, .flash-username_space {
+.flash-delete_account, .flash-existing_username, .flash-existing_program, .flash-delete_account, .flash-existing_community, .flash-not_match, .flash-wrong_old, .flash-delete_file, .flash-login_error, .flash-password_space, .flash-newpassword_space, .flash-username_space, .flash-delete_pending {
     color: #721c24;
     background-color: #f8d7da;
     border: 1px solid #f5c6cb;

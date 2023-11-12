@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA
+from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp
 from main import db
 from main import Form
 from flask import Response
@@ -143,6 +143,7 @@ def cAdd_community():
         department = request.form.get("lead")
         subDepartment = request.form.get("support")
         status = "Ongoing"
+        pending = "pending"
 
         #Convert date
         start_date = convert_date(start_date1)
@@ -154,61 +155,53 @@ def cAdd_community():
         cna_file = request.files['CNA']
       
 
-        existing_community = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+        existing_community = Pending_project.query.filter_by(community=community, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
-            new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,
-            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status)
+            new_community = Pending_project(community=community, program=program, subprogram=subprogram, start_date=start_date,
+            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, pending = pending)
 
             db.session.add(new_community)
             db.session.commit()
         else:
             return redirect(url_for('coordinator.cManage_community'))
-
-        #FOR SUBPROGRAM
-        existing_subprogram = Subprogram.query.filter_by(program = program, subprogram=subprogram).first()
-
-        if existing_subprogram is None:
-            new_subprogram = Subprogram(program=program, subprogram=subprogram)
-
-            db.session.add(new_subprogram)
-            db.session.commit()
-        else:
-            return redirect(url_for('coordinator.cManage_community'))
         
-        
-        if cpf_file and cesap_file and cna_file :
-            # Read the file data
+        if cpf_file:
             cpf_data = cpf_file.read()
-            cesap_data = cesap_file.read()
-            cna_date = cna_file.read()
-
-            # Create records in the database
-            cpf_record = CPF(
+            cpf_record = CPFp(
+                community=community,
                 program=program,
                 subprogram=subprogram,
                 filename=cpf_file.filename,
                 data=cpf_data
             )
-
-            cesap_record = CESAP(
-                program=program,
-                subprogram=subprogram,
-                filename=cesap_file.filename,
-                data=cesap_data
-            )
-
-            cna_record = CNA(
-                program=program,
-                subprogram=subprogram,
-                filename=cesap_file.filename,
-                data=cesap_data
-            )
-
             db.session.add(cpf_record)
+            db.session.commit()
+
+        if cesap_file: 
+            cesap_data = cesap_file.read()
+            cesap_record = CESAPp(
+                community=community,
+                program=program,
+                subprogram=subprogram,
+                filename=cesap_file.filename,
+                data=cesap_data
+            )
             db.session.add(cesap_record)
+            db.session.commit()
+
+        if cna_file:
+            cna_data = cna_file.read()
+            cna_record = CNAp(
+                community=community,
+                program=program,
+                subprogram=subprogram,
+                filename=cna_file.filename,
+                data=cna_data
+            )
             db.session.add(cna_record)
             db.session.commit()
+
         flash('New community project added!', 'add_community')
         return redirect(url_for('coordinator.cManage_community'))
        
@@ -272,87 +265,6 @@ def cGet_completed_count(session, program_name):
         return result[0][1]
     else:
         return 0
-
-
-@coordinator_route.route("/cKaakbay_program")
-def cKaakbay_program():
-    if 'user_id' not in session:
-        flash('Please log in first.', 'error')
-        return redirect(url_for('dbModel.login'))
-    
-    literacy_program_data = User.query.filter_by(program="Literacy").first()
-    economic_program_data = User.query.filter_by(program="Socio-economic").first()
-    environmental_program_data = User.query.filter_by(program="Environmental Stewardship").first()
-    health_program_data = User.query.filter_by(program="Health and Wellness").first()
-    cultural_program_data = User.query.filter_by(program="Cultural Enhancement").first()
-    values_program_data = User.query.filter_by(program="Values Formation").first()
-    disaster_program_data = User.query.filter_by(program="Disaster Management").first()
-    gender_program_data = User.query.filter_by(program="Gender and Development").first()
-
-    literacy_firstname = literacy_program_data.firstname if literacy_program_data else None
-    literacy_lastname = literacy_program_data.lastname if literacy_program_data else None
-
-    economic_firstname = economic_program_data.firstname if economic_program_data else None
-    economic_lastname = economic_program_data.lastname if economic_program_data else None
-
-    environmental_firstname = environmental_program_data.firstname if environmental_program_data else None
-    environmental_lastname = environmental_program_data.lastname if environmental_program_data else None
-
-    health_firstname = health_program_data.firstname if health_program_data else None
-    health_lastname = health_program_data.lastname if health_program_data else None
-
-    cultural_firstname = cultural_program_data.firstname if cultural_program_data else None
-    cultural_lastname = cultural_program_data.lastname if cultural_program_data else None
-
-    values_firstname = values_program_data.firstname if values_program_data else None
-    values_lastname = values_program_data.lastname if values_program_data else None
-
-    disaster_firstname = disaster_program_data.firstname if disaster_program_data else None
-    disaster_lastname = disaster_program_data.lastname if disaster_program_data else None
-
-    gender_firstname = gender_program_data.firstname if gender_program_data else None
-    gender_lastname = gender_program_data.lastname if gender_program_data else None
-
-
-
-    program_names = ['Literacy', 'Socio-economic', 'Environmental Stewardship', 'Health and Wellness', 'Cultural Enhancement', 'Values Formation', 'Disaster Management', 'Gender and Development' ]
-    program_ongoing_counts = {}
-    program_completed_counts = {}
-
-    for program_name in program_names:
-        ongoing_count = cGet_ongoing_count(session, program_name)
-        program_ongoing_counts[program_name] = ongoing_count
-        
-    for program_name in program_names:
-        completed_count = cGet_completed_count(session, program_name)
-        program_completed_counts[program_name] = completed_count
-    
-    return render_template("cKaakbay_program.html", literacy_firstname=literacy_firstname, literacy_lastname=literacy_lastname,
-                      economic_firstname=economic_firstname, economic_lastname=economic_lastname,
-                      environmental_firstname=environmental_firstname, environmental_lastname=environmental_lastname,
-                      health_firstname=health_firstname, health_lastname=health_lastname,
-                      cultural_firstname=cultural_firstname, cultural_lastname=cultural_lastname,
-                      values_firstname=values_firstname, values_lastname=values_lastname,
-                      disaster_firstname=disaster_firstname, disaster_lastname=disaster_lastname,
-                      gender_firstname=gender_firstname, gender_lastname=gender_lastname,
-                      literacy_ongoing_count = program_ongoing_counts.get('Literacy', 0),
-                      literacy_completed_count = program_completed_counts.get('Literacy', 0),
-                      socio_ongoing_count = program_ongoing_counts.get('Socio-economic', 0),
-                      socio_completed_count = program_completed_counts.get('Socio-economic', 0),
-                      environmental_ongoing_count = program_ongoing_counts.get('Environmental Stewardship', 0),
-                      environmental_completed_count = program_completed_counts.get('Environmental Stewardship', 0),
-                      health_ongoing_count = program_ongoing_counts.get('Health and Wellness', 0),
-                      health_completed_count = program_completed_counts.get('Health and Wellness', 0),
-                      cultural_ongoing_count = program_ongoing_counts.get('Cultural Enhancement', 0),
-                      cultural_completed_count = program_completed_counts.get('Cultural Enhancement', 0),
-                      values_ongoing_count = program_ongoing_counts.get('Values Formation', 0),
-                      values_completed_count = program_completed_counts.get('Values Formation', 0),
-                      disaster_ongoing_count = program_ongoing_counts.get('Disaster Management', 0),
-                      disaster_completed_count = program_completed_counts.get('Disaster Management', 0),
-                      gender_ongoing_count = program_ongoing_counts.get('Gender and Development', 0),
-                      gender_completed_count = program_completed_counts.get('Gender and Development', 0),
-                      )
-
 
 ############# changepassword ##############
 @coordinator_route.route("/cChange_password")

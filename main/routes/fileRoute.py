@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, url_for, render_template, session, flash, request, Response, g
-from main.models.dbModel import Upload, User
+from main.models.dbModel import Upload, User, Pending_project
 from main import db
 
 
@@ -9,17 +9,26 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = User.query.get(session['user_id'])
+        pending_count = Pending_project.query.filter_by(pending="pending").count()
+            
+        # Set a maximum value for pending_count
+        max_pending_count = 9
+        pending_count_display = min(pending_count, max_pending_count)
+
+        # If pending_count is 9 or greater, display it as '9+'
+        pending_count_display = '9+' if pending_count > max_pending_count else pending_count
+
         if user:
-            return user.firstname, user.role
-    return None, None
-    
+            return user.firstname, user.role, pending_count_display
+    return None, None, 0
+
 @file_route.before_request
 def before_request():
-    g.current_user, g.current_role = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display = get_current_user()
 
 @file_route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role)
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display )
 
 # -------------------------   DL FILES for admin
 @file_route.route('/files')

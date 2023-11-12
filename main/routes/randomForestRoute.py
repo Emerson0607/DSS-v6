@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, session,
 from collections import Counter
 import pandas as pd
 import joblib
-from main.models.dbModel import User, Subprogram, CSV
+from main.models.dbModel import User, Subprogram, Pending_project
 from main import db
 
 randomForest_Route = Blueprint('randomForest', __name__)
@@ -22,17 +22,26 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = User.query.get(session['user_id'])
+        pending_count = Pending_project.query.filter_by(pending="pending").count()
+            
+        # Set a maximum value for pending_count
+        max_pending_count = 9
+        pending_count_display = min(pending_count, max_pending_count)
+
+        # If pending_count is 9 or greater, display it as '9+'
+        pending_count_display = '9+' if pending_count > max_pending_count else pending_count
+
         if user:
-            return user.firstname, user.role
-    return None, None
+            return user.firstname, user.role, pending_count_display
+    return None, None, 0
 
 @randomForest_Route.before_request
 def before_request():
-    g.current_user, g.current_role = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display = get_current_user()
 
 @randomForest_Route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role)
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display )
 
 @randomForest_Route.route("/program", methods=["GET", "POST"])
 def program():
@@ -57,10 +66,6 @@ def programWithCSV():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-    
-    # delete the temporary csv
-    CSV.query.delete()
-    db.session.commit()
 
     if request.method == "POST":
         csv_file = request.files["csv_file"]
@@ -220,18 +225,6 @@ def programWithCSV():
             else:
                 program_ces = "Gender Development" 
 
-            if 'csv_file' in request.files:
-                file = request.files["csv_file"]
-                csv_data = file.read()
-                csv_record = CSV(
-                    filename=file.filename,
-                    data=csv_data
-                )
-                db.session.add(csv_record)
-                db.session.commit()
-            else:
-                return redirect(url_for('dbModel.login'))
-
             return render_template("resultCSV.html",
                 top1=top_programs_with_subprograms[0] if len(top_programs_with_subprograms) >= 1 else {},
                 top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) >= 2 else {},
@@ -258,36 +251,6 @@ def programWithCSV():
                 program_ces = program_ces)
         
     return render_template("program.html")
-
-#view temporary csv
-
-@randomForest_Route.route('/viewTemporary/<int:file_id>')
-def viewTemporary(file_id):
-    csvEntry = CSV.query.get(file_id)
-    if csvEntry:
-        # Determine the content type based on the file extension
-        content_type = "application/octet-stream"
-        filename = csvEntry.filename.lower()
-
-        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
-            content_type = "image"
-
-        # Serve the file with appropriate content type and Content-Disposition
-        response = Response(csvEntry.data, content_type=content_type)
-
-        if content_type.startswith("image"):
-            # If it's an image, set Content-Disposition to inline for display
-            response.headers["Content-Disposition"] = "inline"
-        else:
-            # For other types, set Content-Disposition to attachment for download
-            response.headers[
-                "Content-Disposition"] = f'attachment; filename="{csvEntry.filename}"'
-        if filename.endswith(".pdf"):
-            response = Response(csvEntry.data,
-                                content_type="application/pdf")
-        return response
-    return "File not found", 404
-
 
 #for coordinator side
 

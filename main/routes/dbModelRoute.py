@@ -1,11 +1,10 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA
+from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp
 from main import db
 from main import Form
 from flask import Response
 from datetime import datetime
 from sqlalchemy import func, case
-
 
 dbModel_route = Blueprint('dbModel', __name__)
 
@@ -44,17 +43,26 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = User.query.get(session['user_id'])
+        pending_count = Pending_project.query.filter_by(pending="pending").count()
+            
+        # Set a maximum value for pending_count
+        max_pending_count = 9
+        pending_count_display = min(pending_count, max_pending_count)
+
+        # If pending_count is 9 or greater, display it as '9+'
+        pending_count_display = '9+' if pending_count > max_pending_count else pending_count
+
         if user:
-            return user.firstname, user.role
-    return None, None
+            return user.firstname, user.role, pending_count_display
+    return None, None, 0
 
 @dbModel_route.before_request
 def before_request():
-    g.current_user, g.current_role = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display = get_current_user()
 
 @dbModel_route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role)
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display)
 
 
 @dbModel_route.route("/clear_session")
@@ -70,7 +78,6 @@ def programCSVresult():
     return redirect(url_for('randomForest.programOneRow'))
 
 #FOR USER CRUD
-
 @dbModel_route.route("/manage_account")
 def manage_account():
     if 'user_id' not in session:
@@ -329,40 +336,45 @@ def add_community():
         else:
             return redirect(url_for('dbModel.manage_community'))
         
-        
-        if cpf_file and cesap_file and cna_file :
-            # Read the file data
+        existing_cpf_file = CPF.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+        if existing_cpf_file is None:
             cpf_data = cpf_file.read()
-            cesap_data = cesap_file.read()
-            cna_date = cna_file.read()
-
-            # Create records in the database
             cpf_record = CPF(
+                community=community,
                 program=program,
                 subprogram=subprogram,
                 filename=cpf_file.filename,
                 data=cpf_data
             )
-
-            cesap_record = CESAP(
-                program=program,
-                subprogram=subprogram,
-                filename=cesap_file.filename,
-                data=cesap_data
-            )
-
-            cna_record = CNA(
-                program=program,
-                subprogram=subprogram,
-                filename=cesap_file.filename,
-                data=cesap_data
-            )
-
             db.session.add(cpf_record)
+            db.session.commit()
+
+        existing_cesap_file = CESAP.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+        if existing_cesap_file is None:
+            cesap_data = cesap_file.read()
+            cesap_record = CESAP(
+                community=community,
+                program=program,
+                subprogram=subprogram,
+                filename=cesap_file.filename,
+                data=cesap_data
+            )
             db.session.add(cesap_record)
+            db.session.commit()
+
+        existing_cna_file = CNA.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+        if existing_cna_file is None:
+            cna_data = cna_file.read()
+            cna_record = CNA(
+                community=community,
+                program=program,
+                subprogram=subprogram,
+                filename=cna_file.filename,
+                data=cna_data
+            )
             db.session.add(cna_record)
             db.session.commit()
-        
+
         return redirect(url_for('dbModel.manage_community'))
        
     return redirect(url_for('dbModel.manage_community'))
@@ -465,6 +477,308 @@ def delete_community(id):
             db.session.rollback()
     flash('Delete successfully!', 'delete_account')
     return redirect(url_for('dbModel.manage_community'))
+
+############################### FOR PENDING ###################################
+
+@dbModel_route.route("/manage_pending")
+def manage_pending():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+     # Fetch all user records from the database
+    all_data = Pending_project.query.all()
+
+    return render_template("pending.html", pending_project_data = all_data)
+
+@dbModel_route.route('/delete_pending/<int:id>', methods=['GET'])
+def delete_pending(id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    community = Pending_project.query.get(id)
+
+    if community:
+        try:
+            # Delete the user from the database
+            db.session.delete(community)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+
+     # First, find and delete records from the database
+    cpf_record = CPFp.query.filter_by(community=community.community, program=community.program, subprogram=community.subprogram).first()
+    cesap_record = CESAPp.query.filter_by(community=community.community, program=community.program, subprogram=community.subprogram).first()
+    cna_record = CNAp.query.filter_by(community=community.community, program=community.program, subprogram=community.subprogram).first()
+    if cpf_record:
+        # Delete the file associated with the CPF record
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(cpf_record)
+            db.session.commit()
+            
+        except Exception as e:
+            db.session.rollback()
+
+    if cesap_record:
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(cesap_record)
+            db.session.commit()
+            
+        except Exception as e:
+            db.session.rollback()
+    if cna_record:
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(cna_record)
+            db.session.commit()
+            
+        except Exception as e:
+            db.session.rollback()
+    flash('Delete successfully!', 'delete_pending')
+    return redirect(url_for('dbModel.manage_pending'))
+
+@dbModel_route.route('/view_pending/<int:pending_id>', methods=['GET'])
+def view_pending(pending_id):
+    p = Pending_project.query.get(pending_id)
+    cna_data = CNAp.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+    cesap_data = CESAPp.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+    cpf_data = CPFp.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+
+    cpf_data_filename = cpf_data.filename
+    cesap_data_filename = cesap_data.filename
+    cna_data_filename = cna_data.filename
+
+    return render_template("pending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_data_filename=cpf_data_filename, cesap_data_filename=cesap_data_filename, cna_data_filename=cna_data_filename)
+
+@dbModel_route.route('/view_cpf/<program>/<subprogram>/<community>', methods=['GET'])
+def view_cpf(program, subprogram, community):
+    upload_entry = CPFp.query.filter_by(community = community, program = program, subprogram = subprogram).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.data, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.data,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@dbModel_route.route('/view_cna/<program>/<subprogram>/<community>', methods=['GET'])
+def view_cna(program, subprogram, community):
+    upload_entry = CNAp.query.filter_by(community = community, program = program, subprogram = subprogram).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.data, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.data,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+    return render_template("pending_details.html")
+
+@dbModel_route.route('/view_cesap/<program>/<subprogram>/<community>', methods=['GET'])
+def view_cesap(program, subprogram, community):
+    upload_entry = CESAPp.query.filter_by(community = community, program = program, subprogram = subprogram).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.data, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.data,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+    return render_template("pending_details.html")
+
+
+@dbModel_route.route("/approve", methods=["POST"])
+def approve():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        community = request.form.get("community")
+        program = request.form.get("program")
+        subprogram = request.form.get("subprogram")
+        start_date1 = request.form.get("start_date")
+        end_date1 = request.form.get("end_date")
+        week = 0
+        totalWeek = request.form.get("totalWeek")
+        user = request.form.get("user")
+        department = request.form.get("lead")
+        subDepartment = request.form.get("support")
+        status = "Ongoing"
+
+        #Convert date
+        start_date = convert_date(start_date1)
+        end_date = convert_date(end_date1)
+
+         # Access uploaded files
+        cpf_file = request.files['CPF']
+        cesap_file = request.files['CESAP']
+        cna_file = request.files['CNA']
+      
+
+        existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
+
+        if existing_community is None:
+            new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,
+            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status)
+
+            db.session.add(new_community)
+            db.session.commit()
+            flash('New community project added!', 'add_community')
+
+            
+            pending_delete = Pending_project.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+
+            if pending_delete:
+                try:
+                    # Delete the user from the database
+                    db.session.delete(pending_delete)
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    # You may want to log the exception for debugging purposes
+            else:
+                flash('User not found. Please try again.', 'error')
+
+            # First, find and delete records from the database
+            cpf_record = CPFp.query.filter_by(community=community, program=program, subprogram=subprogram).first()
+            cesap_record = CESAPp.query.filter_by(community=community, program=program, subprogram=subprogram).first()
+            cna_record = CNAp.query.filter_by(community=community, program=program, subprogram=subprogram).first()
+            if cpf_record:
+                # Delete the file associated with the CPF record
+                try:
+                    # Delete the 'Upload' record from the database
+                    db.session.delete(cpf_record)
+                    db.session.commit()
+                    
+                except Exception as e:
+                    db.session.rollback()
+
+            if cesap_record:
+                try:
+                    # Delete the 'Upload' record from the database
+                    db.session.delete(cesap_record)
+                    db.session.commit()
+                    
+                except Exception as e:
+                    db.session.rollback()
+            if cna_record:
+                try:
+                    # Delete the 'Upload' record from the database
+                    db.session.delete(cna_record)
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+        else:
+            flash(f"Sorry, '{subprogram}' is already taken in {{community}}.", 'existing_community')
+
+        #FOR SUBPROGRAM
+        existing_subprogram = Subprogram.query.filter_by(program = program, subprogram=subprogram).first()
+        if existing_subprogram is None:
+            new_subprogram = Subprogram(program=program, subprogram=subprogram)
+            db.session.add(new_subprogram)
+            db.session.commit()
+        
+        existing_cpf_file = CPF.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+        if existing_cpf_file is None:
+            cpf_data = cpf_file.read()
+            cpf_record = CPF(
+                community=community,
+                program=program,
+                subprogram=subprogram,
+                filename=cpf_file.filename,
+                data=cpf_data
+            )
+            db.session.add(cpf_record)
+            db.session.commit()
+
+        existing_cesap_file = CESAP.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+        if existing_cesap_file is None:
+            cesap_data = cesap_file.read()
+            cesap_record = CESAP(
+                community=community,
+                program=program,
+                subprogram=subprogram,
+                filename=cesap_file.filename,
+                data=cesap_data
+            )
+            db.session.add(cesap_record)
+            db.session.commit()
+
+        existing_cna_file = CNA.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+        if existing_cna_file is None:
+            cna_data = cna_file.read()
+            cna_record = CNA(
+                community=community,
+                program=program,
+                subprogram=subprogram,
+                filename=cna_file.filename,
+                data=cna_data
+            )
+            db.session.add(cna_record)
+            db.session.commit()
+        
+
+
+        return redirect(url_for('dbModel.manage_pending'))
+       
+    return redirect(url_for('dbModel.manage_pending'))
+
+
+
+
 
 ############# UPDATE WEEK BASED FROM Subprogram ##############
 
