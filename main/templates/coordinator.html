@@ -71,7 +71,7 @@
             <form>
             <div class="form-group">
                 <label for=""> <br>Comment </label>
-                <textarea class="form-control" id="textarea" rows="1"></textarea>
+                <textarea class="form-control" id="textarea" rows="1" style="display: none;"></textarea>
                 <br>
               </div>
             <div class="checkbox-group">
@@ -83,9 +83,8 @@
             
          </form>
         </div>
-       
-       
-        <button class="btn btn-primary archive-button">Archive</button>
+    
+        <button class="btn btn-primary archive-button">Completed</button>
         <button class="btn btn-primary save-button">Save</button>
     </div>
     
@@ -226,15 +225,24 @@
 
          // Add a click event handler for saving data to the database
         insightsDiv.find(".save-button").click(function () {
-            var textareaValue = insightsDiv.find("#textarea").val();
 
+            var userConfirmed = confirm("Are you sure you want to proceed?");
+          
+
+            if (userConfirmed) {
+                // Execute update_status and updatePercentage if the user confirmed
+                update_status();
+                updatePercentage();
+            }
+
+            /**
+            var textareaValue = insightsDiv.find("#textarea").val();
             if (textareaValue.trim() === "") {
                 alert("Please input data in the textarea before saving.");
             } else {
-                update_status();
-                updatePercentage();
                 saveDataToDatabase(textareaValue);
             }
+            */
         });
 
         function saveDataToDatabase(textareaValue) {

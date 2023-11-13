@@ -22,7 +22,9 @@
     <link rel="stylesheet" href="/static/css/flash.css">
     <link rel="stylesheet" href="/static/css/pending.css">
     <link rel="stylesheet" href="/static/css/pending_details.css">
- 
+    <link rel="stylesheet" href="/static/css/project_files.css">
+    <link rel="stylesheet" href="/static/css/project_table.css">
+    <link rel="stylesheet" href="/static/css/project_details.css">
 </head>
 <body>
     <div class="container1 ">
@@ -73,12 +75,22 @@
                     <h3>Program Recommendation</h3>
                 </a>
                 <!---------------------------   NEWLY ADDED    -------------------------------->
-                <a href="{{ url_for('file.files') }}"class="sidebar-link">
-                    <span class="material-symbols-sharp">
-                        folder
+
+                <div class="dropdown-files" onclick="toggleDropdownFile()">
+                    <a href="#" class="sidebar-link">
+                        <span class="material-symbols-sharp">
+                            folder
                         </span>
-                    <h3>Files</h3>
-                </a>
+                        <h3>Files</h3>
+                        <span class="material-symbols-sharp arrow_drop_down">
+                            arrow_drop_down
+                        </span>
+                    </a>
+                    <div class="dropdown-content-files" id="dropdown-content-files">
+                        <a href="{{ url_for('file.files') }}">CESU files</a>
+                        <a href="{{ url_for('dbModel.project_files') }}">Community projects file</a>
+                    </div>
+                </div>
                 
             </div>
         </aside>
@@ -128,6 +140,12 @@
 
    
 <script src="/static/js/admin_dashboard.js"></script>
+<script>
+     function toggleDropdownFile() {
+        var dropdownContent = document.getElementById("dropdown-content-files");
+        dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+    }
+</script>
 <script>
     var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
   

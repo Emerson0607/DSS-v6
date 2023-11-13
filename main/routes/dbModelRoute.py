@@ -268,7 +268,7 @@ def manage_community():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Community.query.all()
+    all_data = Community.query.filter_by(status="Ongoing").all()
     program8 = Program.query.all()
     user1 = User.query.all()
     return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1)
@@ -608,7 +608,6 @@ def view_cna(program, subprogram, community):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
-    return render_template("pending_details.html")
 
 @dbModel_route.route('/view_cesap/<program>/<subprogram>/<community>', methods=['GET'])
 def view_cesap(program, subprogram, community):
@@ -636,7 +635,6 @@ def view_cesap(program, subprogram, community):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
-    return render_template("pending_details.html")
 
 
 @dbModel_route.route("/approve", methods=["POST"])
@@ -777,9 +775,6 @@ def approve():
     return redirect(url_for('dbModel.manage_pending'))
 
 
-
-
-
 ############# UPDATE WEEK BASED FROM Subprogram ##############
 
 @dbModel_route.route('/update_week', methods=['POST'])
@@ -836,8 +831,6 @@ def get_completed_count(session, program_name):
         return result[0][1]
     else:
         return 0
-
-
 @dbModel_route.route("/kaakbay_program")
 def kaakbay_program():
     if 'user_id' not in session:
@@ -917,7 +910,6 @@ def kaakbay_program():
                       gender_completed_count = program_completed_counts.get('Gender and Development', 0),
                       )
 
-
 ############# changepassword ##############
 @dbModel_route.route("/change_password")
 def change_password():
@@ -926,7 +918,6 @@ def change_password():
         return redirect(url_for('dbModel.login'))
     return render_template("change_password.html")
 
-############# changepassword ##############
 @dbModel_route.route("/new_password", methods=["GET", "POST"])
 def new_password():
     if 'user_id' not in session:
@@ -953,3 +944,169 @@ def new_password():
         else:
             flash('Wrong old password.', 'wrong_old')
     return redirect(url_for('dbModel.change_password'))
+
+############# project files ##############
+@dbModel_route.route("/project_files")
+def project_files():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("project_files.html")
+
+@dbModel_route.route("/project_file_list/<data>")
+def project_file_list(data):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    project_file_list = Community.query.filter_by(program=data).all()
+    return render_template("project_table.html", project_file_list=project_file_list, data=data)
+
+@dbModel_route.route("/view_project/<int:project_id>")
+def view_project(project_id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    p = Community.query.get(project_id)
+    cna_data = CNA.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+    cesap_data = CESAP.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+    cpf_data = CPF.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+
+    cpf_data_filename = cpf_data.filename
+    cesap_data_filename = cesap_data.filename
+    cna_data_filename = cna_data.filename
+
+    return render_template("project_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_data_filename=cpf_data_filename, cesap_data_filename=cesap_data_filename, cna_data_filename=cna_data_filename)
+
+
+@dbModel_route.route("/delete_project/<int:project_id>")
+def delete_project(project_id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    p = Community.query.filter_by(id=project_id).first()
+    if p:
+        try:
+            # Delete the user from the database
+            db.session.delete(p)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+     # First, find and delete records from the database
+    cna_record = CNA.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+    cesap_record = CESAP.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+    cpf_record = CPF.query.filter_by(community = p.community, program = p.program, subprogram = p.subprogram).first()
+    
+    if cpf_record:
+        # Delete the file associated with the CPF record
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(cpf_record)
+            db.session.commit()
+            
+        except Exception as e:
+            db.session.rollback()
+
+    if cesap_record:
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(cesap_record)
+            db.session.commit()
+            
+        except Exception as e:
+            db.session.rollback()
+    if cna_record:
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(cna_record)
+            db.session.commit()
+            
+        except Exception as e:
+            db.session.rollback()
+    flash('Delete successfully!', 'delete_project')
+    return redirect(url_for('dbModel.project_files'))
+
+@dbModel_route.route('/view_cpf_project/<program>/<subprogram>/<community>', methods=['GET'])
+def view_cpf_project(program, subprogram, community):
+    upload_entry = CPF.query.filter_by(community = community, program = program, subprogram = subprogram).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.data, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.data,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@dbModel_route.route('/view_cna_project/<program>/<subprogram>/<community>', methods=['GET'])
+def view_cna_project(program, subprogram, community):
+    upload_entry = CNA.query.filter_by(community = community, program = program, subprogram = subprogram).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.data, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.data,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@dbModel_route.route('/view_cesap_project/<program>/<subprogram>/<community>', methods=['GET'])
+def view_cesap_project(program, subprogram, community):
+    upload_entry = CESAP.query.filter_by(community = community, program = program, subprogram = subprogram).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.data, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.data,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404

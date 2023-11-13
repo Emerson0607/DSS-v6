@@ -74,13 +74,13 @@
             </div>
 
             <div class="form-group file-box">
-                <label for="CESAP">CES Activity Proposal</label>
+                <p for="CESAP">CES Activity Proposal</p>
                 <a href="{{ url_for('dbModel.view_cesap', program=program, subprogram=subprogram, community=community) }}">{{ cesap_data_filename }}</a>
                 <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx" required>
             </div>
 
             <div class="form-group file-box">
-                <label for="CNA">Community Needs Assessment</label>
+                <p for="CNA">Community Needs Assessment</p>
                 <a href="{{ url_for('dbModel.view_cna', program=program, subprogram=subprogram, community=community) }}">{{ cna_data_filename }}</a>
                 <input class="CNA" type="file" name="CNA" id="CNA" accept=".csv" required>
             </div>

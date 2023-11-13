@@ -82,28 +82,18 @@ main .pendingCard table tr:last-child td{
 }
 
 
-.manageUser{ 
-    margin: 0 auto;
-    padding-top: 1rem;
-    width: 90%;
-}
 
 
-.manageUser .jumbo{
+.pendingCard .jumbo{
     overflow: auto;
     width: 20rem;  
 }
-main .manageUser table td{
-    height: 3rem;
-    border-bottom: 1px solid lightgray;
-    color: var(--color-dark);
-    width: 100%; 
-}
-main .manageUser table th{
+
+main .pendingCard table th{
     padding-right: 1rem;
 }
 
-.manageUser .btn-delete1{
+.pendingCard .btn-delete1{
     padding-top: 1px;
     padding-bottom: 1px;
     padding-left: 5px;  /* Adjust padding as needed */
