@@ -101,10 +101,26 @@ main .pending_detailsCard > div:hover{
 @media screen and (max-width: 400px){
     .pending_detailsCard{ 
         margin: 0 auto;
-        padding-top: 2rem;
+        padding-top: 1rem;
         width: 90%;
         
     }
+
+    main .pending_detailsCard .pending_detailsBox{
+        padding: 2rem 2rem;
+    }
+
+    main .pending_detailsCard .time-frame, .fileces{
+        grid-template-columns:1fr;
+    }
+
+    /* Style for submit button */
+    .pending_detailsCard .btn-submit {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    
    
 }
 

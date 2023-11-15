@@ -110,16 +110,18 @@ main .projectFilesCard .btn-delete1{
 @media screen and (max-width: 400px){
     .projectFilesCard{ 
         margin: 0 auto;
+        width: 90%;
         padding-top: 2rem;
+        padding-left: 0;
+        padding-right: 0;
         
     }
     .projectFilesCard .jumbotron{ 
-       width: 90%;
-       margin: 0 auto;
+       width: 100%;
     }
 
     .projectFilesCard .table-card{
-        width: 19rem;
+        width: 20rem;
         overflow: auto;
     }
     .projectFilesCard .table-card th{

@@ -102,9 +102,21 @@ main .project_detailsCard > div:hover{
 @media screen and (max-width: 400px){
     .project_detailsCard{ 
         margin: 0 auto;
-        padding-top: 2rem;
+        padding-top: 1rem;
         width: 90%;
         
+    }
+
+    main .project_detailsCard .project_detailsBox{
+        padding: 2rem 2rem;
+    
+    }
+
+    main .project_detailsCard .time-frame, .fileces{
+        display: grid;
+        grid-template-columns:1fr;
+        gap: 1.6rem;
+        position: relative;
     }
    
 }

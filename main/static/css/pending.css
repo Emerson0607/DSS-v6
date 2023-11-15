@@ -104,17 +104,17 @@ main .pendingCard table th{
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px){
     .pendingCard{ 
+        width: 90%;
         margin: 0 auto;
         padding-top: 2rem;
         
     }
     .pendingCard .jumbotron{ 
-       width: 90%;
-       margin: 0 auto;
+       width: 100%;
     }
 
     .pendingCard .table-card{
-        width: 19rem;
+        width: 20rem;
         overflow: auto;
     }
     .pendingCard .table-card th{

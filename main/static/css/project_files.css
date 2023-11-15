@@ -87,3 +87,16 @@
     margin-top: 1rem !important;
 }
 
+@media screen and (max-width: 400px){
+    .project_files_title{
+        margin: 0 auto;
+        padding-top: 1rem;
+        width: 90%;
+    }
+    .project_files_container{
+        margin: 0 auto;
+        padding-top: 1rem;
+        width: 90%;
+    }
+}
+
