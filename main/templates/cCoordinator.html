@@ -82,9 +82,6 @@
             
          </form>
         </div>
-       
-       
-        <button class="btn btn-primary archive-button">Archive</button>
         <button class="btn btn-primary save-button">Save</button>
     </div>
     
@@ -128,17 +125,13 @@
             var colorClass = statusText === 'Ongoing' ? 'text-orange' : 'text-green';
             
             if (statusText === 'Ongoing') {
-                // If the status is 'Ongoing', hide the archive-button and show the save-button
-                insightsDiv.find(".archive-button").css("display", "none");
                 insightsDiv.find(".save-button").css("display", "block");
             } else if (statusText === 'Completed') {
-                // If the status is 'Completed', show the archive-button and hide the save-button
-                insightsDiv.find(".archive-button").css("display", "block");
                 insightsDiv.find(".save-button").css("display", "none");
             }
 
             // Update the content within the newly created insights-div
-            insightsDiv.find(".community-title").text(record.community);
+            insightsDiv.find(".community-title").text(record.community);    
             insightsDiv.find(".community-department").text(record.department);
             insightsDiv.find(".community-subDepartment").text(record.subDepartment);
             insightsDiv.find(".community-subprogram").text(record.subprogram);

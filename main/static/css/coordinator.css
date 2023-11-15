@@ -4,6 +4,7 @@
 
 /* Root Variable */
 :root {
+    --color-kaakbay: #2f9e36;
     --color-primary: #7380ec;
     --color-danger: #ff7782;
     --color-success: #41f1b6;
@@ -182,22 +183,6 @@ main .coordinatorCard .save-button:hover {
     cursor: pointer;
 }
 
-/* Archive Button Styles */
-main .coordinatorCard .archive-button {
-    background-color: #e73838; /* Change to the desired color for the archive button */
-    color: #fff;
-    padding: 10px 12px;
-    border: none;
-    border-radius: 5px;
-    position: absolute;
-    bottom: 2rem;
-    right: 2rem;
-}
-
-main .coordinatorCard .archive-button:hover {
-    background-color: #ff0000; /* Change to the desired hover color for the archive button */
-    cursor: pointer;
-}
   /* textarea*/
 .form-control {
     width: 100%;

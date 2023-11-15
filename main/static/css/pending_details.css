@@ -27,7 +27,7 @@ main .pending_detailsCard .time-frame, .fileces{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
-    position: relative;
+    margin-bottom: 2rem;
 }
 
 
@@ -36,7 +36,11 @@ main .pending_detailsCard{
     grid-template-columns: 1fr;
     gap: 1.6rem;
     position: relative;
-    
+}
+
+
+main .pending_detailsCard .pending_detailsBox{
+    padding: 3rem 5rem;
 }
 
 main .pending_detailsCard > div{
@@ -87,7 +91,7 @@ main .pending_detailsCard > div:hover{
     cursor: pointer;
     position: absolute;
     bottom: 1rem;
-    right: 1.3rem;
+    right: 5rem;
 }
 
 .pending_detailsCard .btn-submit:hover {

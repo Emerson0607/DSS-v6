@@ -13,7 +13,8 @@
     {% endwith %}
 
 <div class="pending_detailsCard">
-    <div>
+    <div class="pending_detailsBox">
+        <h2 style="margin-bottom: 1rem;">Pending <b>Project Details</b></h2> 
         <form action="{{ url_for('dbModel.approve')}}" method="POST" enctype="multipart/form-data" id="upload-form">
             <!-- PPA -->
             <label class="PPA label-category">PPA (Program, Project, Activity)</label>
@@ -84,7 +85,7 @@
                 <a href="{{ url_for('dbModel.view_cna', program=program, subprogram=subprogram, community=community) }}">{{ cna_data_filename }}</a>
                 <input class="CNA" type="file" name="CNA" id="CNA" accept=".csv" required>
             </div>
-        </div>
+            </div>
             <div class="form-group">
                 <button class="btn-submit" type="submit" value="Upload">Approve</button>
                 
