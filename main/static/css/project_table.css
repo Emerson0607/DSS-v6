@@ -82,21 +82,12 @@ main .projectFilesCard .btn-delete1:hover {
 }
 
 
-main .projectFilesCard{ 
-    margin: 0 auto;
-    padding-top: 1rem;
-    width: 90%;
-}
-
 
 main .projectFilesCard .jumbo{
     overflow: auto;
     width: 20rem;  
 }
 
-main .projectFilesCard table th{
-    padding-right: 1rem;
-}
 
 main .projectFilesCard .btn-delete1{
     padding-top: 1px;
@@ -109,25 +100,22 @@ main .projectFilesCard .btn-delete1{
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px){
     .projectFilesCard{ 
-        margin: 0 auto;
-        width: 90%;
-        padding-top: 2rem;
-        padding-left: 0;
-        padding-right: 0;
-        
+        width: 100%;
+        padding: 0;
+
+
     }
     .projectFilesCard .jumbotron{ 
-       width: 100%;
+       width: 90%;
+       margin: 0 auto;
     }
 
     .projectFilesCard .table-card{
-        width: 20rem;
+        max-width: 20rem;
         overflow: auto;
+
     }
-    .projectFilesCard .table-card th{
-        padding-right: 1rem;
-    }
-    
+
 }
 
 

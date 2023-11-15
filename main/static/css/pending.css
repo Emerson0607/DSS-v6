@@ -50,9 +50,7 @@ main .pendingCard > div:hover{
 }
 
 .pendingCard table{
-
     width: 100%;
-   
 }
 
 main .pendingCard table td{
@@ -82,16 +80,11 @@ main .pendingCard table tr:last-child td{
 }
 
 
-
-
 .pendingCard .jumbo{
     overflow: auto;
     width: 20rem;  
 }
 
-main .pendingCard table th{
-    padding-right: 1rem;
-}
 
 .pendingCard .btn-delete1{
     padding-top: 1px;
@@ -104,23 +97,27 @@ main .pendingCard table th{
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px){
     .pendingCard{ 
+        width: 100%;
+    }
+
+    .pendingBox{
         width: 90%;
         margin: 0 auto;
         padding-top: 2rem;
-        
     }
     .pendingCard .jumbotron{ 
        width: 100%;
+       margin: 0 auto;
     }
 
     .pendingCard .table-card{
-        width: 20rem;
+        max-width: 20rem;
         overflow: auto;
     }
-    .pendingCard .table-card th{
-        padding-right: 1rem;
-    }
+   
     
 }
+
+
 
 
