@@ -140,10 +140,8 @@ main .coordinatorCard .checkbox-group{
     grid-template-columns: repeat(4, 1fr);
     gap: 1;
     margin-bottom: 4rem;
-    margin-left: 1rem;
- 
+    margin-left: 1rem;  
 }
-
 
 
   main .coordinatorCard .form-check .label {
