@@ -213,6 +213,7 @@ def cAdd_community():
 @coordinator_route.route('/cUpdate_week', methods=['POST'])
 def cUpdate_week():
     data = request.get_json()
+    community = data['community']
     subprogram = data['subprogram']
     totalCheckboxes = data['totalCheckboxes']
     program = data['program']
@@ -230,6 +231,7 @@ def cUpdate_week():
 @coordinator_route.route('/cUpdate_status', methods=['POST'])
 def cUpdate_status():
     data = request.get_json()
+    community = data['community']
     subprogram = data['subprogram']
     program = data['program']
     status = data['status']

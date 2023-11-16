@@ -107,6 +107,7 @@
         <thead>
             <tr>
                 <th>File name</th>
+                <th>Community</th>
                 <th>Program</th>
                 <th>Subprogram</th>
                 
@@ -116,6 +117,7 @@
             {% for file4 in CNA_data %}
             <tr>
                 <td class="file-td">{{ file4.filename }}</td>
+                <td class="file-td">{{ file4.community }}</td>
                 <td class="file-td">{{ file4.program }}</td>
                 <td class="file-td">{{ file4.subprogram }}</td>
             </tr>
@@ -171,6 +173,7 @@
             <tr>
                 <th>ID</th>
                 <th>File name</th>
+                <th>Community</th>
                 <th>Program</th>
                 <th>Subprogram</th>
                 
@@ -179,8 +182,10 @@
         <tbody>
             {% for file5 in CNAp_data %}
             <tr>
+                
                 <td class="file-td">{{ file5.id }}</td>
                 <td class="file-td">{{ file5.filename }}</td>
+                <td class="file-td">{{ file5.community }}</td>
                 <td class="file-td">{{ file5.program }}</td>
                 <td class="file-td">{{ file5.subprogram }}</td>
             </tr>

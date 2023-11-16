@@ -36,6 +36,7 @@
     width: 85%;
     text-align: center;
     margin: 1rem auto;
+    transition: opacity 1s; /* Adjust the duration if needed */
 }
 
 .flash-login .flash-login_error {

@@ -141,7 +141,9 @@ main .coordinatorCard .checkbox-group{
     gap: 1;
     margin-bottom: 4rem;
     margin-left: 1rem;
+ 
 }
+
 
 
   main .coordinatorCard .form-check .label {
@@ -150,6 +152,7 @@ main .coordinatorCard .checkbox-group{
     color: #242424; 
     position: absolute;
     margin-top: 1rem;
+    
   }
   
  
@@ -164,6 +167,7 @@ main .coordinatorCard .checkbox-group{
 
 main .coordinatorCard .insights-div{
     position: relative;
+ 
 }
 
   /* Save Button Styles */

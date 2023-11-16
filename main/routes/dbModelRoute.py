@@ -322,22 +322,15 @@ def add_community():
             db.session.add(new_community)
             db.session.commit()
             flash('New community project added!', 'add_community')
-        else:
-            flash(f"Sorry, '{subprogram}' is already taken in {{community}}.", 'existing_community')
 
-        #FOR SUBPROGRAM
-        existing_subprogram = Subprogram.query.filter_by(program = program, subprogram=subprogram).first()
+            #FOR SUBPROGRAM
+            #existing_subprogram = Subprogram.query.filter_by(program = program, subprogram=subprogram).first()
 
-        if existing_subprogram is None:
             new_subprogram = Subprogram(program=program, subprogram=subprogram)
-
             db.session.add(new_subprogram)
             db.session.commit()
-        else:
-            return redirect(url_for('dbModel.manage_community'))
-        
-        existing_cpf_file = CPF.query.filter_by(community=community, program = program, subprogram=subprogram).first()
-        if existing_cpf_file is None:
+            
+
             cpf_data = cpf_file.read()
             cpf_record = CPF(
                 community=community,
@@ -349,8 +342,6 @@ def add_community():
             db.session.add(cpf_record)
             db.session.commit()
 
-        existing_cesap_file = CESAP.query.filter_by(community=community, program = program, subprogram=subprogram).first()
-        if existing_cesap_file is None:
             cesap_data = cesap_file.read()
             cesap_record = CESAP(
                 community=community,
@@ -362,8 +353,6 @@ def add_community():
             db.session.add(cesap_record)
             db.session.commit()
 
-        existing_cna_file = CNA.query.filter_by(community=community, program = program, subprogram=subprogram).first()
-        if existing_cna_file is None:
             cna_data = cna_file.read()
             cna_record = CNA(
                 community=community,
@@ -374,6 +363,10 @@ def add_community():
             )
             db.session.add(cna_record)
             db.session.commit()
+        else:
+            flash(f"Sorry, '{subprogram}' is already taken in {{community}}.", 'existing_community')
+
+        
 
         return redirect(url_for('dbModel.manage_community'))
        
@@ -423,6 +416,13 @@ def delete_community(id):
     community = Community.query.get(id)
     program = request.args.get('program')
     subprogram = request.args.get('subprogram')
+    community_name = request.args.get('community')
+
+    # First, find and delete records from the database
+    cpf_record = CPF.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
+    cesap_record = CESAP.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
+    subprogram_record = Subprogram.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
+    cna_record = CNA.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
 
     if community:
         try:
@@ -435,11 +435,17 @@ def delete_community(id):
     else:
         flash('User not found. Please try again.', 'error')
 
-     # First, find and delete records from the database
-    cpf_record = CPF.query.filter_by(program=program, subprogram=subprogram).first()
-    cesap_record = CESAP.query.filter_by(program=program, subprogram=subprogram).first()
-    subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
-    cna_record = CNA.query.filter_by(program=program, subprogram=subprogram).first()
+    if subprogram_record:
+        try:
+            # Delete the user from the database
+            db.session.delete(subprogram_record)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+
     if cpf_record:
         # Delete the file associated with the CPF record
         try:
@@ -797,12 +803,13 @@ def update_week():
 @dbModel_route.route('/update_status', methods=['POST'])
 def update_status():
     data = request.get_json()
+    community = data['community']
     subprogram = data['subprogram']
     program = data['program']
     status = data['status']
 
     # Query the database to get records with the specified subprogram
-    communities = Community.query.filter_by(program=program, subprogram=subprogram).all()
+    communities = Community.query.filter_by(community = community, program=program, subprogram=subprogram).all()
 
     for community in communities:
         community.status = status

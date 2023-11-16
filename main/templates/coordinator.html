@@ -25,7 +25,7 @@
 </div>
 <div class="coordinatorCard">
     
-    <div class="insights-div">
+    <div class="insights-div " >
         <p class="community-status"></p>
         <div class="community-subprogram-title">
             <div class="subLogo">
@@ -70,7 +70,7 @@
         <div class="checkboxes">
             <form>
             <div class="form-group">
-                <label for=""> <br>Comment </label>
+                 <!--  <label for=""> <br>Comment </label> -->
                 <textarea class="form-control" id="textarea" rows="1" style="display: none;"></textarea>
                 <br>
               </div>
@@ -230,6 +230,7 @@
                 // Execute update_status and updatePercentage if the user confirmed
                 update_status();
                 updatePercentage();
+                
             }
 
             /**
@@ -287,6 +288,7 @@
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
+                    community: record.community,
                     subprogram: record.subprogram,
                     totalCheckboxes: checkedCheckboxes,
                     program: record.program
@@ -315,6 +317,7 @@
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
+                    community: record.community,
                     program: record.program,
                     subprogram: record.subprogram,
                     status: recordStatus

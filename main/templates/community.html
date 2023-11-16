@@ -42,7 +42,7 @@
                         <td>{{ row.totalWeek }}</td>
                         <td>{{ row.user }}</td>
                         <td>
-                            <a href="{{ url_for('dbModel.delete_community', id=row.id, program=row.program, subprogram=row.subprogram) }}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                            <a href="{{ url_for('dbModel.delete_community', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}

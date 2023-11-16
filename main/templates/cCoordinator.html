@@ -224,8 +224,8 @@
 
             if (userConfirmed) {
                 // Execute update_status and updatePercentage if the user confirmed
-                update_status();
                 updatePercentage();
+                update_status();
             }
 
             /**
@@ -283,6 +283,7 @@
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
+                    community: record.community,
                     subprogram: record.subprogram,
                     totalCheckboxes: checkedCheckboxes,
                     program: record.program
@@ -311,6 +312,7 @@
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
+                    community: record.community,
                     program: record.program,
                     subprogram: record.subprogram,
                     status: recordStatus
@@ -325,7 +327,6 @@
             
         }
 
-        
             var circle = insightsDiv.find("circle");
             var circumference = 2 * Math.PI * parseInt(circle.attr("r"));
             var dashOffset = circumference * (1 - percentage / 100);
@@ -348,6 +349,9 @@
             });
 
             insightsContainer.find("> div:first-child").css("display", "none");
+
+            
+
         }
     },
     error: function() {

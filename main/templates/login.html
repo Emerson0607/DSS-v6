@@ -43,18 +43,19 @@
         </div>
     </div>
     <script>
-         document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
         var flashes = document.querySelectorAll('.flash-login');
-        
+
         flashes.forEach(function(flash) {
+            // Set a timeout to hide the flash after 3 seconds
             setTimeout(function() {
                 flash.style.opacity = 0;
 
-                // Reload the page after the fade-out effect is completed
-                setTimeout(function() {
-                    location.reload();
-                }, 0); // Adjust the duration if needed
-            }, 3000); // 5000 milliseconds (5 seconds)
+                // Optionally, remove the flash element from the DOM after the fade-out effect is completed
+                flash.addEventListener('transitionend', function() {
+                    flash.remove();
+                });
+            }, 3000); // 3000 milliseconds (3 seconds)
         });
     });
     </script>
