@@ -25,13 +25,14 @@
     <link rel="stylesheet" href="/static/css/project_files.css">
     <link rel="stylesheet" href="/static/css/project_table.css">
     <link rel="stylesheet" href="/static/css/project_details.css">
+    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
 </head>
 <body>
     <div class="container1 ">
         <aside class="sticky-top">
             <div class="top">
                 <div class="logo">
-                    <img src="/static/images/CESO.png" alt="">
+                    <img src="/static/images/mobile.png" alt="CESU-LOGO">
                     <span class="cesu" id="dashboardLink">CE
                         <span class="su">SU</span>
                     </span>
@@ -44,7 +45,7 @@
                 </div>
             </div>
             <div class="sidebar">
-                <a href="{{ url_for('dbModel.dashboard') }}" class="sidebar-link">
+                <a href="{{ url_for('dbModel.dashboard') }}" class="sidebar-link" style="display:none;">
                     <span class="material-symbols-sharp">dashboard</span>
                     <h3>Dashboard</h3>
                 </a>
@@ -52,22 +53,23 @@
                     <span class="material-symbols-sharp" >groups</span>
                     <h3>Community</h3>
                 </a>
-                <a href="{{ url_for('dbModel.manage_pending') }}" class="sidebar-link pending-container">
-                    <span class="material-symbols-sharp">
-                        pending
-                        </span>
-                    <h3>Pending</h3>
-                    <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
-                </a>
+
                 <a href="{{ url_for('dbModel.kaakbay_program') }} " class="sidebar-link">
                     <span class="material-symbols-sharp">
                         monitoring
                         </span>
-                    <h3>Community Projects</h3>
+                    <h3>Community Programs</h3>
+                </a>
+                <a href="{{ url_for('dbModel.manage_pending') }}" class="sidebar-link pending-container">
+                    <span class="material-symbols-sharp">
+                        pending
+                        </span>
+                    <h3>Pending Projects</h3>
+                    <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
                 </a>
                 <a href="{{ url_for('dbModel.manage_account') }}"class="sidebar-link">
                     <span class="material-symbols-sharp">manage_accounts</span>
-                    <h3>Manage Account</h3>
+                    <h3>Users Account</h3>
                 </a>
                 
                 <a href="{{ url_for('randomForest.program') }}"class="sidebar-link">
@@ -115,15 +117,13 @@
                         <small class="text-muted">{{current_role}}</small>
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
-                        <img src="/static/images/CESO.png" alt="">
+                        <img src="/static/images/mobile.png" alt="CESU-LOGO">
                         <div class="dropdown-content" id="dropdown-content">
                             <div class="password-div"><a class="password-button"  href="{{ url_for('dbModel.change_password') }}" id="password-button">Change Password</a></div>
                             <div class="logout-hover"><a class="logout-button" href="{{ url_for('dbModel.clear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>
                         </div>
                     </div>
-                    
                 </div>
-                
             </div>
             <!--End of top-->
             <div class="recent-updates">
@@ -156,58 +156,6 @@
     // Set the display property based on the value of pendingCount
     pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
   </script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    
-
-    //SIDE BAR LINKS ACTIVATE
-    const sidebarLinks = document.querySelectorAll(".sidebar-link");
-    sidebarLinks.forEach(function(link) {
-        link.addEventListener("click", function(event) {
-            // Prevent the default behavior of the link temporarily
-            event.preventDefault();
-
-            // Remove "active" class from all links
-            sidebarLinks.forEach(function(link) {
-                link.classList.remove("active");
-            });
-
-            // Add "active" class to the clicked link
-            link.classList.add("active");
-
-            // Store the active link information in local storage
-            localStorage.setItem("activeLink", link.getAttribute("href"));
-
-            setTimeout(() => {
-                window.location.href = link.getAttribute("href");
-            }, 10);
-        });
-    });
-
-    const activeLink = localStorage.getItem("activeLink");
-    if (activeLink) {
-        const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
-        if (activeLinkElement) {
-            activeLinkElement.classList.add("active");
-        }
-    } 
-});
-
-function clearAndSetFirstLinkActive() {
-    const sidebarLinks = document.querySelectorAll(".sidebar-link");
-
-    // Remove "active" class from all links
-    sidebarLinks.forEach(function(link) {
-        link.classList.remove("active");
-    });
-
-    // Set the first link as active
-    if (sidebarLinks.length > 0) {
-        sidebarLinks[0].classList.add("active");
-        localStorage.setItem("activeLink", sidebarLinks[0].getAttribute("href"));
-    }
-}
-</script>
 
 <!-- ON CLICK CESU-->
 <script>

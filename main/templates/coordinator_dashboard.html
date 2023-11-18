@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="/static/css/change_password.css">
     <link rel="stylesheet" href="/static/css/flash.css">
+    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
  
 </head>
 <body>
@@ -27,7 +28,7 @@
         <aside class="sticky-top">
             <div class="top">
                 <div class="logo">
-                    <img src="/static/images/CESO.png" alt="">
+                    <img src="/static/images/mobile.png" alt="">
                     <span class="cesu" id="dashboardLink">CE
                         <span class="su">SU</span>
                     </span>
@@ -40,19 +41,19 @@
                 </div>
             </div>
             <div class="sidebar">
-                <a href="{{ url_for('coordinator.coordinator_dashboard') }}" class="sidebar-link">
+                <a href="{{ url_for('coordinator.coordinator_dashboard') }}" class="sidebar-link" style="display:none;">
                     <span class="material-symbols-sharp">dashboard</span>
                     <h3>Dashboard</h3>
                 </a>
                 <a href="{{ url_for('coordinator.cManage_community') }} " class="sidebar-link">
                     <span class="material-symbols-sharp" >groups</span>
-                    <h3>Community</h3>
+                    <h3>My Community</h3>
                 </a>
                 <a href="{{ url_for('coordinator.cCoordinator') }} " class="sidebar-link">
                     <span class="material-symbols-sharp">
                         monitoring
                         </span>
-                    <h3>Community Projects</h3>
+                    <h3>My Community Program</h3>
                 </a>
                 <a href="{{ url_for('randomForest.cProgram') }}"class="sidebar-link">
                     <span class="material-symbols-sharp">neurology</span>
@@ -63,7 +64,7 @@
                     <span class="material-symbols-sharp">
                         folder
                         </span>
-                    <h3>Files</h3>
+                    <h3>CESU Files</h3>
                 </a>
                 
             </div>
@@ -88,10 +89,10 @@
                         <small class="text-muted">{{current_role}}</small>
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
-                        <img src="/static/images/CESO.png" alt="">
+                        <img src="/static/images/mobile.png" alt="">
                         <div class="dropdown-content" id="dropdown-content">
                             <div class="password-div"><a class="password-button"  href="{{ url_for('coordinator.cChange_password') }}" id="password-button">Change Password</a></div>
-                            <div class="logout-hover"><a class="logout-button" href="{{ url_for('coordinator.cClear_session') }}" id="logout-button">Logout</a></div>
+                            <div class="logout-hover"><a class="logout-button" href="{{ url_for('coordinator.cClear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>
                         </div>
                     </div>
                     
@@ -113,46 +114,56 @@
  <script src="/static/js/admin_dashboard.js"></script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-  const sidebarLinks = document.querySelectorAll(".sidebar-link");
+document.addEventListener("DOMContentLoaded", function() {
+    
 
-  sidebarLinks.forEach(function(link) {
-    link.addEventListener("click", function(event) {
-      // Prevent the default behavior of the link temporarily
-      event.preventDefault();
+    //SIDE BAR LINKS ACTIVATE
+    const sidebarLinks = document.querySelectorAll(".sidebar-link");
+    sidebarLinks.forEach(function(link) {
+        link.addEventListener("click", function(event) {
+            // Prevent the default behavior of the link temporarily
+            event.preventDefault();
 
-      // Remove "active" class from all links
-      sidebarLinks.forEach(function(link) {
-        link.classList.remove("active");
-      });
+            // Remove "active" class from all links
+            sidebarLinks.forEach(function(link) {
+                link.classList.remove("active");
+            });
 
-      // Add "active" class to the clicked link
-      link.classList.add("active");
+            // Add "active" class to the clicked link
+            link.classList.add("active");
 
-      // Store the active link information in local storage
-      localStorage.setItem("activeLink", link.getAttribute("href"));
+            // Store the active link information in local storage
+            localStorage.setItem("activeLink", link.getAttribute("href"));
 
-      // Wait for a short period (e.g., 500 milliseconds) to let the styles apply
-      setTimeout(() => {
-        window.location.href = link.getAttribute("href");
-      }, 10);
+            setTimeout(() => {
+                window.location.href = link.getAttribute("href");
+            }, 10);
+        });
     });
-  });
 
-  const activeLink = localStorage.getItem("activeLink");
-  if (activeLink) {
-    const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
-    if (activeLinkElement) {
-      activeLinkElement.classList.add("active");
-    } else {
-      // If the stored active link is not found, activate the first link
-      sidebarLinks[0].classList.add("active");
-    }
-  } else {
-    // If there is no stored active link, activate the first link
-    sidebarLinks[0].classList.add("active");
-  }
+    const activeLink = localStorage.getItem("activeLink");
+    if (activeLink) {
+        const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
+        if (activeLinkElement) {
+            activeLinkElement.classList.add("active");
+        }
+    } 
 });
+
+function clearAndSetFirstLinkActive() {
+    const sidebarLinks = document.querySelectorAll(".sidebar-link");
+
+    // Remove "active" class from all links
+    sidebarLinks.forEach(function(link) {
+        link.classList.remove("active");
+    });
+
+    // Set the first link as active
+    if (sidebarLinks.length > 0) {
+        sidebarLinks[1].classList.add("active");
+        localStorage.setItem("activeLink", sidebarLinks[1].getAttribute("href"));
+    }
+}
 
 </script>
 
