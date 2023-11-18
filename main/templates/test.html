@@ -43,6 +43,29 @@
     </table>
 
     <table >
+        <h1>CesuUser</h1>
+        <thead>
+            <tr>
+               
+                <th>username</th>
+                <th>birthday</th>
+                <th>password</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for CesuUser in CesuUser_data %}
+            <tr>
+                <td class="file-td">{{ CesuUser.username }}</td>
+                <td class="file-td">{{ CesuUser.birthday }}</td>
+                <td class="file-td">{{ CesuUser.password }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <table >
         <h1>Subrpogram</h1>
         <thead>
             <tr>

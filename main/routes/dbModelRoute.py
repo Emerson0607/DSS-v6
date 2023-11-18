@@ -1,13 +1,14 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp
+from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp, UsersK
 from main import db
 from main import Form
 from flask import Response
+import secrets
 from datetime import datetime
 from sqlalchemy import func, case
 
 dbModel_route = Blueprint('dbModel', __name__)
-
+token_store = {}
 @dbModel_route.route("/login", methods=["GET", "POST"])
 def login():
     if 'user_id' in session:
@@ -30,6 +31,55 @@ def login():
             flash(f'Invalid username or password.', 'login_error')
             return redirect(url_for('dbModel.login'))
     return render_template('login.html')
+
+@dbModel_route.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        birthday = request.form['birthday']
+
+        # Validate birthday against the database
+        user = UsersK.query.filter_by(birthday=birthday).first()
+
+        if user:
+            # Birthday is valid, generate a random token and store it for later verification
+            token = secrets.token_urlsafe(16)
+            token_store[token] = birthday
+
+            # Redirect the user to a page where they can reset their password using the token
+            return redirect(url_for('dbModel.reset_password', token=token))
+
+    return render_template('forgot_password.html')
+
+@dbModel_route.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    # Check if the token is valid
+    if token not in token_store:
+        flash('Invalid or expired token. Please request a new password reset.')
+        return redirect(url_for('dbModel.forgot_password'))
+
+    if request.method == 'POST':
+        # Retrieve the user from the database based on the stored birthday
+        birthday = token_store[token]
+        user = UsersK.query.filter_by(birthday=birthday).first()
+
+        if user:
+            # Update the user's password (replace with your actual password update logic)
+            new_password = request.form['new_password']
+            user.password = new_password
+
+            # Commit the changes to the database
+            db.session.commit()
+
+            # Clear the token after password reset
+            del token_store[token]
+
+            flash('Password reset successful. You can now log in with your new password.')
+            return redirect(url_for('dbModel.login'))  # Replace 'login' with your actual login route
+        else:
+            flash('Invalid or expired token. Please request a new password reset.')
+            return redirect(url_for('dbModel.forgot_password'))
+
+    return render_template('reset_password.html', token=token)
 
 @dbModel_route.route("/admin_dashboard")
 def dashboard():

@@ -1,8 +1,10 @@
 from main import db, app
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import func
+import secrets
+from flask_mail import Mail
 
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +28,17 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), nullable=False)
     program = db.Column(db.String(255), unique=True, nullable=False)
+
+class UsersK(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255), unique=True, nullable=False)
+    firstname = db.Column(db.String(255), nullable=False)
+    lastname = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(50), nullable=False)
+    program = db.Column(db.String(255), unique=True, nullable=False)
+    birthday = db.Column(db.Date, nullable=False)
+
 
 
 class Program(db.Model):
@@ -176,9 +189,10 @@ def insert_user():
     password = '123'
     role = 'Admin'
     program = 'CESU'
+    birthday = datetime.strptime('2000-12-07', '%Y-%m-%d').date()
     
-    user_insert = User(username=username,firstname=firstname,lastname=lastname, password=password,
-    role=role, program=program)
+    user_insert = UsersK(username=username,firstname=firstname,lastname=lastname, password=password,
+    role=role, program=program, birthday=birthday)
     if user_insert:
         # If a row with the specified program value is found, delete it
         db.session.add(user_insert)
@@ -214,7 +228,7 @@ def delete_CESAP():
 def initialize_database():
     #delete_subprogram()
     #multiple_insert()
-    #insert_user()
+    insert_user()
     #delete_pending_files()
     #delete_CNA()
     #delete_CESAP()
@@ -231,8 +245,8 @@ def display_community_data():
     all_community_data = db.session.query(Community).all()
     CNA_data = CNA.query.all()
     Pending_project_data = Pending_project.query.all()
-
+    CesuUser_data = UsersK.query.all()
     CPFp_data = CPFp.query.all()
-    CESAPp_data = db.session.query(CESAPp).all()
+    CESAPp_data = CESAPp.query.all()
     CNAp_data = CNAp.query.all()
-    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, Pending_project_data = Pending_project_data, CPFp_data=CPFp_data, CESAPp_data=CESAPp_data,CNAp_data=CNAp_data  )
+    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, Pending_project_data = Pending_project_data, CPFp_data=CPFp_data, CESAPp_data=CESAPp_data,CNAp_data=CNAp_data , CesuUser_data = CesuUser_data  )
