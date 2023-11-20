@@ -9,6 +9,10 @@ from sqlalchemy import func, case
 
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
+# Function to convert date strings to Python date objects
+def convert_date(date_str):
+    return datetime.strptime(date_str, '%Y-%m-%d').date()
+    
 @dbModel_route.route("/login", methods=["GET", "POST"])
 def login():
     if 'user_id' in session:
@@ -17,7 +21,6 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-
         user = User.query.filter_by(username=username, password=password).first()
 
         if user:
@@ -32,54 +35,53 @@ def login():
             return redirect(url_for('dbModel.login'))
     return render_template('login.html')
 
-@dbModel_route.route('/forgot_password', methods=['GET', 'POST'])
+@dbModel_route.route('/forgot_password', methods=["GET",'POST'])
 def forgot_password():
     if request.method == 'POST':
-        birthday = request.form['birthday']
+        username = request.form.get("username")
+        birthday1 = request.form.get("birthday")
+        birthday = convert_date(birthday1)
 
-        # Validate birthday against the database
-        user = UsersK.query.filter_by(birthday=birthday).first()
+        user = UsersK.query.filter_by(birthday=birthday, username=username).first()
 
         if user:
-            # Birthday is valid, generate a random token and store it for later verification
-            token = secrets.token_urlsafe(16)
-            token_store[token] = birthday
-
             # Redirect the user to a page where they can reset their password using the token
-            return redirect(url_for('dbModel.reset_password', token=token))
+            return render_template('reset_password.html', username=username, birthday=birthday)
+        else:
+            return jsonify({'error': 'Incorrect credentials'}), 400  # Send a JSON response for AJAX handling
+    return render_template('login.html')
 
-    return render_template('forgot_password.html')
-
-@dbModel_route.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    # Check if the token is valid
-    if token not in token_store:
-        flash('Invalid or expired token. Please request a new password reset.')
-        return redirect(url_for('dbModel.forgot_password'))
-
+@dbModel_route.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
     if request.method == 'POST':
-        # Retrieve the user from the database based on the stored birthday
-        birthday = token_store[token]
-        user = UsersK.query.filter_by(birthday=birthday).first()
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+        username = request.form['username']
+        user = UsersK.query.filter_by(username=username).first()
+
+        if ' ' in new_password:
+            flash('Password cannot contain spaces.', 'newpassword_space')
+            return render_template('reset_password.html', username=username, new_password=new_password, confirm_password=confirm_password)
 
         if user:
-            # Update the user's password (replace with your actual password update logic)
-            new_password = request.form['new_password']
-            user.password = new_password
+            if new_password == confirm_password:
+                user.password = new_password
 
-            # Commit the changes to the database
-            db.session.commit()
+                # Commit the changes to the database
+                db.session.commit()
 
-            # Clear the token after password reset
-            del token_store[token]
-
-            flash('Password reset successful. You can now log in with your new password.')
-            return redirect(url_for('dbModel.login'))  # Replace 'login' with your actual login route
+                flash('Password reset successful. You can now log in with your new password.')
+                return redirect(url_for('dbModel.login'))  # Replace 'login' with your actual login route
+            else:
+                flash('New password and confirmation do not match.', 'not_match')
+                return render_template('reset_password.html', username=username)
         else:
-            flash('Invalid or expired token. Please request a new password reset.')
-            return redirect(url_for('dbModel.forgot_password'))
+            flash('User not found.')
+            return render_template('reset_password.html', username=username)
 
-    return render_template('reset_password.html', token=token)
+    return render_template('reset_password.html')
+
+
 
 @dbModel_route.route("/admin_dashboard")
 def dashboard():
@@ -330,9 +332,7 @@ def get_program(get_program):
     subArray = [user.username for user in sub]  
     return jsonify({'user': subArray})
 
-# Function to convert date strings to Python date objects
-def convert_date(date_str):
-    return datetime.strptime(date_str, '%Y-%m-%d').date() 
+ 
 
 @dbModel_route.route("/add_community", methods=["POST"])
 def add_community():

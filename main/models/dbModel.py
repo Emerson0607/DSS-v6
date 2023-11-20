@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import secrets
-from flask_mail import Mail
 
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -183,13 +182,13 @@ def insert_community():
         db.session.commit()
 
 def insert_user():
-    username = 'admin'
+    username = 'admin11'
     firstname = 'Emerson'
     lastname = 'Martinez'
     password = '123'
     role = 'Admin'
-    program = 'CESU'
-    birthday = datetime.strptime('2000-12-07', '%Y-%m-%d').date()
+    program = 'CESU1'
+    birthday = datetime.strptime('2023-11-27', '%Y-%m-%d').date()
     
     user_insert = UsersK(username=username,firstname=firstname,lastname=lastname, password=password,
     role=role, program=program, birthday=birthday)
@@ -228,7 +227,7 @@ def delete_CESAP():
 def initialize_database():
     #delete_subprogram()
     #multiple_insert()
-    insert_user()
+    #insert_user()
     #delete_pending_files()
     #delete_CNA()
     #delete_CESAP()
