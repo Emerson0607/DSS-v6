@@ -61,7 +61,6 @@ def reset_password():
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'newpassword_space')
             return render_template('reset_password.html', username=username, new_password=new_password, confirm_password=confirm_password)
-
         if user:
             if new_password == confirm_password:
                 user.password = new_password
@@ -72,7 +71,7 @@ def reset_password():
                 flash('Password reset successful. You can now log in with your new password.')
                 return redirect(url_for('dbModel.login'))  # Replace 'login' with your actual login route
             else:
-                flash('New password and confirmation do not match.', 'not_match')
+                flash('New password and confirmation not match.', 'not_match')
                 return render_template('reset_password.html', username=username)
         else:
             flash('User not found.')
