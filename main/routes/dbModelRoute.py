@@ -43,7 +43,6 @@ def forgot_password():
         birthday = convert_date(birthday1)
 
         user = UsersK.query.filter_by(birthday=birthday, username=username).first()
-
         if user:
             # Redirect the user to a page where they can reset their password using the token
             return render_template('reset_password.html', username=username, birthday=birthday)

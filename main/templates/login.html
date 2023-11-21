@@ -65,15 +65,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div> <!--end modal-->
+            </div><!--end modal-->
 
-        </div>
+            <div class="reset-password" id="reset-password">
+
+            </div>
+        </div> 
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
         var flashes = document.querySelectorAll('.flash-login');
@@ -109,7 +110,7 @@ $(document).ready(function () {
             data: $('#forgotPasswordForm').serialize(),
             success: function (response) {
                 // If successful, redirect to the reset_password route
-                $('html').html(response);
+                $('body').html(response);
             },
             error: function (xhr, status, error) {
                 // If error, display an alert
