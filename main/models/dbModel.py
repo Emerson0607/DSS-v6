@@ -27,18 +27,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(50), nullable=False)
     program = db.Column(db.String(255), unique=True, nullable=False)
-
-class UsersK(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), unique=True, nullable=False)
-    firstname = db.Column(db.String(255), nullable=False)
-    lastname = db.Column(db.String(255), nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50), nullable=False)
-    program = db.Column(db.String(255), unique=True, nullable=False)
     birthday = db.Column(db.Date, nullable=False)
-
-
 
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -162,7 +151,7 @@ def multiple_insert():
     db.session.commit()
     
 def insert_community():
-    community = 'Community1'
+    community = 'Bubukal'
     program = 'Literacy'
     subprogram = 'Sub-Literacy'
     start_date = datetime.strptime('2023-10-01', '%Y-%m-%d').date()
@@ -182,15 +171,15 @@ def insert_community():
         db.session.commit()
 
 def insert_user():
-    username = 'admin11'
+    username = 'EMERSON'
     firstname = 'Emerson'
     lastname = 'Martinez'
     password = '123'
     role = 'Admin'
-    program = 'CESU1'
+    program = 'CESU'
     birthday = datetime.strptime('2023-11-27', '%Y-%m-%d').date()
     
-    user_insert = UsersK(username=username,firstname=firstname,lastname=lastname, password=password,
+    user_insert = User(username=username,firstname=firstname,lastname=lastname, password=password,
     role=role, program=program, birthday=birthday)
     if user_insert:
         # If a row with the specified program value is found, delete it
@@ -244,7 +233,7 @@ def display_community_data():
     all_community_data = db.session.query(Community).all()
     CNA_data = CNA.query.all()
     Pending_project_data = Pending_project.query.all()
-    CesuUser_data = UsersK.query.all()
+    CesuUser_data = User.query.all()
     CPFp_data = CPFp.query.all()
     CESAPp_data = CESAPp.query.all()
     CNAp_data = CNAp.query.all()

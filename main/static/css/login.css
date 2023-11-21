@@ -224,7 +224,9 @@ h2{
     .login {
    
         margin: 0 auto;
-
+    }
+    .login-container .modal-content{
+        width:90%;
     }
 }
 

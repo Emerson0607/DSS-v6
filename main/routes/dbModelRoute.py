@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp, UsersK
+from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp
 from main import db
 from main import Form
 from flask import Response
@@ -42,7 +42,7 @@ def forgot_password():
         birthday1 = request.form.get("birthday")
         birthday = convert_date(birthday1)
 
-        user = UsersK.query.filter_by(birthday=birthday, username=username).first()
+        user = User.query.filter_by(birthday=birthday, username=username).first()
         if user:
             # Redirect the user to a page where they can reset their password using the token
             return render_template('reset_password.html', username=username, birthday=birthday)
@@ -56,7 +56,7 @@ def reset_password():
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
         username = request.form['username']
-        user = UsersK.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
 
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'newpassword_space')
@@ -150,9 +150,12 @@ def add_account():
         username = request.form.get("username")
         firstname = request.form.get("firstname")
         lastname = request.form.get("lastname")
+        birthday1 = request.form.get("birthday")
         password = request.form.get("password")
         role = request.form.get("role")
         program = request.form.get("program")
+
+        birthday = convert_date(birthday1)
         # Check if the username already exists in the database
         existing_username = User.query.filter_by(username=username).first()
         existing_program = User.query.filter_by(program=program).first()
@@ -170,7 +173,7 @@ def add_account():
             if existing_username:
                 flash('Username already exists. Please choose a different username.', 'existing_username')
             else:
-                new_user = User(username=username, firstname=firstname, lastname=lastname, 
+                new_user = User(username=username, firstname=firstname, lastname=lastname, birthday=birthday,
                 password=password, role = role, program = program)
                 try: 
                     db.session.add(new_user)
@@ -193,7 +196,10 @@ def edit_account():
         new_lastname = request.form['new_lastname']
         new_password = request.form['new_password']
         new_role = request.form['new_role']
+        new_birthday1 = request.form['new_birthday']
         new_program = request.form['new_program']
+
+        new_birthday = convert_date(new_birthday1)
         
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'password_space')
@@ -209,10 +215,11 @@ def edit_account():
             user.username = new_username
             user.firstname = new_firstname
             user.lastname = new_lastname
+            user.birthday = new_birthday
             user.password = new_password
             user.role = new_role
             user.program = new_program
-
+            
             db.session.commit()
             flash('Account updated successfully!', 'edit_account')
 
