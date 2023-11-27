@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
 
 # Specify the custom static URL path
 custom_static_url_path = '/static'
@@ -10,6 +11,9 @@ app.secret_key = 'your_secret_key'  # Set a secret key for session management
 # Configure the database connection for SQLite
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cesu9.db'  # Use SQLite with a database file named 'cesu.db'
 db = SQLAlchemy(app)
+# Configure session to use Flask-Session
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
 
 from wtforms import SelectField
 from flask_wtf import FlaskForm
