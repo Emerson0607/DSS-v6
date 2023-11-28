@@ -476,7 +476,7 @@ def delete_community(id):
     # First, find and delete records from the database
     cpf_record = CPF.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
     cesap_record = CESAP.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
-    subprogram_record = Subprogram.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
+    subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
     cna_record = CNA.query.filter_by(community = community_name, program=program, subprogram=subprogram).first()
 
     if community:
