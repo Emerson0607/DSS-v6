@@ -19,6 +19,14 @@ class Community(db.Model):
     subDepartment = db.Column(db.String(255), nullable=False) #SUPPORT
     status = db.Column(db.String(255), nullable=False)
 
+class CesuUserX(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+    otp = db.Column(db.String(6), nullable=True)
+    otp_timestamp = db.Column(db.DateTime, nullable=True)
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), unique=True, nullable=False)
@@ -49,6 +57,14 @@ class Upload(db.Model):
     data = db.Column(db.LargeBinary)
 
 class CPF(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
+    program = db.Column(db.String(255), nullable=False)
+    subprogram = db.Column(db.String(255), nullable=False)
+    filename = db.Column(db.String(50))
+    data = db.Column(db.LargeBinary)
+
+class CPFARCHIVE(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community = db.Column(db.String(255), nullable=False) 
     program = db.Column(db.String(255), nullable=False)
@@ -170,7 +186,26 @@ def insert_community():
         db.session.add(community_insert)
         db.session.commit()
 
-def insert_user():
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+    otp = db.Column(db.String(6), nullable=True)
+    otp_timestamp = db.Column(db.DateTime, nullable=True)
+
+def insert_userx():
+    name = 'martinez'
+    email = 'emer22297@gmail.com'
+    password = '123456'
+
+    
+    user_insert = CesuUserX(name=name, email=email, password=password)
+    if user_insert:
+        # If a row with the specified program value is found, delete it
+        db.session.add(user_insert)
+        db.session.commit()
+
+def cesu_user():
     username = 'EMERSON'
     firstname = 'Emerson'
     lastname = 'Martinez'
@@ -221,12 +256,14 @@ def initialize_database():
     #delete_CNA()
     #delete_CESAP()
     #delete_CPF()
+    insert_userx()
     
     return 'Program.'
 
 @app.route('/test')
 def display_community_data():
     CPF_data = CPF.query.all()
+    CPF_archive = CPFARCHIVE.query.all()
     CESAP_data = db.session.query(CESAP).all()
     subprogram_data = db.session.query(Subprogram).all()
     # Query and retrieve all records from the "community" table
@@ -237,4 +274,5 @@ def display_community_data():
     CPFp_data = CPFp.query.all()
     CESAPp_data = CESAPp.query.all()
     CNAp_data = CNAp.query.all()
-    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, Pending_project_data = Pending_project_data, CPFp_data=CPFp_data, CESAPp_data=CESAPp_data,CNAp_data=CNAp_data , CesuUser_data = CesuUser_data  )
+    CesuUser = CesuUserX.query.all()
+    return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, Pending_project_data = Pending_project_data, CPFp_data=CPFp_data, CESAPp_data=CESAPp_data,CNAp_data=CNAp_data , CesuUser_data = CesuUser_data , CPF_archive = CPF_archive, CesuUserX = CesuUser)

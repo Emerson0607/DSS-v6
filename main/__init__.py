@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
-
+from flask_mail import Mail
 # Specify the custom static URL path
 custom_static_url_path = '/static'
 
@@ -15,6 +15,14 @@ db = SQLAlchemy(app)
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
+app.config['MAIL_SERVER']="smtp.gmail.com"
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = "emer22297@gmail.com"
+app.config['MAIL_PASSWORD'] = "lnvc hkqg fdtr ywue"
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+
+mail = Mail(app)
 from wtforms import SelectField
 from flask_wtf import FlaskForm
 

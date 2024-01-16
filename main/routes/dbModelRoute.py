@@ -1,11 +1,13 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp
+from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp, CPFARCHIVE, CesuUserX
 from main import db
-from main import Form
 from flask import Response
 import secrets
-from datetime import datetime
+from datetime import datetime, timedelta
 from sqlalchemy import func, case
+from mailbox import Message
+from main import Form, app, mail
+from flask_mail import Mail, Message
 
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
@@ -13,6 +15,113 @@ token_store = {}
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date()
     
+
+@dbModel_route.route("/rec", methods=["GET", "POST"])
+def rec():
+    return render_template('password_recovery_email.html')
+
+@dbModel_route.route("/send_recovery_mail", methods=['GET', 'POST'])
+def send_recovery_mail():
+    if request.method == 'POST':
+        email = request.form.get('email')
+
+        # Check if the email exists in the database
+        user = CesuUserX.query.filter_by(email=email).first()
+
+        if user:
+            # Generate and store OTP in the database
+            otp = secrets.token_hex(3)  # 6 characters in hex format
+            user.otp = otp
+            user.otp_timestamp = datetime.utcnow() + timedelta(minutes=5)  # Set expiration time to 5 minutes
+            db.session.commit()
+
+            # Send OTP via email
+            send_mail(otp, email)
+
+            return render_template('password_recovery.html', email=email)
+        else:
+            return "Email not found in the database."
+
+    return render_template('password_recovery_request.html')
+
+@dbModel_route.route("/recover_password", methods=['GET', 'POST'])
+def recover_password():
+
+    if request.method == "POST":
+        email = request.form.get("email")
+        otp_entered = request.form.get("otp")
+        new_password = request.form.get("new_password")
+
+        # Check if the email exists in the database
+        user = CesuUserX.query.filter_by(email=email).first()
+
+        if user:
+            print(f"OTP Entered: {otp_entered}")
+            print(f"Stored OTP: {user.otp}")
+            print(f"OTP Timestamp: {user.otp_timestamp}")
+
+            if user.otp == otp_entered:
+                # Check if the OTP has not expired (within a 5-minute window)
+                expiration_time = user.otp_timestamp + timedelta(minutes=5)
+                if datetime.utcnow() < expiration_time:
+                    # Update the password and reset OTP fields
+                    user.password = new_password
+                    user.otp = None
+                    user.otp_timestamp = None
+                    db.session.commit()
+                    return "Success!"
+                    #return redirect(url_for('dbModel.dashboard'))
+                else:
+                    return "OTP has expired. Please request a new one."
+            else:
+                return "Invalid OTP."
+
+    return "Invalid request."
+
+
+
+#For email
+@dbModel_route.route("/send_mail")
+def send_mail(otp, recipient_email):
+    #OTP = "123456"
+    #recipient_email = "martinezemerson52@gmail.com"
+    sender_name = "LU-CESU"
+    
+    mail_message = Message(
+            'Account Recovery', 
+            sender =   (sender_name, 'emer22297@gmail.com'), 
+            recipients = [recipient_email, 'emer22297@gmail.com'])
+    mail_message.body = f"""
+    Your One-Time Password (OTP): {otp}
+
+    This OTP is valid for a single use and will expire shortly. 
+    Do not share it with anyone for security reasons. 
+
+    If you did not request this OTP or experience any issues, please contact our support team immediately. 
+
+    Thank you for trusting us with your security.
+
+    Best regards,
+    CESU MIS Team
+    """
+    mail_message.html = f"""
+    <html>
+        <body>
+            <p>Hi {recipient_email},</p>
+            <p>Your One-Time Password (OTP): <strong>{otp}</strong></p>
+            <p>This OTP is valid for a single use and will expire shortly. 
+            Do not share it with anyone for security reasons.</p>
+            <p>If you did not request this OTP or experience any issues, please contact our support team immediately.</p>
+            <p>Thank you for trusting us with your security.</p>
+            <h1 style="margin-top: 1rem;"></h1>
+            <p><em>Best regards, CESU MIS Team</em></p>
+        </body>
+    </html>
+    """
+    mail.send(mail_message)
+    return "Mail has sent"
+
+
 @dbModel_route.route("/login", methods=["GET", "POST"])
 def login():
     if 'user_id' in session:
@@ -1172,3 +1281,33 @@ def view_cesap_project(program, subprogram, community):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
+
+
+# prototype to move data from table1 to table 2 (archive)
+@dbModel_route.route('/move_data')
+def move_data():
+    # Fetch data from CPF
+    data_to_move = CPFARCHIVE.query.all()
+
+    # Iterate through the data and move it to CPFARCHIVE
+    for row in data_to_move:
+        # Create a new row in CPFARCHIVE
+        new_row = CPF(
+            community=row.community,
+            program=row.program,
+            subprogram=row.subprogram,
+            filename=row.filename,
+            data=row.data
+        )
+        db.session.add(new_row)
+
+    # Commit the changes to CPFARCHIVE
+    db.session.commit()
+
+    # Delete the corresponding rows from CPF
+    CPFARCHIVE.query.delete()
+
+    # Commit the changes to CPF
+    db.session.commit()
+
+    return 'Data moved successfully'
