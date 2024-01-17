@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, session,
 from collections import Counter
 import pandas as pd
 import joblib
-from main.models.dbModel import User, Subprogram, Pending_project
+from main.models.dbModel import Users, Subprogram, Pending_project
 from main import db
 
 randomForest_Route = Blueprint('randomForest', __name__)
@@ -21,7 +21,7 @@ def handle_error(e):
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
-        user = User.query.get(session['user_id'])
+        user = Users.query.get(session['user_id'])
         pending_count = Pending_project.query.filter_by(pending="pending").count()
             
         # Set a maximum value for pending_count
@@ -32,7 +32,7 @@ def get_current_user():
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
         if user:
-            return user.firstname, user.role, pending_count_display
+            return user.username, user.role, pending_count_display
     return None, None, 0
 
 @randomForest_Route.before_request

@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp, CPFARCHIVE, Users
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive
 from main import db
 from flask import Response
 import secrets
@@ -14,7 +14,6 @@ token_store = {}
 
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date()
-    
 
 #################### ACCOUNT RECOVER REQUEST FUNCTION ##################
 
@@ -157,7 +156,7 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        pending_count = Pending_project.query.filter_by(pending="pending").count()
+        pending_count = Pending_project.query.filter_by(status="pending").count()
             
         # Set a maximum value for pending_count
         max_pending_count = 9
@@ -178,7 +177,6 @@ def before_request():
 def inject_current_user():
     return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display)
 
-
 @dbModel_route.route("/clear_session")
 def clear_session():
     session.clear()
@@ -191,14 +189,17 @@ def programCSVresult():
         return redirect(url_for('dbModel.login'))
     return redirect(url_for('randomForest.programOneRow'))
 
-#FOR USER CRUD
+
+
+############################  USER ACCOUNT FUNCTION  FOR ADMIN #########################
+
 @dbModel_route.route("/manage_account")
 def manage_account():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = User.query.all()
+    all_data = Users.query.all()
     role = Role.query.all()
     program8 = Program.query.all()
     return render_template("manage_account.html", users = all_data, role = role, program8=program8)
@@ -211,17 +212,15 @@ def add_account():
     
     if request.method == "POST":
         username = request.form.get("username")
-        firstname = request.form.get("firstname")
-        lastname = request.form.get("lastname")
-        birthday1 = request.form.get("birthday")
+        email = request.form.get("email")
         password = request.form.get("password")
         role = request.form.get("role")
         program = request.form.get("program")
 
-        birthday = convert_date(birthday1)
         # Check if the username already exists in the database
-        existing_username = User.query.filter_by(username=username).first()
-        existing_program = User.query.filter_by(program=program).first()
+        existing_username = Users.query.filter_by(username=username).first()
+        existing_program = Users.query.filter_by(program=program).first()
+        existing_email = Users.query.filter_by(email=email).first()
 
         if ' ' in password:
             flash('Password cannot contain spaces.', 'password_space')
@@ -229,21 +228,24 @@ def add_account():
         if ' ' in username:
             flash('Password cannot contain spaces.', 'username_space')
             return redirect(url_for('dbModel.manage_account'))
+        
 
         if existing_program:
             flash(f"Sorry, '{program}' is already taken. Please choose another name or check existing programs.", 'existing_program')
         else:
-            if existing_username:
-                flash('Username already exists. Please choose a different username.', 'existing_username')
+            if existing_email:
+                flash(f"Sorry, '{email}' is already taken.", 'existing_program')
             else:
-                new_user = User(username=username, firstname=firstname, lastname=lastname, birthday=birthday,
-                password=password, role = role, program = program)
-                try: 
-                    db.session.add(new_user)
-                    db.session.commit()
-                except Exception as e:
-                    db.session.rollback()
-                flash('User added successfully!', 'add_account')
+                if existing_username:
+                    flash('Username already exists. Please choose a different username.', 'existing_username')
+                else:
+                    new_user = Users(username=username, email=email, password=password, role = role, program = program)
+                    try: 
+                        db.session.add(new_user)
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+                    flash('User added successfully!', 'add_account')
     return redirect(url_for('dbModel.manage_account'))
 
 @dbModel_route.route('/edit_account', methods=['POST'])
@@ -255,15 +257,11 @@ def edit_account():
     if request.method == 'POST':
         user_id = request.form.get('id')
         new_username = request.form['new_username']
-        new_firstname = request.form['new_firstname']
-        new_lastname = request.form['new_lastname']
+        new_email = request.form['new_email']
         new_password = request.form['new_password']
         new_role = request.form['new_role']
-        new_birthday1 = request.form['new_birthday']
         new_program = request.form['new_program']
 
-        new_birthday = convert_date(new_birthday1)
-        
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'password_space')
             return redirect(url_for('dbModel.manage_account'))
@@ -271,14 +269,11 @@ def edit_account():
             flash('Password cannot contain spaces.', 'username_space')
             return redirect(url_for('dbModel.manage_account'))
         
-
-        user = User.query.get(user_id)
+        user = Users.query.get(user_id)
         
         if user:
             user.username = new_username
-            user.firstname = new_firstname
-            user.lastname = new_lastname
-            user.birthday = new_birthday
+            user.email = new_email
             user.password = new_password
             user.role = new_role
             user.program = new_program
@@ -294,7 +289,7 @@ def delete_account(id):
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     
-    user = User.query.get(id)
+    user = Users.query.get(id)
 
     if user:
         try:
@@ -1235,7 +1230,7 @@ def view_cesap_project(program, subprogram, community):
     return "File not found", 404
 
 
-# prototype to move data from table1 to table 2 (archive)
+"""
 @dbModel_route.route('/move_data')
 def move_data():
     # Fetch data from CPF
@@ -1263,3 +1258,4 @@ def move_data():
     db.session.commit()
 
     return 'Data moved successfully'
+    """

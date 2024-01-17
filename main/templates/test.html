@@ -43,29 +43,6 @@
     </table>
 
     <table >
-        <h1>CesuUser</h1>
-        <thead>
-            <tr>
-               
-                <th>username</th>
-                <th>birthday</th>
-                <th>password</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for CesuUser in CesuUser_data %}
-            <tr>
-                <td class="file-td">{{ CesuUser.username }}</td>
-                <td class="file-td">{{ CesuUser.birthday }}</td>
-                <td class="file-td">{{ CesuUser.password }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-
-    <table >
         <h1>Subrpogram</h1>
         <thead>
             <tr>
@@ -104,50 +81,6 @@
             {% endfor %}
         </tbody>
     </table>
-    <table >
-        <h1>CESAP_data</h1>
-        <thead>
-            <tr>
-                <th>File name</th>
-                <th>Program</th>
-                <th>Subprogram</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for file2 in CESAP_data %}
-            <tr>
-                <td class="file-td">{{ file2.filename }}</td>
-                <td class="file-td">{{ file2.program }}</td>
-                <td class="file-td">{{ file2.subprogram }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-  
-    <table >
-        <h1>CNA</h1>
-        <thead>
-            <tr>
-                <th>File name</th>
-                <th>Community</th>
-                <th>Program</th>
-                <th>Subprogram</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for file4 in CNA_data %}
-            <tr>
-                <td class="file-td">{{ file4.filename }}</td>
-                <td class="file-td">{{ file4.community }}</td>
-                <td class="file-td">{{ file4.program }}</td>
-                <td class="file-td">{{ file4.subprogram }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
    
     <h1>Pending_project_data</h1>
     <table>
@@ -190,108 +123,8 @@
     </table>
 
 
-    <table >
-        <h1>CNA</h1>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>File name</th>
-                <th>Community</th>
-                <th>Program</th>
-                <th>Subprogram</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for file5 in CNAp_data %}
-            <tr>
-                
-                <td class="file-td">{{ file5.id }}</td>
-                <td class="file-td">{{ file5.filename }}</td>
-                <td class="file-td">{{ file5.community }}</td>
-                <td class="file-td">{{ file5.program }}</td>
-                <td class="file-td">{{ file5.subprogram }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <table >
-        <h1>CESAP</h1>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>File name</th>
-                <th>Program</th>
-                <th>Subprogram</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for file6 in CESAPp_data %}
-            <tr>
-                <td class="file-td">{{ file6.id }}</td>
-                <td class="file-td">{{ file6.filename }}</td>
-                <td class="file-td">{{ file6.program }}</td>
-                <td class="file-td">{{ file6.subprogram }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <table>
-        <h1>CPF</h1>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>File name</th>
-                <th>Program</th>
-                <th>Subprogram</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for file7 in CPFp_data %}
-            <tr>
-                <td class="file-td">{{ file7.id }}</td>
-                <td class="file-td">{{ file7.filename }}</td>
-                <td class="file-td">{{ file7.program }}</td>
-                <td class="file-td">{{ file7.subprogram }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-
-    <!--CPF Archive-->
-
-    <table>
-        <h1>CPF ARCHIVE</h1>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>File name</th>
-                <th>Program</th>
-                <th>Subprogram</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for file10 in CPF_archive %}
-            <tr>
-                <td class="file-td">{{ file10.id }}</td>
-                <td class="file-td">{{ file10.filename }}</td>
-                <td class="file-td">{{ file10.program }}</td>
-                <td class="file-td">{{ file10.subprogram }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-<br>
-<br>
-
 <table>
-    <h1>CesuUser</h1>
+    <h1>Users</h1>
     <thead>
         <tr>
             <th>ID</th>
@@ -302,11 +135,11 @@
             <th>otp_timestamp</th>
             <th>program</th>
             <th>role</th>
-            
+            <th>budget</th>
         </tr>
     </thead>
     <tbody>
-        {% for file11 in CesuUserX %}
+        {% for file11 in Users %}
         <tr>
             <td class="file-td">{{ file11.id }}</td>
             <td class="file-td">{{ file11.username }}</td>
@@ -316,6 +149,7 @@
             <td class="file-td">{{ file11.otp_timestamp }}</td>
             <td class="file-td">{{ file11.program }}</td>
             <td class="file-td">{{ file11.role }}</td>
+            <td class="file-td">{{ file11.budget }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -323,6 +157,5 @@
 <br>
 <br>
 
-<a href="mailto: emer22297@gmail.com">Send Mail</a>
 </body>
 </html>

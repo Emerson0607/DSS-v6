@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp
+from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project
 from main import db
 from main import Form
 from flask import Response
@@ -19,9 +19,9 @@ def coordinator_dashboard():
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
-        user = User.query.get(session['user_id'])
+        user = Users.query.get(session['user_id'])
         if user:
-            return user.firstname, user.role, user.program
+            return user.username, user.role, user.program
     return None, None
     
 @coordinator_route.before_request
@@ -290,7 +290,7 @@ def cNew_password():
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
 
-        user = User.query.filter_by(id=session['user_id'], password=old_password).first()
+        user = Users.query.filter_by(id=session['user_id'], password=old_password).first()
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'newpassword_space')
             return redirect(url_for('coordinator.cChange_password'))
