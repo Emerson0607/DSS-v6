@@ -18,24 +18,16 @@ class Community(db.Model):
     department  = db.Column(db.String(255), nullable=False) #LEAD
     subDepartment = db.Column(db.String(255), nullable=False) #SUPPORT
     status = db.Column(db.String(255), nullable=False)
-
-class CesuUserX(db.Model):
+    
+class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
+    username = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     otp = db.Column(db.String(6), nullable=True)
     otp_timestamp = db.Column(db.DateTime, nullable=True)
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), unique=True, nullable=False)
-    firstname = db.Column(db.String(255), nullable=False)
-    lastname = db.Column(db.String(255), nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    role = db.Column(db.String(50), nullable=False)
     program = db.Column(db.String(255), unique=True, nullable=False)
-    birthday = db.Column(db.Date, nullable=False)
+    role = db.Column(db.String(50), nullable=False)
 
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -194,12 +186,13 @@ def insert_community():
     otp_timestamp = db.Column(db.DateTime, nullable=True)
 
 def insert_userx():
-    name = 'martinez'
+    username = 'martinez'
     email = 'emer22297@gmail.com'
+    program = 'Literacy'
     password = '123456'
-
+    role = 'Admin'
     
-    user_insert = CesuUserX(name=name, email=email, password=password)
+    user_insert = Users(username=username, email=email, password=password, program=program, role=role)
     if user_insert:
         # If a row with the specified program value is found, delete it
         db.session.add(user_insert)
@@ -256,7 +249,7 @@ def initialize_database():
     #delete_CNA()
     #delete_CESAP()
     #delete_CPF()
-    insert_userx()
+    #insert_userx()
     
     return 'Program.'
 
@@ -274,5 +267,5 @@ def display_community_data():
     CPFp_data = CPFp.query.all()
     CESAPp_data = CESAPp.query.all()
     CNAp_data = CNAp.query.all()
-    CesuUser = CesuUserX.query.all()
+    CesuUser = Users.query.all()
     return render_template('test.html', community_data=all_community_data, CPF_data=CPF_data, CESAP_data=CESAP_data, subprogram_data=subprogram_data,CNA_data=CNA_data, Pending_project_data = Pending_project_data, CPFp_data=CPFp_data, CESAPp_data=CESAPp_data,CNAp_data=CNAp_data , CesuUser_data = CesuUser_data , CPF_archive = CPF_archive, CesuUserX = CesuUser)

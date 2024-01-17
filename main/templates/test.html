@@ -295,10 +295,13 @@
     <thead>
         <tr>
             <th>ID</th>
-            <th>name</th>
+            <th>username</th>
             <th>email</th>
             <th>password</th>
             <th>otp</th>
+            <th>otp_timestamp</th>
+            <th>program</th>
+            <th>role</th>
             
         </tr>
     </thead>
@@ -306,11 +309,13 @@
         {% for file11 in CesuUserX %}
         <tr>
             <td class="file-td">{{ file11.id }}</td>
-            <td class="file-td">{{ file11.name }}</td>
+            <td class="file-td">{{ file11.username }}</td>
             <td class="file-td">{{ file11.email }}</td>
             <td class="file-td">{{ file11.password }}</td>
             <td class="file-td">{{ file11.otp }}</td>
             <td class="file-td">{{ file11.otp_timestamp }}</td>
+            <td class="file-td">{{ file11.program }}</td>
+            <td class="file-td">{{ file11.role }}</td>
         </tr>
         {% endfor %}
     </tbody>

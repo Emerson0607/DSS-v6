@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp, CPFARCHIVE, CesuUserX
+from main.models.dbModel import User, Community, Program, Subprogram, Role, Upload, CPF, CESAP, CNA, Pending_project, CPFp, CESAPp, CNAp, CPFARCHIVE, Users
 from main import db
 from flask import Response
 import secrets
@@ -11,14 +11,12 @@ from flask_mail import Mail, Message
 
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
-# Function to convert date strings to Python date objects
+
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date()
     
 
-@dbModel_route.route("/rec", methods=["GET", "POST"])
-def rec():
-    return render_template('password_recovery_email.html')
+#################### ACCOUNT RECOVER REQUEST FUNCTION ##################
 
 @dbModel_route.route("/send_recovery_mail", methods=['GET', 'POST'])
 def send_recovery_mail():
@@ -26,7 +24,7 @@ def send_recovery_mail():
         email = request.form.get('email')
 
         # Check if the email exists in the database
-        user = CesuUserX.query.filter_by(email=email).first()
+        user = Users.query.filter_by(email=email).first()
 
         if user:
             # Generate and store OTP in the database
@@ -38,59 +36,60 @@ def send_recovery_mail():
             # Send OTP via email
             send_mail(otp, email)
 
-            return render_template('password_recovery.html', email=email)
+            return render_template('reset_password.html', email=email)
         else:
             return "Email not found in the database."
 
     return render_template('password_recovery_request.html')
 
-@dbModel_route.route("/recover_password", methods=['GET', 'POST'])
-def recover_password():
-
+@dbModel_route.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
     if request.method == "POST":
         email = request.form.get("email")
         otp_entered = request.form.get("otp")
         new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
 
         # Check if the email exists in the database
-        user = CesuUserX.query.filter_by(email=email).first()
+        user = Users.query.filter_by(email=email).first()
 
+        if ' ' in new_password:
+            flash('Password cannot contain spaces.', 'newpassword_space')
+           
         if user:
-            print(f"OTP Entered: {otp_entered}")
-            print(f"Stored OTP: {user.otp}")
-            print(f"OTP Timestamp: {user.otp_timestamp}")
-
             if user.otp == otp_entered:
-                # Check if the OTP has not expired (within a 5-minute window)
                 expiration_time = user.otp_timestamp + timedelta(minutes=5)
+
                 if datetime.utcnow() < expiration_time:
-                    # Update the password and reset OTP fields
-                    user.password = new_password
-                    user.otp = None
-                    user.otp_timestamp = None
-                    db.session.commit()
-                    return "Success!"
-                    #return redirect(url_for('dbModel.dashboard'))
+                    if new_password == confirm_password:
+                        user.password = new_password
+                        user.otp = None
+                        user.otp_timestamp = None
+                        db.session.commit()
+
+                        flash('Password reset successful. You can now log in with your new password.')
+                        return redirect(url_for('dbModel.login'))
+                    else:
+                        flash('New password and confirmation do not match.', 'not_match')
+                        return render_template('reset_password.html', email = email)
                 else:
-                    return "OTP has expired. Please request a new one."
+                    flash('OTP has expired. Please request a new one.', 'not_match')
+                    return render_template('reset_password.html', email = email)
             else:
-                return "Invalid OTP."
+                flash('Invalid OTP.', 'not_match')
+                return render_template('reset_password.html', email = email)
+        else:
+            flash('User not found.', 'not_match')
+            return render_template('reset_password.html', email = email)
+    return render_template('reset_password.html')
 
-    return "Invalid request."
-
-
-
-#For email
 @dbModel_route.route("/send_mail")
 def send_mail(otp, recipient_email):
-    #OTP = "123456"
-    #recipient_email = "martinezemerson52@gmail.com"
     sender_name = "LU-CESU"
-    
     mail_message = Message(
             'Account Recovery', 
             sender =   (sender_name, 'emer22297@gmail.com'), 
-            recipients = [recipient_email, 'emer22297@gmail.com'])
+            recipients = [recipient_email])
     mail_message.body = f"""
     Your One-Time Password (OTP): {otp}
 
@@ -122,6 +121,8 @@ def send_mail(otp, recipient_email):
     return "Mail has sent"
 
 
+#################### USERS LOGIN FUNCTION ##################
+
 @dbModel_route.route("/login", methods=["GET", "POST"])
 def login():
     if 'user_id' in session:
@@ -130,7 +131,7 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        user = User.query.filter_by(username=username, password=password).first()
+        user = Users.query.filter_by(username=username, password=password).first()
 
         if user:
             session['user_id'] = user.id
@@ -144,52 +145,6 @@ def login():
             return redirect(url_for('dbModel.login'))
     return render_template('login.html')
 
-@dbModel_route.route('/forgot_password', methods=["GET",'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        username = request.form.get("username")
-        birthday1 = request.form.get("birthday")
-        birthday = convert_date(birthday1)
-
-        user = User.query.filter_by(birthday=birthday, username=username).first()
-        if user:
-            # Redirect the user to a page where they can reset their password using the token
-            return render_template('reset_password.html', username=username, birthday=birthday)
-        else:
-            return jsonify({'error': 'Incorrect credentials'}), 400  # Send a JSON response for AJAX handling
-    return render_template('login.html')
-
-@dbModel_route.route('/reset_password', methods=['GET', 'POST'])
-def reset_password():
-    if request.method == 'POST':
-        new_password = request.form['new_password']
-        confirm_password = request.form['confirm_password']
-        username = request.form['username']
-        user = User.query.filter_by(username=username).first()
-
-        if ' ' in new_password:
-            flash('Password cannot contain spaces.', 'newpassword_space')
-            return render_template('reset_password.html', username=username, new_password=new_password, confirm_password=confirm_password)
-        if user:
-            if new_password == confirm_password:
-                user.password = new_password
-
-                # Commit the changes to the database
-                db.session.commit()
-
-                flash('Password reset successful. You can now log in with your new password.')
-                return redirect(url_for('dbModel.login'))  # Replace 'login' with your actual login route
-            else:
-                flash('New password and confirmation not match.', 'not_match')
-                return render_template('reset_password.html', username=username)
-        else:
-            flash('User not found.')
-            return render_template('reset_password.html', username=username)
-
-    return render_template('reset_password.html')
-
-
-
 @dbModel_route.route("/admin_dashboard")
 def dashboard():
      # Check if the user is logged in
@@ -201,7 +156,7 @@ def dashboard():
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
-        user = User.query.get(session['user_id'])
+        user = Users.query.get(session['user_id'])
         pending_count = Pending_project.query.filter_by(pending="pending").count()
             
         # Set a maximum value for pending_count
@@ -212,7 +167,7 @@ def get_current_user():
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
         if user:
-            return user.firstname, user.role, pending_count_display
+            return user.username, user.role, pending_count_display
     return None, None, 0
 
 @dbModel_route.before_request
@@ -806,7 +761,6 @@ def view_cesap(program, subprogram, community):
         return response
     return "File not found", 404
 
-
 @dbModel_route.route("/approve", methods=["POST"])
 def approve():
     if 'user_id' not in session:
@@ -944,7 +898,6 @@ def approve():
        
     return redirect(url_for('dbModel.manage_pending'))
 
-
 ############# UPDATE WEEK BASED FROM Subprogram ##############
 
 @dbModel_route.route('/update_week', methods=['POST'])
@@ -979,7 +932,6 @@ def update_status():
         community.status = status
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
-
 
 #display kaakbay program and coordinator
 def get_ongoing_count(session, program_name):
