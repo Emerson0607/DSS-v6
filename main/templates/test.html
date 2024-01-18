@@ -20,6 +20,12 @@
                 <th>Department</th>
                 <th>SubDepartment</th>
                 <th>Status</th>
+                <th>Budget</th>
+                <th>CPF</th>
+                <th>CESAP</th>
+                <th>CNA</th>
+    
+                
             </tr>
         </thead>
         <tbody>
@@ -37,6 +43,12 @@
                 <td>{{ community.department }}</td>
                 <td>{{ community.subDepartment }}</td>
                 <td>{{ community.status }}</td>
+                <td>{{ community.budget }}</td>
+                <td>{{ community.cpf_filename }}</td>
+                <td>{{ community.cesap_filename }}</td>
+                <td>{{ community.cna_filename }}</td>
+          
+                
             </tr>
             {% endfor %}
         </tbody>
@@ -61,26 +73,6 @@
             {% endfor %}
         </tbody>
     </table>
-    <table >
-        <h1>CPF_data</h1>
-        <thead>
-            <tr>
-                <th>File name</th>
-                <th>Program</th>
-                <th>Subprogram</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            {% for file1 in CPF_data %}
-            <tr>
-                <td class="file-td">{{ file1.filename }}</td>
-                <td class="file-td">{{ file1.program }}</td>
-                <td class="file-td">{{ file1.subprogram }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
    
     <h1>Pending_project_data</h1>
     <table>
@@ -98,11 +90,16 @@
                 <th>Department</th>
                 <th>SubDepartment</th>
                 <th>Status</th>
-                <th>Pending</th>
+                <th>Budget</th>
+                <th>CPF</th>
+                <th>CESAP</th>
+                <th>CNA</th>
+    
+                
             </tr>
         </thead>
         <tbody>
-            {% for community in  Pending_project_data%}
+            {% for community in Pending_project_data %}
             <tr>
                 <td>{{ community.id }}</td>
                 <td>{{ community.community }}</td>
@@ -116,7 +113,10 @@
                 <td>{{ community.department }}</td>
                 <td>{{ community.subDepartment }}</td>
                 <td>{{ community.status }}</td>
-                <td>{{ community.pending }}</td>
+                <td>{{ community.budget }}</td>
+                <td>{{ community.cpf_filename }}</td>
+                <td>{{ community.cesap_filename }}</td>
+                <td>{{ community.cna_filename }}</td>
             </tr>
             {% endfor %}
         </tbody>

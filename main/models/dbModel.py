@@ -22,9 +22,9 @@ class Community(db.Model):
     cna = db.Column(db.LargeBinary, nullable=True)
     cpf = db.Column(db.LargeBinary, nullable=True)
     cesap = db.Column(db.LargeBinary, nullable=True)
-    cna_filename = db.Column(db.LargeBinary, nullable=True)
-    cpf_filename = db.Column(db.LargeBinary, nullable=True)
-    cesap_filename = db.Column(db.LargeBinary, nullable=True)
+    cna_filename = db.Column(db.String(255), nullable=True)
+    cpf_filename = db.Column(db.String(255), nullable=True)
+    cesap_filename = db.Column(db.String(255), nullable=True)
     
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,6 +74,9 @@ class Pending_project(db.Model):
     cna = db.Column(db.LargeBinary, nullable=True)
     cpf = db.Column(db.LargeBinary, nullable=True)
     cesap = db.Column(db.LargeBinary, nullable=True)
+    cna_filename = db.Column(db.String(255), nullable=True)
+    cpf_filename = db.Column(db.String(255), nullable=True)
+    cesap_filename = db.Column(db.String(255), nullable=True)
     comments = db.Column(db.String(255), nullable=True)
 
 
@@ -153,6 +156,29 @@ def insert_community():
         # If a row with the specified program value is found, delete it
         db.session.add(community_insert)
         db.session.commit()
+    
+def insert_pending():
+    community = 'Bubukal'
+    program = 'Literacy'
+    subprogram = 'Sub-Literacy'
+    start_date = datetime.strptime('2023-10-01', '%Y-%m-%d').date()
+    end_date = datetime.strptime('2023-11-01', '%Y-%m-%d').date()
+    week = 2
+    totalWeek = 10
+    user = 'Admin'
+    department = 'Department'
+    subDepartment = 'Sub-department'
+    status = 'Pending'
+    budget = 100
+    
+    
+    community_insert = Pending_project(community=community,program=program,subprogram=subprogram, start_date=start_date,
+    end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget=budget )
+        
+    if community_insert:
+        # If a row with the specified program value is found, delete it
+        db.session.add(community_insert)
+        db.session.commit()
 
 def insert_userx():
     username = 'admin'
@@ -167,16 +193,20 @@ def insert_userx():
         db.session.add(user_insert)
         db.session.commit()
 
-def delete_subprogram():
+def delete_data():
  # Delete all records in the Subprogram table
-    Subprogram.query.delete()
+    data = Community.query.filter_by(user="Admin").first()
+ 
+    db.session.delete(data)
     db.session.commit()
 
 @app.route('/db')
 def initialize_database():
-    multiple_insert()
-    insert_community()
-    insert_userx()
+    #multiple_insert()
+    #insert_community()
+    #insert_userx()
+    #insert_pending()
+    delete_data()
     return 'Program.'
 
 @app.route('/test')

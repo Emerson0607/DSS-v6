@@ -9,7 +9,7 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        pending_count = Pending_project.query.filter_by(pending="pending").count()
+        pending_count = Pending_project.query.filter_by(status="Pending").count()
             
         # Set a maximum value for pending_count
         max_pending_count = 9

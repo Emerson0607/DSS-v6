@@ -30,6 +30,7 @@
                         <th>Week</th>
                         <th>Total Week</th>
                         <th>Coordinator</th>
+                        <th>Budget</th>
                         <th>Action</th>
                     </tr>
                     {% for row in community %}
@@ -41,6 +42,7 @@
                         <td>{{ row.week }}</td>
                         <td>{{ row.totalWeek }}</td>
                         <td>{{ row.user }}</td>
+                        <td>{{ row.budget }}</td>
                         <td>
                             <a href="{{ url_for('dbModel.delete_community', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
                         </td>
@@ -85,6 +87,11 @@
                                         <div class="form-group">
                                             <label>Total Week:</label>
                                             <input type="number" class="form-control" name="totalWeek"  required>
+                                        </div>
+                                        <br>
+                                        <div class="form-group">
+                                            <label>Budget:</label>
+                                            <input type="number" class="form-control" name="budget"  required>
                                         </div>
                                         <br>
                                     <!-- ACCOUNTABILITY -->
@@ -284,8 +291,8 @@
                     var optionHTML = '';
                     var selectElement = document.getElementById('userSelect');
 
-                    for (user of data.user) {
-                        optionHTML += '<option value="' + user + '">' + user + '</option>'
+                    for (users of data.users) {
+                        optionHTML += '<option value="' + users + '">' + users + '</option>'
                     }
 
                     selectElement.innerHTML = optionHTML;

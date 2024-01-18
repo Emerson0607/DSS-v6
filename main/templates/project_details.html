@@ -70,17 +70,17 @@
         
             <div class="form-group file-box">
                 <p for="CPF">Community Profiling Form</p>
-                <a href="{{ url_for('dbModel.view_cpf_project', program=program, subprogram=subprogram, community=community) }}">{{ cpf_data_filename }}</a>
+                <a href="{{ url_for('dbModel.view_cpf_project', program=program, subprogram=subprogram, community=community, cpf_filename=cpf_filename) }}">{{ cpf_filename }}</a>
             </div>
 
             <div class="form-group file-box">
                 <p for="CESAP">CES Activity Proposal</p>
-                <a href="{{ url_for('dbModel.view_cesap_project', program=program, subprogram=subprogram, community=community) }}">{{ cesap_data_filename }}</a>
+                <a href="{{ url_for('dbModel.view_cesap_project', program=program, subprogram=subprogram, community=community, cesap_filename=cesap_filename) }}">{{ cesap_filename }}</a>
             </div>
 
             <div class="form-group file-box">
                 <p for="CNA">Community Needs Assessment</p>
-                <a href="{{ url_for('dbModel.view_cna_project', program=program, subprogram=subprogram, community=community) }}">{{ cna_data_filename }}</a>
+                <a href="{{ url_for('dbModel.view_cna_project', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">{{ cna_filename }}</a>
             </div>
         </div>
         </form>

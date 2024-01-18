@@ -38,13 +38,13 @@ def cClear_session():
     session.clear()
     return redirect(url_for('dbModel.login'))
 
-##################  FOR COORDINATOR  #######################
 @coordinator_route.route('/cCoordinator')
 def cCoordinator():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     return render_template("cCoordinator.html")
+
 
 ##################  FOR COMMUNITY CRUD  #######################
 @coordinator_route.route("/cGet_community_data", methods=['GET'])
@@ -66,7 +66,8 @@ def cGet_community_data():
                     'subDepartment': record.subDepartment,
                     'start_date': record.start_date,
                     'end_date': record.end_date,
-                    'status': record.status
+                    'status': record.status,
+                    'budget': record.budget
                 }
                 for record in Community.query.filter_by(program=g.current_program).all()
             ]
@@ -91,7 +92,7 @@ def cCommunity_data_list():
     try:
         community_data = [
             {
-                    'community': record.community,
+                   'community': record.community,
                     'program': record.program,
                     'subprogram': record.subprogram,
                     'week': record.week,
@@ -99,7 +100,8 @@ def cCommunity_data_list():
                     'user': record.user,
                     'department': record.department,
                     'subDepartment': record.subDepartment,
-                    'status': record.status
+                    'status': record.status,
+                    'budget': record.budget
             }
                 for record in Community.query.filter_by(program=g.current_program).all()
             ]
@@ -108,7 +110,6 @@ def cCommunity_data_list():
         # Log the error for debugging
         print(str(e))
         return make_response("Internal Server Error", 500)
-
 
 @coordinator_route.route("/cManage_community")
 def cManage_community():
@@ -119,7 +120,6 @@ def cManage_community():
     all_data = Community.query.filter_by(program=g.current_program).all()
 
     return render_template("cCommunity.html", community = all_data)
-
 
 # Function to convert date strings to Python date objects
 def convert_date(date_str):
@@ -142,8 +142,9 @@ def cAdd_community():
         user = request.form.get("user")
         department = request.form.get("lead")
         subDepartment = request.form.get("support")
-        status = "Ongoing"
-        pending = "pending"
+        status = "Pending"
+        budget = request.form.get("budget")
+
 
         #Convert date
         start_date = convert_date(start_date1)
@@ -158,51 +159,19 @@ def cAdd_community():
         existing_community = Pending_project.query.filter_by(community=community, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
-            new_community = Pending_project(community=community, program=program, subprogram=subprogram, start_date=start_date,
-            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, pending = pending)
+            cpf_data = cpf_file.read()
+            cesap_data = cesap_file.read()
+            cna_data = cna_file.read()
 
+            new_community = Pending_project(community=community, program=program, subprogram=subprogram, start_date=start_date,
+            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
+            cna_filename = cna_file.filename, cna=cna_data)
             db.session.add(new_community)
             db.session.commit()
+            flash('New community project added!', 'add_community')
         else:
             return redirect(url_for('coordinator.cManage_community'))
         
-        if cpf_file:
-            cpf_data = cpf_file.read()
-            cpf_record = CPFp(
-                community=community,
-                program=program,
-                subprogram=subprogram,
-                filename=cpf_file.filename,
-                data=cpf_data
-            )
-            db.session.add(cpf_record)
-            db.session.commit()
-
-        if cesap_file: 
-            cesap_data = cesap_file.read()
-            cesap_record = CESAPp(
-                community=community,
-                program=program,
-                subprogram=subprogram,
-                filename=cesap_file.filename,
-                data=cesap_data
-            )
-            db.session.add(cesap_record)
-            db.session.commit()
-
-        if cna_file:
-            cna_data = cna_file.read()
-            cna_record = CNAp(
-                community=community,
-                program=program,
-                subprogram=subprogram,
-                filename=cna_file.filename,
-                data=cna_data
-            )
-            db.session.add(cna_record)
-            db.session.commit()
-
-        flash('New community project added!', 'add_community')
         return redirect(url_for('coordinator.cManage_community'))
        
     return redirect(url_for('coordinator.cManage_community'))
