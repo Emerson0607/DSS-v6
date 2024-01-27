@@ -65,7 +65,7 @@
                                     
                                     <div class="form-group" >
                                     <label for="new_role">Role:</label>
-                                    <select class="form-select" name="new_role"required>
+                                    <select class="form-select" name="new_role" required>
                                         <option value="{{row.role}}" selected style="display: none;">{{row.role}}</option>
                                         {% for r in role %}
                                             <option value="{{ r.role }}">{{ r.role }}</option>
@@ -122,7 +122,7 @@
                                         <div class="form-group">
                                             <label for="role">Role:</label>
                                             <select class="form-control" name="role" required>
-                                                <option selected disabled>-- s e l e c t --</option>  <!-- Placeholder option -->
+                                                <option value="" selected disabled>-- s e l e c t --</option>  <!-- Placeholder option -->
                                                 {% for r in role %}
                                                     <option value="{{ r.role }}">{{ r.role }}</option>
                                                 {% endfor %}
@@ -132,7 +132,7 @@
                                         <div class="form-group">
                                             <label for="program">Program:</label>
                                             <select class="form-control" name="program" required>
-                                                <option selected disabled >-- s e l e c t --</option>  <!-- Placeholder option -->
+                                                <option value="" selected disabled >-- s e l e c t --</option>  <!-- Placeholder option -->
                                                 {% for p in program8 %}
                                                     <option value="{{ p.program }}">{{ p.program }}</option>
                                                 {% endfor %}

@@ -84,6 +84,7 @@
         </div>
     
         <button class="btn btn-primary save-button">Save</button>
+        <button class="btn btn-primary archive-button">Archive</button>
     </div>
     
 </div>
@@ -125,12 +126,16 @@
             var statusText = record.status;
             var colorClass = statusText === 'Ongoing' ? 'text-orange' : 'text-green';
             
-            if (statusText === 'Ongoing') {
+           
 
+            if (statusText === 'Ongoing') {
+                
+                insightsDiv.find(".archive-button").css("display", "none");
                 insightsDiv.find(".save-button").css("display", "block");
             } else if (statusText === 'Completed') {
               
                 insightsDiv.find(".save-button").css("display", "none");
+                insightsDiv.find(".archive-button").css("display", "block");
             }
 
             // Update the content within the newly created insights-div
@@ -227,39 +232,53 @@
 
             if (userConfirmed) {
                 // Execute update_status and updatePercentage if the user confirmed
-                update_status();
-                updatePercentage();
-                
-            }
-
-            /**
-            var textareaValue = insightsDiv.find("#textarea").val();
-            if (textareaValue.trim() === "") {
-                alert("Please input data in the textarea before saving.");
+                if (record.week === record.totalWeek) {
+                    update_status();
             } else {
-                saveDataToDatabase(textareaValue);
+                updatePercentage();
+
             }
-            */
+            }
         });
 
-        function saveDataToDatabase(textareaValue) {
-            setTimeout(function () {
-                insightsDiv.find("#textarea").val("");
+        // archive project
+        insightsDiv.find(".archive-button").click(function () {
+            var userConfirmed = confirm("Are you sure you want to proceed?");
+            if (userConfirmed) {
+                // Execute update_status and updatePercentage if the user confirmed
+                archive_project();
+            }
+        });
 
-                var alertElement =  '<div role="alert">' + '<h4>Save Success</h4>' + '</div>';
-
-                insightsDiv.append(alertElement);
-                setTimeout(function () {
-                    insightsDiv.find(".alert.alert-success").remove();
-                }, 3000); 
-            }, 1000); 
+        function archive_project(){
+            var recordStatus = "Completed";
+            $.ajax({
+                url: "/archive_project",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    community: record.community,
+                    program: record.program,
+                    subprogram: record.subprogram,
+                    status: recordStatus
+                }),
+                success: function(response) {
+                    console.log("Status updated successfully.");
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error("Failed to update status: " + error);
+                }
+            });
         }
+
         var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
         var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
         var percentage = Math.floor((checkedCheckboxes * 100) / totalCheckboxes);
         insightsDiv.find(".number").text(percentage + "%");
 
         function updatePercentage() {
+          
             var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
             var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
             var percentage = Math.floor((checkedCheckboxes * 100) / totalCheckboxes);
@@ -272,6 +291,28 @@
             circle.attr("stroke-dasharray", circumference);
             circle.attr("stroke-dashoffset", dashOffset);
 
+            if (percentage > 99) {
+                var recordStatus = "Completed";
+                
+                $.ajax({
+                    url: "/update_status", // Use an appropriate URL for updating the status
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        community: record.community,
+                        program: record.program,
+                        subprogram: record.subprogram,
+                        status: recordStatus
+                    }),
+                    success: function(response) {
+                        console.log("Status updated successfully.");
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.error("Failed to update status: " + error);
+                    }
+                });
+            }
             if (percentage >= 85) {
                 circle.attr("stroke", "#41f1b6"); // Green
                 } else if (percentage >= 70) {
@@ -294,23 +335,22 @@
                 }),
                 success: function(response) {
                     console.log("Week updated successfully.");
+                    location.reload();
                 },
                     error: function(error) {
                         console.error("Failed to update week: " + error);
                     }
             }); 
+
+
+            
+
+           
         }
 
-
         function update_status(){
-
-            var recordStatus = "";
-            if (record.week === record.totalWeek) {
-                recordStatus = "Completed";
-            } else {
-                recordStatus = "Ongoing"; // Set status to "Ongoing" if not equal
-            }
-
+            var recordStatus = "Completed";
+            
             $.ajax({
                 url: "/update_status", // Use an appropriate URL for updating the status
                 method: "POST",
@@ -323,6 +363,7 @@
                 }),
                 success: function(response) {
                     console.log("Status updated successfully.");
+                    location.reload();
                 },
                 error: function(error) {
                     console.error("Failed to update status: " + error);
@@ -330,8 +371,7 @@
             });
             
         }
-
-        
+            
             var circle = insightsDiv.find("circle");
             var circumference = 2 * Math.PI * parseInt(circle.attr("r"));
             var dashOffset = circumference * (1 - percentage / 100);
@@ -355,6 +395,8 @@
 
             insightsContainer.find("> div:first-child").css("display", "none");
         }
+
+    
     },
     error: function() {
         console.log("Failed to load community data.");

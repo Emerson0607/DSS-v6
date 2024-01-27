@@ -96,7 +96,10 @@ class Archive(db.Model):
     budget = db.Column(db.Integer, nullable=False)
     cna = db.Column(db.LargeBinary, nullable=True)
     cpf = db.Column(db.LargeBinary, nullable=True)
-    cesap = db.Column(db.LargeBinary, nullable=True) 
+    cesap = db.Column(db.LargeBinary, nullable=True)
+    cna_filename = db.Column(db.String(255), nullable=True)
+    cpf_filename = db.Column(db.String(255), nullable=True)
+    cesap_filename = db.Column(db.String(255), nullable=True) 
 
 # --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
 
@@ -206,7 +209,7 @@ def initialize_database():
     #insert_community()
     #insert_userx()
     #insert_pending()
-    delete_data()
+    #delete_data()
     return 'Program.'
 
 @app.route('/test')
@@ -215,4 +218,6 @@ def display_community_data():
     all_community_data = db.session.query(Community).all()
     Pending_project_data = Pending_project.query.all()
     User = Users.query.all()
-    return render_template('test.html', community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User)
+    
+    archive_project = db.session.query(Archive).all()
+    return render_template('test.html', community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User, archive_project=archive_project)

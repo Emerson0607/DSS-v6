@@ -54,8 +54,64 @@
         </tbody>
     </table>
 
+
+
+    <!--ARCHIVE-->
+
+    <h1>ARCHIVE Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Community</th>
+                <th>Program</th>
+                <th>Subprogram</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Week</th>
+                <th>Total Week</th>
+                <th>User</th>
+                <th>Department</th>
+                <th>SubDepartment</th>
+                <th>Status</th>
+                <th>Budget</th>
+                <th>CPF</th>
+                <th>CESAP</th>
+                <th>CNA</th>
+    
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for community in archive_project %}
+            <tr>
+                <td>{{ community.id }}</td>
+                <td>{{ community.community }}</td>
+                <td>{{ community.program }}</td>
+                <td>{{ community.subprogram }}</td>
+                <td>{{ community.start_date }}</td>
+                <td>{{ community.end_date }}</td>
+                <td>{{ community.week }}</td>
+                <td>{{ community.totalWeek }}</td>
+                <td>{{ community.user }}</td>
+                <td>{{ community.department }}</td>
+                <td>{{ community.subDepartment }}</td>
+                <td>{{ community.status }}</td>
+                <td>{{ community.budget }}</td>
+                <td>{{ community.cpf_filename }}</td>
+                <td>{{ community.cesap_filename }}</td>
+                <td>{{ community.cna_filename }}</td>
+          
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <!--Subprogram-->
     <table >
-        <h1>Subrpogram</h1>
+        <h1>Subprogram</h1>
         <thead>
             <tr>
                

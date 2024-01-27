@@ -37,7 +37,7 @@
                 <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.totalWeek }}</a></td>
                 <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.user }}</a></td>
                 <td>
-                    <a href="{{ url_for('dbModel.delete_project', project_id=row.id)}}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                    <a href="{{ url_for('dbModel.delete_project', project_id=row.id, data=data)}}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
                 </td>
             </tr>
             {% endfor %}

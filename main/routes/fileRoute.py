@@ -2,7 +2,6 @@ from flask import Blueprint, redirect, url_for, render_template, session, flash,
 from main.models.dbModel import Upload, Users, Pending_project
 from main import db
 
-
 file_route = Blueprint('file', __name__)
 
 def get_current_user():
@@ -33,6 +32,10 @@ def inject_current_user():
 # -------------------------   DL FILES for admin
 @file_route.route('/files')
 def files():
+     # Check if current_role is "admin"
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login')) 
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -41,6 +44,9 @@ def files():
 
 @file_route.route('/uploadfile', methods=['POST'])
 def upload():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login')) 
+
     if 'file' in request.files:
         file = request.files['file']
         if file.filename != '':
@@ -55,6 +61,9 @@ def upload():
 
 @file_route.route('/view/<int:file_id>')
 def view(file_id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     upload_entry = Upload.query.get(file_id)
     if upload_entry:
         # Determine the content type based on the file extension
@@ -82,6 +91,9 @@ def view(file_id):
 
 @file_route.route('/delete_file/<int:id>', methods=['GET'])
 def delete_file(id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+        
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))

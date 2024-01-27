@@ -13,16 +13,18 @@ sub_model_path = 'subprogram7.pkl'
 model = joblib.load(model_path_cesu)
 model2 = joblib.load(sub_model_path)
 
-
 @randomForest_Route.errorhandler(Exception)
 def handle_error(e):
-    return render_template("error.html"), 500  # You can customize the error page and status code
+    if g.current_role == "Coordinator":
+        return render_template("cerror.html"), 500  # Customize the error page and status code
+    else:
+        return render_template("error.html"), 500  # Customize the error page and status code
 
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        pending_count = Pending_project.query.filter_by(pending="pending").count()
+        pending_count = Pending_project.query.filter_by(status="Pending").count()
             
         # Set a maximum value for pending_count
         max_pending_count = 9
@@ -45,6 +47,9 @@ def inject_current_user():
 
 @randomForest_Route.route("/program", methods=["GET", "POST"])
 def program():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+        
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -63,6 +68,9 @@ def cProgram():
 
 @randomForest_Route.route("/programWithCSV", methods=["GET", "POST"])
 def programWithCSV():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))

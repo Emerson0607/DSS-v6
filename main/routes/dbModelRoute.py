@@ -125,7 +125,10 @@ def send_mail(otp, recipient_email):
 @dbModel_route.route("/login", methods=["GET", "POST"])
 def login():
     if 'user_id' in session:
-        return redirect(url_for('dbModel.dashboard'))
+        if g.current_role != "Admin":
+            return redirect(url_for('coordinator.coordinator_dashboard')) 
+        else:
+            return redirect(url_for('dbModel.dashboard'))
 
     if request.method == "POST":
         username = request.form.get("username")
@@ -146,6 +149,9 @@ def login():
 
 @dbModel_route.route("/admin_dashboard")
 def dashboard():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login')) 
+
      # Check if the user is logged in
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
@@ -184,6 +190,9 @@ def clear_session():
 
 @dbModel_route.route("/result")
 def programCSVresult():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -194,6 +203,9 @@ def programCSVresult():
 
 @dbModel_route.route("/manage_account")
 def manage_account():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -205,6 +217,7 @@ def manage_account():
 
 @dbModel_route.route("/add_account", methods=["POST"])
 def add_account():
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -303,6 +316,9 @@ def delete_account(id):
 ############################  FOR COORDINATOR ROUTE  ############################
 @dbModel_route.route('/coordinator/<data>')
 def coordinator(data):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -375,6 +391,9 @@ def community_data_list():
 
 @dbModel_route.route("/manage_community")
 def manage_community():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     form = Form()
     placeholder_choice = ("", "-- Select Program --")
     form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
@@ -428,7 +447,7 @@ def add_community():
         cna_file = request.files['CNA']
       
 
-        existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
+        existing_community = Community.query.filter_by(user= user, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
             cpf_data = cpf_file.read()
@@ -526,6 +545,9 @@ def delete_community(id):
 
 @dbModel_route.route("/manage_pending")
 def manage_pending():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -644,6 +666,7 @@ def view_cesap(program, subprogram, community, cesap_filename):
 
 @dbModel_route.route("/approve", methods=["POST"])
 def approve():
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -654,7 +677,7 @@ def approve():
         subprogram = request.form.get("subprogram")
         user = request.form.get("user")
         
-        existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
+        existing_community = Community.query.filter_by(user= user, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
             data_to_move = Pending_project.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
@@ -737,13 +760,70 @@ def update_status():
     program = data['program']
     status = data['status']
 
-    # Query the database to get records with the specified subprogram
-    communities = Community.query.filter_by(community = community, program=program, subprogram=subprogram).all()
+    # Query the database to get a single record with the specified subprogram
+    community_to_update = Community.query.filter_by(community=community, program=program, subprogram=subprogram).first()
 
-    for community in communities:
-        community.status = status
+    if community_to_update:
+        # Update the status for the specific record
+        community_to_update.status = status
+        db.session.commit()
+        return jsonify({'message': 'Status updated successfully.'})
+    else:
+        return jsonify({'message': 'Record not found.'}), 404
+
+
+############################### ARCHIVE PROJECT ###############################
+@dbModel_route.route('/archive_project', methods=['POST'])
+def archive_project():
+    data = request.get_json()
+    community = data['community']
+    subprogram = data['subprogram']
+    program = data['program']
+    status = data['status']
+
+    data_to_move = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+    # Iterate through the data and move it to CPFARCHIVE
+        
+        # Create a new row in CPFARCHIVE
+    new_row = Archive(
+        community=data_to_move.community, 
+        program=data_to_move.program, 
+        subprogram=data_to_move.subprogram, 
+        start_date=data_to_move.start_date,
+        end_date=data_to_move.end_date, 
+        week=data_to_move.week, 
+        totalWeek=data_to_move.totalWeek, 
+        user=data_to_move.user, 
+        department=data_to_move.department, 
+        subDepartment=data_to_move.subDepartment, 
+        status="Completed", 
+        budget = data_to_move.budget, 
+        cpf_filename=data_to_move.cpf_filename, 
+        cpf=data_to_move.cpf, 
+        cesap_filename=data_to_move.cesap_filename, 
+        cesap=data_to_move.cesap,
+        cna_filename = data_to_move.cna_filename, 
+        cna=data_to_move.cna
+    )
+    db.session.add(new_row)
     db.session.commit()
-    return jsonify({'message': 'Week column updated for the specified subprogram.'})
+    flash('New community project added!', 'add_community')
+
+    community_delete = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+    if community_delete:
+        try:
+                # Delete the user from the database
+            db.session.delete(community_delete)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+                # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+   
+
+    return jsonify({'message': 'Data archived.'})
+
 
 ############################### display kaakbay program and coordinator ###############################
 def get_ongoing_count(session, program_name):
@@ -770,6 +850,9 @@ def get_completed_count(session, program_name):
 
 @dbModel_route.route("/kaakbay_program")
 def kaakbay_program():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -834,6 +917,9 @@ def kaakbay_program():
 ############################### CHANGED PASSWORD ###############################
 @dbModel_route.route("/change_password")
 def change_password():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -841,6 +927,9 @@ def change_password():
 
 @dbModel_route.route("/new_password", methods=["GET", "POST"])
 def new_password():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -869,6 +958,9 @@ def new_password():
 ############################### CURRENT PROJECT FILES ###############################
 @dbModel_route.route("/project_files")
 def project_files():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -876,6 +968,9 @@ def project_files():
 
 @dbModel_route.route("/project_file_list/<data>")
 def project_file_list(data):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -898,6 +993,7 @@ def view_project(project_id):
 
 @dbModel_route.route("/delete_project/<int:project_id>")
 def delete_project(project_id):
+    data = request.args.get('data')
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -915,7 +1011,8 @@ def delete_project(project_id):
         flash('User not found. Please try again.', 'error')
     
     flash('Delete successfully!', 'delete_project')
-    return redirect(url_for('dbModel.project_files'))
+    project_file_list = Community.query.filter_by(program=data).all()
+    return render_template("project_table.html", project_file_list=project_file_list, data=data)
 
 @dbModel_route.route('/view_cpf_project/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf_project(program, subprogram, community, cpf_filename):
@@ -999,32 +1096,144 @@ def view_cesap_project(program, subprogram, community, cesap_filename):
     return "File not found", 404
 
 
-"""
-@dbModel_route.route('/move_data')
-def move_data():
-    # Fetch data from CPF
-    data_to_move = CPFARCHIVE.query.all()
 
-    # Iterate through the data and move it to CPFARCHIVE
-    for row in data_to_move:
-        # Create a new row in CPFARCHIVE
-        new_row = CPF(
-            community=row.community,
-            program=row.program,
-            subprogram=row.subprogram,
-            filename=row.filename,
-            data=row.data
-        )
-        db.session.add(new_row)
+############################### ARCHIVED FILES ###############################
 
-    # Commit the changes to CPFARCHIVE
-    db.session.commit()
+@dbModel_route.route("/archived_files")
+def archived_files():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+        
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("archived_files.html")
 
-    # Delete the corresponding rows from CPF
-    CPFARCHIVE.query.delete()
+@dbModel_route.route("/archived_file_list/<data>")
+def archived_file_list(data):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
 
-    # Commit the changes to CPF
-    db.session.commit()
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    archived_file_list = Archive.query.filter_by(program=data).all()
+    return render_template("archived_table.html", archived_file_list=archived_file_list, data=data)
 
-    return 'Data moved successfully'
-    """
+@dbModel_route.route("/view_archived/<int:project_id>")
+def view_archived(project_id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    p = Archive.query.get(project_id)
+
+    cpf_data_filename = p.cpf_filename
+    cesap_data_filename = p.cesap_filename
+    cna_data_filename = p.cna_filename
+
+    return render_template("archived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename)
+
+@dbModel_route.route("/delete_archived/<int:project_id>")
+def delete_archived(project_id):
+    data = request.args.get('data')
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    p = Archive.query.filter_by(id=project_id).first()
+    if p:
+        try:
+            # Delete the user from the database
+            db.session.delete(p)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+    
+    flash('Delete successfully!', 'delete_project')
+    archived_file_list = Archive.query.filter_by(program=data).all()
+    return render_template("archived_table.html", archived_file_list=archived_file_list, data=data)
+
+@dbModel_route.route('/view_cpf_archived/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
+def view_cpf_archived(program, subprogram, community, cpf_filename):
+    upload_entry = Archive.query.filter_by(community = community, program = program, subprogram = subprogram, cpf_filename=cpf_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cpf_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cpf, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cpf_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cpf,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@dbModel_route.route('/view_cna_archived/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
+def view_cna_archived(program, subprogram, community, cna_filename):
+    upload_entry = Archive.query.filter_by(community = community, program = program, subprogram = subprogram, cna_filename=cna_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cna_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cna, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cna_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cna,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@dbModel_route.route('/view_cesap_archived/<program>/<subprogram>/<community>/<cesap_filename>', methods=['GET'])
+def view_cesap_archived(program, subprogram, community, cesap_filename):
+    upload_entry = Archive.query.filter_by(community = community, program = program, subprogram = subprogram, cesap_filename=cesap_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cesap_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cna, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cesap_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cna,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
