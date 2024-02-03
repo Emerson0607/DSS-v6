@@ -20,27 +20,27 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        pending_count = Pending_project.query.filter_by(status="Declined", program=user.program).count()
+        declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count()
             
         # Set a maximum value for pending_count
-        max_pending_count = 9
-        pending_count_display = min(pending_count, max_pending_count)
+        max_declined_count = 9
+        declined_count_display = min(declined_count, max_declined_count)
 
         # If pending_count is 9 or greater, display it as '9+'
-        pending_count_display = '9+' if pending_count > max_pending_count else pending_count
+        declined_count_display = '9+' if declined_count > max_declined_count else declined_count
 
         if user:
-            return user.username, user.role, user.program, pending_count_display
+            return user.username, user.role, user.program, declined_count_display
     return None, None, None, 0
     
 @coordinator_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program, g.pending_count_display = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.declined_count_display = get_current_user()
 
 @coordinator_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, pending_count = g.pending_count_display)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display)
 
 @coordinator_route.route("/cClear_session")
 def cClear_session():
@@ -507,3 +507,23 @@ def cView_cesap(program, subprogram, community, cesap_filename):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
+
+
+############################### COORDINATOR COMMENTS ###############################
+@coordinator_route.route('/get_comments')
+def get_comments():
+    try:
+        community_data = [
+            {
+                'community': record.community,
+                'program': record.program,
+                'subprogram': record.subprogram,
+                'comments': record.comments
+            }
+            for record in Pending_project.query.filter_by(program=g.current_program).all()
+        ]
+        return jsonify(community_data)
+    except Exception as e:
+        # Log the error for debugging
+        print(str(e))
+        return make_response("Internal Server Error", 500)

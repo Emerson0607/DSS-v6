@@ -65,7 +65,7 @@
                         pending
                         </span>
                     <h3>Pending Projects</h3>
-                    <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
+                    <span class="pending-badge" id="pending-badge">{{declined_count}}</span>
                 </a>
                 <a href="{{ url_for('randomForest.cProgram') }}"class="sidebar-link">
                     <span class="material-symbols-sharp">neurology</span>
@@ -128,10 +128,18 @@
                         <!-- The current date and day will be displayed here -->
                     </div>
                 </div>
+                
+                <!--
+                <div class="comments">
+                    <div id="comments-container">
+                        <h3>Notifications</h3>
+                        <span class="material-symbols-sharp">notifications</span>
+                    </div>
+                </div>
+                -->
             </div>
         </div>
     </div>
-
    
  <script src="/static/js/admin_dashboard.js"></script>
  <script>
@@ -140,9 +148,50 @@
        dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
    }
 </script>
+
+<!--
 <script>
+   $(document).ready(function () {
+    $.ajax({
+        url: "/get_comments",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            data = data.reverse();
+
+            var commentsContainer = $('#comments-container');
+
+            data.forEach(function (record) {
+                // Create a new comments-body element for each comment
+                var commentsBody = $('<div class="comments-body"></div>');
+
+                // Create a new <p> element with the comment details
+                var commentContent = '<p>' +
+                    'Admin declined ' +
+                    record.community + 
+                    ' and comments: "' + record.comments + '"' +
+                    '</p>';
+
+                // Add the comment content to the comments-body element
+                commentsBody.append(commentContent);
+
+                // Append the comments-body element to the commentsContainer
+                commentsContainer.append(commentsBody);
+                
+            });
+        },
+        error: function () {
+            console.log("Failed to load community data.");
+        }
+    });
+});
+
+</script>
+-->
+
+<script>
+
 document.addEventListener("DOMContentLoaded", function() {
-    
 
     //SIDE BAR LINKS ACTIVATE
     const sidebarLinks = document.querySelectorAll(".sidebar-link");
@@ -201,7 +250,7 @@ function clearAndSetFirstLinkActive() {
     });
 </script>
 <script>
-    var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
+    var pendingCount = '{{declined_count}}'; // Assuming pending_count is a variable in your template
   
     // Get the element by ID
     var pendingBadge = document.getElementById('pending-badge');

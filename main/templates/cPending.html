@@ -63,7 +63,9 @@
             var status = statusElement.getAttribute('data-status');
             if (status.trim() === 'Declined') {
                 statusElement.style.color = 'red';  // Change the color as needed
-                statusElement.style.fontWeight = 'bold'; 
+                
+            }else{
+                statusElement.style.color = '#0066ff';
             }
         });
     });

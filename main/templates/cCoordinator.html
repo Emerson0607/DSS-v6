@@ -148,9 +148,9 @@
             var checkboxContainer = $('<div class="form-check form-check-inline">');
             var checkbox = $('<input class="form-check-input" type="checkbox">');
             var label = $('<label class="label">Week ' + i + '</label>');
-            var checkboxId = record.subprogram;
+            var checkboxId = record.subprogram+record.community;
             checkbox.attr("id", checkboxId);
-            label.attr("for", checkboxId);
+            label.attr("for", record.subprogram);
 
             checkboxContainer.append(checkbox);
             checkboxContainer.append(label);
@@ -218,38 +218,13 @@
 
          // Add a click event handler for saving data to the database
         insightsDiv.find(".save-button").click(function () {
-           
             var userConfirmed = confirm("Are you sure you want to proceed?");
-          
-
             if (userConfirmed) {
                 // Execute update_status and updatePercentage if the user confirmed
                 updatePercentage();
-                update_status();
             }
-
-            /**
-            var textareaValue = insightsDiv.find("#textarea").val();
-            if (textareaValue.trim() === "") {
-                alert("Please input data in the textarea before saving.");
-            } else {
-                saveDataToDatabase(textareaValue);
-            }
-            */
         });
 
-        function saveDataToDatabase(textareaValue) {
-            setTimeout(function () {
-                insightsDiv.find("#textarea").val("");
-
-                var alertElement =  '<div role="alert">' + '<h4>Save Success</h4>' + '</div>';
-
-                insightsDiv.append(alertElement);
-                setTimeout(function () {
-                    insightsDiv.find(".alert.alert-success").remove();
-                }, 3000); 
-            }, 1000); 
-        }
         var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
         var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
         var percentage = Math.floor((checkedCheckboxes * 100) / totalCheckboxes);
@@ -268,6 +243,28 @@
             circle.attr("stroke-dasharray", circumference);
             circle.attr("stroke-dashoffset", dashOffset);
 
+            if (percentage > 99) {
+                var recordStatus = "Completed";
+                
+                $.ajax({
+                    url: "/cUpdate_status", // Use an appropriate URL for updating the status
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        community: record.community,
+                        program: record.program,
+                        subprogram: record.subprogram,
+                        status: recordStatus
+                    }),
+                    success: function(response) {
+                        console.log("Status updated successfully.");
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.error("Failed to update status: " + error);
+                    }
+                });
+            }
             if (percentage >= 85) {
                 circle.attr("stroke", "#41f1b6"); // Green
                 } else if (percentage >= 70) {
@@ -290,6 +287,7 @@
                 }),
                 success: function(response) {
                     console.log("Week updated successfully.");
+                    location.reload();
                 },
                     error: function(error) {
                         console.error("Failed to update week: " + error);
@@ -300,12 +298,7 @@
 
         function update_status(){
 
-            var recordStatus = "";
-            if (record.week === record.totalWeek) {
-                recordStatus = "Completed";
-            } else {
-                recordStatus = "Ongoing"; // Set status to "Ongoing" if not equal
-            }
+            var recordStatus = "Completed";
 
             $.ajax({
                 url: "/cUpdate_status", // Use an appropriate URL for updating the status

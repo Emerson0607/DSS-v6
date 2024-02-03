@@ -29,21 +29,25 @@ def get_current_user():
         # Set a maximum value for pending_count
         max_pending_count = 9
         pending_count_display = min(pending_count, max_pending_count)
-
-        # If pending_count is 9 or greater, display it as '9+'
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
+
+        declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count() 
+        max_declined_count = 9
+        declined_count_display = min(declined_count, max_declined_count)
+        declined_count_display = '9+' if declined_count > max_declined_count else declined_count
+
         if user:
-            return user.username, user.role, pending_count_display
-    return None, None, 0
+            return user.username, user.role, pending_count_display, declined_count_display
+    return None, None, 0, 0
 
 @randomForest_Route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display = get_current_user()
 
 @randomForest_Route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display )
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count=g.declined_count_display )
 
 @randomForest_Route.route("/program", methods=["GET", "POST"])
 def program():

@@ -125,8 +125,6 @@
             
             var statusText = record.status;
             var colorClass = statusText === 'Ongoing' ? 'text-orange' : 'text-green';
-            
-           
 
             if (statusText === 'Ongoing') {
                 
@@ -156,9 +154,9 @@
             var checkboxContainer = $('<div class="form-check form-check-inline">');
             var checkbox = $('<input class="form-check-input" type="checkbox">');
             var label = $('<label class="label">Week ' + i + '</label>');
-            var checkboxId = record.subprogram;
+            var checkboxId = record.subprogram+record.community;
             checkbox.attr("id", checkboxId);
-            label.attr("for", checkboxId);
+            label.attr("for", record.subprogram);
 
             checkboxContainer.append(checkbox);
             checkboxContainer.append(label);

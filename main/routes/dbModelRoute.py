@@ -529,7 +529,7 @@ def delete_community(id):
             # You may want to log the exception for debugging purposes
     else:
         flash('User not found. Please try again.', 'error')
-
+    
     if subprogram_record:
         try:
             # Delete the 'Upload' record from the database
@@ -1058,12 +1058,24 @@ def delete_project(project_id):
             # Delete the user from the database
             db.session.delete(p)
             db.session.commit()
+
+            subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
+            if subprogram_record:
+                try:
+                    # Delete the 'Upload' record from the database
+                    db.session.delete(subprogram_record)
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
         except Exception as e:
             db.session.rollback()
             # You may want to log the exception for debugging purposes
+        
     else:
         flash('User not found. Please try again.', 'error')
     
+    
+
     flash('Delete successfully!', 'delete_project')
     project_file_list = Community.query.filter_by(program=data).all()
     return render_template("project_table.html", project_file_list=project_file_list, data=data)
