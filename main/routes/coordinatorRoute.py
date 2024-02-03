@@ -20,18 +20,27 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
+        pending_count = Pending_project.query.filter_by(status="Declined", program=user.program).count()
+            
+        # Set a maximum value for pending_count
+        max_pending_count = 9
+        pending_count_display = min(pending_count, max_pending_count)
+
+        # If pending_count is 9 or greater, display it as '9+'
+        pending_count_display = '9+' if pending_count > max_pending_count else pending_count
+
         if user:
-            return user.username, user.role, user.program
-    return None, None
+            return user.username, user.role, user.program, pending_count_display
+    return None, None, None, 0
     
 @coordinator_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.pending_count_display = get_current_user()
 
 @coordinator_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, pending_count = g.pending_count_display)
 
 @coordinator_route.route("/cClear_session")
 def cClear_session():
@@ -188,7 +197,7 @@ def cUpdate_week():
     program = data['program']
 
     # Query the database to get records with the specified subprogram
-    communities = Community.query.filter_by(program=program, subprogram=subprogram).all()
+    communities = Community.query.filter_by(community=community,program=program, subprogram=subprogram).all()
 
     for community in communities:
         # Update the "week" column to match the totalCheckboxes
@@ -247,7 +256,7 @@ def cChange_password():
     return render_template("cChange_password.html")
 
 ############# changepassword ##############
-############# changepassword ##############
+
 @coordinator_route.route("/cNew_password", methods=["GET", "POST"])
 def cNew_password():
     if 'user_id' not in session:
@@ -274,3 +283,227 @@ def cNew_password():
         else:
             flash('Wrong old password.', 'wrong_old')
     return redirect(url_for('coordinator.cChange_password'))
+
+############################### COORDINATOR CURRENT PROJECT FILES ###############################
+
+@coordinator_route.route("/cProject_file_list")
+def cProject_file_list():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    project_file_list = Community.query.filter_by(program=g.current_program).all()
+    return render_template("cProject_table.html", project_file_list=project_file_list, data=g.current_program)
+
+@coordinator_route.route("/cView_project/<int:project_id>")
+def cView_project(project_id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    p = Community.query.get(project_id)
+
+    cpf_data_filename = p.cpf_filename
+    cesap_data_filename = p.cesap_filename
+    cna_data_filename = p.cna_filename
+
+    return render_template("cProject_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename)
+
+@coordinator_route.route('/cView_cpf_project/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
+def cView_cpf_project(program, subprogram, community, cpf_filename):
+    upload_entry = Community.query.filter_by(community = community, program = program, subprogram = subprogram, cpf_filename=cpf_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cpf_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cpf, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cpf_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cpf,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@coordinator_route.route('/cView_cna_project/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
+def cView_cna_project(program, subprogram, community, cna_filename):
+    upload_entry = Community.query.filter_by(community = community, program = program, subprogram = subprogram, cna_filename=cna_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cna_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cna, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cna_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cna,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@coordinator_route.route('/cView_cesap_project/<program>/<subprogram>/<community>/<cesap_filename>', methods=['GET'])
+def cView_cesap_project(program, subprogram, community, cesap_filename):
+    upload_entry = Community.query.filter_by(community = community, program = program, subprogram = subprogram, cesap_filename=cesap_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cesap_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cesap, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cesap_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cesap,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+
+
+############################### COORDINATOR PENDING PROJECT FILES ###############################
+@coordinator_route.route("/cManage_pending")
+def cManage_pending():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+     # Fetch all user records from the database
+    all_data = Pending_project.query.filter_by(program=g.current_program).all()
+    return render_template("cPending.html", pending_project_data = all_data)
+
+@coordinator_route.route('/cDelete_pending/<int:id>', methods=['GET'])
+def cDelete_pending(id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    community = Pending_project.query.get(id)
+    if community:
+        try:
+            # Delete the user from the database
+            db.session.delete(community)
+            db.session.commit()
+            flash('Delete successfully!', 'delete_pending')
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+    return redirect(url_for('coordinator.cManage_pending'))
+
+@coordinator_route.route('/cView_pending/<int:pending_id>', methods=['GET'])
+def cView_pending(pending_id):
+    p = Pending_project.query.get(pending_id)
+
+    return render_template("cPending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+
+@coordinator_route.route('/cView_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
+def cView_cpf(program, subprogram, community, cpf_filename):
+    upload_entry = Pending_project.query.filter_by(community = community, program = program, subprogram = subprogram, cpf_filename=cpf_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cpf_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cpf, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cpf_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cpf,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@coordinator_route.route('/cView_cna/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
+def cView_cna(program, subprogram, community, cna_filename):
+    upload_entry = Pending_project.query.filter_by(community = community, program = program, subprogram = subprogram, cna_filename=cna_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cna_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cna, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cna_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cna,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@coordinator_route.route('/cView_cesap/<program>/<subprogram>/<community>/<cesap_filename>', methods=['GET'])
+def cView_cesap(program, subprogram, community, cesap_filename):
+    upload_entry = Pending_project.query.filter_by(community = community, program = program, subprogram = subprogram, cesap_filename=cesap_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cesap_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cesap, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cesap_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cesap,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404

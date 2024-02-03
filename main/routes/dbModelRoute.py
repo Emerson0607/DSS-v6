@@ -447,7 +447,7 @@ def add_community():
         cna_file = request.files['CNA']
       
 
-        existing_community = Community.query.filter_by(user= user, program = program, subprogram=subprogram).first()
+        existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
             cpf_data = cpf_file.read()
@@ -552,7 +552,7 @@ def manage_pending():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Pending_project.query.all()
+    all_data = Pending_project.query.filter_by(status="Pending").all()
 
     return render_template("pending.html", pending_project_data = all_data)
 
@@ -581,7 +581,7 @@ def delete_pending(id):
 def view_pending(pending_id):
     p = Pending_project.query.get(pending_id)
 
-    return render_template("pending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+    return render_template("pending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
 @dbModel_route.route('/view_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf(program, subprogram, community, cpf_filename):
@@ -677,7 +677,7 @@ def approve():
         subprogram = request.form.get("subprogram")
         user = request.form.get("user")
         
-        existing_community = Community.query.filter_by(user= user, program = program, subprogram=subprogram).first()
+        existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
 
         if existing_community is None:
             data_to_move = Pending_project.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
@@ -733,17 +733,38 @@ def approve():
        
     return redirect(url_for('dbModel.manage_pending'))
 
-############################### UPDATE WEEK BASED FROM Subprogram ###############################
+@dbModel_route.route("/decline", methods=["POST"])
+def decline():
+    community = request.args.get('community')
+    program = request.args.get('program')
+    subprogram = request.args.get('subprogram')
+    comments = request.form.get('comments')
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        p = Pending_project.query.filter_by(community=community, program = program, subprogram=subprogram).first()
 
+        if p:
+            p.status = "Declined"
+            p.comments=comments 
+            db.session.commit()
+        return redirect(url_for('dbModel.manage_pending'))
+       
+    return redirect(url_for('dbModel.manage_pending'))
+
+############################### UPDATE WEEK BASED FROM Subprogram ###############################
 @dbModel_route.route('/update_week', methods=['POST'])
 def update_week():
     data = request.get_json()
+    community = data['community']
     subprogram = data['subprogram']
     totalCheckboxes = data['totalCheckboxes']
     program = data['program']
 
     # Query the database to get records with the specified subprogram
-    communities = Community.query.filter_by(program=program, subprogram=subprogram).all()
+    communities = Community.query.filter_by(community = community, program=program, subprogram=subprogram).all()
 
     for community in communities:
         # Update the "week" column to match the totalCheckboxes
@@ -993,7 +1014,12 @@ def view_project(project_id):
 
 @dbModel_route.route("/delete_project/<int:project_id>")
 def delete_project(project_id):
+    
     data = request.args.get('data')
+    community = request.args.get('community')
+    program = request.args.get('program')
+    subprogram = request.args.get('subprogram')
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1001,6 +1027,34 @@ def delete_project(project_id):
     p = Community.query.filter_by(id=project_id).first()
     if p:
         try:
+            data_to_move = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+            # Iterate through the data and move it to CPFARCHIVE
+                
+                # Create a new row in CPFARCHIVE
+            new_row = Archive(
+                community=data_to_move.community, 
+                program=data_to_move.program, 
+                subprogram=data_to_move.subprogram, 
+                start_date=data_to_move.start_date,
+                end_date=data_to_move.end_date, 
+                week=data_to_move.week, 
+                totalWeek=data_to_move.totalWeek, 
+                user=data_to_move.user, 
+                department=data_to_move.department, 
+                subDepartment=data_to_move.subDepartment, 
+                status=data_to_move.status, 
+                budget = data_to_move.budget, 
+                cpf_filename=data_to_move.cpf_filename, 
+                cpf=data_to_move.cpf, 
+                cesap_filename=data_to_move.cesap_filename, 
+                cesap=data_to_move.cesap,
+                cna_filename = data_to_move.cna_filename, 
+                cna=data_to_move.cna
+            )
+            db.session.add(new_row)
+            db.session.commit()
+            flash('New community project added!', 'add_community')
+
             # Delete the user from the database
             db.session.delete(p)
             db.session.commit()
@@ -1080,7 +1134,7 @@ def view_cesap_project(program, subprogram, community, cesap_filename):
             content_type = "image"
 
         # Serve the file with appropriate content type and Content-Disposition
-        response = Response(upload_entry.cna, content_type=content_type)
+        response = Response(upload_entry.cesap, content_type=content_type)
 
         if content_type.startswith("image"):
             # If it's an image, set Content-Disposition to inline for display
@@ -1090,7 +1144,7 @@ def view_cesap_project(program, subprogram, community, cesap_filename):
             response.headers[
                 "Content-Disposition"] = f'attachment; filename="{upload_entry.cesap_filename}"'
         if filename.endswith(".pdf"):
-            response = Response(upload_entry.cna,
+            response = Response(upload_entry.cesap,
                                 content_type="application/pdf")
         return response
     return "File not found", 404
@@ -1223,7 +1277,7 @@ def view_cesap_archived(program, subprogram, community, cesap_filename):
             content_type = "image"
 
         # Serve the file with appropriate content type and Content-Disposition
-        response = Response(upload_entry.cna, content_type=content_type)
+        response = Response(upload_entry.cesap, content_type=content_type)
 
         if content_type.startswith("image"):
             # If it's an image, set Content-Disposition to inline for display
@@ -1233,7 +1287,7 @@ def view_cesap_archived(program, subprogram, community, cesap_filename):
             response.headers[
                 "Content-Disposition"] = f'attachment; filename="{upload_entry.cesap_filename}"'
         if filename.endswith(".pdf"):
-            response = Response(upload_entry.cna,
+            response = Response(upload_entry.cesap,
                                 content_type="application/pdf")
         return response
     return "File not found", 404

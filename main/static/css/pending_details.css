@@ -43,6 +43,17 @@ main .pending_detailsCard .pending_detailsBox{
     padding: 3rem 5rem;
 }
 
+main .pending_detailsCard .file-box p{
+    margin-bottom: .5rem;
+}
+
+main .pending_detailsCard .file-box a{
+    color: #05ae11;
+    font-weight: 600;
+    padding: 2px;
+    margin-top: 1rem;
+    
+}
 main .pending_detailsCard > div{
     background: var(--color-white);
     padding: var(--card-padding);
@@ -56,6 +67,7 @@ main .pending_detailsCard > div{
 main .pending_detailsCard > div:hover{
     box-shadow: none;
 }
+
 
 
 /* file upload button */

@@ -20,6 +20,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="/static/css/change_password.css">
     <link rel="stylesheet" href="/static/css/flash.css">
+    <link rel="stylesheet" href="/static/css/coordinator_dashboard.css">
+    <link rel="stylesheet" href="/static/css/project_table.css">
+    <link rel="stylesheet" href="/static/css/project_details.css">
+    <link rel="stylesheet" href="/static/css/pending.css">
+    <link rel="stylesheet" href="/static/css/pending_details.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
  
 </head>
@@ -55,17 +60,34 @@
                         </span>
                     <h3>My Community Program</h3>
                 </a>
+                <a href="{{ url_for('coordinator.cManage_pending') }}" class="sidebar-link pending-container">
+                    <span class="material-symbols-sharp">
+                        pending
+                        </span>
+                    <h3>Pending Projects</h3>
+                    <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
+                </a>
                 <a href="{{ url_for('randomForest.cProgram') }}"class="sidebar-link">
                     <span class="material-symbols-sharp">neurology</span>
                     <h3>Program Recommendation</h3>
                 </a>
                 <!---------------------------   NEWLY ADDED    -------------------------------->
-                <a href="{{ url_for('file.cFiles') }}"class="sidebar-link">
-                    <span class="material-symbols-sharp">
-                        folder
+
+                <div class="dropdown-files" onclick="toggleDropdownFile()">
+                    <a href="#" class="sidebar-link">
+                        <span class="material-symbols-sharp">
+                            folder
                         </span>
-                    <h3>CESU Files</h3>
-                </a>
+                        <h3>Files</h3>
+                        <span class="material-symbols-sharp arrow_drop_down">
+                            arrow_drop_down
+                        </span>
+                    </a>
+                    <div class="coordinator_dropdown-content-files dropdown-content-files" id="dropdown-content-files">
+                        <a href="{{ url_for('file.cFiles') }}">CESU files</a>
+                        <a href="{{ url_for('coordinator.cProject_file_list') }}">Community projects file</a>
+                    </div>
+                </div>
                 
             </div>
         </aside>
@@ -112,7 +134,12 @@
 
    
  <script src="/static/js/admin_dashboard.js"></script>
-
+ <script>
+    function toggleDropdownFile() {
+       var dropdownContent = document.getElementById("dropdown-content-files");
+       dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+   }
+</script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     
@@ -173,5 +200,14 @@ function clearAndSetFirstLinkActive() {
         window.location.href = "{{ url_for('coordinator.coordinator_dashboard') }}";
     });
 </script>
+<script>
+    var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
+  
+    // Get the element by ID
+    var pendingBadge = document.getElementById('pending-badge');
+  
+    // Set the display property based on the value of pendingCount
+    pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
+  </script>
 </body>
 </html>

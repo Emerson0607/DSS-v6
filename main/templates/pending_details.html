@@ -92,8 +92,18 @@
             </div>
             <div class="form-group">
                 <button class="btn-submit" type="submit" value="Upload">Approve</button>
-                
             </div>
+
+           
+        </form>
+
+        <form action="{{ url_for('dbModel.decline', community=community, program=program, subprogram=subprogram) }}" method="POST" enctype="multipart/form-data" id="upload-form">
+            <div class="form-group">
+                <label>Comments:</label>
+                <input type="text" class="form-control" name="comments" required>
+                <!--value="{{comments}}"-->
+            </div>
+            <button type="submit">Decline</button>
         </form>
     </div>
 </div>

@@ -54,10 +54,24 @@ main .project_detailsCard .project_detailsBox{
 }
 
 
+
 main .project_detailsCard > div:hover{
     box-shadow: none;
 }
 
+main .project_detailsCard .file-box p{
+    margin-bottom: .5rem;
+}
+
+
+
+main .project_detailsCard .file-box a{
+    color: #05ae11;
+    font-weight: 600;
+    padding: 2px;
+    margin-top: 1rem;
+    
+}
 
 /* file upload button */
 .project_detailsCard  input[type="file"]::file-selector-button {
