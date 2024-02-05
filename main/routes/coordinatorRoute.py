@@ -508,6 +508,22 @@ def cView_cesap(program, subprogram, community, cesap_filename):
         return response
     return "File not found", 404
 
+@coordinator_route.route('/CNA_delete', methods=['POST'])
+def CNA_delete():
+    if request.method == 'POST':
+        cna_filename = request.form.get('cna_filename')
+        pending_project = Pending_project.query.filter_by(cna_filename=cna_filename).first()
+
+        if pending_project:
+            # Delete the file from the database
+            pending_project.cna = None
+            pending_project.cna_filename = None
+            db.session.commit()
+
+    
+    # Redirect to the page displaying the remaining files
+    return redirect(url_for('coordinator.cManage_pending'))
+
 
 ############################### COORDINATOR COMMENTS ###############################
 @coordinator_route.route('/get_comments')
