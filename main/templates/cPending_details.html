@@ -72,17 +72,24 @@
             <label class="file label-category">CESU FILE</label><br>
             <div class="fileces">
         
-            <div class="form-group file-box">
-                <p for="CPF">Community Profiling Form</p>
-                <a href="{{ url_for('coordinator.cView_cpf', program=program, subprogram=subprogram, community=community, cpf_filename = cpf_filename) }}">{{ cpf_filename }}</a>
-                
-            </div>
-
-            <div class="form-group file-box">
-                <p for="CESAP">CES Activity Proposal</p>
-                <a href="{{ url_for('coordinator.cView_cesap', program=program, subprogram=subprogram, community=community, cesap_filename = cesap_filename) }}">{{ cesap_filename }}</a>
-                
-            </div>
+                <div class="form-group file-box">
+                    <p for="CPF">Community Profiling Form</p>
+                    {% if cpf_filename %}
+                    <a href="{{ url_for('coordinator.cView_cpf', program=program, subprogram=subprogram, community=community, cpf_filename = cpf_filename) }}">{{ cpf_filename }}</a>
+                    {% else %}
+                        <p>No CPF file available.</p>
+                    {% endif %}
+                </div>
+    
+                <div class="form-group file-box">
+                    <p for="CESAP">CES Activity Proposal</p>
+                    {% if cesap_filename %}
+                    <a href="{{ url_for('coordinator.cView_cesap', program=program, subprogram=subprogram, community=community, cesap_filename = cesap_filename) }}">{{ cesap_filename }}</a>
+                    {% else %}
+                        <p>No CESAP file available.</p>
+                    {% endif %}
+                    
+                </div>
 
             <div class="form-group file-box">
                 <p for="CNA">Community Needs Assessment</p>
@@ -93,9 +100,6 @@
                     {% else %}
                         <p>No CNA file available.</p>
                     {% endif %}
-
-                
-              
             </div>
             </div>
 
@@ -112,9 +116,20 @@
         </form>
 
           
+        <form action="{{ url_for('coordinator.CPF_delete') }}" method="POST" style="display: inline;">
+            <input type="text" class="form-control" name="cpf_filename" value="{{cpf_filename}}" required>
+            <input type="text" class="form-control" name="cpf_id" value="{{id}}" required>
+            <button type="submit">CPF Delete</button>
+        </form>
+        <form action="{{ url_for('coordinator.CESAP_delete') }}" method="POST" style="display: inline;">
+            <input type="text" class="form-control" name="cesap_filename" value="{{cesap_filename}}" required>
+            <input type="text" class="form-control" name="cesap_id" value="{{id}}" required>
+            <button type="submit">CESAP Delete</button>
+        </form>
         <form action="{{ url_for('coordinator.CNA_delete') }}" method="POST" style="display: inline;">
             <input type="text" class="form-control" name="cna_filename" value="{{cna_filename}}" required>
-            <button type="submit">Delete</button>
+            <input type="text" class="form-control" name="cna_id" value="{{id}}" required>
+            <button type="submit">CNA Delete</button>
         </form>
     </div>
 </div>

@@ -425,7 +425,7 @@ def cDelete_pending(id):
 def cView_pending(pending_id):
     p = Pending_project.query.get(pending_id)
 
-    return render_template("cPending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
 @coordinator_route.route('/cView_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def cView_cpf(program, subprogram, community, cpf_filename):
@@ -508,10 +508,56 @@ def cView_cesap(program, subprogram, community, cesap_filename):
         return response
     return "File not found", 404
 
+
+
+@coordinator_route.route('/CPF_delete', methods=['POST'])
+def CPF_delete():
+    if request.method == 'POST':
+        cpf_filename = request.form.get('cpf_filename')
+        cpf_id = request.form.get('cpf_id')
+        pending_project = Pending_project.query.filter_by(cpf_filename=cpf_filename).first()
+
+        if pending_project:
+            # Delete the file from the database
+            pending_project.cpf = None
+            pending_project.cpf_filename = None
+            db.session.commit()
+
+        p = Pending_project.query.get(cpf_id)
+        if p:
+            # Delete the file from the database
+            p.totalWeek = 1
+            db.session.commit()
+
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+
+@coordinator_route.route('/CESAP_delete', methods=['POST'])
+def CESAP_delete():
+    if request.method == 'POST':
+        cesap_filename = request.form.get('cesap_filename')
+        cesap_id = request.form.get('cesap_id')
+        pending_project = Pending_project.query.filter_by(cesap_filename=cesap_filename).first()
+
+        if pending_project:
+            # Delete the file from the database
+            pending_project.cesap = None
+            pending_project.cesap_filename = None
+            db.session.commit()
+
+        p = Pending_project.query.get(cesap_id)
+        if p:
+            # Delete the file from the database
+            p.totalWeek = 2
+            db.session.commit()
+
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+
+
 @coordinator_route.route('/CNA_delete', methods=['POST'])
 def CNA_delete():
     if request.method == 'POST':
         cna_filename = request.form.get('cna_filename')
+        cna_id = request.form.get('cna_id')
         pending_project = Pending_project.query.filter_by(cna_filename=cna_filename).first()
 
         if pending_project:
@@ -520,10 +566,13 @@ def CNA_delete():
             pending_project.cna_filename = None
             db.session.commit()
 
-    
-    # Redirect to the page displaying the remaining files
-    return redirect(url_for('coordinator.cManage_pending'))
+        p = Pending_project.query.get(cna_id)
+        if p:
+            # Delete the file from the database
+            p.totalWeek = 3
+            db.session.commit()
 
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
 ############################### COORDINATOR COMMENTS ###############################
 @coordinator_route.route('/get_comments')
