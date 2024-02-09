@@ -508,14 +508,11 @@ def cView_cesap(program, subprogram, community, cesap_filename):
         return response
     return "File not found", 404
 
-
-
 @coordinator_route.route('/CPF_delete', methods=['POST'])
 def CPF_delete():
     if request.method == 'POST':
-        cpf_filename = request.form.get('cpf_filename')
         cpf_id = request.form.get('cpf_id')
-        pending_project = Pending_project.query.filter_by(cpf_filename=cpf_filename).first()
+        pending_project = Pending_project.query.filter_by(id=cpf_id).first()
 
         if pending_project:
             # Delete the file from the database
@@ -534,9 +531,8 @@ def CPF_delete():
 @coordinator_route.route('/CESAP_delete', methods=['POST'])
 def CESAP_delete():
     if request.method == 'POST':
-        cesap_filename = request.form.get('cesap_filename')
         cesap_id = request.form.get('cesap_id')
-        pending_project = Pending_project.query.filter_by(cesap_filename=cesap_filename).first()
+        pending_project = Pending_project.query.filter_by(id=cesap_id).first()
 
         if pending_project:
             # Delete the file from the database
@@ -552,13 +548,11 @@ def CESAP_delete():
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
-
 @coordinator_route.route('/CNA_delete', methods=['POST'])
 def CNA_delete():
     if request.method == 'POST':
-        cna_filename = request.form.get('cna_filename')
         cna_id = request.form.get('cna_id')
-        pending_project = Pending_project.query.filter_by(cna_filename=cna_filename).first()
+        pending_project = Pending_project.query.filter_by(id=cna_id).first()
 
         if pending_project:
             # Delete the file from the database
@@ -574,6 +568,72 @@ def CNA_delete():
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
+@coordinator_route.route('/update_pending', methods=['POST'])
+def update_pending():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == 'POST':
+        pending_id = request.form.get('id')
+        community = request.form.get('community')
+        program = request.form['program']
+        subprogram = request.form['subprogram']
+        start_date1 = request.form['start_date']
+        end_date1 = request.form['end_date']
+        totalWeek = request.form['totalWeek']
+        budget = request.form['budget']
+        user = request.form['user']
+        lead = request.form['lead']
+        support = request.form['support']
+        status = "Pending"
+        
+        
+        #Convert date
+        start_date = convert_date(start_date1)
+        end_date = convert_date(end_date1)
+
+        pending = Pending_project.query.get(pending_id)
+
+        if pending:
+            if not pending.cpf:
+                cpf_file = request.files['CPF']
+                pending.cpf_filename = cpf_file.filename
+                pending.cpf = cpf_file.read()
+
+            if not pending.cesap:
+                cesap_file = request.files['CESAP']
+                pending.cesap_filename = cesap_file.filename
+                pending.cesap = cesap_file.read()
+
+            if not pending.cna:
+                cna_file = request.files['CNA']
+                pending.cna_filename = cna_file.filename
+                pending.cna = cna_file.read()
+
+            pending.community = community
+            pending.program = program
+            pending.subprogram = subprogram
+            pending.start_date = start_date
+            pending.end_date = end_date
+            pending.totalWeek = totalWeek
+            pending.budget = budget
+            pending.user = user
+            pending.lead = lead
+            pending.support = support
+            pending.status = status
+
+            db.session.commit()
+
+
+            db.session.commit()
+            flash('Pending updated successfully!', 'edit_account')
+
+        p = Pending_project.query.get(pending_id)
+        if p:
+            db.session.commit()
+
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 ############################### COORDINATOR COMMENTS ###############################
 @coordinator_route.route('/get_comments')
 def get_comments():
@@ -592,3 +652,5 @@ def get_comments():
         # Log the error for debugging
         print(str(e))
         return make_response("Internal Server Error", 500)
+
+
