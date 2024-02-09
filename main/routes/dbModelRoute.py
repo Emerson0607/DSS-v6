@@ -552,8 +552,7 @@ def manage_pending():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Pending_project.query.filter_by(status="Pending").all()
-
+    all_data = Pending_project.query.all()
     return render_template("pending.html", pending_project_data = all_data)
 
 @dbModel_route.route('/delete_pending/<int:id>', methods=['GET'])

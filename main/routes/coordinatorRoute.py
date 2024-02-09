@@ -619,8 +619,8 @@ def update_pending():
             pending.totalWeek = totalWeek
             pending.budget = budget
             pending.user = user
-            pending.lead = lead
-            pending.support = support
+            pending.department = lead
+            pending.subDepartment = support
             pending.status = status
 
             db.session.commit()

@@ -68,18 +68,21 @@
             <label class="file label-category">CESU FILE</label><br>
             <div class="fileces">
         
-            <div class="form-group file-box">
-                <p for="CPF">Community Profiling Form</p>
+                <div class="form-group file-box" id="tooltip">
+                    <p for="CPF">Community Profiling Form</p>
+                    <span id="tooltipText">download</span>
                 <a href="{{ url_for('dbModel.view_cpf_archived', program=program, subprogram=subprogram, community=community, cpf_filename=cpf_filename) }}">{{ cpf_filename }}</a>
             </div>
 
-            <div class="form-group file-box">
+            <div class="form-group file-box" id="tooltip2">
                 <p for="CESAP">CES Activity Proposal</p>
+                <span id="tooltipText2">download</span>
                 <a href="{{ url_for('dbModel.view_cesap_archived', program=program, subprogram=subprogram, community=community, cesap_filename=cesap_filename) }}">{{ cesap_filename }}</a>
             </div>
 
-            <div class="form-group file-box">
+            <div class="form-group file-box" id="tooltip3">
                 <p for="CNA">Community Needs Assessment</p>
+                <span id="tooltipText3">download</span>
                 <a href="{{ url_for('dbModel.view_cna_archived', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">{{ cna_filename }}</a>
             </div>
         </div>

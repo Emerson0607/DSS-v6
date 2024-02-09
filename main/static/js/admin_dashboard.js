@@ -56,3 +56,21 @@ flashes.forEach(function(flash) {
    
 
 
+    $(document).ready(function() {
+    $('#tooltip, #tooltip2, #tooltip3').hover(function() {
+        $(this).find('#tooltipText, #tooltipText2, #tooltipText3').css({
+            'top': '-1rem',
+            'visibility': 'visible',
+            'opacity': '1'
+        });
+    }, function() {
+        $(this).find('#tooltipText, #tooltipText2, #tooltipText3').css({
+            'top': '100%',
+            'visibility': 'hidden',
+            'opacity': '0'
+        });
+    });
+});
+
+
+

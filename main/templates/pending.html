@@ -26,6 +26,7 @@
                         <th>Week</th>
                         <th>Total Week</th>
                         <th>Coordinator</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                     {% for row in pending_project_data %}
@@ -37,6 +38,11 @@
                         <td><a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit">{{ row.week }}</a></td>
                         <td><a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit">{{ row.totalWeek }}</a></td>
                         <td><a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit">{{ row.user }}</a></td>
+                        <td>
+                            <a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit status-element" data-status="{{ row.status }}">
+                                {{ row.status }}
+                            </a>
+                        </td>
                         <td>
                             <a href="{{ url_for('dbModel.delete_pending', id=row.id)}}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
                         </td>
@@ -66,5 +72,18 @@ flatpickr("#end_date_input", {
             altFormat: "F j, Y"
         });
 </script>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var statusElements = document.querySelectorAll('.status-element');
+        statusElements.forEach(function (statusElement) {
+            var status = statusElement.getAttribute('data-status');
+            if (status.trim() === 'Declined') {
+                statusElement.style.color = 'red';  // Change the color as needed
+                
+            }else{
+                statusElement.style.color = '#0066ff';
+            }
+        });
+    });
+</script>
 {% endblock %}
