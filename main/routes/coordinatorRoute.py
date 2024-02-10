@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project
+from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs
 from main import db
 from main import Form
 from flask import Response
@@ -7,6 +7,9 @@ from datetime import datetime
 from sqlalchemy import func, case
 
 coordinator_route = Blueprint('coordinator', __name__)
+
+def convert_date1(datetime_str):
+    return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
 
 @coordinator_route.route("/coordinator_dashboard")
 def coordinator_dashboard():
@@ -45,6 +48,14 @@ def inject_current_user():
 @coordinator_route.route("/cClear_session")
 def cClear_session():
     session.clear()
+    userlog = g.current_user
+    action = f'Logged out.'
+    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = convert_date1(timestamp1)
+    insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+    if insert_logs:
+        db.session.add(insert_logs)
+        db.session.commit()
     return redirect(url_for('dbModel.login'))
 
 @coordinator_route.route('/cCoordinator')
@@ -177,7 +188,16 @@ def cAdd_community():
             cna_filename = cna_file.filename, cna=cna_data)
             db.session.add(new_community)
             db.session.commit()
-            flash('New community project added!', 'add_community')
+            userlog = g.current_user
+
+            action = f'ADDED pending {program} project of {community}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+            flash('Pending project added!', 'add_community')
         else:
             return redirect(url_for('coordinator.cManage_community'))
         
@@ -202,6 +222,14 @@ def cUpdate_week():
     for community in communities:
         # Update the "week" column to match the totalCheckboxes
         community.week = totalCheckboxes
+    userlog = g.current_user
+    action = f'UPDATED week progress of {program} project in {community}'
+    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = convert_date1(timestamp1)
+    insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+    if insert_logs:
+        db.session.add(insert_logs)
+        db.session.commit()
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
 
@@ -277,6 +305,15 @@ def cNew_password():
                 user.password = new_password
                 db.session.commit()
                 flash('Password successfully changed.', 'new_password')
+
+                userlog = g.current_user
+                action = f'CHANGED password'
+                timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                timestamp = convert_date1(timestamp1)
+                insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+                if insert_logs:
+                    db.session.add(insert_logs)
+                    db.session.commit()
                 return redirect(url_for('coordinator.cChange_password'))
             else:
                 flash('New password and confirmation do not match.', 'not_match')
@@ -413,6 +450,15 @@ def cDelete_pending(id):
             # Delete the user from the database
             db.session.delete(community)
             db.session.commit()
+
+            userlog = g.current_user
+            action = f'DELETED pending {community.program} project of {community.community}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
             flash('Delete successfully!', 'delete_pending')
         except Exception as e:
             db.session.rollback()
@@ -515,16 +561,23 @@ def CPF_delete():
         pending_project = Pending_project.query.filter_by(id=cpf_id).first()
 
         if pending_project:
+            
+
+            userlog = g.current_user
+            action = f'DELETED CPF file : {pending_project.cpf_filename}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
             # Delete the file from the database
             pending_project.cpf = None
             pending_project.cpf_filename = None
             db.session.commit()
-
+        
         p = Pending_project.query.get(cpf_id)
-        if p:
-            # Delete the file from the database
-            p.totalWeek = 1
-            db.session.commit()
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
@@ -535,16 +588,22 @@ def CESAP_delete():
         pending_project = Pending_project.query.filter_by(id=cesap_id).first()
 
         if pending_project:
+
+
+            userlog = g.current_user
+            action = f'DELETED CESAP file : {pending_project.cesap_filename}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
             # Delete the file from the database
             pending_project.cesap = None
             pending_project.cesap_filename = None
             db.session.commit()
-
         p = Pending_project.query.get(cesap_id)
-        if p:
-            # Delete the file from the database
-            p.totalWeek = 2
-            db.session.commit()
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
@@ -555,16 +614,22 @@ def CNA_delete():
         pending_project = Pending_project.query.filter_by(id=cna_id).first()
 
         if pending_project:
+
+            
+            userlog = g.current_user
+            action = f'DELETED CNA file : {pending_project.cna_filename}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
             # Delete the file from the database
             pending_project.cna = None
             pending_project.cna_filename = None
             db.session.commit()
-
         p = Pending_project.query.get(cna_id)
-        if p:
-            # Delete the file from the database
-            p.totalWeek = 3
-            db.session.commit()
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 
@@ -623,15 +688,19 @@ def update_pending():
             pending.subDepartment = support
             pending.status = status
 
-            db.session.commit()
-
-
+            userlog = g.current_user
+            action = f'UPDATED pending {program} projects of {community}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+                
             db.session.commit()
             flash('Pending updated successfully!', 'edit_account')
 
         p = Pending_project.query.get(pending_id)
-        if p:
-            db.session.commit()
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
 ############################### COORDINATOR COMMENTS ###############################

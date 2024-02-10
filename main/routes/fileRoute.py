@@ -1,8 +1,13 @@
 from flask import Blueprint, redirect, url_for, render_template, session, flash, request, Response, g
-from main.models.dbModel import Upload, Users, Pending_project
+from main.models.dbModel import Upload, Users, Pending_project, Logs
 from main import db
+from datetime import datetime, timedelta
 
 file_route = Blueprint('file', __name__)
+
+
+def convert_date1(datetime_str):
+    return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
 
 def get_current_user():
     if 'user_id' in session:
@@ -66,6 +71,16 @@ def upload():
             db.session.add(upload_entry)
             db.session.commit()
             flash('File uploaded successfully!', 'upload_file')
+
+            userlog = g.current_user
+            action = f'ADDED new file {file.filename}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
     return redirect(url_for('file.files'))
 
 
@@ -110,6 +125,14 @@ def delete_file(id):
     
     upload = Upload.query.get(id)
     if upload:
+        userlog = g.current_user
+        action = f'DELETED file {upload.filename}'
+        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()
         try:
             # Delete the user from the database
             db.session.delete(upload)

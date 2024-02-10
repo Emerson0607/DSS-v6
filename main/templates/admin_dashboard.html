@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="/static/css/project_table.css">
     <link rel="stylesheet" href="/static/css/project_details.css">
     
+    <link rel="stylesheet" href="/static/css/Logfile.css">
+    
     <link rel="stylesheet" href="/static/css/tooltip.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
 </head>
@@ -79,7 +81,10 @@
                     <h3>Program Recommendation</h3>
                 </a>
                 <!---------------------------   NEWLY ADDED    -------------------------------->
-
+                <a href="{{ url_for('dbModel.logs_activity') }}" class="sidebar-link">
+                    <span class="material-symbols-sharp">manage_search</span>
+                    <h3>Logs</h3>
+                </a>
                 <div class="dropdown-files" onclick="toggleDropdownFile()">
                     <a href="#" class="sidebar-link">
                         <span class="material-symbols-sharp">
@@ -96,7 +101,7 @@
                         <a href="{{ url_for('dbModel.archived_files') }}">Archive</a>
                     </div>
                 </div>
-                
+               
             </div>
         </aside>
         <main>

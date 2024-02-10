@@ -101,6 +101,13 @@ class Archive(db.Model):
     cpf_filename = db.Column(db.String(255), nullable=True)
     cesap_filename = db.Column(db.String(255), nullable=True) 
 
+# --------------------- LOGS ------------------------#
+class Logs(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    userlog = db.Column(db.String(255), nullable=False)
+    action = db.Column(db.String(255), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.now, nullable=False)
+
 # --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
 
 # Create the database tables
@@ -218,6 +225,6 @@ def display_community_data():
     all_community_data = db.session.query(Community).all()
     Pending_project_data = Pending_project.query.all()
     User = Users.query.all()
-    
+    UserLogs = Logs.query.all()
     archive_project = db.session.query(Archive).all()
-    return render_template('test.html', community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User, archive_project=archive_project)
+    return render_template('test.html', UserLogs = UserLogs, community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User, archive_project=archive_project)

@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs
 from main import db
 from flask import Response
 import secrets
@@ -15,17 +15,28 @@ token_store = {}
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date()
 
+def convert_date1(datetime_str):
+    return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
+
+global cur
 #################### ACCOUNT RECOVER REQUEST FUNCTION ##################
 
 @dbModel_route.route("/send_recovery_mail", methods=['GET', 'POST'])
 def send_recovery_mail():
     if request.method == 'POST':
         email = request.form.get('email')
-
         # Check if the email exists in the database
         user = Users.query.filter_by(email=email).first()
 
         if user:
+            userlog = user.username
+            action = "Attempted to recover account"
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
             # Generate and store OTP in the database
             otp = secrets.token_hex(3)  # 6 characters in hex format
             user.otp = otp
@@ -66,6 +77,14 @@ def reset_password():
                         user.otp_timestamp = None
                         db.session.commit()
 
+                        userlog = user.username
+                        action = "Successfully recovered account."
+                        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        timestamp = convert_date1(timestamp1)
+                        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+                        if insert_logs:
+                            db.session.add(insert_logs)
+                            db.session.commit()
                         flash('Password reset successful. You can now log in with your new password.')
                         return redirect(url_for('dbModel.login'))
                     else:
@@ -119,45 +138,7 @@ def send_mail(otp, recipient_email):
     mail.send(mail_message)
     return "Mail has sent"
 
-
-#################### USERS LOGIN FUNCTION ##################
-
-@dbModel_route.route("/login", methods=["GET", "POST"])
-def login():
-    if 'user_id' in session:
-        if g.current_role != "Admin":
-            return redirect(url_for('coordinator.coordinator_dashboard')) 
-        else:
-            return redirect(url_for('dbModel.dashboard'))
-
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        user = Users.query.filter_by(username=username, password=password).first()
-
-        if user:
-            session['user_id'] = user.id
-            if user.role == 'Admin': #Admin
-                flash(f'Login successful!', 'success')
-                return redirect(url_for('dbModel.dashboard'))
-            else:      #------------------------- COORDINATOR PAGE ---------------------
-                return redirect(url_for('coordinator.coordinator_dashboard'))
-        else:
-            flash(f'Invalid username or password.', 'login_error')
-            return redirect(url_for('dbModel.login'))
-    return render_template('login.html')
-
-@dbModel_route.route("/admin_dashboard")
-def dashboard():
-    if g.current_role != "Admin":
-        return redirect(url_for('dbModel.login')) 
-
-     # Check if the user is logged in
-    if 'user_id' not in session:
-        flash('Please log in first.', 'error')
-        return redirect(url_for('dbModel.login'))
-    return render_template("dashboard.html")
-
+#################### CURRENT USER ##################
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
@@ -183,9 +164,66 @@ def before_request():
 def inject_current_user():
     return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display)
 
+
+
+#################### USERS LOGIN FUNCTION ##################
+
+@dbModel_route.route("/login", methods=["GET", "POST"])
+def login():
+    if 'user_id' in session:
+        if g.current_role != "Admin":
+            return redirect(url_for('coordinator.coordinator_dashboard')) 
+        else:
+            return redirect(url_for('dbModel.dashboard'))
+
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        user = Users.query.filter_by(username=username, password=password).first()
+
+        if user:
+            userlog = username
+            action = 'Logged in.'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            session['user_id'] = user.id
+            if user.role == 'Admin': #Admin
+                flash(f'Login successful!', 'success')
+                return redirect(url_for('dbModel.dashboard'))
+            else:      #------------------------- COORDINATOR PAGE ---------------------
+                return redirect(url_for('coordinator.coordinator_dashboard'))
+        else:
+            flash(f'Invalid username or password.', 'login_error')
+            return redirect(url_for('dbModel.login'))
+    return render_template('login.html')
+
+@dbModel_route.route("/admin_dashboard")
+def dashboard():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login')) 
+
+     # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("dashboard.html")
+
 @dbModel_route.route("/clear_session")
 def clear_session():
     session.clear()
+    userlog = g.current_user
+    action = 'Logged out.'
+    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = convert_date1(timestamp1)
+    insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+    if insert_logs:
+        db.session.add(insert_logs)
+        db.session.commit()
     return redirect(url_for('dbModel.login'))
 
 @dbModel_route.route("/result")
@@ -217,7 +255,9 @@ def manage_account():
 
 @dbModel_route.route("/add_account", methods=["POST"])
 def add_account():
-    
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -253,6 +293,15 @@ def add_account():
                 else:
                     new_user = Users(username=username, email=email, password=password, role = role, program = program)
                     try: 
+                        userlog = g.current_user
+                        action = f'ADDED new user account named {new_user.username}'
+                        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        timestamp = convert_date1(timestamp1)
+                        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+                        if insert_logs:
+                            db.session.add(insert_logs)
+                            db.session.commit()
+
                         db.session.add(new_user)
                         db.session.commit()
                     except Exception as e:
@@ -262,6 +311,9 @@ def add_account():
 
 @dbModel_route.route('/edit_account', methods=['POST'])
 def edit_account():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -284,12 +336,21 @@ def edit_account():
         user = Users.query.get(user_id)
         
         if user:
+            userlog = g.current_user
+            action = f'UPDATED account named {new_username}.'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
             user.username = new_username
             user.email = new_email
             user.password = new_password
             user.role = new_role
             user.program = new_program
-            
+
             db.session.commit()
             flash('Account updated successfully!', 'edit_account')
 
@@ -297,6 +358,9 @@ def edit_account():
 
 @dbModel_route.route('/delete_account/<int:id>', methods=['GET'])
 def delete_account(id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -304,6 +368,14 @@ def delete_account(id):
     user = Users.query.get(id)
 
     if user:
+        userlog = g.current_user
+        action = f'DELETED account named {user.username}.'
+        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
         try:
             db.session.delete(user)
             db.session.commit()
@@ -419,6 +491,9 @@ def get_program(get_program):
 ############################  CRUD FOR MANAGE COMMUNITY  ############################
 @dbModel_route.route("/add_community", methods=["POST"])
 def add_community():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -458,6 +533,15 @@ def add_community():
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
             cna_filename = cna_file.filename, cna=cna_data)
 
+            userlog = g.current_user
+            action = f'ADDED new {program} project to {community} .'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
             db.session.add(new_community)
             db.session.commit()
             flash('New community project added!', 'add_community')
@@ -486,6 +570,14 @@ def edit_community():
         new_totalWeek = request.form['new_totalWeek']
         new_user = request.form['new_user']
         
+        userlog = g.current_user
+        action = f'UPDATE {community}'
+        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()     
         # Query the user by ID
         user = Community.query.get(user_id)
         
@@ -508,6 +600,9 @@ def edit_community():
 
 @dbModel_route.route('/delete_community/<int:id>', methods=['GET'])
 def delete_community(id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -520,6 +615,15 @@ def delete_community(id):
     subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
 
     if community:
+        userlog = g.current_user
+        action = f'DELETED {program} project of {community}'
+        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()  
+
         try:
             # Delete the user from the database
             db.session.delete(community)
@@ -557,6 +661,9 @@ def manage_pending():
 
 @dbModel_route.route('/delete_pending/<int:id>', methods=['GET'])
 def delete_pending(id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+        
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -564,6 +671,14 @@ def delete_pending(id):
     community = Pending_project.query.get(id)
 
     if community:
+        userlog = g.current_user
+        action = f'DELETED pending {community.program} project of {community.community}'
+        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()
         try:
             # Delete the user from the database
             db.session.delete(community)
@@ -665,6 +780,8 @@ def view_cesap(program, subprogram, community, cesap_filename):
 
 @dbModel_route.route("/approve", methods=["POST"])
 def approve():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
@@ -703,9 +820,18 @@ def approve():
                     cna_filename = data_to_move.cna_filename, 
                     cna=data_to_move.cna
             )
-            db.session.add(new_row)
-            db.session.commit()
-            flash('New community project added!', 'add_community')
+
+            userlog = g.current_user
+            action = f'APPROVE pending {program} project of {community}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+                db.session.add(new_row)
+                db.session.commit()
+                flash('Approved community project!', 'add_community')
 
             pending_delete = Pending_project.query.filter_by(community=community, program = program, subprogram=subprogram).first()
             if pending_delete:
@@ -734,6 +860,8 @@ def approve():
 
 @dbModel_route.route("/decline", methods=["POST"])
 def decline():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
     community = request.args.get('community')
     program = request.args.get('program')
     subprogram = request.args.get('subprogram')
@@ -746,6 +874,15 @@ def decline():
         p = Pending_project.query.filter_by(community=community, program = program, subprogram=subprogram).first()
 
         if p:
+            userlog = g.current_user
+            action = f'DECLINED pending {program} project of {community}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
             p.status = "Declined"
             p.comments=comments 
             db.session.commit()
@@ -766,8 +903,16 @@ def update_week():
     communities = Community.query.filter_by(community = community, program=program, subprogram=subprogram).all()
 
     for community in communities:
-        # Update the "week" column to match the totalCheckboxes
         community.week = totalCheckboxes
+
+    userlog = g.current_user
+    action = f'UPDATED week progress of {program} project in {community}'
+    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = convert_date1(timestamp1)
+    insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+    if insert_logs:
+        db.session.add(insert_logs)
+        db.session.commit()
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
 
@@ -825,9 +970,17 @@ def archive_project():
         cna_filename = data_to_move.cna_filename, 
         cna=data_to_move.cna
     )
+    userlog = g.current_user
+    action = f'ARCHIVED {program} project of {community}'
+    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = convert_date1(timestamp1)
+    insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+    if insert_logs:
+        db.session.add(insert_logs)
+        db.session.commit()
+
     db.session.add(new_row)
     db.session.commit()
-    flash('New community project added!', 'add_community')
 
     community_delete = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
     if community_delete:
@@ -965,6 +1118,15 @@ def new_password():
             return redirect(url_for('dbModel.change_password'))
         if user:
             if new_password == confirm_password:
+                userlog = g.current_user
+                action = f'CHANGED password'
+                timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                timestamp = convert_date1(timestamp1)
+                insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+                if insert_logs:
+                    db.session.add(insert_logs)
+                    db.session.commit()
+
                 user.password = new_password
                 db.session.commit()
                 flash('Password successfully changed.', 'new_password')
@@ -999,6 +1161,9 @@ def project_file_list(data):
 
 @dbModel_route.route("/view_project/<int:project_id>")
 def view_project(project_id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1013,7 +1178,9 @@ def view_project(project_id):
 
 @dbModel_route.route("/delete_project/<int:project_id>")
 def delete_project(project_id):
-    
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     data = request.args.get('data')
     community = request.args.get('community')
     program = request.args.get('program')
@@ -1050,10 +1217,18 @@ def delete_project(project_id):
                 cna_filename = data_to_move.cna_filename, 
                 cna=data_to_move.cna
             )
+            userlog = g.current_user
+            action = f'DELETED {program} project of {community}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
             db.session.add(new_row)
             db.session.commit()
-            flash('New community project added!', 'add_community')
-
+            
             # Delete the user from the database
             db.session.delete(p)
             db.session.commit()
@@ -1187,6 +1362,9 @@ def archived_file_list(data):
 
 @dbModel_route.route("/view_archived/<int:project_id>")
 def view_archived(project_id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1201,6 +1379,9 @@ def view_archived(project_id):
 
 @dbModel_route.route("/delete_archived/<int:project_id>")
 def delete_archived(project_id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
     data = request.args.get('data')
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
@@ -1208,6 +1389,14 @@ def delete_archived(project_id):
     
     p = Archive.query.filter_by(id=project_id).first()
     if p:
+        userlog = g.current_user
+        action = f'DELETED archived {p.program} project of {p.community}'
+        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()
         try:
             # Delete the user from the database
             db.session.delete(p)
@@ -1302,3 +1491,16 @@ def view_cesap_archived(program, subprogram, community, cesap_filename):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
+
+############################### USER LOGS ###############################
+@dbModel_route.route("/logs_activity")
+def logs_activity():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+        
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    UserLogs = Logs.query.order_by(Logs.timestamp.desc()).all()
+
+    return render_template("Logfolder.html", UserLogs = UserLogs)
