@@ -58,9 +58,10 @@
                                         <label>Email:</label>
                                         <input type="email" class="form-control" name="new_email" value="{{row.email}}" required>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group pass-toggle-container">
                                         <label>Password:</label>
-                                        <input type="text" class="form-control pass-input" name="new_password" value="{{row.password}}" id="pass" minlength="8" required>
+                                        <input type="password" class="form-control pass-input passedit" name="new_password" value="{{row.password}}" id="pass" minlength="8" required>
+                                        <i class="toggle-password material-symbols-sharp" id="toggle-edit-password">visibility</i>
                                     </div>
                                     
                                     <div class="form-group" >
@@ -153,6 +154,8 @@
     </div><!--end jumbotronnnn-->   
 </div>
 <script>
+    
+
     var passwordPlaceholders = document.querySelectorAll('.password-placeholder');
        passwordPlaceholders.forEach(function(placeholder) {
            var password = placeholder.textContent;
@@ -182,8 +185,23 @@
         });
     });
        
-       
    </script>
+   <script>
+    document.querySelectorAll(".toggle-password").forEach(function (togglePasswordIcon) {
+        togglePasswordIcon.addEventListener("click", function () {
+            const passwordInput = this.parentElement.querySelector(".passedit");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                this.textContent = "visibility_off";
+            } else {
+                passwordInput.type = "password";
+                this.textContent = "visibility";
+            }
+        });
+    });
+</script>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

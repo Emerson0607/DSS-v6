@@ -12,7 +12,9 @@
 </head>
 <body>
     <div class="login-container">
+       
         <div class="login">
+            
             <h2>Login</h2>
             <form method="POST" action="{{ url_for('dbModel.login') }}"> 
                 <div class="form-group">
@@ -23,21 +25,22 @@
                     <label for="password" style="color: rgb(85, 85, 85);">Password</label>
                     <input type="password" id="password" name="password" required>
                 </div>
+               
                 <button type="submit" class="btn">Login</button>
                  <!-- Add this code below the form -->
                  <small>
-                 {% with messages = get_flashed_messages(category_filter=['login_error'], with_categories=true) %}
-                 {% if messages %}
-                     <div>
-                         {% for category, message in messages %}
-                             <div class="flash-login flash-{{ category }}">
-                                 {{ message }}
-                             </div>
-                         {% endfor %}
-                     </div>
-                 {% endif %}
-                {% endwith %}
-            </small>
+                    {% with messages = get_flashed_messages(category_filter=['login_error'], with_categories=true) %}
+                    {% if messages %}
+                        <div>
+                            {% for category, message in messages %}
+                                <div class="flash-login flash-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                   {% endwith %}
+               </small>
             </form>
 
             <h5 class="btn-recover" data-bs-toggle="modal" data-bs-target="#mymodal">Recover My Account</h5>
@@ -71,6 +74,13 @@
 
             </div>
         </div> 
+    </div>
+
+    <div id="loadingScreen" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white;">
+            <div>Loading...</div>
+            <!-- You can replace "Loading..." with a spinner or any other loading animation if you prefer -->
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -123,5 +133,53 @@ $(document).ready(function () {
 
 
 </script>
+<script>
+    document.querySelector('.btn-submit-recovery').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        var email = document.getElementById('email').value.trim(); // Get email input value and remove leading/trailing spaces
+
+        // Email format regular expression
+        var emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Check if the email format is valid
+        if (!emailFormat.test(email)) {
+            alert("Please enter a valid email address.");
+            return; // Exit function if email format is invalid
+        }
+
+        // Show loading screen
+        document.getElementById('loadingScreen').style.display = 'block';
+
+        var formData = new FormData();
+        formData.append('email', email);
+
+        fetch('/send_recovery_mail', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Hide loading screen
+            document.getElementById('loadingScreen').style.display = 'none';
+
+            if (data.success) {
+                // Redirect to reset_password.html upon successful recovery
+                window.location.href = '/reset_password?email=' + encodeURIComponent(email);
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            // Hide loading screen
+            document.getElementById('loadingScreen').style.display = 'none';
+
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+
+
+
 </body>
 </html>

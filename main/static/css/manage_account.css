@@ -133,6 +133,7 @@ main .manageUser table tr:last-child td{
     background-color: #05ae11;
 }
 
+
 .manageUser .btn-add {
     background-color: #49a14f; /* Change this to your desired color */
     color: #fff; /* Change the text color */
@@ -207,6 +208,15 @@ main .manageUser table tr:last-child td{
     text-align: center;
 }
 
+.manageUser .pass-toggle-container{
+    position: relative;
+}
+.manageUser #toggle-edit-password{
+    position: absolute;
+    right: 1rem;
+    top: 1.9rem;
+    cursor: pointer;
+}
 @media screen and (max-width: 400px){
 
     .manageUser{ 
@@ -246,6 +256,7 @@ main .manageUser table tr:last-child td{
         padding-left: 3px;  /* Adjust padding as needed */
         padding-right: 3px;
     }
+
 
 }
 
