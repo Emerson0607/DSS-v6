@@ -42,6 +42,10 @@
     margin-top: 1rem;
 }
 
+.project_files_title-blue{
+    background-color: #303396;
+}
+
 
 .project_files_title .folder_managed{
     padding-right: 0.5rem; /* Add some right padding to the lock icon */
@@ -76,11 +80,21 @@
     cursor: pointer;
 }
 
+.project_files_container .blue-link{
+    color: #303396;
+}
+
 .project_files_container a:hover{
     text-decoration: underline;
     background-color: rgba(47, 158, 54, 1);
     color: white;
 
+}
+
+.project_files_container .blue-link:hover{
+    text-decoration: underline;
+    background-color: #303396;
+    color: white;
 }
 
 .project_files_container .literacy{

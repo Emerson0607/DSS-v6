@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="margin-top"></div>
-<div class="program_recommendation_title">
+<div class="program_recommendation_title program_recommendation_title-blue">
     <h1>
         <span class="material-symbols-sharp">
             recommend
@@ -16,7 +16,7 @@
         <form method="POST" action="{{ url_for('randomForest.programWithCSV') }}" enctype="multipart/form-data" id="upload-form">
             <label for="formFile" class="programForm">Upload CESU CSV file</label>
                     <input class="form-submit" type="file" name="csv_file" id="formFile" accept=".csv" required>
-                    <input class="btn-submit" type="submit" style="float: right;" value="Upload" id="submit-button" onclick="myfunction(); return false;">
+                    <input class="btn-submit btn-submit-blue" type="submit" style="float: right;" value="Upload" id="submit-button" onclick="myfunction(); return false;">
         </form>
     </div>
 </div>

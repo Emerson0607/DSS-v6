@@ -38,7 +38,7 @@
                 <div class="logo">
                     <img src="/static/images/mobile.png" alt="CESU-LOGO">
                     <span class="cesu" id="dashboardLink">CE
-                        <span class="su">SU</span>
+                        <span class="su su-blue-link">SU</span>
                     </span>
                 </div>
                 <span class="cesu-mobile" id="dashboardLink2">CE
@@ -49,44 +49,44 @@
                 </div>
             </div>
             <div class="sidebar">
-                <a href="{{ url_for('dbModel.dashboard') }}" class="sidebar-link" style="display:none;">
+                <a href="{{ url_for('dbModel.dashboard') }}" class="sidebar-link " style="display:none;">
                     <span class="material-symbols-sharp">dashboard</span>
                     <h3>Dashboard</h3>
                 </a>
-                <a href="{{ url_for('dbModel.manage_community') }} " class="sidebar-link">
+                <a href="{{ url_for('dbModel.manage_community') }} " class="sidebar-link blue-link">
                     <span class="material-symbols-sharp" >groups</span>
                     <h3>Community</h3>
                 </a>
 
-                <a href="{{ url_for('dbModel.kaakbay_program') }} " class="sidebar-link">
+                <a href="{{ url_for('dbModel.kaakbay_program') }} " class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">
                         monitoring
                         </span>
                     <h3>Community Programs</h3>
                 </a>
-                <a href="{{ url_for('dbModel.manage_pending') }}" class="sidebar-link pending-container">
+                <a href="{{ url_for('dbModel.manage_pending') }}" class="sidebar-link pending-container blue-link">
                     <span class="material-symbols-sharp">
                         pending
                         </span>
                     <h3>Pending Projects</h3>
                     <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
                 </a>
-                <a href="{{ url_for('dbModel.manage_account') }}"class="sidebar-link">
+                <a href="{{ url_for('dbModel.manage_account') }}"class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">manage_accounts</span>
                     <h3>Users Account</h3>
                 </a>
                 
-                <a href="{{ url_for('randomForest.program') }}"class="sidebar-link">
+                <a href="{{ url_for('randomForest.program') }}"class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">neurology</span>
                     <h3>Program Recommendation</h3>
                 </a>
                 <!---------------------------   NEWLY ADDED    -------------------------------->
-                <a href="{{ url_for('dbModel.logs_activity') }}" class="sidebar-link">
+                <a href="{{ url_for('dbModel.logs_activity') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">manage_search</span>
                     <h3>Logs</h3>
                 </a>
                 <div class="dropdown-files" onclick="toggleDropdownFile()">
-                    <a href="#" class="sidebar-link">
+                    <a href="#" class="sidebar-link blue-link">
                         <span class="material-symbols-sharp">
                             folder
                         </span>
@@ -96,9 +96,9 @@
                         </span>
                     </a>
                     <div class="dropdown-content-files" id="dropdown-content-files">
-                        <a href="{{ url_for('file.files') }}">CESU files</a>
-                        <a href="{{ url_for('dbModel.project_files') }}">Community projects file</a>
-                        <a href="{{ url_for('dbModel.archived_files') }}">Archive</a>
+                        <a class="blue-link" href="{{ url_for('file.files') }}">CESU files</a>
+                        <a class="blue-link" href="{{ url_for('dbModel.project_files') }}">Community projects file</a>
+                        <a class="blue-link" href="{{ url_for('dbModel.archived_files') }}">Archive</a>
                     </div>
                 </div>
                
@@ -110,7 +110,7 @@
             <div class="space" style="margin-top: 5rem;"></div>
         </main>
         <div class="right">
-            <div class="top">
+            <div class="top top-blue">
                 <button id="menu-btn">
                     <span class="material-symbols-sharp">menu</span>
                 </button>
@@ -125,10 +125,10 @@
                         <small class="text-muted">{{current_role}}</small>
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
-                        <img src="/static/images/mobile.png" alt="CESU-LOGO">
+                        <img class="invert-blue " src="/static/images/user-blue.png" alt="CESU-LOGO">
                         <div class="dropdown-content" id="dropdown-content">
-                            <div class="password-div"><a class="password-button"  href="{{ url_for('dbModel.change_password') }}" id="password-button">Change Password</a></div>
-                            <div class="logout-hover"><a class="logout-button" href="{{ url_for('dbModel.clear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>
+                            <div class="password-div password-div-blue"><a class="password-button password-button-blue"  href="{{ url_for('dbModel.change_password') }}" id="password-button">Change Password</a></div>
+                            <div class="logout-hover "><a class="logout-button logout-button-blue" href="{{ url_for('dbModel.clear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>
                         </div>
                     </div>
                 </div>

@@ -19,14 +19,17 @@
             manage_search
         </span>
         <h3 class="changetxt">Logs Activity</h3>
-        <form method="POST" action="" class="d-flex" id="search_form">
-            <input type="search" class="form-control" id="search_text" placeholder="Find activiy.." name="search_box">
-        </form>
     </h1>
+    
+    <form method="POST" action="" class="d-flex search_form" id="search_form">
+        <input type="search" class="form-control search_text" id="search_text" placeholder="Find activiy.." name="search_box">
+    </form>
 </div>
+
 
 <div class="logs-container">
     <div id="records_count"></div>
+    <div class="table-card">
     <table class="table table-striped" id="logs_table">
         <thead>
             <tr>
@@ -47,6 +50,7 @@
             {% endfor %}
         </tbody>
     </table>
+</div>
     <div id="no_records_found" style="display: none;">No records found.</div>
     <hr>
 </div>

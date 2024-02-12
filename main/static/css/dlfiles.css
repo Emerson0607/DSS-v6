@@ -53,8 +53,13 @@ main .file-container{
     border-top-right-radius: var(--border-radius-2); /* Top right corner radius */
     display: flex; /* Use flexbox to control alignment */
     align-items: center; /* Vertically center the content */
-    justify-content: flex-start; /* Align content to the start */
+    justify-content: flex-start; /* Align content to the start  303396*/
     height:6rem;
+}
+
+.file_title-blue{
+    
+    background-color: #303396;
 }
 
 .file_title span{
@@ -172,29 +177,16 @@ main .file-container:hover{
     border-radius: 5px;
     cursor: pointer;
     position: absolute;
-    right: 2rem;
+    right: 4.5rem;
 }
 
 
 
-/* upload BUTTON */
-.file-container .btn-submit{
-    background-color: #49a14f;
-    color: #fff;
-    padding: 4px 6px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    position: absolute;
-    right: 8.8rem;
-}
-
-
-
-.file-container .btn-submit:hover{
+.upfiles .btn-submit:hover{
     background-color: #05ae11;
 
 }
+
 
 
 .file-container td {
@@ -232,6 +224,10 @@ main .file-container:hover{
     .upfiles{
         margin-top: 1rem;
     }
+    .upfiles .btn-submit{
+
+        right: 2rem;
+    }
 }
 
 @media screen and (max-width: 400px){
@@ -241,7 +237,10 @@ main .file-container:hover{
     }
 
 
+    .upfiles .btn-submit{
 
+        right: 2rem;
+    }
     .file-container , .file_title, .upfiles{
         margin: 0 auto;
         width: 90%;

@@ -2,6 +2,7 @@
 
 :root {
     --color-primary: #7380ec;
+    --color-admin:#303396;
     --color-danger: #ff7782;
     --color-success: #41f1b6;
     --color-warning: #ffbb55;
@@ -52,7 +53,7 @@ main .kaakbay_container > a:hover{
 .kaakbay_container .kaakbay_title {
     width: 100%;
     height: 6rem;
-    background-color: var(--color-kaakbay);
+    background-color: var(--color-admin);
     border-top-left-radius: var(--border-radius-1); /* Top left corner radius */
     border-top-right-radius: var(--border-radius-1); /* Top right corner radius */
     text-align: left;
@@ -116,6 +117,8 @@ main .kaakbay_container .status span{
 main .kaakbay_card .status .green{
     color: #0dc286;
 }
+
+
 main .kaakbay_card .status .orange{
     color: rgb(220, 140, 55);
 }

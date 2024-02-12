@@ -112,7 +112,7 @@
                         <small class="text-muted">{{current_role}}</small>
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
-                        <img src="/static/images/mobile.png" alt="">
+                        <img class="invert-green" src="/static/images/user.png" alt="">
                         <div class="dropdown-content" id="dropdown-content">
                             <div class="password-div"><a class="password-button"  href="{{ url_for('coordinator.cChange_password') }}" id="password-button">Change Password</a></div>
                             <div class="logout-hover"><a class="logout-button" href="{{ url_for('coordinator.cClear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>

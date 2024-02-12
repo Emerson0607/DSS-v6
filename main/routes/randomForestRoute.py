@@ -10,8 +10,11 @@ randomForest_Route = Blueprint('randomForest', __name__)
 model_path_cesu = 'trained_modelCESU7.pkl'
 sub_model_path = 'subprogram7.pkl'
 
+
+
 model = joblib.load(model_path_cesu)
 model2 = joblib.load(sub_model_path)
+
 
 @randomForest_Route.errorhandler(Exception)
 def handle_error(e):
@@ -19,7 +22,7 @@ def handle_error(e):
         return render_template("cerror.html"), 500  # Customize the error page and status code
     else:
         return render_template("error.html"), 500  # Customize the error page and status code
-
+        
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
@@ -237,30 +240,31 @@ def programWithCSV():
             else:
                 program_ces = "Gender Development" 
 
-            return render_template("resultCSV.html",
-                top1=top_programs_with_subprograms[0] if len(top_programs_with_subprograms) >= 1 else {},
-                top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) >= 2 else {},
-                top3=top_programs_with_subprograms[2] if len(top_programs_with_subprograms) >= 3 else {},
-                top1_2 = top_programs_with_subprograms2[0] if len(top_programs_with_subprograms) >= 1 else {},
-                top2_2 = top_programs_with_subprograms2[1] if len(top_programs_with_subprograms) >= 1 else {},
-                top3_2 = top_programs_with_subprograms2[2] if len(top_programs_with_subprograms) >= 1 else {},
-                kasarian_counts=kasarian_counts,
-                edad_counts=edad_counts,
-                antas_counts=antas_counts,
-                uri_counts=uri_counts,
-                Pangedukasyon_counts=Pangedukasyon_counts,
-                Pangkabuhayan_counts=Pangkabuhayan_counts,
-                Pagtatanim_counts=Pagtatanim_counts,
-                Pangkalusugan_counts=Pangkalusugan_counts,
-                Dental_counts=Dental_counts,
-                Pangkultura_counts=Pangkultura_counts,
-                Values_counts=Values_counts,
-                Pagkain_counts=Pagkain_counts,
-                Pagrerecycle_counts=Pagrerecycle_counts,
-                Teknolohiya_counts=Teknolohiya_counts,
-                max_category = max_category,
-                highest_count=highest_count,
-                program_ces = program_ces)
+            return render_template("cResultCSV.html",
+            top1=top_programs_with_subprograms[0] if top_programs_with_subprograms else {},
+            top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) > 1 else {},
+            top3=top_programs_with_subprograms[2] if len(top_programs_with_subprograms) > 2 else {},
+            top1_2=top_programs_with_subprograms2[0] if top_programs_with_subprograms2 else {},
+            top2_2=top_programs_with_subprograms2[1] if len(top_programs_with_subprograms2) > 1 else {},
+            top3_2=top_programs_with_subprograms2[2] if len(top_programs_with_subprograms2) > 2 else {},
+            kasarian_counts=kasarian_counts,
+            edad_counts=edad_counts,
+            antas_counts=antas_counts,
+            uri_counts=uri_counts,
+            Pangedukasyon_counts=Pangedukasyon_counts,
+            Pangkabuhayan_counts=Pangkabuhayan_counts,
+            Pagtatanim_counts=Pagtatanim_counts,
+            Pangkalusugan_counts=Pangkalusugan_counts,
+            Dental_counts=Dental_counts,
+            Pangkultura_counts=Pangkultura_counts,
+            Values_counts=Values_counts,
+            Pagkain_counts=Pagkain_counts,
+            Pagrerecycle_counts=Pagrerecycle_counts,
+            Teknolohiya_counts=Teknolohiya_counts,
+            max_category=max_category,
+            highest_count=highest_count,
+            program_ces=program_ces)
+
         
     return render_template("program.html")
 
@@ -431,28 +435,28 @@ def cProgramWithCSV():
                 program_ces = "Gender Development"  
 
             return render_template("cResultCSV.html",
-                top1=top_programs_with_subprograms[0] if len(top_programs_with_subprograms) >= 1 else {},
-                top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) >= 2 else {},
-                top3=top_programs_with_subprograms[2] if len(top_programs_with_subprograms) >= 3 else {},
-                top1_2 = top_programs_with_subprograms2[0] if len(top_programs_with_subprograms) >= 1 else {},
-                top2_2 = top_programs_with_subprograms2[1] if len(top_programs_with_subprograms) >= 1 else {},
-                top3_2 = top_programs_with_subprograms2[2] if len(top_programs_with_subprograms) >= 1 else {},
-                kasarian_counts=kasarian_counts,
-                edad_counts=edad_counts,
-                antas_counts=antas_counts,
-                uri_counts=uri_counts,
-                Pangedukasyon_counts=Pangedukasyon_counts,
-                Pangkabuhayan_counts=Pangkabuhayan_counts,
-                Pagtatanim_counts=Pagtatanim_counts,
-                Pangkalusugan_counts=Pangkalusugan_counts,
-                Dental_counts=Dental_counts,
-                Pangkultura_counts=Pangkultura_counts,
-                Values_counts=Values_counts,
-                Pagkain_counts=Pagkain_counts,
-                Pagrerecycle_counts=Pagrerecycle_counts,
-                Teknolohiya_counts=Teknolohiya_counts,
-                max_category = max_category,
-                highest_count=highest_count,
-                program_ces = program_ces)
+            top1=top_programs_with_subprograms[0] if top_programs_with_subprograms else {},
+            top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) > 1 else {},
+            top3=top_programs_with_subprograms[2] if len(top_programs_with_subprograms) > 2 else {},
+            top1_2=top_programs_with_subprograms2[0] if top_programs_with_subprograms2 else {},
+            top2_2=top_programs_with_subprograms2[1] if len(top_programs_with_subprograms2) > 1 else {},
+            top3_2=top_programs_with_subprograms2[2] if len(top_programs_with_subprograms2) > 2 else {},
+            kasarian_counts=kasarian_counts,
+            edad_counts=edad_counts,
+            antas_counts=antas_counts,
+            uri_counts=uri_counts,
+            Pangedukasyon_counts=Pangedukasyon_counts,
+            Pangkabuhayan_counts=Pangkabuhayan_counts,
+            Pagtatanim_counts=Pagtatanim_counts,
+            Pangkalusugan_counts=Pangkalusugan_counts,
+            Dental_counts=Dental_counts,
+            Pangkultura_counts=Pangkultura_counts,
+            Values_counts=Values_counts,
+            Pagkain_counts=Pagkain_counts,
+            Pagrerecycle_counts=Pagrerecycle_counts,
+            Teknolohiya_counts=Teknolohiya_counts,
+            max_category=max_category,
+            highest_count=highest_count,
+            program_ces=program_ces)
         
     return render_template("cProgram.html")

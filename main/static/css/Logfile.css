@@ -31,19 +31,14 @@
 
 /* BACKGROUND TITLE */
 .logs_title {
-    background-color: #2f9e36;
+    background-color: #303396;
     color: #ffffff;
     padding: 10px;
     border-top-left-radius: var(--border-radius-2);
-    /* Top left corner radius */
     border-top-right-radius: var(--border-radius-2);
-    /* Top right corner radius */
     display: flex;
-    /* Use flexbox to control alignment */
     align-items: center;
-    /* Vertically center the content */
     justify-content: flex-start;
-    /* Align content to the start */
     height: 6rem;
     margin-top: 1rem;
 }
@@ -143,16 +138,93 @@ main .logs-container table td{
     margin-top: 1rem; /* Adjust the top margin as needed */
 }
 
+
+@media screen and (max-width: 760px){
+
+    .margin-top{
+        height: 4rem;
+      
+    }
+
+}
+
+
 @media screen and (max-width: 400px) {
-    .project_files_title {
+   
+    .margin-top{
+        height: 4rem;
+      
+    }
+    .logs-container{
         margin: 0 auto;
-        padding-top: 1rem;
         width: 90%;
     }
 
-    .project_files_container {
+    
+    .logs_title{
         margin: 0 auto;
-        padding-top: 1rem;
         width: 90%;
+        margin-top: 2rem;
+        position: relative;
+    }
+
+    .logs_title .search_form{
+        padding: 0;
+    }
+
+    #search_text {
+        width: 9rem; /* Set the width of the input field to 100% */
+        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    }
+    
+    .logs-container {
+        height: 30rem;
+    }
+
+
+    .logs_title .changetxt{
+        padding-left: 0.5rem;
+        font-size: 1.7rem;
+        line-height: 2rem;
+    }
+
+    .logs-container .table-card{
+        max-width: 20rem;
+        overflow: auto;
+
+    }
+  
+    
+    .logs-container table td {
+        height: 2.3rem;
+        text-align: left;
+    }
+    .logs-container table tr td:nth-child(2) {
+        text-align: center;
+        padding-left: 0;
+    }
+  
+    .logs-container table tr td:nth-child(3) {
+        text-align: center;
+        padding:0;
+    }
+    
+    .logs-container table tr td:nth-child(4) {
+        text-align: center;
+ 
+        padding:0;
+    }
+
+    .logs-container table th:nth-child(4) {
+        text-align: center;
+        padding-left: 0;
+    }
+    .logs-container table th:nth-child(3) {
+        text-align: center;
+        padding-left: 1rem;
+    }
+    .logs-container table th:nth-child(2) {
+        text-align: center;
+        padding-left: 1rem;
     }
 }

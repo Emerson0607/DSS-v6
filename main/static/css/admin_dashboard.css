@@ -149,6 +149,8 @@ aside .cesu .su{
     color: var(--color-kaakbay);
 }
 
+
+
 aside .cesu-mobile{
     font-size: 2rem;
     font-weight: bold;
@@ -213,6 +215,8 @@ aside .sidebar a:hover {
     margin-left: 0 !important;
   }
   
+ 
+
   aside .sidebar a:hover:before {
     content: "" !important;
     width: 6px !important;
@@ -224,11 +228,24 @@ aside .sidebar a:hover {
     color: var(--color-darkgreen) ;
     margin-left: calc(1rem - 3px) !important;
   }
-  
-aside .sidebar a:hover{
-    color: var(--color-darkgreen);
-}
 
+
+/** for blue**/
+aside .sidebar .blue-link:hover {
+    color: #303396;
+  }
+
+  aside .sidebar .blue-link:hover:before {
+    background: #303396;
+  }
+  aside .sidebar .blue-link:hover span {
+    color:  #303396;
+    margin-left: calc(1rem - 3px) !important;
+  }
+  
+    aside .sidebar .blue-link:hover{
+        color:  #303396;
+    }
 
 aside .sidebar .pending-container .pending-badge{
     color: white;
@@ -238,6 +255,7 @@ aside .sidebar .pending-container .pending-badge{
     border-radius: 50%;
     font-size: .8rem;
 }
+
 
 
 /*============ MAIN ====================*/
@@ -376,9 +394,15 @@ main{
     transition: background-color 0.35s;
 }
 
+
+.logout-button-blue:hover {
+    background-color: #303396;
+}
+
 .logout-button a:hover {
     color: #ffffff;
 }
+
 .password-div{
     margin-bottom: 1.1rem;
 }
@@ -399,10 +423,17 @@ main{
 }
 
 .password-button:hover {
-    background-color: #087830;
+    background-color: #277843;
     color: #ffffff;
     transition: background-color 0.35s;
 }
+
+.password-button-blue:hover {
+    background-color: #303396;
+}
+
+
+
 .password-button a:hover {
     color: #ffffff;
 }
@@ -644,6 +675,10 @@ main{
         box-shadow:0 1rem 1rem var(--color-light);
         background-color:var(--color-kaakbay)
     }
+
+    .right .top-blue{
+        background-color:#303396;
+    }
     
     .right .top #menu-btn span{
         color: white;
@@ -745,7 +780,13 @@ main{
         color: #ffffff;
     }
 
- 
+    .invert-blue{
+        content: url("/static/images/user-invert-blue.png"); /* Change the image source for mobile */
+    }
+    .invert-green{
+        content: url("/static/images/user-invert-green.png"); /* Change the image source for mobile */
+    }
+    
 
 }
 
@@ -759,5 +800,12 @@ main{
         left: 3rem;
     }
 
+    .invert-blue{
+        content: url("/static/images/user-invert-blue.png"); /* Change the image source for mobile */
+    }
+
+    .invert-green{
+        content: url("/static/images/user-invert-green.png"); /* Change the image source for mobile */
+    }
     
 }

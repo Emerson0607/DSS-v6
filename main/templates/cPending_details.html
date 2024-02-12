@@ -128,21 +128,28 @@
         </form>
 
           <div class="cpf_del">
-            <form action="{{ url_for('coordinator.CPF_delete') }}" method="POST" style="display: inline;">
+            <form action="{{ url_for('coordinator.CPF_delete') }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this?')">
                 <input style="display: none;" type="text" class="form-control" name="cpf_id" value="{{id}}" required>
-                <button type="submit">CPF Delete</button>
+                <button class="cpf_delete" type="submit"><span class="material-symbols-outlined">
+                    delete
+                    </span></button>
+                    
             </form>
         </div>
         <div class="cesap_del">
-            <form action="{{ url_for('coordinator.CESAP_delete') }}" method="POST" style="display: inline;">
+            <form action="{{ url_for('coordinator.CESAP_delete') }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this?')">
                 <input style="display: none;" type="text" class="form-control" name="cesap_id" value="{{id}}" required>
-                <button type="submit">CESAP Delete</button>
+                <button class="cesap_delete" type="submit"><span class="material-symbols-outlined">
+                    delete
+                    </span></button>
             </form>
         </div>
         <div class="cna_del">
-            <form action="{{ url_for('coordinator.CNA_delete') }}" method="POST" style="display: inline;">
+            <form action="{{ url_for('coordinator.CNA_delete') }}" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this?')">
                 <input style="display: none;" type="text" class="form-control" name="cna_id" value="{{id}}" required>
-                <button type="submit">CNA Delete</button>
+                <button class="cna_delete" type="submit"><span class="material-symbols-outlined">
+                    delete
+                    </span></button>
             </form>
         </div>
     </div>
