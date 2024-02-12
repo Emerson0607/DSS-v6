@@ -23,29 +23,34 @@ global cur
 
 @dbModel_route.route("/send_recovery_mail", methods=['POST'])
 def send_recovery_mail():
-    email = request.form.get('email')
-    user = Users.query.filter_by(email=email).first()
+    if request.method == 'POST':
+        email = request.form.get('email')
+        # Check if the email exists in the database
+        user = Users.query.filter_by(email=email).first()
 
-    if user:
-        userlog = user.username
-        action = "Attempted to recover account"
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        timestamp = convert_date1(timestamp1)
-        insert_logs = Logs(userlog=userlog, timestamp=timestamp, action=action)
-        if insert_logs:
-            db.session.add(insert_logs)
+        if user:
+            userlog = user.username
+            action = "Attempted to recover account"
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+            # Generate and store OTP in the database
+            otp = secrets.token_hex(3)  # 6 characters in hex format
+            user.otp = otp
+            user.otp_timestamp = datetime.utcnow() + timedelta(minutes=5)  # Set expiration time to 5 minutes
             db.session.commit()
 
-        otp = secrets.token_hex(3)  # Generate OTP
-        user.otp = otp
-        user.otp_timestamp = datetime.utcnow() + timedelta(minutes=5)  # Set expiration time to 5 minutes
-        db.session.commit()
+            # Send OTP via email
+            send_mail(otp, email)
 
-        send_mail(otp, email)  # Send OTP via email
+            return render_template('reset_password.html', email=email)
+        else:
+            return "Email not found in the database."
 
-        return jsonify({'success': True, 'message': 'OTP sent successfully'})
-    else:
-        return jsonify({'success': False, 'message': 'Email not found'})
+    return redirect(url_for('dbModel.login'))
 
 
 @dbModel_route.route('/reset_password', methods=['GET', 'POST'])

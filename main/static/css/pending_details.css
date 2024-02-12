@@ -1,27 +1,4 @@
-:root {
-    --color-primary: #7380ec;
-    --color-danger: #ff7782;
-    --color-success: #41f1b6;
-    --color-warning: #ffbb55;
-    --color-white: #fff;
-    --color-info-dark: #7d8da1;
-    --color-info-light: #dce1eb;
-    --color-dark: #363949;
-    --color-light: rgba(132, 139, 200, 0.18);
-    --color-primary-variant: #111e88;
-    --color-dark-variant: #677483;
-    --color-background: #f6f6f9;
 
-    --card-border-radius: 2rem;
-    --border-radius-1: 0.4rem;
-    --border-radius-2: 0.8rem;
-    --border-radius-3: 1.2rem;
-
-    --card-padding: 1.8rem;
-    --padding-1: 1.2rem;
-
-    --box-shadow: 0 2rem 3rem var(--color-light)
-}
 
 main .pending_detailsCard .time-frame, .fileces{
     display: grid;
@@ -41,6 +18,7 @@ main .pending_detailsCard{
 
 main .pending_detailsCard .pending_detailsBox{
     padding: 3rem 5rem;
+    padding-bottom: 6rem;
 }
 
 main .pending_detailsCard .file-box p{
@@ -102,8 +80,27 @@ main .pending_detailsCard > div:hover{
     border-radius: 5px;
     cursor: pointer;
     position: absolute;
-    bottom: 1rem;
+    bottom: 2.5rem;
+    right: 11rem;
+    width: 5rem;
+}
+
+/* Style for decline button */
+.pending_detailsCard .btn-decline {
+    background-color: #49a14f;
+    color: #fff;
+    width: 5rem;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 2.5rem;
     right: 5rem;
+}
+
+.pending_detailsCard .btn-decline:hover {
+    background-color: #05ae11;
 }
 
 .pending_detailsCard .btn-submit:hover {
