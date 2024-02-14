@@ -9,7 +9,24 @@
     <link rel="stylesheet" href="/static/css/login.css"/>
     <link rel="stylesheet" href="/static/css/flash.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
 </head>
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #ffffff;
+        background-image: url('/static/images/CES.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        justify-items: right;
+    }
+</style>
 <body>
     <div class="login-container">
        

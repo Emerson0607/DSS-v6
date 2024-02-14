@@ -48,7 +48,7 @@ def send_recovery_mail():
 
             return render_template('reset_password.html', email=email)
         else:
-            return "Email not found in the database."
+            return "Email not found."
 
     return redirect(url_for('dbModel.login'))
 

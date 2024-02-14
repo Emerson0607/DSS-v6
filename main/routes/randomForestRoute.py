@@ -10,7 +10,7 @@ randomForest_Route = Blueprint('randomForest', __name__)
 model_path_cesu = 'trained_modelCESU7.pkl'
 sub_model_path = 'subprogram7.pkl'
 
-
+#comments
 
 model = joblib.load(model_path_cesu)
 model2 = joblib.load(sub_model_path)
@@ -22,7 +22,7 @@ def handle_error(e):
         return render_template("cerror.html"), 500  # Customize the error page and status code
     else:
         return render_template("error.html"), 500  # Customize the error page and status code
-        
+  
 def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID

@@ -146,6 +146,8 @@ main .logs-container table td{
 }
 
 
+
+
 @media screen and (max-width: 400px) {
    
     .margin-top{
@@ -223,5 +225,12 @@ main .logs-container table td{
     .logs-container table th:nth-child(2) {
         text-align: center;
         padding-left: 1rem;
+    }
+}
+
+@media screen and (max-width: 385px) {
+    #search_text {
+        width: 7rem; /* Set the width of the input field to 100% */
+      
     }
 }

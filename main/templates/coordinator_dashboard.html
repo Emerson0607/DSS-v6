@@ -27,7 +27,17 @@
     <link rel="stylesheet" href="/static/css/pending_details.css">
     <link rel="stylesheet" href="/static/css/tooltip.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
- 
+    <style>
+        @media screen and (max-width: 400px){
+
+            .invert-green{
+                content: url("/static/images/user-invert-green.png"); /* Change the image source for mobile */
+            }
+    
+        }
+
+        
+    </style>
 </head>
 <body>
     <div class="container1 ">

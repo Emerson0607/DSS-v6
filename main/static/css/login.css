@@ -25,19 +25,6 @@
 
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #ffffff;
-    background-image: url('/static/images/CES.png');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: cover;
-    height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: center;
-    justify-items: right;
-}
 
 *{
     margin: 0;
@@ -234,14 +221,14 @@ h2{
     .login-container {
         width: 100vw;
         height: 100vh;
-       
     }
     .login {
         padding-top: 5rem;
+        padding-left: 2rem;
         
-        width: 100vw;
+        padding-right: 2rem;
+        max-width: 25rem;
         height: 100vh;
-        margin: 0 auto;
         border-radius: 0;
         box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0);
     }
@@ -249,5 +236,7 @@ h2{
     .login-container .btn-recover{
         bottom: 5rem;
     }
+
+  
 
 }
