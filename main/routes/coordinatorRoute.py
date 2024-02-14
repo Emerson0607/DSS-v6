@@ -703,6 +703,8 @@ def update_pending():
         p = Pending_project.query.get(pending_id)
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+
+
 ############################### COORDINATOR COMMENTS ###############################
 @coordinator_route.route('/get_comments')
 def get_comments():

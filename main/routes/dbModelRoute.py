@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan
 from main import db
 from flask import Response
 import secrets
@@ -51,7 +51,6 @@ def send_recovery_mail():
             return "Email not found."
 
     return redirect(url_for('dbModel.login'))
-
 
 @dbModel_route.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
@@ -235,7 +234,6 @@ def programCSVresult():
         return redirect(url_for('dbModel.login'))
     return redirect(url_for('randomForest.programOneRow'))
 
-
 ############################  USER ACCOUNT FUNCTION  FOR ADMIN #########################
 
 @dbModel_route.route("/manage_account")
@@ -385,7 +383,6 @@ def delete_account(id):
             db.session.rollback()
     return redirect(url_for('dbModel.manage_account'))
 
-
 ############################  FOR COORDINATOR ROUTE  ############################
 @dbModel_route.route('/coordinator/<data>')
 def coordinator(data):
@@ -461,7 +458,6 @@ def community_data_list():
         print(str(e))
         return make_response("Internal Server Error", 500)
 
-
 @dbModel_route.route("/manage_community")
 def manage_community():
     if g.current_role != "Admin":
@@ -488,7 +484,6 @@ def get_program(get_program):
     subArray = [users.username for users in sub]  
     return jsonify({'users': subArray})
 
- 
 ############################  CRUD FOR MANAGE COMMUNITY  ############################
 @dbModel_route.route("/add_community", methods=["POST"])
 def add_community():
@@ -937,7 +932,6 @@ def update_status():
     else:
         return jsonify({'message': 'Record not found.'}), 404
 
-
 ############################### ARCHIVE PROJECT ###############################
 @dbModel_route.route('/archive_project', methods=['POST'])
 def archive_project():
@@ -997,7 +991,6 @@ def archive_project():
    
 
     return jsonify({'message': 'Data archived.'})
-
 
 ############################### display kaakbay program and coordinator ###############################
 def get_ongoing_count(session, program_name):
@@ -1336,8 +1329,6 @@ def view_cesap_project(program, subprogram, community, cesap_filename):
         return response
     return "File not found", 404
 
-
-
 ############################### ARCHIVED FILES ###############################
 
 @dbModel_route.route("/archived_files")
@@ -1505,3 +1496,458 @@ def logs_activity():
     UserLogs = Logs.query.order_by(Logs.timestamp.desc()).all()
 
     return render_template("Logfolder.html", UserLogs = UserLogs)
+
+############################### PLANS FILES ###############################
+
+@dbModel_route.route("/cesu_plans")
+def cesu_plans():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
+    form = Form()
+    placeholder_choice = ("", "-- Select Program --")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+     # Fetch all user records from the database
+    all_data = Plan.query.filter_by(status="Planning").all()
+    program8 = Program.query.all()
+    user1 = Users.query.all()
+    return render_template("cesu_plans.html", community = all_data, form=form, program8=program8, user1 = user1)
+
+@dbModel_route.route("/add_plan", methods=["POST"])
+def add_plan():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        community = request.form.get("community")
+        program = request.form.get("program")
+        subprogram = request.form.get("subprogram")
+        start_date1 = request.form.get("start_date")
+        end_date1 = request.form.get("end_date")
+        week = 0
+        totalWeek = request.form.get("totalWeek")
+        user = request.form.get("user")
+        department = request.form.get("lead")
+        subDepartment = request.form.get("support")
+        status = "Planning"
+        budget = request.form.get("budget")
+
+        #Convert date
+        start_date = convert_date(start_date1)
+        end_date = convert_date(end_date1)
+
+         # Access uploaded files
+        cpf_file = request.files['CPF']
+        cesap_file = request.files['CESAP']
+        cna_file = request.files['CNA']
+      
+
+        existing_plan= Plan.query.filter_by(user= user, status= status, community=community, program = program, subprogram=subprogram).first()
+
+        if existing_plan is None:
+            cpf_data = cpf_file.read()
+            cesap_data = cesap_file.read()
+            cna_data = cna_file.read()
+
+            new_plan = Plan(community=community, program=program, subprogram=subprogram, start_date=start_date,
+            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
+            cna_filename = cna_file.filename, cna=cna_data)
+
+            userlog = g.current_user
+            action = f'ADDED new {program} project to {community} for planning.'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            db.session.add(new_plan)
+            db.session.commit()
+            flash('New community project added for planning!', 'add_community')
+
+            new_subprogram = Subprogram(program=program, subprogram=subprogram)
+            db.session.add(new_subprogram)
+            db.session.commit()
+            
+        else:
+            flash(f"Sorry, '{subprogram}' is already taken in {{community}}.", 'existing_community')
+        return redirect(url_for('dbModel.cesu_plans'))
+    return redirect(url_for('dbModel.cesu_plans'))
+
+@dbModel_route.route('/delete_plan/<int:id>', methods=['GET'])
+def delete_plan(id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    cesu_plan = Plan.query.get(id)
+    program = request.args.get('program')
+    subprogram = request.args.get('subprogram')
+    community_name = request.args.get('community')
+
+    subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
+
+    if cesu_plan:
+        userlog = g.current_user
+        action = f'DELETED {program} project of {community} from CESU planner'
+        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()  
+
+        try:
+            # Delete the user from the database
+            db.session.delete(cesu_plan)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+    
+    if subprogram_record:
+        try:
+            # Delete the 'Upload' record from the database
+            db.session.delete(subprogram_record)
+            db.session.commit()
+            
+        except Exception as e:
+            db.session.rollback()
+    flash('Delete successfully!', 'delete_account')
+    return redirect(url_for('dbModel.cesu_plans'))
+
+@dbModel_route.route("/view_plan/<int:plan_id>")
+def view_plan(plan_id):
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    p = Plan.query.get(plan_id)
+
+    cpf_data_filename = p.cpf_filename
+    cesap_data_filename = p.cesap_filename
+    cna_data_filename = p.cna_filename
+
+    return render_template("plan_details.html",id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, budget=p.budget)
+
+
+@dbModel_route.route('/view_cpf_plan/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
+def view_cpf_plan(program, subprogram, community, cpf_filename):
+    upload_entry = Plan.query.filter_by(community = community, program = program, subprogram = subprogram, cpf_filename=cpf_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cpf_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cpf, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cpf_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cpf,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@dbModel_route.route('/view_cna_plan/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
+def view_cna_plan(program, subprogram, community, cna_filename):
+    upload_entry = Plan.query.filter_by(community = community, program = program, subprogram = subprogram, cna_filename=cna_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cna_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cna, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cna_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cna,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+@dbModel_route.route('/view_cesap_plan/<program>/<subprogram>/<community>/<cesap_filename>', methods=['GET'])
+def view_cesap_plan(program, subprogram, community, cesap_filename):
+    upload_entry = Plan.query.filter_by(community = community, program = program, subprogram = subprogram, cesap_filename=cesap_filename).first()
+    if upload_entry:
+        # Determine the content type based on the file extension
+        content_type = "application/octet-stream"
+        filename = upload_entry.cesap_filename.lower()
+
+        if filename.endswith((".jpg", ".jpeg", ".png", ".gif")):
+            content_type = "image"
+
+        # Serve the file with appropriate content type and Content-Disposition
+        response = Response(upload_entry.cesap, content_type=content_type)
+
+        if content_type.startswith("image"):
+            # If it's an image, set Content-Disposition to inline for display
+            response.headers["Content-Disposition"] = "inline"
+        else:
+            # For other types, set Content-Disposition to attachment for download
+            response.headers[
+                "Content-Disposition"] = f'attachment; filename="{upload_entry.cesap_filename}"'
+        if filename.endswith(".pdf"):
+            response = Response(upload_entry.cesap,
+                                content_type="application/pdf")
+        return response
+    return "File not found", 404
+
+
+@dbModel_route.route('/update_plan', methods=['POST'])
+def update_plan():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == 'POST':
+        plan_id = request.form.get('id')
+        community = request.form.get('community')
+        program = request.form['program']
+        subprogram = request.form['subprogram']
+        start_date1 = request.form['start_date']
+        end_date1 = request.form['end_date']
+        totalWeek = request.form['totalWeek']
+        budget = request.form['budget']
+        user = request.form['user']
+        lead = request.form['lead']
+        support = request.form['support']
+        status = "Planning"
+        
+        
+        #Convert date
+        start_date = convert_date(start_date1)
+        end_date = convert_date(end_date1)
+
+        cesu_plan = Plan.query.get(plan_id)
+
+        if cesu_plan:
+            if not cesu_plan.cpf:
+                cpf_file = request.files['CPF']
+                cesu_plan.cpf_filename = cpf_file.filename
+                cesu_plan.cpf = cpf_file.read()
+
+            if not cesu_plan.cesap:
+                cesap_file = request.files['CESAP']
+                cesu_plan.cesap_filename = cesap_file.filename
+                cesu_plan.cesap = cesap_file.read()
+
+            if not cesu_plan.cna:
+                cna_file = request.files['CNA']
+                cesu_plan.cna_filename = cna_file.filename
+                cesu_plan.cna = cna_file.read()
+
+            cesu_plan.community = community
+            cesu_plan.program = program
+            cesu_plan.subprogram = subprogram
+            cesu_plan.start_date = start_date
+            cesu_plan.end_date = end_date
+            cesu_plan.totalWeek = totalWeek
+            cesu_plan.budget = budget
+            cesu_plan.user = user
+            cesu_plan.department = lead
+            cesu_plan.subDepartment = support
+            cesu_plan.status = status
+
+            userlog = g.current_user
+            action = f'UPDATED planned {program} projects of {community} from CESU Planner'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+                
+            db.session.commit()
+            flash('Updated successfully!', 'edit_account')
+
+        p = Plan.query.get(plan_id)
+
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+
+@dbModel_route.route('/delete_cpf_plan', methods=['POST'])
+def delete_cpf_plan():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
+    if request.method == 'POST':
+        cpf_id = request.form.get('cpf_id')
+        cesu_plan = Plan.query.filter_by(id=cpf_id).first()
+
+        if cesu_plan:
+            userlog = g.current_user
+            action = f'DELETED CPF file : {cesu_plan.cpf_filename}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            # Delete the file from the database
+            cesu_plan.cpf = None
+            cesu_plan.cpf_filename = None
+            db.session.commit()
+        
+        p = Plan.query.get(cpf_id)
+
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+
+@dbModel_route.route('/delete_cesap_plan', methods=['POST'])
+def delete_cesap_plan():
+    if request.method == 'POST':
+        cesap_id = request.form.get('cesap_id')
+        cesu_plan = Plan.query.filter_by(id=cesap_id).first()
+
+        if cesu_plan:
+            userlog = g.current_user
+            action = f'DELETED CESAP file : {cesu_plan.cesap_filename}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            # Delete the file from the database
+            cesu_plan.cesap = None
+            cesu_plan.cesap_filename = None
+            db.session.commit()
+        p = Plan.query.get(cesap_id)
+
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+
+@dbModel_route.route('/delete_cna_plan', methods=['POST'])
+def delete_cna_plan():
+    if request.method == 'POST':
+        cna_id = request.form.get('cna_id')
+        cesu_plan = Plan.query.filter_by(id=cna_id).first()
+
+        if cesu_plan:
+            userlog = g.current_user
+            action = f'DELETED CNA file : {cesu_plan.cna_filename}'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            # Delete the file from the database
+            cesu_plan.cna = None
+            cesu_plan.cna_filename = None
+            db.session.commit()
+        p = Plan.query.get(cna_id)
+
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+
+@dbModel_route.route("/deploy", methods=["POST"])
+def deploy():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        community = request.form.get("community")
+        program = request.form.get("program")
+        subprogram = request.form.get("subprogram")
+        
+        existing_plan = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+
+        if existing_plan is None:
+            data_to_move = Plan.query.filter_by( community=community, program = program, subprogram=subprogram).first()
+
+            new_row = Community(
+                    community=data_to_move.community, 
+                    program=data_to_move.program, 
+                    subprogram=data_to_move.subprogram, 
+                    start_date=data_to_move.start_date,
+                    end_date=data_to_move.end_date, 
+                    week=data_to_move.week, 
+                    totalWeek=data_to_move.totalWeek, 
+                    user=data_to_move.user, 
+                    department=data_to_move.department, 
+                    subDepartment=data_to_move.subDepartment, 
+                    status="Ongoing", 
+                    budget = data_to_move.budget, 
+                    cpf_filename=data_to_move.cpf_filename, 
+                    cpf=data_to_move.cpf, 
+                    cesap_filename=data_to_move.cesap_filename, 
+                    cesap=data_to_move.cesap,
+                    cna_filename = data_to_move.cna_filename, 
+                    cna=data_to_move.cna
+            )
+
+            userlog = g.current_user
+            action = f'Deployed {program} project of {community} from CESU Planner'
+            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+                db.session.add(new_row)
+                db.session.commit()
+                flash('Deploy community project!', 'add_community')
+
+                community_plan = Plan.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+                if community_plan:
+                    try:
+                        # Delete the user from the database
+                        db.session.delete(community_plan)
+                        db.session.commit()
+                    except Exception as e:
+                        db.session.rollback()
+                        # You may want to log the exception for debugging purposes
+                #FOR SUBPROGRAM
+                existing_subprogram = Subprogram.query.filter_by(program = program, subprogram=subprogram).first()
+                if existing_subprogram is None:
+                    new_subprogram = Subprogram(program=program, subprogram=subprogram)
+                    db.session.add(new_subprogram)
+                    db.session.commit()
+        else:
+            flash(f"Sorry, '{subprogram}' is already taken in {{community}}.", 'existing_community')
+
+        return redirect(url_for('dbModel.cesu_plans'))
+       
+    return redirect(url_for('dbModel.cesu_plans'))

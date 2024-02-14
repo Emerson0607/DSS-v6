@@ -25,8 +25,9 @@
     <link rel="stylesheet" href="/static/css/project_files.css">
     <link rel="stylesheet" href="/static/css/project_table.css">
     <link rel="stylesheet" href="/static/css/project_details.css">
-    
+    <link rel="stylesheet" href="/static/css/cesu_plans.css">
     <link rel="stylesheet" href="/static/css/Logfile.css">
+    <link rel="stylesheet" href="/static/css/plan_details.css">
     
     <link rel="stylesheet" href="/static/css/tooltip.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
@@ -67,13 +68,20 @@
                     <span class="material-symbols-sharp" >groups</span>
                     <h3>Community</h3>
                 </a>
-
+                 <a href="{{ url_for('dbModel.cesu_plans') }}" class="sidebar-link pending-container blue-link">
+                    <span class="material-symbols-outlined">
+                        notes
+                        </span>
+                    <h3>CESU Planner</h3>
+                  
+                </a>
                 <a href="{{ url_for('dbModel.kaakbay_program') }} " class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">
                         monitoring
                         </span>
                     <h3>Community Programs</h3>
                 </a>
+               
                 <a href="{{ url_for('dbModel.manage_pending') }}" class="sidebar-link pending-container blue-link">
                     <span class="material-symbols-sharp">
                         pending

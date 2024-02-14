@@ -169,7 +169,7 @@ main .communityCard > div{
 }
 
 main .communityCard .table-card{
-    height: 280px;
+    max-height: 35rem;
     overflow: auto;
 }
 

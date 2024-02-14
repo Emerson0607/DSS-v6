@@ -79,6 +79,28 @@ class Pending_project(db.Model):
     cesap_filename = db.Column(db.String(255), nullable=True)
     comments = db.Column(db.String(255), nullable=True)
 
+class Plan(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=False) 
+    program = db.Column(db.String(255), nullable=False)
+    subprogram = db.Column(db.String(255), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)
+    week = db.Column(db.Integer, nullable=True)
+    totalWeek = db.Column(db.Integer, nullable=False)
+    user = db.Column(db.String(255), nullable=False)
+    department  = db.Column(db.String(255), nullable=False) #LEAD
+    subDepartment = db.Column(db.String(255), nullable=False) #SUPPORT
+    status = db.Column(db.String(255), nullable=False)
+    budget = db.Column(db.Integer, nullable=False)
+    cna = db.Column(db.LargeBinary, nullable=True)
+    cpf = db.Column(db.LargeBinary, nullable=True)
+    cesap = db.Column(db.LargeBinary, nullable=True)
+    cna_filename = db.Column(db.String(255), nullable=True)
+    cpf_filename = db.Column(db.String(255), nullable=True)
+    cesap_filename = db.Column(db.String(255), nullable=True)
+    comments = db.Column(db.String(255), nullable=True)
+
 
 class Archive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -226,5 +248,6 @@ def display_community_data():
     Pending_project_data = Pending_project.query.all()
     User = Users.query.all()
     UserLogs = Logs.query.all()
+    planner = Plan.query.all()
     archive_project = db.session.query(Archive).all()
-    return render_template('test.html', UserLogs = UserLogs, community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User, archive_project=archive_project)
+    return render_template('test.html',planner=planner, UserLogs = UserLogs, community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User, archive_project=archive_project)

@@ -54,6 +54,57 @@
         </tbody>
     </table>
 
+<!--PLAN-->
+<h1>Planner Data</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Community</th>
+            <th>Program</th>
+            <th>Subprogram</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Week</th>
+            <th>Total Week</th>
+            <th>User</th>
+            <th>Department</th>
+            <th>SubDepartment</th>
+            <th>Status</th>
+            <th>Budget</th>
+            <th>CPF</th>
+            <th>CESAP</th>
+            <th>CNA</th>
+
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for planner1 in planner %}
+        <tr>
+            <td>{{ planner1.id }}</td>
+            <td>{{ planner1.community }}</td>
+            <td>{{ planner1.program }}</td>
+            <td>{{ planner1.subprogram }}</td>
+            <td>{{ planner1.start_date }}</td>
+            <td>{{ planner1.end_date }}</td>
+            <td>{{ planner1.week }}</td>
+            <td>{{ planner1.totalWeek }}</td>
+            <td>{{ planner1.user }}</td>
+            <td>{{ planner1.department }}</td>
+            <td>{{ planner1.subDepartment }}</td>
+            <td>{{ planner1.status }}</td>
+            <td>{{ planner1.budget }}</td>
+            <td>{{ planner1.cpf_filename }}</td>
+            <td>{{ planner1.cesap_filename }}</td>
+            <td>{{ planner1.cna_filename }}</td>
+      
+            
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 
 
     <!--ARCHIVE-->
