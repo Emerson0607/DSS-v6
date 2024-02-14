@@ -17,8 +17,8 @@ Session(app)
 
 app.config['MAIL_SERVER']="smtp.gmail.com"
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = "emer22297@gmail.com"
-app.config['MAIL_PASSWORD'] = "lnvc hkqg fdtr ywue"
+app.config['MAIL_USERNAME'] = "lucesu50@gmail.com"
+app.config['MAIL_PASSWORD'] = "ktsf yqpt tnpr iaev"
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 

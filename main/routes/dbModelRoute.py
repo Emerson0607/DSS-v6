@@ -107,7 +107,7 @@ def send_mail(otp, recipient_email):
     sender_name = "LU-CESU"
     mail_message = Message(
             'Account Recovery', 
-            sender =   (sender_name, 'emer22297@gmail.com'), 
+            sender =   (sender_name, 'lucesu50@gmail.com'), 
             recipients = [recipient_email])
     mail_message.body = f"""
     Your One-Time Password (OTP): {otp}
@@ -120,7 +120,7 @@ def send_mail(otp, recipient_email):
     Thank you for trusting us with your security.
 
     Best regards,
-    CESU MIS Team
+    LU-CESU MIS Team
     """
     mail_message.html = f"""
     <html>
@@ -132,7 +132,7 @@ def send_mail(otp, recipient_email):
             <p>If you did not request this OTP or experience any issues, please contact our support team immediately.</p>
             <p>Thank you for trusting us with your security.</p>
             <h1 style="margin-top: 1rem;"></h1>
-            <p><em>Best regards, CESU MIS Team</em></p>
+            <p><em>Best regards, LU-CESU MIS Team</em></p>
         </body>
     </html>
     """
