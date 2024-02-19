@@ -5,8 +5,10 @@ from main import Form
 from flask import Response
 from datetime import datetime
 from sqlalchemy import func, case
+import pytz
 
 coordinator_route = Blueprint('coordinator', __name__)
+
 
 def convert_date1(datetime_str):
     return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
@@ -50,7 +52,9 @@ def cClear_session():
     session.clear()
     userlog = g.current_user
     action = f'Logged out.'
-    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    ph_tz = pytz.timezone('Asia/Manila')
+    ph_time = datetime.now(ph_tz)
+    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
     timestamp = convert_date1(timestamp1)
     insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
     if insert_logs:
@@ -191,7 +195,9 @@ def cAdd_community():
             userlog = g.current_user
 
             action = f'ADDED pending {program} project of {community}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -224,7 +230,9 @@ def cUpdate_week():
         community.week = totalCheckboxes
     userlog = g.current_user
     action = f'UPDATED week progress of {program} project in {community}'
-    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    ph_tz = pytz.timezone('Asia/Manila')
+    ph_time = datetime.now(ph_tz)
+    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
     timestamp = convert_date1(timestamp1)
     insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
     if insert_logs:
@@ -308,7 +316,9 @@ def cNew_password():
 
                 userlog = g.current_user
                 action = f'CHANGED password'
-                timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ph_tz = pytz.timezone('Asia/Manila')
+                ph_time = datetime.now(ph_tz)
+                timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                 timestamp = convert_date1(timestamp1)
                 insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
                 if insert_logs:
@@ -453,7 +463,9 @@ def cDelete_pending(id):
 
             userlog = g.current_user
             action = f'DELETED pending {community.program} project of {community.community}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -565,7 +577,9 @@ def CPF_delete():
 
             userlog = g.current_user
             action = f'DELETED CPF file : {pending_project.cpf_filename}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -592,7 +606,9 @@ def CESAP_delete():
 
             userlog = g.current_user
             action = f'DELETED CESAP file : {pending_project.cesap_filename}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -618,7 +634,9 @@ def CNA_delete():
             
             userlog = g.current_user
             action = f'DELETED CNA file : {pending_project.cna_filename}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -690,7 +708,9 @@ def update_pending():
 
             userlog = g.current_user
             action = f'UPDATED pending {program} projects of {community}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:

@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, session, flash,
 from main.models.dbModel import Upload, Users, Pending_project, Logs
 from main import db
 from datetime import datetime, timedelta
+import pytz
 
 file_route = Blueprint('file', __name__)
 
@@ -74,7 +75,9 @@ def upload():
 
             userlog = g.current_user
             action = f'ADDED new file {file.filename}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -127,7 +130,9 @@ def delete_file(id):
     if upload:
         userlog = g.current_user
         action = f'DELETED file {upload.filename}'
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
         timestamp = convert_date1(timestamp1)
         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
         if insert_logs:

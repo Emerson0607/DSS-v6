@@ -8,6 +8,10 @@ from sqlalchemy import func, case
 from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
+import pytz
+
+# Get the timezone for the Philippines
+
 
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
@@ -31,7 +35,7 @@ def send_recovery_mail():
         if user:
             userlog = user.username
             action = "Attempted to recover account"
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -79,7 +83,7 @@ def reset_password():
 
                         userlog = user.username
                         action = "Successfully recovered account."
-                        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                         timestamp = convert_date1(timestamp1)
                         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
                         if insert_logs:
@@ -182,7 +186,9 @@ def login():
         if user:
             userlog = username
             action = 'Logged in.'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -216,7 +222,9 @@ def clear_session():
     session.clear()
     userlog = g.current_user
     action = 'Logged out.'
-    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    ph_tz = pytz.timezone('Asia/Manila')
+    ph_time = datetime.now(ph_tz)
+    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
     timestamp = convert_date1(timestamp1)
     insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
     if insert_logs:
@@ -294,7 +302,9 @@ def add_account():
                     try: 
                         userlog = g.current_user
                         action = f'ADDED new user account named {new_user.username}'
-                        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        ph_tz = pytz.timezone('Asia/Manila')
+                        ph_time = datetime.now(ph_tz)
+                        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                         timestamp = convert_date1(timestamp1)
                         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
                         if insert_logs:
@@ -337,7 +347,9 @@ def edit_account():
         if user:
             userlog = g.current_user
             action = f'UPDATED account named {new_username}.'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -369,7 +381,9 @@ def delete_account(id):
     if user:
         userlog = g.current_user
         action = f'DELETED account named {user.username}.'
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
         timestamp = convert_date1(timestamp1)
         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
         if insert_logs:
@@ -531,7 +545,9 @@ def add_community():
 
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} .'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -568,7 +584,9 @@ def edit_community():
         
         userlog = g.current_user
         action = f'UPDATE {community}'
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
         timestamp = convert_date1(timestamp1)
         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
         if insert_logs:
@@ -613,7 +631,9 @@ def delete_community(id):
     if community:
         userlog = g.current_user
         action = f'DELETED {program} project of {community}'
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
         timestamp = convert_date1(timestamp1)
         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
         if insert_logs:
@@ -669,7 +689,9 @@ def delete_pending(id):
     if community:
         userlog = g.current_user
         action = f'DELETED pending {community.program} project of {community.community}'
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
         timestamp = convert_date1(timestamp1)
         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
         if insert_logs:
@@ -819,7 +841,9 @@ def approve():
 
             userlog = g.current_user
             action = f'APPROVE pending {program} project of {community}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -872,7 +896,9 @@ def decline():
         if p:
             userlog = g.current_user
             action = f'DECLINED pending {program} project of {community}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -903,7 +929,9 @@ def update_week():
 
     userlog = g.current_user
     action = f'UPDATED week progress of {program} project in {community}'
-    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    ph_tz = pytz.timezone('Asia/Manila')
+    ph_time = datetime.now(ph_tz)
+    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
     timestamp = convert_date1(timestamp1)
     insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
     if insert_logs:
@@ -967,7 +995,9 @@ def archive_project():
     )
     userlog = g.current_user
     action = f'ARCHIVED {program} project of {community}'
-    timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    ph_tz = pytz.timezone('Asia/Manila')
+    ph_time = datetime.now(ph_tz)
+    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
     timestamp = convert_date1(timestamp1)
     insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
     if insert_logs:
@@ -1114,7 +1144,9 @@ def new_password():
             if new_password == confirm_password:
                 userlog = g.current_user
                 action = f'CHANGED password'
-                timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                ph_tz = pytz.timezone('Asia/Manila')
+                ph_time = datetime.now(ph_tz)
+                timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                 timestamp = convert_date1(timestamp1)
                 insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
                 if insert_logs:
@@ -1213,7 +1245,9 @@ def delete_project(project_id):
             )
             userlog = g.current_user
             action = f'DELETED {program} project of {community}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -1383,7 +1417,9 @@ def delete_archived(project_id):
     if p:
         userlog = g.current_user
         action = f'DELETED archived {p.program} project of {p.community}'
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
         timestamp = convert_date1(timestamp1)
         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
         if insert_logs:
@@ -1564,7 +1600,9 @@ def add_plan():
 
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} for planning.'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -1603,7 +1641,9 @@ def delete_plan(id):
     if cesu_plan:
         userlog = g.current_user
         action = f'DELETED {program} project of {community} from CESU planner'
-        timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
         timestamp = convert_date1(timestamp1)
         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
         if insert_logs:
@@ -1788,7 +1828,9 @@ def update_plan():
 
             userlog = g.current_user
             action = f'UPDATED planned {program} projects of {community} from CESU Planner'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -1814,7 +1856,9 @@ def delete_cpf_plan():
         if cesu_plan:
             userlog = g.current_user
             action = f'DELETED CPF file : {cesu_plan.cpf_filename}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -1839,7 +1883,9 @@ def delete_cesap_plan():
         if cesu_plan:
             userlog = g.current_user
             action = f'DELETED CESAP file : {cesu_plan.cesap_filename}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -1863,7 +1909,9 @@ def delete_cna_plan():
         if cesu_plan:
             userlog = g.current_user
             action = f'DELETED CNA file : {cesu_plan.cna_filename}'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
@@ -1920,7 +1968,9 @@ def deploy():
 
             userlog = g.current_user
             action = f'Deployed {program} project of {community} from CESU Planner'
-            timestamp1 = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
             if insert_logs:
