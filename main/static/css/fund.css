@@ -102,24 +102,42 @@
 
 .fund-container table th:first-child {
     text-align: left;
-    padding-left: .3rem;
+    padding-left: 7rem;
+}
+
+.fund-container table td:first-child {
+    text-align: left;
+    padding-left: 7rem;
+}
+
+.fund-container table tr th:nth-child(2) {
+    text-align: left;
+    width: 25%;
+    padding-left: 11rem;
 }
 
 .fund-container table tr td:nth-child(2) {
     text-align: left;
     width: 25%;
-    padding-left: 6.5rem;
+    padding-left: 10rem;
+}
+
+.fund-container table tr th:nth-child(3) {
+    text-align: center;
+    width: 25%;
+    padding-left: 7rem;
 }
 
 .fund-container table tr td:nth-child(3) {
     text-align: center;
     width: 25%;
+    padding-left: 7rem;
 }
 
 .fund-container table tr td:nth-child(4) {
     text-align: left;
     width: 45%;
-    padding-left: 15rem;
+    padding-left: 14rem;
 }
 
 

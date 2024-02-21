@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CESU | {% block title %}{% endblock %}</title>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="/static/css/dashboard.css">
     <link rel="stylesheet" href="/static/css/admin_dashboard.css">
     <link rel="stylesheet" href="/static/css/programCSVresult.css">
@@ -29,20 +32,23 @@
     <link rel="stylesheet" href="/static/css/Logfile.css">
     <link rel="stylesheet" href="/static/css/plan_details.css">
     <link rel="stylesheet" href="/static/css/fund.css">
-    
+
     <link rel="stylesheet" href="/static/css/tooltip.css">
-    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
+    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
+        type="image/x-icon">
 
     <style>
-        @media screen and (max-width: 400px){
-    
+        @media screen and (max-width: 400px) {
 
-            .invert-blue{
-                content: url("/static/images/user-invert-blue.png"); /* Change the image source for mobile */
+
+            .invert-blue {
+                content: url("/static/images/user-invert-blue.png");
+                /* Change the image source for mobile */
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container1 ">
         <aside class="sticky-top">
@@ -66,36 +72,37 @@
                     <h3>Dashboard</h3>
                 </a>
                 <a href="{{ url_for('dbModel.manage_community') }} " class="sidebar-link blue-link">
-                    <span class="material-symbols-sharp" >groups</span>
+                    <span class="material-symbols-sharp">groups</span>
                     <h3>Community</h3>
                 </a>
-                 <a href="{{ url_for('dbModel.cesu_plans') }}" class="sidebar-link pending-container blue-link">
+                <a href="{{ url_for('dbModel.cesu_plans') }}" class="sidebar-link pending-container blue-link">
                     <span class="material-symbols-outlined">
                         notes
-                        </span>
+                    </span>
                     <h3>CESU Plans and Programs</h3>
-                  
+
                 </a>
                 <a href="{{ url_for('dbModel.kaakbay_program') }} " class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">
                         monitoring
-                        </span>
-                    <h3>Community Programs</h3>
+                    </span>
+                    <h3>Extension/Out Reach Programs
+                    </h3>
                 </a>
-               
+
                 <a href="{{ url_for('dbModel.manage_pending') }}" class="sidebar-link pending-container blue-link">
                     <span class="material-symbols-sharp">
                         pending
-                        </span>
+                    </span>
                     <h3>Pending Projects</h3>
                     <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
                 </a>
-                <a href="{{ url_for('dbModel.manage_account') }}"class="sidebar-link blue-link">
+                <a href="{{ url_for('dbModel.manage_account') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">manage_accounts</span>
                     <h3>Users Account</h3>
                 </a>
-                
-                <a href="{{ url_for('randomForest.program') }}"class="sidebar-link blue-link">
+
+                <a href="{{ url_for('randomForest.program') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">neurology</span>
                     <h3>Program Recommendation</h3>
                 </a>
@@ -104,7 +111,7 @@
                     <span class="material-symbols-sharp">crowdsource</span>
                     <h3>Fundraising</h3>
                 </a>
-                
+
 
                 <a href="{{ url_for('dbModel.logs_activity') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">manage_search</span>
@@ -126,7 +133,7 @@
                         <a class="blue-link" href="{{ url_for('dbModel.archived_files') }}">Archive</a>
                     </div>
                 </div>
-               
+
             </div>
         </aside>
         <main>
@@ -139,7 +146,7 @@
                 <button id="menu-btn">
                     <span class="material-symbols-sharp">menu</span>
                 </button>
-           
+
                 <div class="theme-toggler">
                     <span class="material-symbols-sharp active">light_mode</span>
                     <span class="material-symbols-sharp">dark_mode</span>
@@ -152,17 +159,21 @@
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
                         <img class="invert-blue " src="/static/images/user-blue.png" alt="CESU-LOGO">
                         <div class="dropdown-content" id="dropdown-content">
-                            <div class="password-div password-div-blue"><a class="password-button password-button-blue"  href="{{ url_for('dbModel.change_password') }}" id="password-button">Change Password</a></div>
-                            <div class="logout-hover "><a class="logout-button logout-button-blue" href="{{ url_for('dbModel.clear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>
+                            <div class="password-div password-div-blue"><a class="password-button password-button-blue"
+                                    href="{{ url_for('dbModel.change_password') }}" id="password-button">Change
+                                    Password</a></div>
+                            <div class="logout-hover "><a class="logout-button logout-button-blue"
+                                    href="{{ url_for('dbModel.clear_session') }}" id="logout-button"
+                                    onclick="clearAndSetFirstLinkActive();">Logout</a></div>
                         </div>
                     </div>
                 </div>
             </div>
             <!--End of top-->
             <div class="recent-updates">
-              
+
                 <div class="updates">
-                    
+
                     <div id="date-container">
                         <!-- The current date and day will be displayed here -->
                     </div>
@@ -171,33 +182,34 @@
         </div>
     </div>
 
-   
-<script src="/static/js/admin_dashboard.js"></script>
 
-<script>
-     function toggleDropdownFile() {
-        var dropdownContent = document.getElementById("dropdown-content-files");
-        dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
-    }
-</script>
-<script>
-    var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
-  
-    // Get the element by ID
-    var pendingBadge = document.getElementById('pending-badge');
-  
-    // Set the display property based on the value of pendingCount
-    pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
-  </script>
+    <script src="/static/js/admin_dashboard.js"></script>
 
-<!-- ON CLICK CESU-->
-<script>
-    document.getElementById("dashboardLink").addEventListener("click", function() {
-        window.location.href = "{{ url_for('dbModel.dashboard') }}";
-    });
-    document.getElementById("dashboardLink2").addEventListener("click", function() {
-        window.location.href = "{{ url_for('dbModel.dashboard') }}";
-    });
-</script>
+    <script>
+        function toggleDropdownFile() {
+            var dropdownContent = document.getElementById("dropdown-content-files");
+            dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+        }
+    </script>
+    <script>
+        var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
+
+        // Get the element by ID
+        var pendingBadge = document.getElementById('pending-badge');
+
+        // Set the display property based on the value of pendingCount
+        pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
+    </script>
+
+    <!-- ON CLICK CESU-->
+    <script>
+        document.getElementById("dashboardLink").addEventListener("click", function () {
+            window.location.href = "{{ url_for('dbModel.dashboard') }}";
+        });
+        document.getElementById("dashboardLink2").addEventListener("click", function () {
+            window.location.href = "{{ url_for('dbModel.dashboard') }}";
+        });
+    </script>
 </body>
+
 </html>
