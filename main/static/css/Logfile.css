@@ -57,7 +57,7 @@
     position: relative;
     overflow-x: auto;
     /* Horizontal scroll if needed */
-    max-height: 470px;
+    max-height: 500px;
     /* Set a maximum height for vertical scroll */
 
 }
@@ -108,7 +108,7 @@
 .logs-container table tr td:nth-child(2) {
     text-align: left;
     width: 25%;
-    padding-left: 6.5rem ;
+    padding-left: 6.5rem;
 }
 
 .logs-container table tr td:nth-child(3) {
@@ -119,7 +119,7 @@
 .logs-container table tr td:nth-child(4) {
     text-align: left;
     width: 45%;
-    padding-left: 6.5rem ;
+    padding-left: 6.5rem;
 }
 
 
@@ -128,19 +128,23 @@
     padding-left: 15rem;
 }
 
-main .logs-container table td{
+main .logs-container table td {
     border-bottom: 1px solid lightgray;
     color: var(--color-dark);
 }
-#search_text{
-    width: 25rem; /* Adjust the width as needed */
-    margin-left: 2rem; /* Adjust the left margin as needed */
-    margin-top: 1rem; /* Adjust the top margin as needed */
+
+#search_text {
+    width: 25rem;
+    /* Adjust the width as needed */
+    margin-left: 2rem;
+    /* Adjust the left margin as needed */
+    margin-top: 1rem;
+    /* Adjust the top margin as needed */
 }
 
 
-@media screen and (max-width: 760px){
-    .margin-top{
+@media screen and (max-width: 760px) {
+    .margin-top {
         height: 4rem;
     }
 }
@@ -149,68 +153,72 @@ main .logs-container table td{
 
 
 @media screen and (max-width: 400px) {
-   
-    .margin-top{
+
+    .margin-top {
         height: 4rem;
-      
+
     }
-    .logs-container{
+
+    .logs-container {
         margin: 0 auto;
         width: 90%;
     }
 
-    
-    .logs_title{
+
+    .logs_title {
         margin: 0 auto;
         width: 90%;
         margin-top: 2rem;
         position: relative;
     }
 
-    .logs_title .search_form{
+    .logs_title .search_form {
         padding: 0;
     }
 
     #search_text {
-        width: 9rem; /* Set the width of the input field to 100% */
-        box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        width: 9rem;
+        /* Set the width of the input field to 100% */
+        box-sizing: border-box;
+        /* Include padding and border in the element's total width and height */
     }
-    
+
     .logs-container {
         height: 30rem;
     }
 
 
-    .logs_title .changetxt{
+    .logs_title .changetxt {
         padding-left: 0.5rem;
         font-size: 1.7rem;
         line-height: 2rem;
     }
 
-    .logs-container .table-card{
+    .logs-container .table-card {
         max-width: 20rem;
         overflow: auto;
 
     }
-  
-    
+
+
     .logs-container table td {
         height: 2.3rem;
         text-align: left;
     }
+
     .logs-container table tr td:nth-child(2) {
         text-align: center;
         padding-left: 0;
     }
-  
+
     .logs-container table tr td:nth-child(3) {
         text-align: center;
-        padding:0;
+        padding: 0;
     }
-    
+
     .logs-container table tr td:nth-child(4) {
         text-align: left;
- 
+
         padding-left: 1rem;
     }
 
@@ -218,10 +226,12 @@ main .logs-container table td{
         text-align: center;
         padding-left: 0;
     }
+
     .logs-container table th:nth-child(3) {
         text-align: center;
         padding-left: 1rem;
     }
+
     .logs-container table th:nth-child(2) {
         text-align: center;
         padding-left: 1rem;
@@ -230,7 +240,8 @@ main .logs-container table td{
 
 @media screen and (max-width: 385px) {
     #search_text {
-        width: 7rem; /* Set the width of the input field to 100% */
-      
+        width: 7rem;
+        /* Set the width of the input field to 100% */
+
     }
 }

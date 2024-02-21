@@ -1716,6 +1716,18 @@ def view_cpf_plan(program, subprogram, community, cpf_filename):
         return response
     return "File not found", 404
 
+
+@dbModel_route.route("/fundraising_activity")
+def fund():
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login')) 
+
+     # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("fund.html")
+
 @dbModel_route.route('/view_cna_plan/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
 def view_cna_plan(program, subprogram, community, cna_filename):
     upload_entry = Plan.query.filter_by(community = community, program = program, subprogram = subprogram, cna_filename=cna_filename).first()

@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="/static/css/cesu_plans.css">
     <link rel="stylesheet" href="/static/css/Logfile.css">
     <link rel="stylesheet" href="/static/css/plan_details.css">
+    <link rel="stylesheet" href="/static/css/fund.css">
     
     <link rel="stylesheet" href="/static/css/tooltip.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
@@ -98,7 +99,13 @@
                     <span class="material-symbols-sharp">neurology</span>
                     <h3>Program Recommendation</h3>
                 </a>
-                <!---------------------------   NEWLY ADDED    -------------------------------->
+
+                <a href="{{ url_for('dbModel.fund') }}" class="sidebar-link blue-link">
+                    <span class="material-symbols-sharp">crowdsource</span>
+                    <h3>Fundraising</h3>
+                </a>
+                
+
                 <a href="{{ url_for('dbModel.logs_activity') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">manage_search</span>
                     <h3>Logs</h3>
