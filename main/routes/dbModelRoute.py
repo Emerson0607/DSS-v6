@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
+from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
 from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan
 from main import db
 from flask import Response
@@ -9,6 +9,7 @@ from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
 import pytz
+import datetime
 
 # Get the timezone for the Philippines
 
@@ -1182,8 +1183,13 @@ def project_file_list(data):
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
+    # Dynamically generate the years
+    current_year = datetime.datetime.now().year
+
     project_file_list = Community.query.filter_by(program=data).all()
-    return render_template("project_table.html", project_file_list=project_file_list, data=data)
+
+    return render_template("project_table.html", current_year=current_year, project_file_list=project_file_list, data=data)
 
 @dbModel_route.route("/view_project/<int:project_id>")
 def view_project(project_id):
@@ -1383,8 +1389,11 @@ def archived_file_list(data):
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    # Dynamically generate the years
+    current_year = datetime.datetime.now().year
+    
     archived_file_list = Archive.query.filter_by(program=data).all()
-    return render_template("archived_table.html", archived_file_list=archived_file_list, data=data)
+    return render_template("archived_table.html",current_year=current_year, archived_file_list=archived_file_list, data=data)
 
 @dbModel_route.route("/view_archived/<int:project_id>")
 def view_archived(project_id):
@@ -1548,11 +1557,14 @@ def cesu_plans():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
+    # Dynamically generate the years
+    current_year = datetime.datetime.now().year
      # Fetch all user records from the database
     all_data = Plan.query.filter_by(status="Planning").all()
     program8 = Program.query.all()
     user1 = Users.query.all()
-    return render_template("cesu_plans.html", community = all_data, form=form, program8=program8, user1 = user1)
+    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1)
 
 @dbModel_route.route("/add_plan", methods=["POST"])
 def add_plan():
@@ -1716,17 +1728,24 @@ def view_cpf_plan(program, subprogram, community, cpf_filename):
         return response
     return "File not found", 404
 
-
+########################Fundraising Activity#############################
 @dbModel_route.route("/fundraising_activity")
 def fund():
+    # Check if the user is an admin
     if g.current_role != "Admin":
         return redirect(url_for('dbModel.login')) 
 
-     # Check if the user is logged in
+    # Check if the user is logged in
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-    return render_template("fund.html")
+
+    # Dynamically generate the years
+    current_year = datetime.datetime.now().year
+
+    # Render the template with the current year and the next four years
+    return render_template("fund.html", current_year=current_year)
+
 
 @dbModel_route.route('/view_cna_plan/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
 def view_cna_plan(program, subprogram, community, cna_filename):

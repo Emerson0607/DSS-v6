@@ -24,17 +24,17 @@
 }
 
 
-main .cesu_plans_Card{
+main .cesu_plans_Card {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-    
+
 }
 
 
 
 /* file upload button */
-.cesu_plans_Card  input[type="file"]::file-selector-button {
+.cesu_plans_Card input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -43,22 +43,22 @@ main .cesu_plans_Card{
     border: 1px solid rgba(0, 0, 0, 0.16);
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
     transition: background-color 200ms;
-  }
-  
-  /* file upload button hover state */
-  .cesu_plans_Card  input[type="file"]::file-selector-button:hover {
+}
+
+/* file upload button hover state */
+.cesu_plans_Card input[type="file"]::file-selector-button:hover {
     background-color: #f3f4f6;
-  }
-  
-  /* file upload button active state */
-  .cesu_plans_Card  input[type="file"]::file-selector-button:active {
+}
+
+/* file upload button active state */
+.cesu_plans_Card input[type="file"]::file-selector-button:active {
     background-color: #e5e7eb;
-  }
+}
 
 
 
 
-main .cesu_plans_Card > div{
+main .cesu_plans_Card>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -67,30 +67,31 @@ main .cesu_plans_Card > div{
     transition: all 300ms ease;
 }
 
-main .cesu_plans_Card .table-card{
+main .cesu_plans_Card .table-card {
     max-height: 35rem;
     overflow: auto;
 }
 
-main .cesu_plans_Card > div:hover{
+main .cesu_plans_Card>div:hover {
     box-shadow: none;
 }
 
-.cesu_plans_Card table{
+.cesu_plans_Card table {
 
     width: 100%;
-   
+
 }
 
-main .cesu_plans_Card table td{
+main .cesu_plans_Card table td {
     height: 2.8rem;
     border-bottom: 1px solid lightgray;
     color: var(--color-dark);
 }
 
-main .cesu_plans_Card table tr:last-child td{
+main .cesu_plans_Card table tr:last-child td {
     border: none;
 }
+
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
 .cesu_plans_Card .modal {
     display: none;
@@ -112,10 +113,10 @@ main .cesu_plans_Card table tr:last-child td{
     border-radius: 7px;
     width: 50%;
     position: relative;
-    
+
 }
 
-.cesu_plans_Card .modal h4{
+.cesu_plans_Card .modal h4 {
     font-size: 1.4rem;
     margin-bottom: 0.5rem;
 }
@@ -123,18 +124,20 @@ main .cesu_plans_Card table tr:last-child td{
 /* Style for the form container */
 .cesu_plans_Card .modal-body {
     padding: 20px;
-    max-height: 400px; /* Set a maximum height for scrollability */
-    overflow-y: auto; /* Enable vertical scrolling when the content overflows */
+    max-height: 400px;
+    /* Set a maximum height for scrollability */
+    overflow-y: auto;
+    /* Enable vertical scrolling when the content overflows */
     margin-bottom: 4rem;
 }
 
 /* Style for form labels and inputs */
 .cesu_plans_Card .form-group label {
-    font-weight:100;
+    font-weight: 100;
 }
 
 .cesu_plans_Card .label-category {
-    font-weight:700;
+    font-weight: 700;
     font-size: 1rem;
 }
 
@@ -176,12 +179,15 @@ main .cesu_plans_Card table tr:last-child td{
 
 
 .cesu_plans_Card .btn-add {
-    background-color: #49a14f; /* Change this to your desired color */
-    color: #fff; /* Change the text color */
+    background-color: #49a14f;
+    /* Change this to your desired color */
+    color: #fff;
+    /* Change the text color */
     border: none;
     border-radius: 5px;
 }
-.cesu_plans_Card .btn-add:hover{
+
+.cesu_plans_Card .btn-add:hover {
     background-color: #05ae11;
     cursor: pointer;
 
@@ -189,19 +195,25 @@ main .cesu_plans_Card table tr:last-child td{
 
 
 
-.cesu_plans_Card .btn-delete1{
-    background-color: #ff5555; /* Red background color */
-    color: #fff; /* White text color */
-    padding: 5px 10px; /* Adjust padding as needed */
+.cesu_plans_Card .btn-delete1 {
+    background-color: #ff5555;
+    /* Red background color */
+    color: #fff;
+    /* White text color */
+    padding: 5px 10px;
+    /* Adjust padding as needed */
     border: none;
-    border-radius: 4px; /* Rounded corners */
+    border-radius: 4px;
+    /* Rounded corners */
     cursor: pointer;
-    text-decoration: none; /* Remove underlines for links */
+    text-decoration: none;
+    /* Remove underlines for links */
 }
 
 
 .cesu_plans_Card .btn-delete1:hover {
-    background-color: #ff3333; /* Red background color on hover */
+    background-color: #ff3333;
+    /* Red background color on hover */
 }
 
 /* Styling for the close button */
@@ -218,59 +230,111 @@ main .cesu_plans_Card table tr:last-child td{
 }
 
 .cesu_plans_Card .btn-close:hover {
-  
+
     color: var(--color-danger);
 }
-.cesu_plans_Card table td{
+
+.cesu_plans_Card table td {
     text-align: center;
 }
 
-.cesu_plans_Card .file-box{
-    margin-bottom: 1rem; /* Adjust as needed */
+.cesu_plans_Card .file-box {
+    margin-bottom: 1rem;
+    /* Adjust as needed */
 }
 
+/* Year Filter */
+.cesu_plans_Card .jumbotron .year-filter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 50px;
+    margin-right: 30rem;
+}
+
+.cesu_plans_Card .jumbotron.year-filter label {
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: large;
+}
+
+.cesu_plans_Card .jumbotron.year-filter select {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.cesu_plans_Card .jumbotron.year-filter select:hover {
+    border-color: #555;
+    /* Change border color on hover */
+}
+
+
+
+/* Show all btn */
+.cesu_plans_Card .jumbotron.year-filter .show-all-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cesu_plans_Card .jumbotron.year-filter .show-all-button:hover {
+    border-color: #555;
+}
+
+
 /*smaller laptop*/
-@media screen and (max-width: 1200px){.communityCard 
-    .cesu_plans_Card .modal-content{
+@media screen and (max-width: 1200px) {
+    .communityCard .cesu_plans_Card .modal-content {
         position: relative;
     }
-    .cesu_plans_Card .modal-body{
+
+    .cesu_plans_Card .modal-body {
         height: 40rem;
-        
+
     }
-    .cesu_plans_Card .btn-close{
+
+    .cesu_plans_Card .btn-close {
         position: absolute;
         right: 25px;
         bottom: 2px;
     }
-}  
+}
+
 /* ------------------- MOBILE -------------------- */
-@media screen and (max-width: 400px){
-    .cesu_plans_Card{ 
+@media screen and (max-width: 400px) {
+    .cesu_plans_Card {
         margin: 0 auto;
         padding-top: 2rem;
-        
-    }
-    .cesu_plans_Card .jumbotron{ 
-       width: 90%;
-       margin: 0 auto;
+
     }
 
-    .cesu_plans_Card .modal-content{
-        width:90%;
+    .cesu_plans_Card .jumbotron {
+        width: 90%;
+        margin: 0 auto;
     }
 
-    .cesu_plans_Card .table-card{
+    .cesu_plans_Card .modal-content {
+        width: 90%;
+    }
+
+    .cesu_plans_Card .table-card {
         width: 19rem;
         overflow: auto;
     }
-    .cesu_plans_Card .table-card th{
+
+    .cesu_plans_Card .table-card th {
         padding-right: 1rem;
     }
-    
-    .cesu_plans_Card .btn-close{
+
+    .cesu_plans_Card .btn-close {
         height: 2rem;
         right: .5rem;
     }
-   
+
 }

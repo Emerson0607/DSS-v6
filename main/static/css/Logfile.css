@@ -57,7 +57,7 @@
     position: relative;
     overflow-x: auto;
     /* Horizontal scroll if needed */
-    max-height: 500px;
+    max-height: 545px;
     /* Set a maximum height for vertical scroll */
 
 }
