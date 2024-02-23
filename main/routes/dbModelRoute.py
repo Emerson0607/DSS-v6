@@ -9,6 +9,8 @@ from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
 import pytz
+# LINE BELOW IS FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED)
+#from werkzeug.security import generate_password_hash, check_password_hash 
 
 # Get the timezone for the Philippines
 
@@ -78,6 +80,11 @@ def reset_password():
 
                 if datetime.utcnow() < expiration_time:
                     if new_password == confirm_password:
+
+            # 2 LINES BELOW ARE FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED) 
+                        #hashed_password = generate_password_hash(new_password)
+                        #user.password = hashed_password
+
                         user.password = new_password
                         user.otp = None
                         user.otp_timestamp = None
