@@ -162,7 +162,7 @@ main .cesu_plans_Card table tr:last-child td {
 
 /* Style for submit button */
 .cesu_plans_Card .btn-submit {
-    background-color: #49a14f;
+    background-color: #4a4cd7;
     color: #fff;
     padding: 10px 12px;
     border: none;
@@ -174,21 +174,28 @@ main .cesu_plans_Card table tr:last-child td {
 }
 
 .cesu_plans_Card .btn-submit:hover {
-    background-color: #05ae11;
+    background-color: #303396;
+}
+
+.cesu_plans_Card .jumbotron {
+    position: relative;
+
 }
 
 
 .cesu_plans_Card .btn-add {
-    background-color: #49a14f;
+    background-color: #4a4cd7;
     /* Change this to your desired color */
     color: #fff;
     /* Change the text color */
     border: none;
-    border-radius: 5px;
+    border-radius: 7px;
+    position: absolute;
+    left: 12rem;
 }
 
 .cesu_plans_Card .btn-add:hover {
-    background-color: #05ae11;
+    background-color: #303396;
     cursor: pointer;
 
 }
@@ -246,26 +253,26 @@ main .cesu_plans_Card table tr:last-child td {
 /* Year Filter */
 .cesu_plans_Card .jumbotron .year-filter {
     position: absolute;
-    top: 0;
-    right: 0;
-    margin-top: 50px;
-    margin-right: 30rem;
+    top: 1.5rem;
+    right: 3rem;
+
+
 }
 
-.cesu_plans_Card .jumbotron.year-filter label {
+.cesu_plans_Card .jumbotron .year-filter label {
     font-weight: bold;
     margin-right: 10px;
     font-size: large;
 }
 
-.cesu_plans_Card .jumbotron.year-filter select {
+.cesu_plans_Card .jumbotron .year-filter select {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-.cesu_plans_Card .jumbotron.year-filter select:hover {
+.cesu_plans_Card .jumbotron .year-filter select:hover {
     border-color: #555;
     /* Change border color on hover */
 }
@@ -273,7 +280,7 @@ main .cesu_plans_Card table tr:last-child td {
 
 
 /* Show all btn */
-.cesu_plans_Card .jumbotron.year-filter .show-all-button {
+.cesu_plans_Card .jumbotron .year-filter .show-all-button {
     padding: 8px 12px;
     font-size: 14px;
     background-color: #ffffff;
@@ -283,7 +290,7 @@ main .cesu_plans_Card table tr:last-child td {
     cursor: pointer;
 }
 
-.cesu_plans_Card .jumbotron.year-filter .show-all-button:hover {
+.cesu_plans_Card .jumbotron .year-filter .show-all-button:hover {
     border-color: #555;
 }
 

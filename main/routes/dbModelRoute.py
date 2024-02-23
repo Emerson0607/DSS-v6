@@ -9,7 +9,6 @@ from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
 import pytz
-import datetime
 
 # Get the timezone for the Philippines
 
@@ -36,6 +35,8 @@ def send_recovery_mail():
         if user:
             userlog = user.username
             action = "Attempted to recover account"
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
             timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
@@ -84,6 +85,8 @@ def reset_password():
 
                         userlog = user.username
                         action = "Successfully recovered account."
+                        ph_tz = pytz.timezone('Asia/Manila')
+                        ph_time = datetime.now(ph_tz)
                         timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                         timestamp = convert_date1(timestamp1)
                         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
@@ -568,6 +571,8 @@ def add_community():
         return redirect(url_for('dbModel.manage_community'))
     return redirect(url_for('dbModel.manage_community'))
 
+#EDIT COMMUNITY NOT NEEDED SO COMMENT 
+'''
 @dbModel_route.route('/edit_community', methods=['POST'])
 def edit_community():
     if 'user_id' not in session:
@@ -612,6 +617,7 @@ def edit_community():
             flash('User not found. Please try again.', 'error')
 
         return redirect(url_for('dbModel.manage_community'))
+'''
 
 @dbModel_route.route('/delete_community/<int:id>', methods=['GET'])
 def delete_community(id):
@@ -1185,7 +1191,7 @@ def project_file_list(data):
         return redirect(url_for('dbModel.login'))
     
     # Dynamically generate the years
-    current_year = datetime.datetime.now().year
+    current_year = datetime.now().year
 
     project_file_list = Community.query.filter_by(program=data).all()
 
@@ -1390,7 +1396,7 @@ def archived_file_list(data):
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     # Dynamically generate the years
-    current_year = datetime.datetime.now().year
+    current_year = datetime.now().year
     
     archived_file_list = Archive.query.filter_by(program=data).all()
     return render_template("archived_table.html",current_year=current_year, archived_file_list=archived_file_list, data=data)
@@ -1559,7 +1565,7 @@ def cesu_plans():
         return redirect(url_for('dbModel.login'))
     
     # Dynamically generate the years
-    current_year = datetime.datetime.now().year
+    current_year = datetime.now().year
      # Fetch all user records from the database
     all_data = Plan.query.filter_by(status="Planning").all()
     program8 = Program.query.all()
@@ -1741,7 +1747,7 @@ def fund():
         return redirect(url_for('dbModel.login'))
 
     # Dynamically generate the years
-    current_year = datetime.datetime.now().year
+    current_year = datetime.now().year
 
     # Render the template with the current year and the next four years
     return render_template("fund.html", current_year=current_year)

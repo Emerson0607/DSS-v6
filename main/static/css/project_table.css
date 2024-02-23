@@ -105,29 +105,38 @@ main .projectFilesCard .btn-delete1 {
 }
 
 
+
 /* Year Filter */
-.cesu_plans_Card .jumbotron .year-filter {
+.projectFilesCard .jumbotron .year-filter1 {
     position: absolute;
-    top: 0;
-    right: 0;
-    margin-top: 50px;
-    margin-right: 30rem;
+    top: 1.5rem;
+    right: 4rem;
+
+
 }
 
-.projectFilesCard .jumbotron.year-filter label {
+.projectFilesCard .jumbotron .year-filter2 {
+    position: absolute;
+    top: 4rem;
+    right: 22rem;
+
+
+}
+
+.projectFilesCard .jumbotron .year-filter1 label {
     font-weight: bold;
     margin-right: 10px;
     font-size: large;
 }
 
-.projectFilesCard .jumbotron.year-filter select {
+.projectFilesCard .jumbotron .year-filter1 select {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-.projectFilesCard .jumbotron.year-filter select:hover {
+.projectFilesCard .jumbotron .year-filter1 select:hover {
     border-color: #555;
     /* Change border color on hover */
 }
@@ -135,7 +144,7 @@ main .projectFilesCard .btn-delete1 {
 
 
 /* Show all btn */
-.projectFilesCard .jumbotron.year-filter .show-all-button {
+.projectFilesCard .jumbotron .year-filter1 .show-all-button {
     padding: 8px 12px;
     font-size: 14px;
     background-color: #ffffff;
@@ -145,7 +154,7 @@ main .projectFilesCard .btn-delete1 {
     cursor: pointer;
 }
 
-.projectFilesCard .jumbotron .year-filter .show-all-button:hover {
+.projectFilesCard .jumbotron .year-filter1 .show-all-button:hover {
     border-color: #555;
 }
 
@@ -161,6 +170,7 @@ main .projectFilesCard .btn-delete1 {
     .projectFilesCard .jumbotron {
         width: 90%;
         margin: 0 auto;
+        position: relative;
     }
 
     .projectFilesCard .table-card {

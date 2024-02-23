@@ -95,16 +95,18 @@
 }
 
 .project_files_container a:hover {
-    text-decoration: underline;
+    text-decoration: none;
     background-color: rgba(47, 158, 54, 1);
     color: white;
 
 }
 
 .project_files_container .blue-link:hover {
-    text-decoration: underline;
+    text-decoration: none;
     background-color: #303396;
     color: white;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 4px;
 }
 
 .project_files_container .literacy {
@@ -118,6 +120,7 @@
 
 }
 
+/* YEAR FILTER */
 .projectFilesCard .jumbotron .year-filter {
     position: absolute;
     top: 0;

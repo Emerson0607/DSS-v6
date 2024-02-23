@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CESU | {% block title %}{% endblock %}</title>
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="/static/css/dashboard.css">
     <link rel="stylesheet" href="/static/css/admin_dashboard.css">
     <link rel="stylesheet" href="/static/css/programCSVresult.css">
@@ -26,19 +29,20 @@
     <link rel="stylesheet" href="/static/css/pending.css">
     <link rel="stylesheet" href="/static/css/pending_details.css">
     <link rel="stylesheet" href="/static/css/tooltip.css">
-    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}" type="image/x-icon">
+    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
+        type="image/x-icon">
     <style>
-        @media screen and (max-width: 400px){
+        @media screen and (max-width: 400px) {
 
-            .invert-green{
-                content: url("/static/images/user-invert-green.png"); /* Change the image source for mobile */
+            .invert-green {
+                content: url("/static/images/user-invert-green.png");
+                /* Change the image source for mobile */
             }
-    
-        }
 
-        
+        }
     </style>
 </head>
+
 <body>
     <div class="container1 ">
         <aside class="sticky-top">
@@ -62,23 +66,23 @@
                     <h3>Dashboard</h3>
                 </a>
                 <a href="{{ url_for('coordinator.cManage_community') }} " class="sidebar-link">
-                    <span class="material-symbols-sharp" >groups</span>
+                    <span class="material-symbols-sharp">groups</span>
                     <h3>My Community</h3>
                 </a>
                 <a href="{{ url_for('coordinator.cCoordinator') }} " class="sidebar-link">
                     <span class="material-symbols-sharp">
                         monitoring
-                        </span>
-                    <h3>My Community Program</h3>
+                    </span>
+                    <h3>Extension/Out Reach Programs</h3>
                 </a>
                 <a href="{{ url_for('coordinator.cManage_pending') }}" class="sidebar-link pending-container">
                     <span class="material-symbols-sharp">
                         pending
-                        </span>
+                    </span>
                     <h3>Pending Projects</h3>
                     <span class="pending-badge" id="pending-badge">{{declined_count}}</span>
                 </a>
-                <a href="{{ url_for('randomForest.cProgram') }}"class="sidebar-link">
+                <a href="{{ url_for('randomForest.cProgram') }}" class="sidebar-link">
                     <span class="material-symbols-sharp">neurology</span>
                     <h3>Program Recommendation</h3>
                 </a>
@@ -99,7 +103,7 @@
                         <a href="{{ url_for('coordinator.cProject_file_list') }}">Community projects file</a>
                     </div>
                 </div>
-                
+
             </div>
         </aside>
         <main>
@@ -124,13 +128,17 @@
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
                         <img class="invert-green" src="/static/images/user.png" alt="">
                         <div class="dropdown-content" id="dropdown-content">
-                            <div class="password-div"><a class="password-button"  href="{{ url_for('coordinator.cChange_password') }}" id="password-button">Change Password</a></div>
-                            <div class="logout-hover"><a class="logout-button" href="{{ url_for('coordinator.cClear_session') }}" id="logout-button" onclick="clearAndSetFirstLinkActive();">Logout</a></div>
+                            <div class="password-div"><a class="password-button"
+                                    href="{{ url_for('coordinator.cChange_password') }}" id="password-button">Change
+                                    Password</a></div>
+                            <div class="logout-hover"><a class="logout-button"
+                                    href="{{ url_for('coordinator.cClear_session') }}" id="logout-button"
+                                    onclick="clearAndSetFirstLinkActive();">Logout</a></div>
                         </div>
                     </div>
-                    
+
                 </div>
-                
+
             </div>
             <!--End of top-->
             <div class="recent-updates">
@@ -139,7 +147,7 @@
                         <!-- The current date and day will be displayed here -->
                     </div>
                 </div>
-                
+
                 <!--
                 <div class="comments">
                     <div id="comments-container">
@@ -151,16 +159,16 @@
             </div>
         </div>
     </div>
-   
- <script src="/static/js/admin_dashboard.js"></script>
- <script>
-    function toggleDropdownFile() {
-       var dropdownContent = document.getElementById("dropdown-content-files");
-       dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
-   }
-</script>
 
-<!--
+    <script src="/static/js/admin_dashboard.js"></script>
+    <script>
+        function toggleDropdownFile() {
+            var dropdownContent = document.getElementById("dropdown-content-files");
+            dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+        }
+    </script>
+
+    <!--
 <script>
    $(document).ready(function () {
     $.ajax({
@@ -200,74 +208,75 @@
 </script>
 -->
 
-<script>
+    <script>
 
-document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
 
-    //SIDE BAR LINKS ACTIVATE
-    const sidebarLinks = document.querySelectorAll(".sidebar-link");
-    sidebarLinks.forEach(function(link) {
-        link.addEventListener("click", function(event) {
-            // Prevent the default behavior of the link temporarily
-            event.preventDefault();
+            //SIDE BAR LINKS ACTIVATE
+            const sidebarLinks = document.querySelectorAll(".sidebar-link");
+            sidebarLinks.forEach(function (link) {
+                link.addEventListener("click", function (event) {
+                    // Prevent the default behavior of the link temporarily
+                    event.preventDefault();
+
+                    // Remove "active" class from all links
+                    sidebarLinks.forEach(function (link) {
+                        link.classList.remove("active");
+                    });
+
+                    // Add "active" class to the clicked link
+                    link.classList.add("active");
+
+                    // Store the active link information in local storage
+                    localStorage.setItem("activeLink", link.getAttribute("href"));
+
+                    setTimeout(() => {
+                        window.location.href = link.getAttribute("href");
+                    }, 10);
+                });
+            });
+
+            const activeLink = localStorage.getItem("activeLink");
+            if (activeLink) {
+                const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
+                if (activeLinkElement) {
+                    activeLinkElement.classList.add("active");
+                }
+            }
+        });
+
+        function clearAndSetFirstLinkActive() {
+            const sidebarLinks = document.querySelectorAll(".sidebar-link");
 
             // Remove "active" class from all links
-            sidebarLinks.forEach(function(link) {
+            sidebarLinks.forEach(function (link) {
                 link.classList.remove("active");
             });
 
-            // Add "active" class to the clicked link
-            link.classList.add("active");
-
-            // Store the active link information in local storage
-            localStorage.setItem("activeLink", link.getAttribute("href"));
-
-            setTimeout(() => {
-                window.location.href = link.getAttribute("href");
-            }, 10);
-        });
-    });
-
-    const activeLink = localStorage.getItem("activeLink");
-    if (activeLink) {
-        const activeLinkElement = document.querySelector(`[href="${activeLink}"]`);
-        if (activeLinkElement) {
-            activeLinkElement.classList.add("active");
+            // Set the first link as active
+            if (sidebarLinks.length > 0) {
+                sidebarLinks[1].classList.add("active");
+                localStorage.setItem("activeLink", sidebarLinks[1].getAttribute("href"));
+            }
         }
-    } 
-});
 
-function clearAndSetFirstLinkActive() {
-    const sidebarLinks = document.querySelectorAll(".sidebar-link");
+    </script>
 
-    // Remove "active" class from all links
-    sidebarLinks.forEach(function(link) {
-        link.classList.remove("active");
-    });
+    <!-- ON CLICK CESU-->
+    <script>
+        document.getElementById("dashboardLink").addEventListener("click", function () {
+            window.location.href = "{{ url_for('coordinator.coordinator_dashboard') }}";
+        });
+    </script>
+    <script>
+        var pendingCount = '{{declined_count}}'; // Assuming pending_count is a variable in your template
 
-    // Set the first link as active
-    if (sidebarLinks.length > 0) {
-        sidebarLinks[1].classList.add("active");
-        localStorage.setItem("activeLink", sidebarLinks[1].getAttribute("href"));
-    }
-}
+        // Get the element by ID
+        var pendingBadge = document.getElementById('pending-badge');
 
-</script>
-
-<!-- ON CLICK CESU-->
-<script>
-    document.getElementById("dashboardLink").addEventListener("click", function() {
-        window.location.href = "{{ url_for('coordinator.coordinator_dashboard') }}";
-    });
-</script>
-<script>
-    var pendingCount = '{{declined_count}}'; // Assuming pending_count is a variable in your template
-  
-    // Get the element by ID
-    var pendingBadge = document.getElementById('pending-badge');
-  
-    // Set the display property based on the value of pendingCount
-    pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
-  </script>
+        // Set the display property based on the value of pendingCount
+        pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
+    </script>
 </body>
+
 </html>
