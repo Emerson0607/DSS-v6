@@ -142,7 +142,6 @@ def cManage_community():
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
     all_data = Community.query.filter_by(program=g.current_program).all()
-
     return render_template("cCommunity.html", community = all_data)
 
 # Function to convert date strings to Python date objects
@@ -339,7 +338,11 @@ def cProject_file_list():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     project_file_list = Community.query.filter_by(program=g.current_program).all()
-    return render_template("cProject_table.html", project_file_list=project_file_list, data=g.current_program)
+
+    # Dynamically generate the years
+    current_year = datetime.now().year
+    
+    return render_template("cProject_table.html", current_year=current_year, project_file_list=project_file_list, data=g.current_program)
 
 @coordinator_route.route("/cView_project/<int:project_id>")
 def cView_project(project_id):

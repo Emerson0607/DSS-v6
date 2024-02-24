@@ -1,4 +1,4 @@
-from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
+from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
 from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan
 from main import db
 from flask import Response
@@ -9,6 +9,8 @@ from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
 import pytz
+# LINE BELOW IS FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED)
+#from werkzeug.security import generate_password_hash, check_password_hash 
 
 # Get the timezone for the Philippines
 
@@ -35,6 +37,8 @@ def send_recovery_mail():
         if user:
             userlog = user.username
             action = "Attempted to recover account"
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
             timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
             insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
@@ -76,6 +80,11 @@ def reset_password():
 
                 if datetime.utcnow() < expiration_time:
                     if new_password == confirm_password:
+
+            # 2 LINES BELOW ARE FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED) 
+                        #hashed_password = generate_password_hash(new_password)
+                        #user.password = hashed_password
+
                         user.password = new_password
                         user.otp = None
                         user.otp_timestamp = None
@@ -83,6 +92,8 @@ def reset_password():
 
                         userlog = user.username
                         action = "Successfully recovered account."
+                        ph_tz = pytz.timezone('Asia/Manila')
+                        ph_time = datetime.now(ph_tz)
                         timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                         timestamp = convert_date1(timestamp1)
                         insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
@@ -567,6 +578,8 @@ def add_community():
         return redirect(url_for('dbModel.manage_community'))
     return redirect(url_for('dbModel.manage_community'))
 
+#EDIT COMMUNITY NOT NEEDED SO COMMENT 
+'''
 @dbModel_route.route('/edit_community', methods=['POST'])
 def edit_community():
     if 'user_id' not in session:
@@ -611,6 +624,7 @@ def edit_community():
             flash('User not found. Please try again.', 'error')
 
         return redirect(url_for('dbModel.manage_community'))
+'''
 
 @dbModel_route.route('/delete_community/<int:id>', methods=['GET'])
 def delete_community(id):
@@ -1182,8 +1196,13 @@ def project_file_list(data):
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
+    # Dynamically generate the years
+    current_year = datetime.now().year
+
     project_file_list = Community.query.filter_by(program=data).all()
-    return render_template("project_table.html", project_file_list=project_file_list, data=data)
+
+    return render_template("project_table.html", current_year=current_year, project_file_list=project_file_list, data=data)
 
 @dbModel_route.route("/view_project/<int:project_id>")
 def view_project(project_id):
@@ -1383,8 +1402,11 @@ def archived_file_list(data):
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    # Dynamically generate the years
+    current_year = datetime.now().year
+    
     archived_file_list = Archive.query.filter_by(program=data).all()
-    return render_template("archived_table.html", archived_file_list=archived_file_list, data=data)
+    return render_template("archived_table.html",current_year=current_year, archived_file_list=archived_file_list, data=data)
 
 @dbModel_route.route("/view_archived/<int:project_id>")
 def view_archived(project_id):
@@ -1548,11 +1570,14 @@ def cesu_plans():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
+    # Dynamically generate the years
+    current_year = datetime.now().year
      # Fetch all user records from the database
     all_data = Plan.query.filter_by(status="Planning").all()
     program8 = Program.query.all()
     user1 = Users.query.all()
-    return render_template("cesu_plans.html", community = all_data, form=form, program8=program8, user1 = user1)
+    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1)
 
 @dbModel_route.route("/add_plan", methods=["POST"])
 def add_plan():
@@ -1715,6 +1740,25 @@ def view_cpf_plan(program, subprogram, community, cpf_filename):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
+
+########################Fundraising Activity#############################
+@dbModel_route.route("/fundraising_activity")
+def fund():
+    # Check if the user is an admin
+    if g.current_role != "Admin":
+        return redirect(url_for('dbModel.login')) 
+
+    # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    # Dynamically generate the years
+    current_year = datetime.now().year
+
+    # Render the template with the current year and the next four years
+    return render_template("fund.html", current_year=current_year)
+
 
 @dbModel_route.route('/view_cna_plan/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
 def view_cna_plan(program, subprogram, community, cna_filename):
