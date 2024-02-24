@@ -31,46 +31,56 @@ with_categories=true) %}
             <button class="show-all-button" onclick="showAllData()">Show All</button>
         </div>
         <div class="table-card">
-            <p id="noRecordsMessage" style="display: none;">No records found.</p>
             <table class="table table-striped" id="logs_table">
-                <tr>
-                    <th>ID</th>
-                    <th>Community</th>
-                    <th>Program</th>
-                    <th>Sub-Program</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Total Week</th>
-                    <th>Coordinator</th>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Community</th>
+                        <th>Program</th>
+                        <th>Sub-Program</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Total Week</th>
+                        <th>Coordinator</th>
 
-                    <th>Action</th>
-                </tr>
+                        <th>Action</th>
+                    </tr>
+                </thead>
                 {% for row in community %}
-                <tr>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.id }}</a>
-                    </td>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.community
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.program
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.subprogram
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.start_date
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.end_date
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.totalWeek
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.user }}</a>
-                    </td>
+                <tbody>
+                    <tr>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.id
+                                }}</a>
+                        </td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.community
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.program
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.subprogram
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.start_date
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.end_date
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.totalWeek
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.user
+                                }}</a>
+                        </td>
 
-                    <td>
-                        <a href="{{ url_for('dbModel.delete_plan', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
-                            class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
-                    </td>
-                </tr>
+                        <td>
+                            <a href="{{ url_for('dbModel.delete_plan', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
+                                class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
                 {% endfor %}
             </table>
+            <p id="noRecordsMessage" style="display: none;">No records found.</p>
 
             <!-- Modal -->
             <div id="mymodal" class="modal" role="dialog">

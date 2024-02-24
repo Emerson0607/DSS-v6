@@ -26,44 +26,54 @@
         </div>
         <div class="table-card">
             <table class="table table-striped" id="logs_table">
-                <tr>
-                    <th>ID</th>
-                    <th>Community</th>
-                    <th>Program</th>
-                    <th>Sub-Program</th>
-                    <th>Week</th>
-                    <th>Total Week</th>
-                    <th>Coordinator</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-                {% for row in project_file_list %}
-                <tr>
-                    <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.id
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                            row.community }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                            row.program }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                            row.subprogram }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.week
-                            }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                            row.totalWeek }}</a></td>
-                    <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.user
-                            }}</a></td>
-                    <td>
-                        <a href="{{ url_for('dbModel.view_project', project_id=row.id)}}"
-                            class="btn-edit status-element" data-status="{{ row.status }}">
-                            {{ row.status }}
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('dbModel.delete_project', project_id=row.id, data=data, community=row.community, program=row.program, subprogram=row.subprogram )}}"
-                            class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
-                    </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Community</th>
+                        <th>Program</th>
+                        <th>Sub-Program</th>
+                        <th>Date Deployed</th>
+                        <th>Week</th>
+                        <th>Total Week</th>
+                        <th>Coordinator</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                
+                    {% for row in project_file_list %}
+                <tbody>
+                    <tr>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.id
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.community }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.program }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.subprogram }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.start_date}}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.week}}</a></td>
+
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.totalWeek }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.user
+                                }}</a></td>
+                        <td>
+                            <a href="{{ url_for('dbModel.view_project', project_id=row.id)}}"
+                                class="btn-edit status-element" data-status="{{ row.status }}">
+                                {{ row.status }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('dbModel.delete_project', project_id=row.id, data=data, community=row.community, program=row.program, subprogram=row.subprogram )}}"
+                                class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
                 {% endfor %}
             </table>
             <p id="noRecordsMessage" style="display: none;">No records found.</p>
@@ -96,10 +106,11 @@
         var selectedYear = $("#year").val();
         var recordsFound = false;
 
+
         // You can use AJAX to fetch data for the selected year and update the table accordingly
         // For simplicity, let's assume the data is already present and just hide/show rows
         $("#logs_table tbody tr").each(function () {
-            var rowYear = $(this).find("td:eq(1)").text().split('-')[0]; // Assuming the year is in the second column
+            var rowYear = $(this).find("td:eq(4)").text().split('-')[0]; // Assuming the year is in the second column
             if (rowYear === selectedYear || selectedYear === "All") {
                 $(this).show();
                 recordsFound = true;
@@ -119,7 +130,6 @@
     function showAllData() {
         // Show all rows
         $("#logs_table tbody tr").show();
-
         // Hide the "No records found" message
         $("#noRecordsMessage").hide();
     }
