@@ -387,6 +387,32 @@
                 circle.attr("stroke", "red"); // Red
                 }
 
+
+                 // Inside the loop where you create insightsDiv elements
+                 var iconText = "analytics"; // Default icon text
+
+                            
+            //lahat ng program lalagyan
+            switch (record.program) {
+                case "Literacy":
+                    iconText = "analytics";
+                    break;
+                case "Gender and Development":
+                    iconText = "wc";
+                    break;
+                case "Health and Wellness":
+                    iconText = "wc";
+                    break;
+                // Add more cases as needed
+                default:
+                    iconText = "analytics"; // Default icon text
+            }
+                //hanggang dito
+
+
+            // Update the text inside the span element to reflect the icon text
+            insightsDiv.find(".material-symbols-sharp").text(iconText);
+
                 insightsContainer.append(insightsDiv);
                 insightsDiv.removeClass("insights-div");
             });
