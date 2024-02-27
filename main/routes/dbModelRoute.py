@@ -8,7 +8,7 @@ from sqlalchemy import func, case
 from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
-import pytz
+import pytz, re
 # LINE BELOW IS FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED)
 #from werkzeug.security import generate_password_hash, check_password_hash 
 
@@ -17,6 +17,12 @@ import pytz
 
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
+
+# Function to validate email format
+def is_valid_email(email):
+    # Regular expression pattern for validating email format
+    pattern = r'^[\w\.-]+@gmail\.com$'
+    return re.match(pattern, email) is not None
 
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date()
@@ -158,7 +164,7 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        pending_count = Pending_project.query.filter_by(status="Pending").count()
+        pending_count = Pending_project.query.filter_by(status="For Review").count()
             
         # Set a maximum value for pending_count
         max_pending_count = 9
@@ -168,23 +174,23 @@ def get_current_user():
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
         if user:
-            return user.username, user.role, pending_count_display
-    return None, None, 0
+            return user.username, user.role, pending_count_display, user.firstname, user.lastname
+    return None, None, 0, None, None
 
 @dbModel_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.current_firstname, g.current_lastname = get_current_user()
 
 @dbModel_route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display)
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname)
 
 #################### USERS LOGIN FUNCTION ##################
 
 @dbModel_route.route("/login", methods=["GET", "POST"])
 def login():
     if 'user_id' in session:
-        if g.current_role != "Admin":
+        if g.current_role != "Admin" and g.current_role != "BOR":
             return redirect(url_for('coordinator.coordinator_dashboard')) 
         else:
             return redirect(url_for('dbModel.dashboard'))
@@ -196,7 +202,7 @@ def login():
 
         if user:
             userlog = username
-            action = 'Logged in.'
+            action = f'{user.firstname} {user.lastname} Logged in.'
             ph_tz = pytz.timezone('Asia/Manila')
             ph_time = datetime.now(ph_tz)
             timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -207,7 +213,7 @@ def login():
                 db.session.commit()
 
             session['user_id'] = user.id
-            if user.role == 'Admin': #Admin
+            if user.role == 'Admin' or user.role == 'BOR':  # Admin or BOR
                 flash(f'Login successful!', 'success')
                 return redirect(url_for('dbModel.dashboard'))
             else:      #------------------------- COORDINATOR PAGE ---------------------
@@ -219,7 +225,7 @@ def login():
 
 @dbModel_route.route("/admin_dashboard")
 def dashboard():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login')) 
 
      # Check if the user is logged in
@@ -245,7 +251,7 @@ def clear_session():
 
 @dbModel_route.route("/result")
 def programCSVresult():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -257,21 +263,28 @@ def programCSVresult():
 
 @dbModel_route.route("/manage_account")
 def manage_account():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Users.query.all()
+    # Check if the current user's role is 'BOR'
+    if g.current_role == 'BOR':
+        # Retrieve all users with the role 'BOR'
+        filtered_data = Users.query.all()
+    else:
+        # Retrieve all users where the role is not 'BOR'
+        filtered_data = Users.query.filter(Users.role != 'BOR').all()
+
     role = Role.query.all()
     program8 = Program.query.all()
-    return render_template("manage_account.html", users = all_data, role = role, program8=program8)
+    return render_template("manage_account.html", users = filtered_data, role = role, program8=program8)
 
 @dbModel_route.route("/add_account", methods=["POST"])
 def add_account():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -281,6 +294,8 @@ def add_account():
     if request.method == "POST":
         username = request.form.get("username")
         email = request.form.get("email")
+        firstname = request.form.get("firstname")
+        lastname = request.form.get("lastname")
         password = request.form.get("password")
         role = request.form.get("role")
         program = request.form.get("program")
@@ -290,15 +305,20 @@ def add_account():
         existing_program = Users.query.filter_by(program=program).first()
         existing_email = Users.query.filter_by(email=email).first()
 
+        # Check if the email format is valid and ends with '@gmail.com'
+        if not is_valid_email(email):
+            flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
+            return redirect(url_for('dbModel.manage_account'))
+
         if ' ' in password:
             flash('Password cannot contain spaces.', 'password_space')
             return redirect(url_for('dbModel.manage_account'))
         
-        """
+     
         if ' ' in username:
             flash('Password cannot contain spaces.', 'username_space')
             return redirect(url_for('dbModel.manage_account'))
-        """
+    
 
         if existing_program:
             flash(f"Sorry, '{program}' is already taken. Please choose another name or check existing programs.", 'existing_program')
@@ -309,10 +329,10 @@ def add_account():
                 if existing_username:
                     flash('Username already exists. Please choose a different username.', 'existing_username')
                 else:
-                    new_user = Users(username=username, email=email, password=password, role = role, program = program)
+                    new_user = Users(username=username, firstname=firstname, lastname=lastname, email=email, password=password, role = role, program = program)
                     try: 
                         userlog = g.current_user
-                        action = f'ADDED new user account named {new_user.username}'
+                        action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
                         ph_tz = pytz.timezone('Asia/Manila')
                         ph_time = datetime.now(ph_tz)
                         timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -331,7 +351,7 @@ def add_account():
 
 @dbModel_route.route('/edit_account', methods=['POST'])
 def edit_account():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -342,6 +362,8 @@ def edit_account():
         user_id = request.form.get('id')
         new_username = request.form['new_username']
         new_email = request.form['new_email']
+        new_firstname = request.form['new_firstname']
+        new_lastname = request.form['new_lastname']
         new_password = request.form['new_password']
         new_role = request.form['new_role']
         new_program = request.form['new_program']
@@ -353,11 +375,16 @@ def edit_account():
             flash('Password cannot contain spaces.', 'username_space')
             return redirect(url_for('dbModel.manage_account'))
         
+        # Check if the email format is valid and ends with '@gmail.com'
+        if not is_valid_email(new_email):
+            flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
+            return redirect(url_for('dbModel.manage_account'))
+
         user = Users.query.get(user_id)
         
         if user:
             userlog = g.current_user
-            action = f'UPDATED account named {new_username}.'
+            action = f'UPDATED account named {new_firstname} {new_lastname}.'
             ph_tz = pytz.timezone('Asia/Manila')
             ph_time = datetime.now(ph_tz)
             timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -369,6 +396,8 @@ def edit_account():
 
             user.username = new_username
             user.email = new_email
+            user.firstname = new_firstname
+            user.lastname = new_lastname
             user.password = new_password
             user.role = new_role
             user.program = new_program
@@ -380,7 +409,7 @@ def edit_account():
 
 @dbModel_route.route('/delete_account/<int:id>', methods=['GET'])
 def delete_account(id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -390,8 +419,12 @@ def delete_account(id):
     user = Users.query.get(id)
 
     if user:
+        if user.role in ['Admin', 'BOR']:
+            flash('Cannot delete admin account!', 'existing_program')
+            return redirect(url_for('dbModel.manage_account'))
+
         userlog = g.current_user
-        action = f'DELETED account named {user.username}.'
+        action = f'DELETED account named {user.firstname} {user.lastname}.'
         ph_tz = pytz.timezone('Asia/Manila')
         ph_time = datetime.now(ph_tz)
         timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -411,7 +444,7 @@ def delete_account(id):
 ############################  FOR COORDINATOR ROUTE  ############################
 @dbModel_route.route('/coordinator/<data>')
 def coordinator(data):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
     
     if 'user_id' not in session:
@@ -485,7 +518,7 @@ def community_data_list():
 
 @dbModel_route.route("/manage_community")
 def manage_community():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     form = Form()
@@ -506,13 +539,14 @@ def manage_community():
 @dbModel_route.route("/subprogram1/<get_program>")
 def get_program(get_program):
     sub = Users.query.filter_by(program=get_program).all()
-    subArray = [users.username for users in sub]  
+    subArray = [{'firstname': user.firstname, 'lastname': user.lastname} for user in sub]  
     return jsonify({'users': subArray})
+
 
 ############################  CRUD FOR MANAGE COMMUNITY  ############################
 @dbModel_route.route("/add_community", methods=["POST"])
 def add_community():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -628,7 +662,7 @@ def edit_community():
 
 @dbModel_route.route('/delete_community/<int:id>', methods=['GET'])
 def delete_community(id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -679,7 +713,7 @@ def delete_community(id):
 
 @dbModel_route.route("/manage_pending")
 def manage_pending():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -691,7 +725,7 @@ def manage_pending():
 
 @dbModel_route.route('/delete_pending/<int:id>', methods=['GET'])
 def delete_pending(id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
         
     if 'user_id' not in session:
@@ -812,7 +846,7 @@ def view_cesap(program, subprogram, community, cesap_filename):
 
 @dbModel_route.route("/approve", methods=["POST"])
 def approve():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -894,7 +928,7 @@ def approve():
 
 @dbModel_route.route("/decline", methods=["POST"])
 def decline():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
     community = request.args.get('community')
     program = request.args.get('program')
@@ -977,6 +1011,9 @@ def update_status():
 ############################### ARCHIVE PROJECT ###############################
 @dbModel_route.route('/archive_project', methods=['POST'])
 def archive_project():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
     data = request.get_json()
     community = data['community']
     subprogram = data['subprogram']
@@ -1061,7 +1098,7 @@ def get_completed_count(session, program_name):
 
 @dbModel_route.route("/kaakbay_program")
 def kaakbay_program():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
     
     if 'user_id' not in session:
@@ -1128,7 +1165,7 @@ def kaakbay_program():
 ############################### CHANGED PASSWORD ###############################
 @dbModel_route.route("/change_password")
 def change_password():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
     
     if 'user_id' not in session:
@@ -1138,7 +1175,7 @@ def change_password():
 
 @dbModel_route.route("/new_password", methods=["GET", "POST"])
 def new_password():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1180,7 +1217,7 @@ def new_password():
 ############################### CURRENT PROJECT FILES ###############################
 @dbModel_route.route("/project_files")
 def project_files():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1190,7 +1227,7 @@ def project_files():
 
 @dbModel_route.route("/project_file_list/<data>")
 def project_file_list(data):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1206,7 +1243,7 @@ def project_file_list(data):
 
 @dbModel_route.route("/view_project/<int:project_id>")
 def view_project(project_id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1223,7 +1260,7 @@ def view_project(project_id):
 
 @dbModel_route.route("/delete_project/<int:project_id>")
 def delete_project(project_id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     data = request.args.get('data')
@@ -1386,7 +1423,7 @@ def view_cesap_project(program, subprogram, community, cesap_filename):
 
 @dbModel_route.route("/archived_files")
 def archived_files():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
         
     if 'user_id' not in session:
@@ -1396,7 +1433,7 @@ def archived_files():
 
 @dbModel_route.route("/archived_file_list/<data>")
 def archived_file_list(data):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1410,7 +1447,7 @@ def archived_file_list(data):
 
 @dbModel_route.route("/view_archived/<int:project_id>")
 def view_archived(project_id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1427,7 +1464,7 @@ def view_archived(project_id):
 
 @dbModel_route.route("/delete_archived/<int:project_id>")
 def delete_archived(project_id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     data = request.args.get('data')
@@ -1545,7 +1582,7 @@ def view_cesap_archived(program, subprogram, community, cesap_filename):
 ############################### USER LOGS ###############################
 @dbModel_route.route("/logs_activity")
 def logs_activity():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
         
     if 'user_id' not in session:
@@ -1559,7 +1596,7 @@ def logs_activity():
 
 @dbModel_route.route("/cesu_plans")
 def cesu_plans():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     form = Form()
@@ -1581,7 +1618,7 @@ def cesu_plans():
 
 @dbModel_route.route("/add_plan", methods=["POST"])
 def add_plan():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1649,7 +1686,7 @@ def add_plan():
 
 @dbModel_route.route('/delete_plan/<int:id>', methods=['GET'])
 def delete_plan(id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1698,7 +1735,7 @@ def delete_plan(id):
 
 @dbModel_route.route("/view_plan/<int:plan_id>")
 def view_plan(plan_id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
@@ -1745,8 +1782,8 @@ def view_cpf_plan(program, subprogram, community, cpf_filename):
 @dbModel_route.route("/fundraising_activity")
 def fund():
     # Check if the user is an admin
-    if g.current_role != "Admin":
-        return redirect(url_for('dbModel.login')) 
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
 
     # Check if the user is logged in
     if 'user_id' not in session:
@@ -1817,6 +1854,9 @@ def view_cesap_plan(program, subprogram, community, cesap_filename):
 
 @dbModel_route.route('/update_plan', methods=['POST'])
 def update_plan():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1890,7 +1930,7 @@ def update_plan():
 
 @dbModel_route.route('/delete_cpf_plan', methods=['POST'])
 def delete_cpf_plan():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if request.method == 'POST':
@@ -1920,6 +1960,9 @@ def delete_cpf_plan():
 
 @dbModel_route.route('/delete_cesap_plan', methods=['POST'])
 def delete_cesap_plan():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
     if request.method == 'POST':
         cesap_id = request.form.get('cesap_id')
         cesu_plan = Plan.query.filter_by(id=cesap_id).first()
@@ -1946,6 +1989,9 @@ def delete_cesap_plan():
 
 @dbModel_route.route('/delete_cna_plan', methods=['POST'])
 def delete_cna_plan():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
     if request.method == 'POST':
         cna_id = request.form.get('cna_id')
         cesu_plan = Plan.query.filter_by(id=cna_id).first()
@@ -1972,7 +2018,7 @@ def delete_cna_plan():
 
 @dbModel_route.route("/deploy", methods=["POST"])
 def deploy():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:

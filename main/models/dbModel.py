@@ -1,9 +1,12 @@
 from main import db, app
+from flask_migrate import Migrate
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import secrets
+
+migrate = Migrate(app, db)
 
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,6 +38,8 @@ class Users(db.Model):
     otp_timestamp = db.Column(db.DateTime, nullable=True)
     program = db.Column(db.String(255), unique=True, nullable=False)
     role = db.Column(db.String(50), nullable=False)
+    firstname = db.Column(db.String(100), nullable=True)
+    lastname = db.Column(db.String(100), nullable=True)
 
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -214,16 +219,16 @@ def insert_pending():
 
 def insert_userx():
     username = 'admin'
-    email = 'emer22297@gmail.com'
-    program = 'CESU'
-    password = '123'
+    firstname = 'Justine Faith'
+    lastname = 'Samson'
+    email = '1lucesu50@gmail.com'
+    program = 'CESU '
+    password = '@123ABCabc'
     role = 'Admin'
     
-    user_insert = Users(username=username, email=email, password=password, program=program, role=role)
-    if user_insert:
-        # If a row with the specified program value is found, delete it
-        db.session.add(user_insert)
-        db.session.commit()
+    user_insert = Users(username=username, firstname=firstname, lastname=lastname, program=program, email=email, password=password, role=role)
+    db.session.add(user_insert)
+    db.session.commit()
 
 def delete_data():
  # Delete all records in the Subprogram table

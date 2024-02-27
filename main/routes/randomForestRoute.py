@@ -27,7 +27,7 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        pending_count = Pending_project.query.filter_by(status="Pending").count()
+        pending_count = Pending_project.query.filter_by(status="For Review").count()
             
         # Set a maximum value for pending_count
         max_pending_count = 9
@@ -41,20 +41,20 @@ def get_current_user():
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
 
         if user:
-            return user.username, user.role, pending_count_display, declined_count_display
-    return None, None, 0, 0
+            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname
+    return None, None, 0, 0, None, None
 
 @randomForest_Route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display, g.current_firstname, g.current_lastname = get_current_user()
 
 @randomForest_Route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count=g.declined_count_display )
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count=g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname )
 
 @randomForest_Route.route("/program", methods=["GET", "POST"])
 def program():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
         
     if 'user_id' not in session:
@@ -75,7 +75,7 @@ def cProgram():
 
 @randomForest_Route.route("/programWithCSV", methods=["GET", "POST"])
 def programWithCSV():
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
     
     if 'user_id' not in session:
@@ -460,3 +460,4 @@ def cProgramWithCSV():
             program_ces=program_ces)
         
     return render_template("cProgram.html")
+

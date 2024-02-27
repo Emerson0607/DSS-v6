@@ -14,7 +14,7 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        pending_count = Pending_project.query.filter_by(status="Pending").count()
+        pending_count = Pending_project.query.filter_by(status="For Review").count()
             
         # Set a maximum value for pending_count
         max_pending_count = 9
@@ -34,23 +34,23 @@ def get_current_user():
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
 
         if user:
-            return user.username, user.role, pending_count_display, declined_count_display
-    return None, None, 0, 0
+            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname
+    return None, None, 0, 0, None, None
 
 @file_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display,  g.current_firstname, g.current_lastname = get_current_user()
 
 @file_route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count = g.declined_count_display)
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname)
 
 # -------------------------   DL FILES for admin
 @file_route.route('/files')
 def files():
      # Check if current_role is "admin"
-    if g.current_role != "Admin":
-        return redirect(url_for('dbModel.login')) 
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
@@ -60,8 +60,8 @@ def files():
 
 @file_route.route('/uploadfile', methods=['POST'])
 def upload():
-    if g.current_role != "Admin":
-        return redirect(url_for('dbModel.login')) 
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
 
     if 'file' in request.files:
         file = request.files['file']
@@ -89,7 +89,7 @@ def upload():
 
 @file_route.route('/view/<int:file_id>')
 def view(file_id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     upload_entry = Upload.query.get(file_id)
@@ -119,7 +119,7 @@ def view(file_id):
 
 @file_route.route('/delete_file/<int:id>', methods=['GET'])
 def delete_file(id):
-    if g.current_role != "Admin":
+    if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
         
     if 'user_id' not in session:
