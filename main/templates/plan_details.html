@@ -1,5 +1,5 @@
 {% extends "admin_dashboard.html" %}
-{% block title %}Project Details{% endblock %}
+{% block title %}Projects Plan Details{% endblock %}
 {% block content %}
 <div class="margin-top"></div>
     {% with messages = get_flashed_messages(category_filter=['delete_account', 'add_community', 'existing_community'], with_categories=true) %}
@@ -61,12 +61,20 @@
                 <input type="text" class="form-control" name="user" value="{{user}}" required>
             </div>
             <div class="form-group">
+                <label>Department:</label>
+                <input type="text" class="form-control" name="department_A" value="{{department_A}}" required>
+            </div>
+            <div class="form-group">
                 <label>LEAD:</label>
                 <input type="text" class="form-control" name="lead" value="{{department}}" required >
             </div>
             <div class="form-group">
                 <label>SUPPORT:</label>
                 <input type="text" class="form-control" name="support" value="{{subDepartment}}" required >
+            </div>
+            <div class="form-group">
+                <label>Volunteer(s):</label>
+                <input type="number" class="form-control" name="volunteer" value="{{volunteer}}" required >
             </div>
             <br>
 

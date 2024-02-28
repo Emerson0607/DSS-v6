@@ -40,7 +40,7 @@ main .file-container{
     padding-bottom: 2.5rem;
     position: relative;
     overflow-x: auto; /* Horizontal scroll if needed */
-    max-height: 350px; /* Set a maximum height for vertical scroll */
+    max-height: 60%; /* Set a maximum height for vertical scroll */
     
 }
 

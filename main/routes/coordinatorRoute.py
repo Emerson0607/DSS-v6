@@ -167,6 +167,8 @@ def cAdd_community():
         subDepartment = request.form.get("support")
         status = "For Review"
         budget = request.form.get("budget")
+        department_A = request.form.get("department_A")
+        volunteer = request.form.get("volunteer")
 
 
         #Convert date
@@ -188,7 +190,7 @@ def cAdd_community():
 
             new_community = Pending_project(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer)
             db.session.add(new_community)
             db.session.commit()
             userlog = g.current_user
@@ -356,7 +358,7 @@ def cView_project(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("cProject_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename)
+    return render_template("cProject_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer)
 
 @coordinator_route.route('/cView_cpf_project/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def cView_cpf_project(program, subprogram, community, cpf_filename):
@@ -486,7 +488,7 @@ def cDelete_pending(id):
 def cView_pending(pending_id):
     p = Pending_project.query.get(pending_id)
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
 
 @coordinator_route.route('/cView_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def cView_cpf(program, subprogram, community, cpf_filename):
@@ -596,7 +598,7 @@ def CPF_delete():
         
         p = Pending_project.query.get(cpf_id)
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
 
 @coordinator_route.route('/CESAP_delete', methods=['POST'])
 def CESAP_delete():
@@ -624,7 +626,7 @@ def CESAP_delete():
             db.session.commit()
         p = Pending_project.query.get(cesap_id)
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
 
 @coordinator_route.route('/CNA_delete', methods=['POST'])
 def CNA_delete():
@@ -652,7 +654,7 @@ def CNA_delete():
             db.session.commit()
         p = Pending_project.query.get(cna_id)
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
 
 @coordinator_route.route('/update_pending', methods=['POST'])
 def update_pending():
@@ -673,6 +675,8 @@ def update_pending():
         lead = request.form['lead']
         support = request.form['support']
         status = "For Review"
+        department_A = request.form['department_A']
+        volunteer = request.form['volunteer']
         
         
         #Convert date
@@ -708,6 +712,8 @@ def update_pending():
             pending.department = lead
             pending.subDepartment = support
             pending.status = status
+            pending.department_A = department_A
+            pending.volunteer = volunteer
 
             userlog = g.current_user
             action = f'UPDATED pending {program} projects of {community}'
@@ -725,7 +731,7 @@ def update_pending():
 
         p = Pending_project.query.get(pending_id)
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
 
 
 ############################### COORDINATOR COMMENTS ###############################

@@ -6,6 +6,12 @@ from datetime import datetime, timedelta
 from sqlalchemy import func
 import secrets
 
+"""
+flask db migrate -m "volunteer change to int"
+flask db upgrade
+
+"""
+
 migrate = Migrate(app, db)
 
 class Community(db.Model):
@@ -28,7 +34,9 @@ class Community(db.Model):
     cna_filename = db.Column(db.String(255), nullable=True)
     cpf_filename = db.Column(db.String(255), nullable=True)
     cesap_filename = db.Column(db.String(255), nullable=True)
-    
+    department_A = db.Column(db.String(255), nullable=True)
+    volunteer = db.Column(db.Integer, nullable=True)
+ 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False)
@@ -90,6 +98,8 @@ class Pending_project(db.Model):
     cpf_filename = db.Column(db.String(255), nullable=True)
     cesap_filename = db.Column(db.String(255), nullable=True)
     comments = db.Column(db.String(255), nullable=True)
+    department_A = db.Column(db.String(255), nullable=True)
+    volunteer = db.Column(db.Integer, nullable=True)
 
 class Plan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -112,7 +122,8 @@ class Plan(db.Model):
     cpf_filename = db.Column(db.String(255), nullable=True)
     cesap_filename = db.Column(db.String(255), nullable=True)
     comments = db.Column(db.String(255), nullable=True)
-
+    department_A = db.Column(db.String(255), nullable=True)
+    volunteer = db.Column(db.Integer, nullable=True)
 
 class Archive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -133,7 +144,10 @@ class Archive(db.Model):
     cesap = db.Column(db.LargeBinary, nullable=True)
     cna_filename = db.Column(db.String(255), nullable=True)
     cpf_filename = db.Column(db.String(255), nullable=True)
-    cesap_filename = db.Column(db.String(255), nullable=True) 
+    cesap_filename = db.Column(db.String(255), nullable=True)
+    department_A = db.Column(db.String(255), nullable=True)
+    volunteer = db.Column(db.Integer, nullable=True)
+    url = db.Column(db.String(255), nullable=True)
 
 # --------------------- LOGS ------------------------#
 class Logs(db.Model):

@@ -242,6 +242,12 @@ main .manageUser table tr:last-child td {
     cursor: pointer;
 }
 
+
+.manageUser .jumbo{
+    overflow: auto;
+    max-height: 20rem;
+}
+
 /*FOR DEPARTMENT TABLE*/
 
 
@@ -251,6 +257,7 @@ main .manageDepartment {
     width: 50%;
     gap: 1.6rem;
     max-height: 300px;
+    margin-top: 2rem;
     
 }
 
@@ -490,6 +497,11 @@ main .manageDepartment table tr:last-child td {
     color: rgb(246, 246, 246);
 }
 
+.manageDepartment .jumbo{
+    overflow: auto;
+    max-height: 11rem;
+}
+
 
 
 /*FOR DEPARTMENT TABLE -- END*/
@@ -509,6 +521,7 @@ main .manageDepartment table tr:last-child td {
     .manageUser .jumbo {
         overflow: auto;
         width: 20rem;
+        max-height: 30rem;
     }
 
     main .manageUser table td {

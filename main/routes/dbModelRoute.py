@@ -300,6 +300,7 @@ def add_account():
         password = request.form.get("password")
         role = request.form.get("role")
         program = request.form.get("program")
+        department_A = request.form.get("department_A")
 
         # Check if the username already exists in the database
         existing_username = Users.query.filter_by(username=username).first()
@@ -330,7 +331,7 @@ def add_account():
                 if existing_username:
                     flash('Username already exists. Please choose a different username.', 'existing_username')
                 else:
-                    new_user = Users(username=username, firstname=firstname, lastname=lastname, email=email, password=password, role = role, program = program)
+                    new_user = Users(username=username, firstname=firstname, lastname=lastname, email=email, password=password, role = role, program = program, department_A=department_A)
                     try: 
                         userlog = g.current_user
                         action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
@@ -387,52 +388,55 @@ def edit_account():
         user = Users.query.get(user_id)
 
         if user:
-                if user.role == "Admin" and new_program != "CESU":
-                    flash('Cannot change program', 'password_space')
+            # Check if the user is an admin
+            if user.role == "Admin":
+                # Check if there are any other admin users in the system
+                other_admins = Users.query.filter(Users.role == "Admin", Users.id != user.id).first()
+                if other_admins and user.program != new_program:
+                    flash('Cannot change program for admin users.', 'existing_username')
                     return redirect(url_for('dbModel.manage_account'))
-                    # Check if the new values are different from the existing values
+            
+            # Check if the new values already exist in the table
+            if user.username != new_username:
+                existing_username = Users.query.filter_by(username=new_username).first()
+                if existing_username:
+                    flash(f'Username "{new_username}" already exists. Please choose a different username.', 'existing_username')
+                    return redirect(url_for('dbModel.manage_account'))
+            if user.email != new_email:
+                existing_email = Users.query.filter_by(email=new_email).first()
+                if existing_email:
+                    flash(f'Email "{new_email}" already exists. Please choose a different email.', 'existing_username')
+                    return redirect(url_for('dbModel.manage_account'))
+            if user.program != new_program:
+                existing_program = Users.query.filter_by(program=new_program).first()
+                if existing_program:
+                    flash(f'Program "{new_program}" already exists. Please choose a different program.', 'existing_username')
 
-                if user.username != new_username:
-                    # Check if the new values already exist in the table
-                    existing_username = Users.query.filter_by(username=new_username).first()
-                    if existing_username:
-                        flash(f'Username "{new_username}" already exists. Please choose a different username.', 'existing_username')
-                        return redirect(url_for('dbModel.manage_account'))
-                if user.email != new_email:
-                    # Check if the new values already exist in the table
-                    existing_email = Users.query.filter_by(email=new_email).first()
-                    if existing_email:
-                        flash(f'Email "{new_email}" already exists. Please choose a different email.', 'existing_username')
-                        return redirect(url_for('dbModel.manage_account'))
-                if user.program != new_program:
-                    # Check if the new values already exist in the table
-                    existing_program = Users.query.filter_by(program=new_program).first()
-                    if existing_program:
-                        flash(f'Program "{new_program}" already exists. Please choose a different program.', 'existing_username')
-                        return redirect(url_for('dbModel.manage_account'))
+            # Rest of your code for updating the user's account...
 
-                userlog = g.current_user
-                action = f'UPDATED account named {new_firstname} {new_lastname}.'
-                ph_tz = pytz.timezone('Asia/Manila')
-                ph_time = datetime.now(ph_tz)
-                timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
-                timestamp = convert_date1(timestamp1)
-                insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
-                if insert_logs:
-                    db.session.add(insert_logs)
-                    db.session.commit()
 
-                user.username = new_username
-                user.email = new_email
-                user.firstname = new_firstname
-                user.lastname = new_lastname
-                user.password = new_password
-                user.role = new_role
-                user.program = new_program
-                user.department_A= new_department_A
-
+            userlog = g.current_user
+            action = f'UPDATED account named {new_firstname} {new_lastname}.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
                 db.session.commit()
-                flash('Account updated successfully!', 'edit_account')
+
+            user.username = new_username
+            user.email = new_email
+            user.firstname = new_firstname
+            user.lastname = new_lastname
+            user.password = new_password
+            user.role = new_role
+            user.program = new_program
+            user.department_A= new_department_A
+
+            db.session.commit()
+            flash('Account updated successfully!', 'edit_account')
 
         return redirect(url_for('dbModel.manage_account'))
 
@@ -727,8 +731,10 @@ def add_community():
         week = 0
         totalWeek = request.form.get("totalWeek")
         user = request.form.get("user")
+        department_A = request.form.get("department_A")
         department = request.form.get("lead")
         subDepartment = request.form.get("support")
+        volunteer = request.form.get("volunteer")
         status = "Ongoing"
         budget = request.form.get("budget")
 
@@ -751,7 +757,7 @@ def add_community():
 
             new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer)
 
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} .'
@@ -865,7 +871,10 @@ def delete_community(id):
                 cesap_filename=data_to_move.cesap_filename, 
                 cesap=data_to_move.cesap,
                 cna_filename = data_to_move.cna_filename, 
-                cna=data_to_move.cna
+                cna=data_to_move.cna,
+                department_A = data_to_move.department_A, 
+                volunteer=data_to_move.volunteer,
+                url = "None"
         )
         db.session.add(new_row)
         db.session.commit()   
@@ -955,7 +964,7 @@ def delete_pending(id):
 def view_pending(pending_id):
     p = Pending_project.query.get(pending_id)
 
-    return render_template("pending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments)
+    return render_template("pending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
 
 @dbModel_route.route('/view_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf(program, subprogram, community, cpf_filename):
@@ -1078,7 +1087,9 @@ def approve():
                     cesap_filename=data_to_move.cesap_filename, 
                     cesap=data_to_move.cesap,
                     cna_filename = data_to_move.cna_filename, 
-                    cna=data_to_move.cna
+                    cna=data_to_move.cna,
+                    department_A = data_to_move.department_A, 
+                    volunteer=data_to_move.volunteer
             )
 
             userlog = g.current_user
@@ -1236,7 +1247,10 @@ def archive_project():
         cesap_filename=data_to_move.cesap_filename, 
         cesap=data_to_move.cesap,
         cna_filename = data_to_move.cna_filename, 
-        cna=data_to_move.cna
+        cna=data_to_move.cna,
+        department_A = data_to_move.department_A, 
+        volunteer=data_to_move.volunteer,
+        url = "None"
     )
     userlog = g.current_user
     action = f'ARCHIVED {program} project of {community}'
@@ -1450,7 +1464,7 @@ def view_project(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("project_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename)
+    return render_template("project_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer)
 
 @dbModel_route.route("/delete_project/<int:project_id>")
 def delete_project(project_id):
@@ -1491,7 +1505,11 @@ def delete_project(project_id):
                 cesap_filename=data_to_move.cesap_filename, 
                 cesap=data_to_move.cesap,
                 cna_filename = data_to_move.cna_filename, 
-                cna=data_to_move.cna
+                cna=data_to_move.cna,
+                department_A = data_to_move.department_A, 
+                volunteer=data_to_move.volunteer,
+                url = "None"
+                
             )
             userlog = g.current_user
             action = f'DELETED {program} project of {community}'
@@ -1654,7 +1672,7 @@ def view_archived(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("archived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename)
+    return render_template("archived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer)
 
 @dbModel_route.route("/delete_archived/<int:project_id>")
 def delete_archived(project_id):
@@ -1841,6 +1859,9 @@ def add_plan():
         cpf_file = request.files['CPF']
         cesap_file = request.files['CESAP']
         cna_file = request.files['CNA']
+
+        department_A = request.form.get("department_A")
+        volunteer = request.form.get("volunteer")
       
 
         existing_plan= Plan.query.filter_by(user= user, status= status, community=community, program = program, subprogram=subprogram).first()
@@ -1852,7 +1873,7 @@ def add_plan():
 
             new_plan = Plan(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer)
 
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} for planning.'
@@ -1942,7 +1963,7 @@ def view_plan(plan_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("plan_details.html",id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, budget=p.budget)
+    return render_template("plan_details.html",id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
 
 
 @dbModel_route.route('/view_cpf_plan/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
@@ -2068,6 +2089,8 @@ def update_plan():
         lead = request.form['lead']
         support = request.form['support']
         status = "Planning"
+        department_A = request.form['department_A']
+        volunteer = request.form['volunteer']
         
         
         #Convert date
@@ -2103,6 +2126,8 @@ def update_plan():
             cesu_plan.department = lead
             cesu_plan.subDepartment = support
             cesu_plan.status = status
+            cesu_plan.department_A = department_A
+            cesu_plan.volunteer = volunteer
 
             userlog = g.current_user
             action = f'UPDATED planned {program} projects of {community} from CESU Planner'
@@ -2120,7 +2145,7 @@ def update_plan():
 
         p = Plan.query.get(plan_id)
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
 
 @dbModel_route.route('/delete_cpf_plan', methods=['POST'])
 def delete_cpf_plan():
@@ -2150,7 +2175,7 @@ def delete_cpf_plan():
         
         p = Plan.query.get(cpf_id)
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
 
 @dbModel_route.route('/delete_cesap_plan', methods=['POST'])
 def delete_cesap_plan():
@@ -2179,7 +2204,7 @@ def delete_cesap_plan():
             db.session.commit()
         p = Plan.query.get(cesap_id)
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
 
 @dbModel_route.route('/delete_cna_plan', methods=['POST'])
 def delete_cna_plan():
@@ -2208,7 +2233,7 @@ def delete_cna_plan():
             db.session.commit()
         p = Plan.query.get(cna_id)
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
 
 @dbModel_route.route("/deploy", methods=["POST"])
 def deploy():
@@ -2247,7 +2272,9 @@ def deploy():
                     cesap_filename=data_to_move.cesap_filename, 
                     cesap=data_to_move.cesap,
                     cna_filename = data_to_move.cna_filename, 
-                    cna=data_to_move.cna
+                    cna=data_to_move.cna,
+                    department_A = data_to_move.department_A, 
+                    volunteer=data_to_move.volunteer
             )
 
             userlog = g.current_user
