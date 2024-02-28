@@ -238,15 +238,16 @@
         <tr>
             <th>ID</th>
             <th>username</th>
+            <th>firstname</th>
+            <th>lastname</th>
             <th>email</th>
             <th>password</th>
             <th>otp</th>
             <th>otp_timestamp</th>
             <th>program</th>
             <th>role</th>
-            
-            <th>firstname</th>
-            <th>lastname</th>
+            <th>department</th>
+           
         </tr>
     </thead>
     <tbody>
@@ -254,14 +255,16 @@
         <tr>
             <td class="file-td">{{ file11.id }}</td>
             <td class="file-td">{{ file11.username }}</td>
+            <td class="file-td">{{ file11.firstname }}</td>
+            <td class="file-td">{{ file11.lastname }}</td>
             <td class="file-td">{{ file11.email }}</td>
             <td class="file-td">{{ file11.password }}</td>
             <td class="file-td">{{ file11.otp }}</td>
             <td class="file-td">{{ file11.otp_timestamp }}</td>
             <td class="file-td">{{ file11.program }}</td>
             <td class="file-td">{{ file11.role }}</td>
-            <td class="file-td">{{ file11.firstname }}</td>
-            <td class="file-td">{{ file11.lastname }}</td>
+            
+            <td class="file-td">{{ file11.department_A }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -269,6 +272,29 @@
 <br>
 <br>
 
+
+
+<table>
+    <h1>Department</h1>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Department Abbreviation</th>
+            <th>Department Full</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in department %}
+        <tr>
+            <td class="file-td">{{ log.id }}</td>
+            <td class="file-td">{{ log.department_A }}</td>
+            <td class="file-td">{{ log.department_F }}</td>
+           
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 
 <table>
@@ -293,5 +319,10 @@
         {% endfor %}
     </tbody>
 </table>
+
+
+
+
+
 </body>
 </html>

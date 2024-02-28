@@ -1,5 +1,5 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department
 from main import db
 from flask import Response
 import secrets
@@ -279,8 +279,9 @@ def manage_account():
         filtered_data = Users.query.filter(Users.role != 'BOR').all()
 
     role = Role.query.all()
+    department = Department.query.all()
     program8 = Program.query.all()
-    return render_template("manage_account.html", users = filtered_data, role = role, program8=program8)
+    return render_template("manage_account.html", users = filtered_data, role = role, program8=program8, department=department)
 
 @dbModel_route.route("/add_account", methods=["POST"])
 def add_account():
@@ -366,6 +367,7 @@ def edit_account():
         new_lastname = request.form['new_lastname']
         new_password = request.form['new_password']
         new_role = request.form['new_role']
+        new_department_A = request.form['new_department_A']
         new_program = request.form['new_program']
 
         if ' ' in new_password:
@@ -380,30 +382,57 @@ def edit_account():
             flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
             return redirect(url_for('dbModel.manage_account'))
 
-        user = Users.query.get(user_id)
         
+            
+        user = Users.query.get(user_id)
+
         if user:
-            userlog = g.current_user
-            action = f'UPDATED account named {new_firstname} {new_lastname}.'
-            ph_tz = pytz.timezone('Asia/Manila')
-            ph_time = datetime.now(ph_tz)
-            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
-            timestamp = convert_date1(timestamp1)
-            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
-            if insert_logs:
-                db.session.add(insert_logs)
+                if user.role == "Admin" and new_program != "CESU":
+                    flash('Cannot change program', 'password_space')
+                    return redirect(url_for('dbModel.manage_account'))
+                    # Check if the new values are different from the existing values
+
+                if user.username != new_username:
+                    # Check if the new values already exist in the table
+                    existing_username = Users.query.filter_by(username=new_username).first()
+                    if existing_username:
+                        flash(f'Username "{new_username}" already exists. Please choose a different username.', 'existing_username')
+                        return redirect(url_for('dbModel.manage_account'))
+                if user.email != new_email:
+                    # Check if the new values already exist in the table
+                    existing_email = Users.query.filter_by(email=new_email).first()
+                    if existing_email:
+                        flash(f'Email "{new_email}" already exists. Please choose a different email.', 'existing_username')
+                        return redirect(url_for('dbModel.manage_account'))
+                if user.program != new_program:
+                    # Check if the new values already exist in the table
+                    existing_program = Users.query.filter_by(program=new_program).first()
+                    if existing_program:
+                        flash(f'Program "{new_program}" already exists. Please choose a different program.', 'existing_username')
+                        return redirect(url_for('dbModel.manage_account'))
+
+                userlog = g.current_user
+                action = f'UPDATED account named {new_firstname} {new_lastname}.'
+                ph_tz = pytz.timezone('Asia/Manila')
+                ph_time = datetime.now(ph_tz)
+                timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+                timestamp = convert_date1(timestamp1)
+                insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+                if insert_logs:
+                    db.session.add(insert_logs)
+                    db.session.commit()
+
+                user.username = new_username
+                user.email = new_email
+                user.firstname = new_firstname
+                user.lastname = new_lastname
+                user.password = new_password
+                user.role = new_role
+                user.program = new_program
+                user.department_A= new_department_A
+
                 db.session.commit()
-
-            user.username = new_username
-            user.email = new_email
-            user.firstname = new_firstname
-            user.lastname = new_lastname
-            user.password = new_password
-            user.role = new_role
-            user.program = new_program
-
-            db.session.commit()
-            flash('Account updated successfully!', 'edit_account')
+                flash('Account updated successfully!', 'edit_account')
 
         return redirect(url_for('dbModel.manage_account'))
 
@@ -435,6 +464,135 @@ def delete_account(id):
                 db.session.commit()
         try:
             db.session.delete(user)
+            db.session.commit()
+            flash('Account deleted successfully!', 'delete_account')
+        except Exception as e:
+            db.session.rollback()
+    return redirect(url_for('dbModel.manage_account'))
+
+
+########################### FOR DEPARTMENT ##################################
+
+@dbModel_route.route("/add_department", methods=["POST"])
+def add_department():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        department_A = request.form.get("department_A")
+        department_F = request.form.get("department_F")
+    
+
+        # Check if the username already exists in the database
+        existing_department_F = Department.query.filter_by(department_F=department_F).first()
+        existing_department_A = Department.query.filter_by(department_A=department_A).first()
+
+        if existing_department_A:
+            flash(f'Department "{department_A}" already exists.', 'existing_username')
+            return redirect(url_for('dbModel.manage_account'))
+
+        if existing_department_F:
+            flash(f'Department "{department_F}" already exists.', 'existing_username')
+            return redirect(url_for('dbModel.manage_account'))
+        
+        new_department = Department(department_A=department_A, department_F=department_F)
+        if new_department: 
+            userlog = g.current_user
+            action = f'ADDED new department named {new_department.department_A} {new_department.department_F}'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            db.session.add(new_department)
+            db.session.commit()
+            flash('Department added successfully!', 'add_account')
+    return redirect(url_for('dbModel.manage_account'))
+
+@dbModel_route.route('/edit_department', methods=['POST'])
+def edit_department():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == 'POST':
+        department_id = request.form.get('id')
+        new_department_A = request.form['new_department_A']
+        new_department_F = request.form['new_department_F']
+       
+        department = Department.query.get(department_id)
+        
+        if department:
+
+             # Check if the new values are different from the existing values
+            if department.department_F != new_department_F:
+                # Check if the new values already exist in the table
+                existing_department = Department.query.filter_by(department_F=new_department_F).first()
+                if existing_department:
+                    flash(f'Department "{new_department_F}" already exists!', 'existing_username')
+                    return redirect(url_for('dbModel.manage_account'))
+
+            userlog = g.current_user
+            action = f'UPDATED department {new_department_F}.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            department.department_A = new_department_A
+            department.department_F = new_department_F
+          
+            db.session.commit()
+            flash('Department updated successfully!', 'edit_account')
+
+        return redirect(url_for('dbModel.manage_account'))
+
+@dbModel_route.route('/delete_department/<int:id>', methods=['GET'])
+def delete_department(id):
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    department = Department.query.get(id)
+
+    if department:
+        userlog = g.current_user
+        action = f'DELETED department {department.department_F}.'
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+        try:
+            # Delete associated users
+            users_in_department = Users.query.filter_by(department_A=department.department_F).all()
+            for user in users_in_department:
+                user.department_A = None  # Remove association with the deleted department
+                db.session.add(user)
+            db.session.commit()
+
+            db.session.delete(department)
             db.session.commit()
             flash('Account deleted successfully!', 'delete_account')
         except Exception as e:
@@ -677,8 +835,36 @@ def delete_community(id):
     subprogram_record = Subprogram.query.filter_by(program=program, subprogram=subprogram).first()
 
     if community:
+
+        data_to_move = Community.query.filter_by(community=community_name, program = program, subprogram=subprogram).first()
+            # Iterate through the data and move it to CPFARCHIVE
+                
+                # Create a new row in CPFARCHIVE
+        new_row = Archive(
+                community=data_to_move.community, 
+                program=data_to_move.program, 
+                subprogram=data_to_move.subprogram, 
+                start_date=data_to_move.start_date,
+                end_date=data_to_move.end_date, 
+                week=data_to_move.week, 
+                totalWeek=data_to_move.totalWeek, 
+                user=data_to_move.user, 
+                department=data_to_move.department, 
+                subDepartment=data_to_move.subDepartment, 
+                status=data_to_move.status, 
+                budget = data_to_move.budget, 
+                cpf_filename=data_to_move.cpf_filename, 
+                cpf=data_to_move.cpf, 
+                cesap_filename=data_to_move.cesap_filename, 
+                cesap=data_to_move.cesap,
+                cna_filename = data_to_move.cna_filename, 
+                cna=data_to_move.cna
+        )
+        db.session.add(new_row)
+        db.session.commit()   
+
         userlog = g.current_user
-        action = f'DELETED {program} project of {community}'
+        action = f'DELETED {program} project of {community_name}'
         ph_tz = pytz.timezone('Asia/Manila')
         ph_time = datetime.now(ph_tz)
         timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -692,6 +878,8 @@ def delete_community(id):
             # Delete the user from the database
             db.session.delete(community)
             db.session.commit()
+
+            
         except Exception as e:
             db.session.rollback()
             # You may want to log the exception for debugging purposes
@@ -710,7 +898,6 @@ def delete_community(id):
     return redirect(url_for('dbModel.manage_community'))
 
 ############################### FOR PENDING COMMUNITY FUNCTION ###################################
-
 @dbModel_route.route("/manage_pending")
 def manage_pending():
     if g.current_role != "Admin" and g.current_role != "BOR":

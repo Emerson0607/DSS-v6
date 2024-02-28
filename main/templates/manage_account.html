@@ -24,7 +24,8 @@
                     <th>Lastname</th>
                     <th>Email</th> 
                     <th>Password</th>    
-                    <th>Role</th>         
+                    <th>Role</th>   
+                    <th>Department</th>         
                     <th>Program</th>              
                     <th>Action</th>
                 </tr>
@@ -37,8 +38,10 @@
                     <td>{{ row.email }}</td>
                     <td><span class="password-placeholder">{{ row.password }}</span></td>
                     <td>{{ row.role }}</td>
+                    <td>{{ row.department_A }}</td>
                     <td>{{ row.program }}</td>
                     <td>
+                        
                         <a href="{{ url_for('dbModel.edit_account', id=row.id) }}" class="btn-edit" data-bs-toggle="modal" data-bs-target="#modaledit{{row.id}}">Update</a>
                         <a href="{{ url_for('dbModel.delete_account', id=row.id)}}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
                     </td>
@@ -85,6 +88,16 @@
                                         {% endfor %}
                                     </select>
                                     </div>
+                                     
+                                    <div class="form-group" >
+                                        <label for="new_department_A">Department:</label>
+                                        <select class="form-select" name="new_department_A" required>
+                                            <option value="{{row.department_A}}" selected style="display: none;">{{row.department_A}}</option>
+                                            {% for d in department %}
+                                                <option value="{{ d.department_A}}">{{ d.department_F }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        </div>
                                     <div class="form-group">
                                     <label for="new_program">Program:</label>
                                     <select class="form-select" name="new_program" required>
@@ -151,6 +164,16 @@
                                         </div>
 
                                         <div class="form-group">
+                                            <label for="department_A">Department:</label>
+                                            <select class="form-control" name="department_A" required>
+                                                <option value="" selected disabled >-- s e l e c t --</option>  <!-- Placeholder option -->
+                                                {% for d in department %}
+                                                    <option value="{{ d.department_A }}">{{ d.department_F }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
                                             <label for="program">Program:</label>
                                             <select class="form-control" name="program" required>
                                                 <option value="" selected disabled >-- s e l e c t --</option>  <!-- Placeholder option -->
@@ -173,6 +196,105 @@
                 </div> <!--end add modal-->
     </div><!--end jumbotronnnn-->   
 </div>
+
+
+<!--MANAGE DEPARTMENT-->
+
+<div class="manageDepartment">
+    <div class="jumbotron">
+        <h2 style="margin-bottom: 1rem;">Manage <b>Department</b> 
+            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal_d" style="float: right;"><span class="material-symbols-sharp" style="float: right;">add</span></button></h2>
+            <div class="jumbo">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Acronym</th>
+                    <th>Department</th>
+                </tr>
+                 {% for row in department %}
+                 <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.department_A }}</td>
+                    <td>{{ row.department_F }}</td>
+                    <td >
+                        <a href="{{ url_for('dbModel.edit_department', id=row.id) }}" class="btn-edit delete_update_box" data-bs-toggle="modal" data-bs-target="#modaledit_d{{row.id}}"><span class="material-symbols-sharp update_department_btn">
+                            edit
+                            </span></a>
+                        <a href="{{ url_for('dbModel.delete_department', id=row.id)}}" class="btn-delete1 delete_update_box" onclick="return confirm('Are you sure to delete?')"><span class="material-symbols-sharp delete_department_btn">
+                            delete
+                            </span></a>
+                    </td>
+                </tr>
+
+                <!-- Modal for Edit -->
+                <div id="modaledit_d{{row.id}}" class="modal">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Account</h4>
+                            </div> 
+
+                            <div class="modal-body">
+                                <form action="{{ url_for('dbModel.edit_department') }}" method="POST">
+                                    <div class="form-group">
+                                        <label>Acronym:</label>
+                                        <input type="text" class="form-control" name="new_department_A" value="{{row.department_A}}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Department:</label>
+                                        <input type="text" class="form-control" name="new_department_F" value="{{row.department_F}}" required>
+                                    </div>
+                                    
+                    
+                                    <input type="hidden" name="id" id="edit-id" value="{{row.id}}">
+                                        <div class="form-group">
+                                            <button class="btn-submit" type="submit">Save Changes</button>
+                                        </div>
+                                </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn-close btn-secondary" data-bs-dismiss="modal"><span class="material-symbols-sharp">close</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--end edit modal-->
+                {% endfor %}
+            </table>
+        </div>
+
+                <!--Modal for adding -->
+                <div id="mymodal_d" class="modal">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Department information</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('dbModel.add_department') }}" method="POST">
+                                        <div class="form-group">
+                                            <label>Acronym:</label>
+                                            <input type="text" class="form-control" name="department_A" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Department:</label>
+                                            <input type="text" class="form-control" name="department_F" required>
+                                        </div>
+                                       
+                                        <div class="form-group">
+                                            <button class="btn-submit btn-primary" type="submit">Add department</button>
+                                        </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"><span class="material-symbols-sharp">close</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!--end add modal-->
+    </div><!--end jumbotronnnn-->   
+</div>
+
 <script>
     
 

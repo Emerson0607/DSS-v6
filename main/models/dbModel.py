@@ -37,9 +37,16 @@ class Users(db.Model):
     otp = db.Column(db.String(6), nullable=True)
     otp_timestamp = db.Column(db.DateTime, nullable=True)
     program = db.Column(db.String(255), unique=True, nullable=False)
+    department_A = db.Column(db.String(255), nullable=True)
     role = db.Column(db.String(50), nullable=False)
     firstname = db.Column(db.String(100), nullable=True)
     lastname = db.Column(db.String(100), nullable=True)
+
+
+class Department(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    department_A = db.Column(db.String(255), nullable=True)
+    department_F = db.Column(db.String(255), nullable=True)
 
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -254,5 +261,6 @@ def display_community_data():
     User = Users.query.all()
     UserLogs = Logs.query.all()
     planner = Plan.query.all()
+    department = Department.query.all()
     archive_project = db.session.query(Archive).all()
-    return render_template('test.html',planner=planner, UserLogs = UserLogs, community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User, archive_project=archive_project)
+    return render_template('test.html',planner=planner, UserLogs = UserLogs, community_data=all_community_data, subprogram_data=subprogram_data, Pending_project_data = Pending_project_data, Users = User, archive_project=archive_project, department=department)
