@@ -690,14 +690,21 @@ def manage_community():
      # Fetch all user records from the database
     all_data = Community.query.filter_by(status="Ongoing").all()
     program8 = Program.query.all()
+    department = Department.query.all()
     user1 = Users.query.all()
-    return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1)
+    return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1, department=department)
 
 ############################ ASSIGNED PROGRAM FOR COORDINATOR ############################
 @dbModel_route.route("/subprogram1/<get_program>")
 def get_program(get_program):
     sub = Users.query.filter_by(program=get_program).all()
     subArray = [{'firstname': user.firstname, 'lastname': user.lastname} for user in sub]  
+    return jsonify({'users': subArray})
+
+@dbModel_route.route("/department1/<get_department>")
+def get_department(get_department):
+    sub = Users.query.filter_by(program=get_department).all()
+    subArray = [{'department_A': user.department_A} for user in sub]  
     return jsonify({'users': subArray})
 
 

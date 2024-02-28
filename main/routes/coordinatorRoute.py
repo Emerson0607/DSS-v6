@@ -35,17 +35,17 @@ def get_current_user():
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
 
         if user:
-            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname
-    return None, None, None, 0, None, None
+            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A
+    return None, None, None, 0, None, None, None
     
 @coordinator_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A = get_current_user()
 
 @coordinator_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A)
 
 @coordinator_route.route("/cClear_session")
 def cClear_session():

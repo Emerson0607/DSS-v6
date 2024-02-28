@@ -110,6 +110,11 @@ with_categories=true) %}
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label>Department:</label>
+                                    <select class="form-select" name="department" id="departmentSelect" required>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label>LEAD:</label>
                                     <input type="text" class="form-control" name="lead" required>
                                 </div>
@@ -210,6 +215,7 @@ with_categories=true) %}
     $(document).ready(function () {
         loadInitialInsights();
         coordinator_name();
+       
         date_picker();
 
     });
@@ -318,7 +324,6 @@ with_categories=true) %}
             }
         });
     }
-
     function coordinator_name() {
     program_select = document.getElementById('program')
     program_select.onchange = function () {
@@ -332,6 +337,21 @@ with_categories=true) %}
                     // Combine firstname and lastname and set it as the option value
                     var fullname = user.firstname + ' ' + user.lastname;
                     optionHTML += '<option value="' + fullname + '">' + fullname + '</option>'
+                }
+
+                selectElement.innerHTML = optionHTML;
+            });
+        });
+
+        fetch('/department1/' + program).then(function (response) {
+            response.json().then(function (data) {
+                var optionHTML = '';
+                var selectElement = document.getElementById('departmentSelect');
+
+                for (user of data.users) {
+                    // Set department_A as the option value
+                    var department_A = user.department_A;
+                    optionHTML += '<option value="' + department_A + '">' + department_A + '</option>'
                 }
 
                 selectElement.innerHTML = optionHTML;
