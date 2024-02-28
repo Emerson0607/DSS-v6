@@ -342,6 +342,40 @@
                             circle.attr("stroke", "red"); // Red
                         }
 
+
+                        var iconText = "analytics"; // Default icon text
+
+
+                        //lahat ng program lalagyan
+                        switch (record.program) {
+                            case "Literacy":
+                                iconText = "computer";
+                                break;
+                            case "Gender and Development":
+                                iconText = "wc";
+                                break;
+                            case "Health and Wellness":
+                                iconText = "health_and_safety";
+                                break;
+                            // Add more cases as needed
+                            case "Environmental Stewardship":
+                                iconText = "source_environment";
+                                break;
+                            case "Socio-economic":
+                                iconText = "rubric";
+                                break;
+                            case "Disaster Management":
+                                iconText = "flood";
+                                break;
+                            case "Values Formation":
+                                iconText = "settings_accessibility";
+                                break;
+                            case "Cultural Enhancement":
+                                iconText = "compare";
+                                break;
+                        }
+                        insightsDiv.find(".material-symbols-sharp").text(iconText);
+
                         insightsContainer.append(insightsDiv);
                         insightsDiv.removeClass("insights-div");
                     });

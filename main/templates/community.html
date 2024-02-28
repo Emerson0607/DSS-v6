@@ -215,7 +215,7 @@ with_categories=true) %}
     $(document).ready(function () {
         loadInitialInsights();
         coordinator_name();
-       
+
         date_picker();
 
     });
@@ -268,23 +268,36 @@ with_categories=true) %}
                     // Inside the loop where you create insightsDiv elements
                     var iconText = "analytics"; // Default icon text
 
-                  
+
                     //lahat ng program lalagyan
                     switch (record.program) {
                         case "Literacy":
-                            iconText = "analytics";
+                            iconText = "computer";
                             break;
                         case "Gender and Development":
                             iconText = "wc";
                             break;
                         case "Health and Wellness":
-                            iconText = "wc";
+                            iconText = "health_and_safety";
                             break;
                         // Add more cases as needed
-                        default:
-                            iconText = "analytics"; // Default icon text
+                        case "Environmental Stewardship":
+                            iconText = "source_environment";
+                            break;
+                        case "Socio-economic":
+                            iconText = "rubric";
+                            break;
+                        case "Disaster Management":
+                            iconText = "flood";
+                            break;
+                        case "Values Formation":
+                            iconText = "settings_accessibility";
+                            break;
+                        case "Cultural Enhancement":
+                            iconText = "compare";
+                            break;
                     }
-                        //hanggang dito
+                    //hanggang dito
 
 
                     // Update the text inside the span element to reflect the icon text
@@ -325,40 +338,40 @@ with_categories=true) %}
         });
     }
     function coordinator_name() {
-    program_select = document.getElementById('program')
-    program_select.onchange = function () {
-        var program = program_select.value;
-        fetch('/subprogram1/' + program).then(function (response) {
-            response.json().then(function (data) {
-                var optionHTML = '';
-                var selectElement = document.getElementById('userSelect');
+        program_select = document.getElementById('program')
+        program_select.onchange = function () {
+            var program = program_select.value;
+            fetch('/subprogram1/' + program).then(function (response) {
+                response.json().then(function (data) {
+                    var optionHTML = '';
+                    var selectElement = document.getElementById('userSelect');
 
-                for (user of data.users) {
-                    // Combine firstname and lastname and set it as the option value
-                    var fullname = user.firstname + ' ' + user.lastname;
-                    optionHTML += '<option value="' + fullname + '">' + fullname + '</option>'
-                }
+                    for (user of data.users) {
+                        // Combine firstname and lastname and set it as the option value
+                        var fullname = user.firstname + ' ' + user.lastname;
+                        optionHTML += '<option value="' + fullname + '">' + fullname + '</option>'
+                    }
 
-                selectElement.innerHTML = optionHTML;
+                    selectElement.innerHTML = optionHTML;
+                });
             });
-        });
 
-        fetch('/department1/' + program).then(function (response) {
-            response.json().then(function (data) {
-                var optionHTML = '';
-                var selectElement = document.getElementById('departmentSelect');
+            fetch('/department1/' + program).then(function (response) {
+                response.json().then(function (data) {
+                    var optionHTML = '';
+                    var selectElement = document.getElementById('departmentSelect');
 
-                for (user of data.users) {
-                    // Set department_A as the option value
-                    var department_A = user.department_A;
-                    optionHTML += '<option value="' + department_A + '">' + department_A + '</option>'
-                }
+                    for (user of data.users) {
+                        // Set department_A as the option value
+                        var department_A = user.department_A;
+                        optionHTML += '<option value="' + department_A + '">' + department_A + '</option>'
+                    }
 
-                selectElement.innerHTML = optionHTML;
+                    selectElement.innerHTML = optionHTML;
+                });
             });
-        });
+        }
     }
-}
 
 
     //date picker
