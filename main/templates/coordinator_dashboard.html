@@ -13,22 +13,22 @@
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="/static/css/dashboard.css">
     <link rel="stylesheet" href="/static/css/admin_dashboard.css">
-    <link rel="stylesheet" href="/static/css/programCSVresult.css">
-    <link rel="stylesheet" href="/static/css/community.css">
-    <link rel="stylesheet" href="/static/css/manage_account.css">
-    <link rel="stylesheet" href="/static/css/coordinator.css">
-    <link rel="stylesheet" href="/static/css/program.css">
-    <link rel="stylesheet" href="/static/css/dlfiles.css">
+    <link rel="stylesheet" href="/static/css/cprogramCSVresult.css">
+    <link rel="stylesheet" href="/static/css/cprogram.css">
     <link rel="stylesheet" href="/static/css/kaakbay_program.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="/static/css/change_password.css">
     <link rel="stylesheet" href="/static/css/flash.css">
     <link rel="stylesheet" href="/static/css/coordinator_dashboard.css">
-    <link rel="stylesheet" href="/static/css/project_table.css">
-    <link rel="stylesheet" href="/static/css/project_details.css">
-    <link rel="stylesheet" href="/static/css/pending.css">
-    <link rel="stylesheet" href="/static/css/pending_details.css">
+    <link rel="stylesheet" href="/static/css/cProject_table.css">
+    <link rel="stylesheet" href="/static/css/cProject_details.css">
+    <link rel="stylesheet" href="/static/css/cPending.css">
+    <link rel="stylesheet" href="/static/css/cPending_details.css">
     <link rel="stylesheet" href="/static/css/tooltip.css">
+    <link rel="stylesheet" href="/static/css/cChange_password.css">
+    <link rel="stylesheet" href="/static/css/cCommunity.css">
+    <link rel="stylesheet" href="/static/css/cCoordinator.css">
+    <link rel="stylesheet" href="/static/css/cDashboard.css">
+    <link rel="stylesheet" href="/static/css/cDlfiles.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
         type="image/x-icon">
     <style>
@@ -122,7 +122,8 @@
                 </div>
                 <div class="profile">
                     <div class="profile-info">
-                        <p>Hi, <b style="text-transform: uppercase;">{{current_firstname}} <span>{{current_lastname}}</span></b></p>
+                        <p>Hi, <b style="text-transform: uppercase;">{{current_firstname}}
+                                <span>{{current_lastname}}</span></b></p>
                         <small class="text-muted">{{current_role}}</small>
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
