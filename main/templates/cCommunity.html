@@ -15,18 +15,11 @@
 {% endif %}
 {% endwith %}
 
-<<<<<<< HEAD
-<div class="communityCard">
-    <div class="jumbotron">
-        <h2 style="margin-bottom: 1rem;">Manage <b>Community</b>
-            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right;">
-=======
 <div class="cCommunity">
     <div class="jumbotron">
         <h2 style="margin-bottom: 1rem;">Manage <b>Community</b>
             <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal"
                 style="float: right;">
->>>>>>> 1fc0da71d95cb715c7d0dfdfe29ff9b0ae216dd5
                 <span class="material-symbols-sharp green-add" style="float: right;">add</span>
             </button>
         </h2> 
@@ -52,103 +45,6 @@
                     <td>{{ row.user }}</td>
                 </tr>
                 {% endfor %}
-<<<<<<< HEAD
-            </table> 
-        </div> <!-- end table-card -->
-   
-    <!-- Modal -->
-    <div id="mymodal" class="modal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Project details</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="uploading" action="{{ url_for('coordinator.cAdd_community') }}" method="POST" enctype="multipart/form-data" id="upload-form">
-                        <!-- PPA -->
-                        <label class="PPA label-category">PPA (Program, Project, Activity)</label>
-                        <div class="form-group">
-                            <label>Community:</label>
-                            <input type="text" class="form-control" name="community" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Program:</label>
-                            <input type="text" id="program" class="form-control" value="{{current_program}}" name="program" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Sub-program:</label>
-                            <input type="text" class="form-control" name="subprogram" required>
-                        </div>
-                        <br>
-                        <!-- TIMEFRAME -->
-                        <label class="timeframe label-category">TIMEFRAME</label>
-                        <div class="form-group">
-                            <label>Start date:</label>
-                            <input type="text" class="form-control" name="start_date" id="start_date_input" placeholder="Select Date..." required>
-                        </div>
-                        <div class="form-group">
-                            <label>End date:</label>
-                            <input type="text" class="form-control" name="end_date" id="end_date_input" placeholder="Select Date..." required>
-                        </div>
-                        <div class="form-group">
-                            <label>Total Week:</label>
-                            <input type="number" class="form-control" name="totalWeek" required pattern="[1-9][0-9]?" title="Please enter a number between 1 and 99">
-                        </div>
-                        <div class="form-group">
-                            <label>Budget:</label>
-                            <input type="number" class="form-control" name="budget" required>
-                        </div>
-                        <br>
-                        <!-- ACCOUNTABILITY -->
-                        <label class="accountability label-category">ACCOUNTABILITY</label><br>
-                        <div class="form-group">
-                            <label>Coordinator:</label>
-                            <input type="text" id="userSelect" class="form-control" value="{{current_firstname}} {{current_lastname}}" name="user" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>Department:</label>
-                            <input type="text" id="userDepartment" class="form-control" value="{{current_department_A}}" name="department_A" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label>LEAD:</label>
-                            <input type="text" class="form-control" name="lead" required>
-                        </div>
-                        <div class="form-group">
-                            <label>SUPPORT:</label>
-                            <input type="text" class="form-control" name="support" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Volunteer(s) Count:</label>
-                            <input type="number" class="form-control" name="volunteer" required>
-                        </div>
-                        <br>
-                        <!-- FILE -->
-                        <label class="file label-category">CESU FILE</label><br>
-                        <label for="CPF">Community Profiling Form</label>
-                        <div class="form-group file-box">
-                            <input class="CPF" type="file" name="CPF" id="CPF" accept=".pdf, .docx" required>
-                        </div>
-                        <label for="CESAP">CES Activity Proposal</label>
-                        <div class="form-group file-box">
-                            <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx" required>
-                        </div>
-                        <label for="CNA">Community Needs Assessment</label>
-                        <div class="form-group file-box">
-                            <input class="CNA" type="file" name="CNA" id="CNA" accept=".csv" required>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn-submit" type="submit" value="Upload">Add project</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"><span class="material-symbols-sharp">close</span></button>
-                </div>
-            </div>
-        </div>
-    </div> <!-- end modal -->
-</div> <!-- end jumbotron -->
-=======
             </table>
         </div> <!-- end table-card -->
 
@@ -252,7 +148,6 @@
             </div>
         </div> <!-- end modal -->
     </div> <!-- end jumbotron -->
->>>>>>> 1fc0da71d95cb715c7d0dfdfe29ff9b0ae216dd5
 
 </div> <!-- end communityCard -->
 
@@ -305,12 +200,9 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
-<<<<<<< HEAD
-=======
 
 
 
->>>>>>> 1fc0da71d95cb715c7d0dfdfe29ff9b0ae216dd5
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var totalWeekInput = document.querySelector('input[name="totalWeek"]');
