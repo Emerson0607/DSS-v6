@@ -302,6 +302,18 @@ main .communityCard table tr:last-child td {
     cursor: pointer;
 
 }
+/* coordinator add */
+
+.communityCard .btn-add .green-add {
+    background-color: #49a14f;
+    border-radius: 7px;
+}
+
+.communityCard .btn-add .green-add:hover {
+    background-color: #348138;
+    cursor: pointer;
+
+}
 
 .communityCard .btn-edit {
     background-color: #49a14f;
