@@ -102,11 +102,18 @@ small {
 }
 
 .profile-photo {
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 50%;
-    overflow: hidden;
-}
+    margin-right: .5rem;
+ 
+ }
+ 
+ /* Initially hide the dropdown content */
+ .profile-photo img{
+     width: 3.5rem;
+ height: 3.5rem;
+     cursor: pointer;
+     border-radius: 50%;
+    
+ }
 
 .text-muted {
     color: var(--color-info-dark)
@@ -185,8 +192,8 @@ aside .logo {
 }
 
 aside .logo img {
-    width: 3rem;
-    height: 3rem;
+    width: 3.5rem;
+ height: 3.5rem;    
 }
 
 aside .close {
@@ -374,10 +381,7 @@ main {
     vertical-align: super;
 }
 
-/* Initially hide the dropdown content */
-.profile-photo {
-    cursor: pointer;
-}
+
 
 .dropdown-content {
     display: none;
@@ -500,6 +504,9 @@ main {
 .sidebar .dropdown-files .sidebar-link .arrow_drop_down {
     margin-left: 3rem;
 }
+
+
+
 
 
 

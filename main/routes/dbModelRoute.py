@@ -9,6 +9,7 @@ from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
 import pytz, re
+import base64
 # LINE BELOW IS FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED)
 #from werkzeug.security import generate_password_hash, check_password_hash 
 
@@ -173,17 +174,23 @@ def get_current_user():
         # If pending_count is 9 or greater, display it as '9+'
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
+        profile_picture_base64 = None
         if user:
-            return user.username, user.role, pending_count_display, user.firstname, user.lastname
-    return None, None, 0, None, None
+            if user.profile_picture:
+                # Convert the profile picture to base64 encoding
+                profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
+
+            return user.username, user.role, pending_count_display, user.firstname, user.lastname, profile_picture_base64
+    return None, None, 0, None, None, None
 
 @dbModel_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display, g.current_firstname, g.current_lastname = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.current_firstname, g.current_lastname, g.profile_picture_base64 = get_current_user()
 
 @dbModel_route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname)
+    current_user, current_role, pending_count, current_firstname, current_lastname, profile_picture_base64 = get_current_user()
+    return dict(current_user=current_user, current_role=current_role, pending_count=pending_count, current_firstname=current_firstname, current_lastname=current_lastname, profile_picture_base64=profile_picture_base64)
 
 #################### USERS LOGIN FUNCTION ##################
 
@@ -278,10 +285,21 @@ def manage_account():
         # Retrieve all users where the role is not 'BOR'
         filtered_data = Users.query.filter(Users.role != 'BOR').all()
 
+    # Prepare a dictionary to store profile pictures as base64 encoded strings
+    profile_pictures_base64 = {}
+    for user in filtered_data:
+        # Check if the user has a profile picture
+        if user.profile_picture:
+            # Convert the profile picture to base64 encoding
+            profile_pictures_base64[user.id] = base64.b64encode(user.profile_picture).decode('utf-8')
+        else:
+            # If there is no profile picture, set it to None
+            profile_pictures_base64[user.id] = None
+
     role = Role.query.all()
     department = Department.query.all()
     program8 = Program.query.all()
-    return render_template("manage_account.html", users = filtered_data, role = role, program8=program8, department=department)
+    return render_template("manage_account.html",profile_pictures_base64=profile_pictures_base64, users = filtered_data, role = role, program8=program8, department=department)
 
 @dbModel_route.route("/add_account", methods=["POST"])
 def add_account():
@@ -301,11 +319,15 @@ def add_account():
         role = request.form.get("role")
         program = request.form.get("program")
         department_A = request.form.get("department_A")
+        mobile_number = request.form.get("mobile_number")
+        profile_picture = request.files['profile_picture'].read()  # Use .get() instead of ['']
+
 
         # Check if the username already exists in the database
         existing_username = Users.query.filter_by(username=username).first()
         existing_program = Users.query.filter_by(program=program).first()
         existing_email = Users.query.filter_by(email=email).first()
+        existing_mobile_number = Users.query.filter_by(mobile_number=mobile_number).first()
 
         # Check if the email format is valid and ends with '@gmail.com'
         if not is_valid_email(email):
@@ -322,6 +344,10 @@ def add_account():
             return redirect(url_for('dbModel.manage_account'))
     
 
+        if len(mobile_number) < 11:
+                flash('Mobile number must be at least 11 digits long.', 'existing_username')
+                return redirect(url_for('dbModel.manage_account'))
+
         if existing_program:
             flash(f"Sorry, '{program}' is already taken. Please choose another name or check existing programs.", 'existing_program')
         else:
@@ -331,24 +357,27 @@ def add_account():
                 if existing_username:
                     flash('Username already exists. Please choose a different username.', 'existing_username')
                 else:
-                    new_user = Users(username=username, firstname=firstname, lastname=lastname, email=email, password=password, role = role, program = program, department_A=department_A)
-                    try: 
-                        userlog = g.current_user
-                        action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
-                        ph_tz = pytz.timezone('Asia/Manila')
-                        ph_time = datetime.now(ph_tz)
-                        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
-                        timestamp = convert_date1(timestamp1)
-                        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
-                        if insert_logs:
-                            db.session.add(insert_logs)
-                            db.session.commit()
+                    if existing_mobile_number:
+                        flash('Mobile number already exists.', 'existing_username')
+                    else:
+                        new_user = Users(username=username, firstname=firstname, lastname=lastname, email=email, password=password, role = role, program = program, department_A=department_A, mobile_number=mobile_number, profile_picture=profile_picture )
+                        try: 
+                            userlog = g.current_user
+                            action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
+                            ph_tz = pytz.timezone('Asia/Manila')
+                            ph_time = datetime.now(ph_tz)
+                            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+                            timestamp = convert_date1(timestamp1)
+                            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+                            if insert_logs:
+                                db.session.add(insert_logs)
+                                db.session.commit()
 
-                        db.session.add(new_user)
-                        db.session.commit()
-                    except Exception as e:
-                        db.session.rollback()
-                    flash('User added successfully!', 'add_account')
+                            db.session.add(new_user)
+                            db.session.commit()
+                        except Exception as e:
+                            db.session.rollback()
+                        flash('User added successfully!', 'add_account')
     return redirect(url_for('dbModel.manage_account'))
 
 @dbModel_route.route('/edit_account', methods=['POST'])
@@ -370,6 +399,8 @@ def edit_account():
         new_role = request.form['new_role']
         new_department_A = request.form['new_department_A']
         new_program = request.form['new_program']
+        new_mobile_number = request.form['new_mobile_number']
+        new_profile_picture = request.files['new_profile_picture']
 
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'password_space')
@@ -411,6 +442,17 @@ def edit_account():
                 existing_program = Users.query.filter_by(program=new_program).first()
                 if existing_program:
                     flash(f'Program "{new_program}" already exists. Please choose a different program.', 'existing_username')
+            
+            existing_mobile_number = Users.query.filter_by(mobile_number=new_mobile_number).first()
+            if len(new_mobile_number) < 11:
+                flash('Mobile number must be at least 11 digits long.', 'existing_username')
+                return redirect(url_for('dbModel.manage_account'))
+            elif existing_mobile_number and existing_mobile_number.id != user.id:
+                flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'existing_username')
+                return redirect(url_for('dbModel.manage_account'))
+
+
+
 
             # Rest of your code for updating the user's account...
 
@@ -426,6 +468,13 @@ def edit_account():
                 db.session.add(insert_logs)
                 db.session.commit()
 
+            if new_profile_picture.filename != '':
+                # Read the binary data from the uploaded file
+                profile_picture_data = new_profile_picture.read()
+
+                # Update the user's profile picture field with the binary data
+                user.profile_picture = profile_picture_data
+
             user.username = new_username
             user.email = new_email
             user.firstname = new_firstname
@@ -434,6 +483,7 @@ def edit_account():
             user.role = new_role
             user.program = new_program
             user.department_A= new_department_A
+            user.mobile_number= new_mobile_number
 
             db.session.commit()
             flash('Account updated successfully!', 'edit_account')

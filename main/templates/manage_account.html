@@ -1,6 +1,16 @@
 {% extends "admin_dashboard.html" %}
 {% block title %}Manage Account{% endblock %}
 {% block content %}
+
+<style>
+ 
+    
+    /* Hide specific table rows by class */
+    .th {
+      display: none;
+    }
+  </style>
+
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['existing_username', 'existing_program', 'edit_account', 'delete_account', 'add_account', 'password_space', 'username_space'], with_categories=true) %}
 {% if messages %}
@@ -18,25 +28,34 @@
             <div class="jumbo">
             <table class="table">
                 <tr>
-                    <th>ID</th>
+                    <th class="th">ID</th>
+                    <th>Profile</th>
                     <th>Username</th>
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>Email</th> 
-                    <th>Password</th>    
+                    <th class="th">Password</th>  
+                    <th>Mobile #</th>   
                     <th>Role</th>   
                     <th>Department</th>         
                     <th>Program</th>              
                     <th>Action</th>
                 </tr>
                  {% for row in users %}
+                
                  <tr>
-                    <td>{{ row.id }}</td>
+                    <td class="th">{{ row.id }}</td>
+                    {% if profile_pictures_base64[row.id] %}
+                        <td><img src="data:image/jpeg;base64,{{ profile_pictures_base64[row.id] }}" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%; padding: 5px;"></td>
+                    {% else %}
+                        <td>No image</td>
+                    {% endif %}
                     <td>{{ row.username }}</td>
                     <td>{{ row.firstname }}</td>
                     <td>{{ row.lastname }}</td>
                     <td>{{ row.email }}</td>
-                    <td><span class="password-placeholder">{{ row.password }}</span></td>
+                    <td class="th"><span class="password-placeholder">{{ row.password }}</span></td>
+                    <td>{{ row.mobile_number }}</td>
                     <td>{{ row.role }}</td>
                     <td>{{ row.department_A }}</td>
                     <td>{{ row.program }}</td>
@@ -46,6 +65,7 @@
                         <a href="{{ url_for('dbModel.delete_account', id=row.id)}}" class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
                     </td>
                 </tr>
+               
 
                 <!-- Modal for Edit -->
                 <div id="modaledit{{row.id}}" class="modal">
@@ -56,7 +76,20 @@
                             </div> 
 
                             <div class="modal-body">
-                                <form action="{{ url_for('dbModel.edit_account') }}" method="POST">
+                                <form action="{{ url_for('dbModel.edit_account') }}" method="POST" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label>Profile Picture:</label>
+                                        {% if profile_pictures_base64[row.id] %}
+                                            <img src="data:image/jpeg;base64,{{ profile_pictures_base64[row.id] }}" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%; padding: 5px;">
+                                        {% else %}
+                                            <span>No image</span>
+                                        {% endif %}
+
+                                        <img id="preview_{{row.id}}" src="#" alt="Profile Picture" style="display: none; width: 100px; height: 100px; margin-top: 10px;">
+                                        <input type="file" class="form-control" name="new_profile_picture" accept="image/*" required onchange="previewImage(event, 'preview_{{row.id}}')">
+                                        
+                                   
+                                    </div>
                                     <div class="form-group">
                                         <label>Username:</label>
                                         <input type="text" class="form-control" name="new_username" value="{{row.username}}" required>
@@ -78,7 +111,12 @@
                                         <input type="password" class="form-control pass-input passedit" name="new_password" value="{{row.password}}" id="pass" minlength="8" required>
                                         <i class="toggle-password material-symbols-sharp" id="toggle-edit-password">visibility</i>
                                     </div>
-                                    
+                                    <div class="form-group">
+                                        <label>Mobile Number:</label>
+                                        <input type="tel" class="form-control mobile-number mobile-input"  id="mobile_number" minlength="11" maxlength="11" value="{{row.mobile_number}}" name="new_mobile_number"  required>
+                                        <div class="mobile-number-error" style="color: red; display: none;">Mobile number must start with 09</div>
+
+                                    </div>
                                     <div class="form-group" >
                                     <label for="new_role">Role:</label>
                                     <select class="form-select" name="new_role" required>
@@ -121,6 +159,7 @@
                     </div>
                 </div><!--end edit modal-->
                 {% endfor %}
+                
             </table>
         </div>
 
@@ -132,7 +171,18 @@
                                 <h4 class="modal-title">User information</h4>
                             </div>
                             <div class="modal-body">
-                                <form action="{{ url_for('dbModel.add_account') }}" method="POST">
+                                <form action="{{ url_for('dbModel.add_account') }}" method="POST" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label>Profile Picture:</label>
+                                       
+                                        <img id="preview" src="#" alt="Profile Picture" style="display: none; width: 100px; height: 100px; margin-top: 10px;">
+                                        
+                                
+                                        <input type="file" class="form-control" name="profile_picture" accept="image/*" required onchange="previewImage2(event, 'preview')">
+
+                                      
+
+                                    </div>
                                         <div class="form-group">
                                             <label>Username:</label>
                                             <input type="text" class="form-control" name="username" required>
@@ -153,6 +203,12 @@
                                             <label>Password:</label>
                                             <input type="password" class="form-control pass-input" name="password" minlength="8" id="pass" required>
                                         </div>
+                                        <div class="form-group">
+                                            <label>Mobile Number:</label>
+                                            <input type="tel" class="form-control mobile-input mobile-number2" id="mobile_number2" name="mobile_number" minlength="11" maxlength="11" required>
+                                            <div class="mobile-number-error2" style="color: red; display: none;">Mobile number must start with 09</div>
+                                        </div>
+                                        
                                         <div class="form-group">
                                             <label for="role">Role:</label>
                                             <select class="form-control" name="role" required>
@@ -295,9 +351,101 @@
     </div><!--end jumbotronnnn-->   
 </div>
 
+
 <script>
+    function previewImage(event, previewId) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var preview = document.getElementById(previewId);
+            preview.src = reader.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
     
 
+    function previewImage2(event) {
+        var reader = new FileReader();
+        reader.onload = function() {
+            var preview = document.getElementById('preview');
+            preview.src = reader.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+
+
+
+    
+
+<script>
+     // Get all elements with the class 'mobile-number'
+     const mobileNumberInputs = document.querySelectorAll('.mobile-number');
+
+// Loop through each input element
+mobileNumberInputs.forEach(function(input) {
+    // Get the corresponding error message element
+    const errorMessage = input.nextElementSibling;
+
+    // Event listener for input field
+    input.addEventListener('input', function(event) {
+        // Get the entered mobile number
+        const mobileNumber = event.target.value;
+
+        // Check if the entered mobile number starts with "09"
+        if (!mobileNumber.startsWith('09')) {
+            // If not, display the error message
+            errorMessage.style.display = 'block';
+            input.setCustomValidity('Mobile number must start with 09');
+        } else {
+            // If it starts with "09", hide the error message
+            errorMessage.style.display = 'none';
+            input.setCustomValidity('');
+        }
+    });
+});
+
+
+  // Get all elements with the class 'mobile-number'
+  const mobileNumberInputs2 = document.querySelectorAll('.mobile-number2');
+
+// Loop through each input element
+mobileNumberInputs2.forEach(function(input) {
+    // Get the corresponding error message element
+    const errorMessage2 = input.nextElementSibling;
+
+    // Event listener for input field
+    input.addEventListener('input', function(event) {
+        // Get the entered mobile number
+        const mobileNumber2 = event.target.value;
+
+        // Check if the entered mobile number starts with "09"
+        if (!mobileNumber2.startsWith('09')) {
+            // If not, display the error message
+            errorMessage2.style.display = 'block';
+            input.setCustomValidity('Mobile number must start with 09');
+        } else {
+            // If it starts with "09", hide the error message
+            errorMessage2.style.display = 'none';
+            input.setCustomValidity('');
+        }
+    });
+});
+</script>
+<script>
+   document.querySelectorAll(".mobile-input").forEach(function(element) {
+    element.addEventListener("input", function(event) {
+        // Remove any non-numeric characters from the input
+        this.value = this.value.replace(/\D/g, "");
+    });
+});
+
+    </script>
+    
+
+<script>
     var passwordPlaceholders = document.querySelectorAll('.password-placeholder');
        passwordPlaceholders.forEach(function(placeholder) {
            var password = placeholder.textContent;

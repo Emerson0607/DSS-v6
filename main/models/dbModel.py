@@ -10,6 +10,10 @@ import secrets
 flask db migrate -m "volunteer change to int"
 flask db upgrade
 
+
+flask db downgrade
+
+
 """
 
 migrate = Migrate(app, db)
@@ -49,7 +53,8 @@ class Users(db.Model):
     role = db.Column(db.String(50), nullable=False)
     firstname = db.Column(db.String(100), nullable=True)
     lastname = db.Column(db.String(100), nullable=True)
-
+    mobile_number = db.Column(db.String(100), nullable=True)
+    profile_picture = db.Column(db.LargeBinary, nullable=True)
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
