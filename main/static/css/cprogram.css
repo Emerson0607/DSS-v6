@@ -29,7 +29,7 @@
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
 
-.program_recommendation_title {
+.cprogram_recommendation_title {
     margin-top: 1rem;
     background-color: var(--color-kaakbay);
     color: #ffffff;
@@ -47,11 +47,8 @@
     height: 6rem;
 }
 
-.program_recommendation_title-blue {
-    background-color: var(--color-admin);
-}
 
-.program_recommendation_title span {
+.cprogram_recommendation_title span {
     padding-right: 0.5rem;
     /* Add some right padding to the lock icon */
     font-size: 2.3rem;
@@ -59,14 +56,14 @@
     padding-left: 1.6rem;
 }
 
-.program_recommendation_title .programtxt {
+.cprogram_recommendation_title .programtxt {
     padding-left: 0.5rem;
     font-size: 2.3rem;
 }
 
 
 
-.programCard {
+.cprogramCard {
     display: grid;
     grid-template-columns: repeat(1fr);
     gap: 1.6rem;
@@ -132,41 +129,41 @@
 
     }
 
-    .programCard {
+    .cprogramCard {
         margin: 0 auto;
         width: 90%;
     }
 
-    .program_recommendation_title {
+    .cprogram_recommendation_title {
         margin: 0 auto;
         width: 90%;
         margin-top: 2rem;
     }
 
-    .programCard .program-form {
+    .cprogramCard .program-form {
         padding-right: 0;
         position: relative;
     }
 
-    .programCard .program-form .form-submit {
+    .cprogramCard .program-form .form-submit {
         width: 90%;
         padding-right: 0;
     }
 
-    .programCard .program-form .btn-submit {
+    .cprogramCard .program-form .btn-submit {
         position: absolute;
         right: 1rem;
         bottom: 2.5rem;
     }
 
-    .program_recommendation_title .programtxt {
+    .cprogram_recommendation_title .programtxt {
         padding-left: 0.5rem;
         font-size: 1.7rem;
         line-height: 1.7rem;
     }
 
 
-    .program_recommendation_title span {
+    .cprogram_recommendation_title span {
         padding-left: .5rem;
     }
 

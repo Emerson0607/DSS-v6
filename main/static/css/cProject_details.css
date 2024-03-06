@@ -23,40 +23,24 @@
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
 
-main .pending_detailsCard .time-frame,
+main .Cproject_detailsCard .time-frame,
 .fileces {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.6rem;
-    margin-bottom: 2rem;
-}
-
-
-main .pending_detailsCard {
-    display: grid;
-    grid-template-columns: 1fr;
     gap: 1.6rem;
     position: relative;
 }
 
 
-main .pending_detailsCard .pending_detailsBox {
-    padding: 3rem 5rem;
-}
-
-main .pending_detailsCard .file-box p {
-    margin-bottom: .5rem;
-}
-
-main .pending_detailsCard .file-box a {
-    color: #05ae11;
-    font-weight: 600;
-    padding: 2px;
-    margin-top: 1rem;
+main .Cproject_detailsCard {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.6rem;
+    position: relative;
 
 }
 
-main .pending_detailsCard>div {
+main .Cproject_detailsCard>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -65,15 +49,33 @@ main .pending_detailsCard>div {
     transition: all 300ms ease;
 }
 
+main .Cproject_detailsCard .project_detailsBox {
+    padding: 3rem 5rem;
 
-main .pending_detailsCard>div:hover {
-    box-shadow: none;
 }
 
 
 
+main .Cproject_detailsCard>div:hover {
+    box-shadow: none;
+}
+
+main .Cproject_detailsCard .file-box p {
+    margin-bottom: .5rem;
+}
+
+
+
+main .Cproject_detailsCard .file-box a {
+    color: #05ae11;
+    font-weight: 600;
+    padding: 2px;
+    margin-top: 1rem;
+
+}
+
 /* file upload button */
-.pending_detailsCard input[type="file"]::file-selector-button {
+.Cproject_detailsCard input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -85,18 +87,18 @@ main .pending_detailsCard>div:hover {
 }
 
 /* file upload button hover state */
-.pending_detailsCard input[type="file"]::file-selector-button:hover {
+.Cproject_detailsCard input[type="file"]::file-selector-button:hover {
     background-color: #f3f4f6;
 }
 
 /* file upload button active state */
-.pending_detailsCard input[type="file"]::file-selector-button:active {
+.Cproject_detailsCard input[type="file"]::file-selector-button:active {
     background-color: #e5e7eb;
 }
 
 
 /* Style for submit button */
-.pending_detailsCard .btn-submit {
+.Cproject_detailsCard .btn-submit {
     background-color: #49a14f;
     color: #fff;
     padding: 10px 12px;
@@ -105,36 +107,33 @@ main .pending_detailsCard>div:hover {
     cursor: pointer;
     position: absolute;
     bottom: 1rem;
-    right: 5rem;
+    right: 1.3rem;
 }
 
-.pending_detailsCard .btn-submit:hover {
+.Cproject_detailsCard .btn-submit:hover {
     background-color: #05ae11;
 }
 
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px) {
-    .pending_detailsCard {
+    .Cproject_detailsCard {
         margin: 0 auto;
         padding-top: 1rem;
         width: 90%;
 
     }
 
-
-
-    main .pending_detailsCard .pending_detailsBox {
+    main .Cproject_detailsCard .project_detailsBox {
         padding: 2rem 2rem;
+
     }
 
-    main .pending_detailsCard .time-frame,
+    main .Cproject_detailsCard .time-frame,
     .fileces {
+        display: grid;
         grid-template-columns: 1fr;
+        gap: 1.6rem;
+        position: relative;
     }
 
-    /* Style for submit button */
-    .pending_detailsCard .btn-submit {
-        bottom: 1rem;
-        right: 1rem;
-    }
 }

@@ -23,7 +23,8 @@
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
 
-main .project_detailsCard .time-frame, .fileces{
+main .project_detailsCard .time-frame,
+.fileces {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
@@ -31,15 +32,15 @@ main .project_detailsCard .time-frame, .fileces{
 }
 
 
-main .project_detailsCard{
+main .project_detailsCard {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
     position: relative;
-    
+
 }
 
-main .project_detailsCard > div{
+main .project_detailsCard>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -48,33 +49,33 @@ main .project_detailsCard > div{
     transition: all 300ms ease;
 }
 
-main .project_detailsCard .project_detailsBox{
+main .project_detailsCard .project_detailsBox {
     padding: 3rem 5rem;
 
 }
 
 
 
-main .project_detailsCard > div:hover{
+main .project_detailsCard>div:hover {
     box-shadow: none;
 }
 
-main .project_detailsCard .file-box p{
+main .project_detailsCard .file-box p {
     margin-bottom: .5rem;
 }
 
 
 
-main .project_detailsCard .file-box a{
+main .project_detailsCard .file-box a {
     color: #05ae11;
     font-weight: 600;
     padding: 2px;
     margin-top: 1rem;
-    
+
 }
 
 /* file upload button */
-.project_detailsCard  input[type="file"]::file-selector-button {
+.project_detailsCard input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -83,17 +84,17 @@ main .project_detailsCard .file-box a{
     border: 1px solid rgba(0, 0, 0, 0.16);
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
     transition: background-color 200ms;
-  }
-  
-  /* file upload button hover state */
-  .project_detailsCard  input[type="file"]::file-selector-button:hover {
+}
+
+/* file upload button hover state */
+.project_detailsCard input[type="file"]::file-selector-button:hover {
     background-color: #f3f4f6;
-  }
-  
-  /* file upload button active state */
-  .project_detailsCard  input[type="file"]::file-selector-button:active {
+}
+
+/* file upload button active state */
+.project_detailsCard input[type="file"]::file-selector-button:active {
     background-color: #e5e7eb;
-  }
+}
 
 
 /* Style for submit button */
@@ -112,27 +113,27 @@ main .project_detailsCard .file-box a{
 .project_detailsCard .btn-submit:hover {
     background-color: #05ae11;
 }
+
 /* ------------------- MOBILE -------------------- */
-@media screen and (max-width: 400px){
-    .project_detailsCard{ 
+@media screen and (max-width: 400px) {
+    .project_detailsCard {
         margin: 0 auto;
         padding-top: 1rem;
         width: 90%;
-        
+
     }
 
-    main .project_detailsCard .project_detailsBox{
+    main .project_detailsCard .project_detailsBox {
         padding: 2rem 2rem;
-    
+
     }
 
-    main .project_detailsCard .time-frame, .fileces{
+    main .project_detailsCard .time-frame,
+    .fileces {
         display: grid;
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
         gap: 1.6rem;
         position: relative;
     }
-   
+
 }
-
-

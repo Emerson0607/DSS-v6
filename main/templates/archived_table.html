@@ -12,7 +12,7 @@
 {% endif %}
 {% endwith %}
 
-<div class="projectFilesCard">
+<div class="archived_table">
     <div class="jumbotron">
         <h2 style="margin-bottom: 1rem;">{{data}} <b>Archived Projects</b></h2>
 
@@ -35,6 +35,7 @@
                         <th>Program</th>
                         <th>Sub-Program</th>
                         <th>Week</th>
+                        <th>Date</th>
                         <th>Total Week</th>
                         <th>Coordinator</th>
                         <th>Status</th>
@@ -56,17 +57,21 @@
                         <td><a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}" class="btn-edit">{{
                                 row.week
                                 }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}" class="btn-edit">
+                                {{ row.start_date if row.status == 'Ongoing'
+                                else row.end_date }}</a></td>
+
                         <td><a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}" class="btn-edit">{{
                                 row.totalWeek }}</a></td>
                         <td><a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}" class="btn-edit">{{
                                 row.user
                                 }}</a></td>
-                                <td>
-                                    <a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}"
-                                        class="btn-edit status-element" data-status="{{ row.status }}">
-                                        {{ row.status }}
-                                    </a>
-                                </td>
+                        <td>
+                            <a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}"
+                                class="btn-edit status-element" data-status="{{ row.status }}">
+                                {{ row.status }}
+                            </a>
+                        </td>
                         <td>
                             <a href="{{ url_for('dbModel.delete_archived', project_id=row.id, data=data)}}"
                                 class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
@@ -91,7 +96,7 @@
         statusElements.forEach(function (statusElement) {
             var status = statusElement.getAttribute('data-status');
             if (status.trim() === 'Ongoing') {
-                statusElement.style.color = '#e600e6';  // Change the color as needed
+                statusElement.style.color = 'orange';  // Change the color as needed
 
             } else {
                 statusElement.style.color = '#00e600';
