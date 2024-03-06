@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
 /* Root Variable */
 :root {
     --color-kaakbay: #2f9e36;
@@ -26,19 +27,19 @@
     --box-shadow: 0 2rem 3rem var(--color-light)
 }
 
-*{
+* {
     margin: 0;
     padding: 0;
     outline: 0;
     appearance: none;
     border: 0;
     text-decoration: none;
-    list-style:none;
+    list-style: none;
     box-sizing: border-box;
 }
 
 
-label{
+label {
     font-weight: 400;
 }
 
@@ -47,16 +48,16 @@ label{
     position: fixed;
 }
 
-h2{
+h2 {
     margin-top: 1rem;
     margin-bottom: 1.5rem;
     color: rgb(84, 84, 84);
 }
 
 .login {
-    
+
     text-align: center;
-    padding:1rem;
+    padding: 1rem;
     max-width: 350px;
     height: 400px;
     width: 100%;
@@ -64,7 +65,7 @@ h2{
     box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.3);
     border-radius: 1rem;
     position: relative;
-    
+
 }
 
 
@@ -72,16 +73,16 @@ h2{
     padding-left: 1rem;
     margin-bottom: 15px;
     width: 100%;
- 
+
 }
 
-.form-group label{
+.form-group label {
     display: block;
     text-align: left;
     margin-left: .5rem;
 }
 
-.form-group input{
+.form-group input {
     display: block;
     text-align: left;
     width: 90%;
@@ -132,10 +133,10 @@ h2{
     border-radius: 7px;
     width: 30%;
     position: relative;
-    
+
 }
 
-.login-container .modal h4{
+.login-container .modal h4 {
     margin-top: 1rem;
     font-size: 1.4rem;
 }
@@ -143,11 +144,13 @@ h2{
 /* Style for the form container */
 .login-container .modal-body {
     padding: 20px;
-    height: 150px; /* Set a maximum height for scrollability *//* Enable vertical scrolling when the content overflows */
+    height: 150px;
+    /* Set a maximum height for scrollability */
+    /* Enable vertical scrolling when the content overflows */
     margin-bottom: 4rem;
 }
 
-.login-container .btn-recover{
+.login-container .btn-recover {
     font-weight: 300;
     cursor: pointer;
     font-size: .7rem;
@@ -158,7 +161,7 @@ h2{
 
 }
 
-.login-container .btn-close{
+.login-container .btn-close {
     background-color: #ffffff;
     color: #2a2a2a;
     position: absolute;
@@ -170,28 +173,29 @@ h2{
 }
 
 
-.login-container .btn-close:hover{
+.login-container .btn-close:hover {
     color: var(--color-danger);
 }
 
-.login-container .btn-submit-recovery{
+.login-container .btn-submit-recovery {
     cursor: pointer;
     background-color: var(--color-kaakbay);
     color: white;
     padding: 0.8rem;
-    border-radius:.2rem ;
+    border-radius: .2rem;
     width: 12rem;
 }
 
-.login-container .recover-input{
+.login-container .recover-input {
     margin-top: 1rem;
 
 }
-.login-container .recover-input input{
-   margin-bottom: 2rem;
+
+.login-container .recover-input input {
+    margin-bottom: 2rem;
 }
 
-.login-container .btn-submit-recovery:hover{
+.login-container .btn-submit-recovery:hover {
     background-color: #0f8e18;
 
 }
@@ -199,33 +203,29 @@ h2{
 
 
 
-@media screen and (max-width:991px) {
-    body{
-        background-image: none;
-        justify-items: center;
-    }
+/* Between 1080px and 768px */
+@media screen and (max-width: 1080px) and (min-width: 768px) {
+
     .login-container {
-        margin: 0 auto;
-       
+        width: 90vw;
     }
+
     .login {
-   
-        margin: 0 auto;
-    }
-    .login-container .modal-content{
-        width:90%;
+        margin-left: 17rem;
     }
 }
 
-@media screen and (max-width: 400px){
+/* mobile */
+@media screen and (max-width: 400px) {
     .login-container {
         width: 100vw;
         height: 100vh;
     }
+
     .login {
         padding-top: 5rem;
         padding-left: 2rem;
-        
+
         padding-right: 2rem;
         max-width: 25rem;
         height: 100vh;
@@ -233,12 +233,12 @@ h2{
         box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0);
     }
 
-    .login-container .btn-recover{
+    .login-container .btn-recover {
         bottom: 5rem;
     }
 
-    .login-container .btn-submit-recovery{
-      
+    .login-container .btn-submit-recovery {
+
         width: 14rem;
         margin-left: .5rem;
     }
