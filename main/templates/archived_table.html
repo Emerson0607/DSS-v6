@@ -15,7 +15,6 @@
 <div class="archived_table">
     <div class="jumbotron">
         <h2 style="margin-bottom: 1rem;">{{data}} <b>Archived Projects</b></h2>
-
         <div class="year-filter">
             <label for="year">Select Year:</label>
             <select id="year" onchange="filterByYear()">
@@ -35,7 +34,7 @@
                         <th>Program</th>
                         <th>Sub-Program</th>
                         <th>Week</th>
-                        <th>Date</th>
+                        <th>Start Date</th>
                         <th>Total Week</th>
                         <th>Coordinator</th>
                         <th>Status</th>
@@ -58,8 +57,7 @@
                                 row.week
                                 }}</a></td>
                         <td><a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}" class="btn-edit">
-                                {{ row.start_date if row.status == 'Ongoing'
-                                else row.end_date }}</a></td>
+                                {{ row.start_date }}</a></td>
 
                         <td><a href="{{ url_for('dbModel.view_archived', project_id=row.id)}}" class="btn-edit">{{
                                 row.totalWeek }}</a></td>
@@ -110,11 +108,9 @@
         var selectedYear = $("#year").val();
         var recordsFound = false;
 
-        // You can use AJAX to fetch data for the selected year and update the table accordingly
-        // For simplicity, let's assume the data is already present and just hide/show rows
         $("#logs_table tbody tr").each(function () {
-            var rowYear = $(this).find("td:eq(1)").text().split('-')[0]; // Assuming the year is in the second column
-            if (rowYear === selectedYear || selectedYear === "All") {
+            var rowYear = parseInt($(this).find("td:eq(5)").text().split('-')[0]);
+            if (rowYear === parseInt(selectedYear) || selectedYear === "All") {
                 $(this).show();
                 recordsFound = true;
             } else {

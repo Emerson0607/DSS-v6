@@ -400,7 +400,7 @@ def edit_account():
         new_department_A = request.form['new_department_A']
         new_program = request.form['new_program']
         new_mobile_number = request.form['new_mobile_number']
-        new_profile_picture = request.files['new_profile_picture']
+        
 
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'password_space')
@@ -468,13 +468,14 @@ def edit_account():
                 db.session.add(insert_logs)
                 db.session.commit()
 
+            """
             if new_profile_picture.filename != '':
                 # Read the binary data from the uploaded file
                 profile_picture_data = new_profile_picture.read()
 
                 # Update the user's profile picture field with the binary data
                 user.profile_picture = profile_picture_data
-
+            """
             user.username = new_username
             user.email = new_email
             user.firstname = new_firstname
@@ -1598,7 +1599,8 @@ def delete_project(project_id):
 
     flash('Delete successfully!', 'delete_project')
     project_file_list = Community.query.filter_by(program=data).all()
-    return render_template("project_table.html", project_file_list=project_file_list, data=data)
+    current_year = datetime.now().year
+    return render_template("project_table.html",current_year=current_year, project_file_list=project_file_list, data=data)
 
 @dbModel_route.route('/view_cpf_project/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf_project(program, subprogram, community, cpf_filename):
@@ -1705,7 +1707,7 @@ def archived_file_list(data):
     current_year = datetime.now().year
     
     archived_file_list = Archive.query.filter_by(program=data).all()
-    return render_template("archived_table.html",current_year=current_year, archived_file_list=archived_file_list, data=data)
+    return render_template("archived_table.html", current_year=current_year, archived_file_list=archived_file_list, data=data)
 
 @dbModel_route.route("/view_archived/<int:project_id>")
 def view_archived(project_id):
@@ -1758,7 +1760,8 @@ def delete_archived(project_id):
     
     flash('Delete successfully!', 'delete_project')
     archived_file_list = Archive.query.filter_by(program=data).all()
-    return render_template("archived_table.html", archived_file_list=archived_file_list, data=data)
+    current_year = datetime.now().year
+    return render_template("archived_table.html",current_year=current_year, archived_file_list=archived_file_list, data=data)
 
 @dbModel_route.route('/view_cpf_archived/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf_archived(program, subprogram, community, cpf_filename):
@@ -1967,7 +1970,7 @@ def delete_plan(id):
 
     if cesu_plan:
         userlog = g.current_user
-        action = f'DELETED {program} project of {community} from CESU planner'
+        action = f'DELETED {program} project of {community_name} from CESU planner'
         ph_tz = pytz.timezone('Asia/Manila')
         ph_time = datetime.now(ph_tz)
         timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
@@ -2362,3 +2365,159 @@ def deploy():
         return redirect(url_for('dbModel.cesu_plans'))
        
     return redirect(url_for('dbModel.cesu_plans'))
+
+
+    ########################## EDIT PROFILE #######################
+
+
+############################ EDIT PROFILE #############################
+@dbModel_route.route("/edit_profile")
+def edit_profile():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+    
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    p = Users.query.filter_by(username = g.current_user).first()
+
+    return render_template("edit_profile.html", id=p.id, username=p.username, firstname=p.firstname, lastname=p.lastname, email=p.email, mobile_number=p.mobile_number)
+
+
+@dbModel_route.route('/update_profile', methods=['POST'])
+def update_profile():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == 'POST':
+        user_id = request.form.get('id')
+        new_username = request.form['new_username']
+        new_email = request.form['new_email']
+        new_firstname = request.form['new_firstname']
+        new_lastname = request.form['new_lastname']
+        new_mobile_number = request.form['new_mobile_number']
+         
+        # Check if the email format is valid and ends with '@gmail.com'
+        if not is_valid_email(new_email):
+            flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
+            return redirect(url_for('dbModel.edit_profile'))
+
+        user = Users.query.get(user_id)
+
+        if user:
+      
+            # Check if the new values already exist in the table
+            if user.username != new_username:
+                existing_username = Users.query.filter_by(username=new_username).first()
+                if existing_username:
+                    flash(f'Username "{new_username}" already exists. Please choose a different username.', 'existing_username')
+                    return redirect(url_for('dbModel.edit_profile'))
+            if user.email != new_email:
+                existing_email = Users.query.filter_by(email=new_email).first()
+                if existing_email:
+                    flash(f'Email "{new_email}" already exists. Please choose a different email.', 'existing_username')
+                    return redirect(url_for('dbModel.edit_profile'))
+            
+            existing_mobile_number = Users.query.filter_by(mobile_number=new_mobile_number).first()
+            if len(new_mobile_number) < 11:
+                flash('Mobile number must be at least 11 digits long.', 'existing_username')
+                return redirect(url_for('dbModel.edit_profile'))
+            elif existing_mobile_number and existing_mobile_number.id != user.id:
+                flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'existing_username')
+                return redirect(url_for('dbModel.edit_profile'))
+
+            userlog = g.current_user
+            action = f'UPDATED account named {new_firstname} {new_lastname}.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            user.username = new_username
+            user.email = new_email
+            user.firstname = new_firstname
+            user.lastname = new_lastname
+            user.mobile_number= new_mobile_number
+
+            db.session.commit()
+            flash('Account updated successfully!', 'edit_account')
+
+        return redirect(url_for('dbModel.edit_profile'))
+
+
+@dbModel_route.route('/delete_picture', methods=['POST'])
+def delete_picture():
+    if request.method == 'POST':
+        profile_id = request.form.get('edit-id')
+        users_picture = Users.query.filter_by(id=profile_id).first()
+
+        if users_picture:
+            userlog = g.current_user
+            action = f'{users_picture.username} DELETED Profile Picture'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            # Delete the file from the database
+            users_picture.profile_picture = None
+            
+            db.session.commit()
+        
+        p = Users.query.get(profile_id)
+
+    return redirect(url_for('dbModel.edit_profile'))
+
+@dbModel_route.route('/update_picture', methods=['POST'])
+def update_picture():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == 'POST':
+        user_id = request.form.get('id')
+        new_profile_picture = request.files['new_profile_picture']  # Use .get() instead of ['']
+        
+        user = Users.query.get(user_id)
+
+        if user:
+
+            userlog = g.current_user
+            action = f'UPDATED account named {user.firstname} {user.lastname}.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+      
+            if new_profile_picture.filename != '':
+                # Read the binary data from the uploaded file
+                profile_picture_data = new_profile_picture.read()
+
+                # Update the user's profile picture field with the binary data
+                user.profile_picture = profile_picture_data
+
+            db.session.commit()
+            flash('Account updated successfully!', 'edit_account')
+
+        return redirect(url_for('dbModel.edit_profile'))

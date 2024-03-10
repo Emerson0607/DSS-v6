@@ -158,38 +158,28 @@ main .manageUser table tr:last-child td {
 
 .manageUser .btn-edit {
     background-color: #49a14f;
-    /* Set the background color to yellow */
     color: #fff;
-    /* Change the text color */
-    padding: 5px 10px;
-    /* Add some padding for better appearance */
+    padding: 5px 7px;
     border: none;
-    /* Remove the default button border */
-    border-radius: 5px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-/* Add a hover effect for the "Edit" button */
 .manageUser .btn-edit:hover {
     background-color: #348138;
-    /* Change the background color on hover */
 }
 
 .manageUser .btn-delete1 {
     background-color: #ff5555;
-    /* Red background color */
     color: #fff;
-    /* White text color */
     padding: 5px 10px;
-    /* Adjust padding as needed */
     border: none;
     border-radius: 4px;
-    /* Rounded corners */
     cursor: pointer;
 }
 
 .manageUser .btn-delete1:hover {
     background-color: #ff3333;
-    /* Red background color on hover */
 }
 
 /* Styling for the close button */

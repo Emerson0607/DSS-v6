@@ -168,9 +168,14 @@
 
                         <div class="dropdown-content" id="dropdown-content">
                            
+                            <div class="edit-hover"><a class="edit-button edit-button-blue"
+                                href="{{ url_for('dbModel.edit_profile') }}" id="edit-button">Edit
+                                Profile</a></div>
+
                             <div class="password-div password-div-blue"><a class="password-button password-button-blue"
                                     href="{{ url_for('dbModel.change_password') }}" id="password-button">Change
                                     Password</a></div>
+
                             <div class="logout-hover "><a class="logout-button logout-button-blue"
                                     href="{{ url_for('dbModel.clear_session') }}" id="logout-button"
                                     onclick="clearAndSetFirstLinkActive();">Logout</a></div>

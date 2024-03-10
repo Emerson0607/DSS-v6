@@ -122,13 +122,19 @@
                 </div>
                 <div class="profile">
                     <div class="profile-info">
-                        <p>Hi, <b style="text-transform: uppercase;">{{current_firstname}}
-                                <span>{{current_lastname}}</span></b></p>
+                        <p>Hi, <b style="text-transform: uppercase;">{{current_firstname}} <span>{{current_lastname}}</span></b></p>
                         <small class="text-muted">{{current_role}}</small>
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
-                        <img class="invert-green" src="/static/images/user.png" alt="">
+                        {% if profile_picture_base64 %}
+                        <img class="invert-green" src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+                    {% else %}
+                        <img class="invert-green" src="/static/images/user-blue.png" alt="CESU-LOGO">
+                    {% endif %}
                         <div class="dropdown-content" id="dropdown-content">
+                            <div class="edit-hover"><a class="edit-button"
+                                href="{{ url_for('coordinator.cEdit_profile') }}" id="edit-button">Edit
+                                Profile</a></div>
                             <div class="password-div"><a class="password-button"
                                     href="{{ url_for('coordinator.cChange_password') }}" id="password-button">Change
                                     Password</a></div>

@@ -392,7 +392,7 @@ main {
     z-index: 1;
     right: 1rem;
     border-radius: 0.3rem;
-    height: 5.1rem;
+    height: 8rem;
     padding-top: 0.7rem;
 }
 
@@ -409,10 +409,26 @@ main {
 }
 
 
+.dropdown-content .edit-button {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 0.3rem;
+    text-decoration: none;
+    width: 100%;
+    text-decoration: none;
+    color: #000000;
+    padding-right: 2.6rem;
+    padding-left: 2.6rem;
+}
+
 .logout-hover {
     width: 100%;
 }
 
+.dropdown-content .edit-hover {
+    width: 100%;
+    margin-bottom: 1.4rem;
+}
 
 .logout-button:hover {
     background-color: #087830;
@@ -420,12 +436,25 @@ main {
     transition: background-color 0.35s;
 }
 
+.dropdown-content .edit-button:hover {
+    background-color: #087830;
+    color: #ffffff;
+    transition: background-color 0.35s;
+}
 
 .logout-button-blue:hover {
     background-color: #303396;
 }
 
+.dropdown-content .edit-button-blue:hover {
+    background-color: #303396;
+}
+
 .logout-button a:hover {
+    color: #ffffff;
+}
+
+.dropdown-content .edit-button a:hover {
     color: #ffffff;
 }
 

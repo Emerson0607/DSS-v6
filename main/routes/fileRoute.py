@@ -2,9 +2,13 @@ from flask import Blueprint, redirect, url_for, render_template, session, flash,
 from main.models.dbModel import Upload, Users, Pending_project, Logs
 from main import db
 from datetime import datetime, timedelta
-import pytz
+import pytz, base64, re
+
 
 file_route = Blueprint('file', __name__)
+
+# Set the maximum file size to 100MB
+MAX_FILE_SIZE = 100 * 1024 * 1024  # 100MB in bytes
 
 
 def convert_date1(datetime_str):
@@ -32,18 +36,22 @@ def get_current_user():
 
         # If pending_count is 9 or greater, display it as '9+'
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
-
+        
+        profile_picture_base64 = None
         if user:
-            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname
-    return None, None, 0, 0, None, None
+            if user.profile_picture:
+                # Convert the profile picture to base64 encoding
+                profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
+            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname, profile_picture_base64
+    return None, None, 0, 0, None, None, None
 
 @file_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display,  g.current_firstname, g.current_lastname = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display,  g.current_firstname, g.current_lastname, g.profile_picture_base64 = get_current_user()
 
 @file_route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname)
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, profile_picture_base64 = g.profile_picture_base64)
 
 # -------------------------   DL FILES for admin
 @file_route.route('/files')
@@ -66,6 +74,13 @@ def upload():
     if 'file' in request.files:
         file = request.files['file']
         if file.filename != '':
+            # Check if the file size is below the maximum allowed size
+            if len(file.read()) > MAX_FILE_SIZE:
+                flash('File size exceeds the maximum allowed size (100MB)', 'delete_file')
+                return redirect(url_for('file.files'))
+
+            # Reset the file cursor after checking the size
+            file.seek(0)
             # Read the file and insert it into the database
             data = file.read()
             upload_entry = Upload(filename=file.filename, data=data)

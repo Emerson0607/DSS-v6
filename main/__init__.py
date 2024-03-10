@@ -10,7 +10,7 @@ app = Flask(__name__, static_url_path=custom_static_url_path)
 app.secret_key = 'your_secret_key'  # Set a secret key for session management
 
 # Configure the database connection for SQLite
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cesu16.db'  # Use SQLite with a database file named 'cesu.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cesu17.db'  # Use SQLite with a database file named 'cesu.db'
 db = SQLAlchemy(app)
 # Configure session to use Flask-Session
 app.config['SESSION_TYPE'] = 'filesystem'

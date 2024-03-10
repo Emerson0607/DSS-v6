@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, session, request, g, send_file, Response
 from collections import Counter
 import pandas as pd
-import joblib
+import joblib, base64, re
 from main.models.dbModel import Users, Subprogram, Pending_project
 from main import db
 
@@ -39,18 +39,22 @@ def get_current_user():
         max_declined_count = 9
         declined_count_display = min(declined_count, max_declined_count)
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
-
+        
+        profile_picture_base64 = None
         if user:
-            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname
-    return None, None, 0, 0, None, None
+            if user.profile_picture:
+                # Convert the profile picture to base64 encoding
+                profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
+            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname, profile_picture_base64
+    return None, None, 0, 0, None, None, None
 
 @randomForest_Route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display, g.current_firstname, g.current_lastname = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display, g.current_firstname, g.current_lastname, g.profile_picture_base64 = get_current_user()
 
 @randomForest_Route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count=g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname )
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count=g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, profile_picture_base64 = g.profile_picture_base64 )
 
 @randomForest_Route.route("/program", methods=["GET", "POST"])
 def program():

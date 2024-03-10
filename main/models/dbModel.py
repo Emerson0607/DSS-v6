@@ -244,11 +244,11 @@ def insert_pending():
         db.session.commit()
 
 def insert_userx():
-    username = 'admin'
-    firstname = 'Justine Faith'
-    lastname = 'Samson'
-    email = '1lucesu50@gmail.com'
-    program = 'CESU '
+    username = 'admin2'
+    firstname = 'Joselle2'
+    lastname = 'Banocnoc2'
+    email = '1ls1ucesu50@gmail.com'
+    program = 'CESU'
     password = '@123ABCabc'
     role = 'Admin'
     

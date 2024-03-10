@@ -5,10 +5,18 @@ from main import Form
 from flask import Response
 from datetime import datetime
 from sqlalchemy import func, case
-import pytz
+import pytz, re
+import base64
+
 
 coordinator_route = Blueprint('coordinator', __name__)
 
+
+# Function to validate email format
+def is_valid_email(email):
+    # Regular expression pattern for validating email format
+    pattern = r'^[\w\.-]+@gmail\.com$'
+    return re.match(pattern, email) is not None
 
 def convert_date1(datetime_str):
     return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
@@ -34,18 +42,22 @@ def get_current_user():
         # If pending_count is 9 or greater, display it as '9+'
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
 
+        profile_picture_base64 = None
         if user:
-            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A
-    return None, None, None, 0, None, None, None
+            if user.profile_picture:
+                # Convert the profile picture to base64 encoding
+                profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
+            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64
+    return None, None, None, 0, None, None, None, None
     
 @coordinator_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64 = get_current_user()
 
 @coordinator_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64)
 
 @coordinator_route.route("/cClear_session")
 def cClear_session():
@@ -752,5 +764,154 @@ def get_comments():
         # Log the error for debugging
         print(str(e))
         return make_response("Internal Server Error", 500)
+    
+
+############################ EDIT PROFILE #############################
+@coordinator_route.route("/cEdit_profile")
+def cEdit_profile():
+  
+    
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    p = Users.query.filter_by(username = g.current_user).first()
+
+    return render_template("cEdit_profile.html", id=p.id, username=p.username, firstname=p.firstname, lastname=p.lastname, email=p.email, mobile_number=p.mobile_number)
 
 
+@coordinator_route.route('/cUpdate_profile', methods=['POST'])
+def cUpdate_profile():
+   
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == 'POST':
+        user_id = request.form.get('id')
+        new_username = request.form['new_username']
+        new_email = request.form['new_email']
+        new_firstname = request.form['new_firstname']
+        new_lastname = request.form['new_lastname']
+        new_mobile_number = request.form['new_mobile_number']
+       
+        
+        # Check if the email format is valid and ends with '@gmail.com'
+        if not is_valid_email(new_email):
+            flash('Invalid email format. Only Gmail accounts are allowed.', 'delete_pending')
+            return redirect(url_for('coordinator.cEdit_profile'))
+
+        user = Users.query.get(user_id)
+
+        if user:
+      
+            # Check if the new values already exist in the table
+            if user.username != new_username:
+                existing_username = Users.query.filter_by(username=new_username).first()
+                if existing_username:
+                    flash(f'Username "{new_username}" already exists. Please choose a different username.', 'delete_pending')
+                    return redirect(url_for('coordinator.cEdit_profile'))
+            if user.email != new_email:
+                existing_email = Users.query.filter_by(email=new_email).first()
+                if existing_email:
+                    flash(f'Email "{new_email}" already exists. Please choose a different email.', 'delete_pending')
+                    return redirect(url_for('coordinator.cEdit_profile'))
+            
+            existing_mobile_number = Users.query.filter_by(mobile_number=new_mobile_number).first()
+            if len(new_mobile_number) < 11:
+                flash('Mobile number must be at least 11 digits long.', 'delete_pending')
+                return redirect(url_for('coordinator.cEdit_profile'))
+            elif existing_mobile_number and existing_mobile_number.id != user.id:
+                flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'delete_pending')
+                return redirect(url_for('coordinator.cEdit_profile'))
+
+            userlog = g.current_user
+            action = f'UPDATED account named {new_firstname} {new_lastname}.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            user.username = new_username
+            user.email = new_email
+            user.firstname = new_firstname
+            user.lastname = new_lastname
+            user.mobile_number= new_mobile_number
+
+            db.session.commit()
+            flash('Account updated successfully!', 'new_password')
+
+        return redirect(url_for('coordinator.cEdit_profile'))
+
+
+
+@coordinator_route.route('/cDelete_picture', methods=['POST'])
+def cDelete_picture():
+    if request.method == 'POST':
+        profile_id = request.form.get('edit-id')
+        users_picture = Users.query.filter_by(id=profile_id).first()
+
+        if users_picture:
+            userlog = g.current_user
+            action = f'{users_picture.username} DELETED Profile Picture'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            # Delete the file from the database
+            users_picture.profile_picture = None
+            
+            db.session.commit()
+        
+        p = Users.query.get(profile_id)
+
+    return redirect(url_for('coordinator.cEdit_profile'))
+
+@coordinator_route.route('/cUpdate_picture', methods=['POST'])
+def cUpdate_picture():
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == 'POST':
+        user_id = request.form.get('id')
+        new_profile_picture = request.files['new_profile_picture']  # Use .get() instead of ['']
+        
+        user = Users.query.get(user_id)
+
+        if user:
+
+            userlog = g.current_user
+            action = f'UPDATED account named {user.firstname} {user.lastname}.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+      
+            if new_profile_picture.filename != '':
+                # Read the binary data from the uploaded file
+                profile_picture_data = new_profile_picture.read()
+
+                # Update the user's profile picture field with the binary data
+                user.profile_picture = profile_picture_data
+
+            db.session.commit()
+            flash('Account updated successfully!', 'edit_account')
+
+        return redirect(url_for('coordinator.cEdit_profile'))
