@@ -80,6 +80,7 @@
                     <label class="label" ></label>
                 </div>
             </div>
+            <input type="text"  class="link-input" placeholder="Enter Link" style="display: none;">
          </form>
         </div>
     
@@ -134,6 +135,7 @@
               
                 insightsDiv.find(".save-button").css("display", "none");
                 insightsDiv.find(".archive-button").css("display", "block");
+                insightsDiv.find(".link-input").css("display", "block");
             }
 
             // Update the content within the newly created insights-div
@@ -241,14 +243,22 @@
 
         // archive project
         insightsDiv.find(".archive-button").click(function () {
-            var userConfirmed = confirm("Are you sure you want to proceed?");
-            if (userConfirmed) {
-                // Execute update_status and updatePercentage if the user confirmed
-                archive_project();
+           // Select the input field based on its parent container
+            var linkInput = insightsDiv.find(".link-input").val().trim();
+
+            if (linkInput === "") {
+                console.log("URL is empty.");
+                alert("Please enter a URL before archiving the project.");
+            } else {
+                var userConfirmed = confirm("Are you sure you want to proceed?");
+                if (userConfirmed) {
+                    // Execute update_status and updatePercentage if the user confirmed
+                    archive_project(linkInput); // Pass the URL input value to the archive_project function
+                }
             }
         });
 
-        function archive_project(){
+        function archive_project(url){
             var recordStatus = "Completed";
             $.ajax({
                 url: "/archive_project",
@@ -258,7 +268,8 @@
                     community: record.community,
                     program: record.program,
                     subprogram: record.subprogram,
-                    status: recordStatus
+                    status: recordStatus,
+                    url: url // Include the URL in the data to be sent to the server
                 }),
                 success: function(response) {
                     console.log("Status updated successfully.");

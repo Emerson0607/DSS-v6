@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs
+from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs, Resources
 from main import db
 from main import Form
 from flask import Response
@@ -915,3 +915,99 @@ def cUpdate_picture():
             flash('Account updated successfully!', 'edit_account')
 
         return redirect(url_for('coordinator.cEdit_profile'))
+
+
+################## RESOURCES ################3333
+@coordinator_route.route("/cResources")
+def cResources():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    # Dynamically generate the years
+    current_year = datetime.now().year
+     # Fetch all user records from the database
+    all_data = Resources.query.filter_by(program=g.current_program).all()
+    program8 = Program.query.all()
+    user1 = Users.query.all()
+    return render_template("cResources.html", current_year=current_year, community = all_data)
+
+
+@coordinator_route.route("/cAdd_resources", methods=["POST"])
+def cAdd_resources():
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        community = request.form.get("community")
+        program = request.form.get("program")
+        user = request.form.get("user")
+        date1 = request.form.get("date")
+        activity = request.form.get("activity")
+        url = request.form.get("url")
+     
+        #Convert date
+        date = convert_date(date1)
+    
+        existing_resources= Resources.query.filter_by(user= user, community=community, program = program, activity=activity).first()
+
+        if existing_resources is None:
+        
+            new_resources = Resources(community=community, program=program, user=user, date=date, activity=activity, url=url)
+
+            userlog = g.current_user
+            action = f'ADDED new {program} project resources.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            db.session.add(new_resources)
+            db.session.commit()
+            flash('New resources added', 'add_community')
+        else:
+            flash(f"Sorry, resources is already exist.", 'existing_community')
+        return redirect(url_for('dbModel.cResources'))
+    return redirect(url_for('dbModel.cResources'))
+
+@coordinator_route.route('/cDelete_resources/<int:id>', methods=['GET'])
+def cDelete_resources(id):
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    resources = Resources.query.get(id)
+    program = request.args.get('program')
+    community_name = request.args.get('community')
+
+    if resources:
+        userlog = g.current_user
+        action = f'DELETED resources'
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()  
+
+        try:
+            # Delete the user from the database
+            db.session.delete(resources)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+    
+    flash('Delete successfully!', 'delete_account')
+    return redirect(url_for('dbModel.cResources'))

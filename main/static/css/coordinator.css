@@ -359,6 +359,13 @@ main .coordinatorCard .community-status{
 }
 
 
+/* LINK BEFORE ARCHIVE */
+main .coordinatorCard .link-input{
+    margin: 0 0 0.3rem 1rem;
+    width: 65%;
+    height: 2rem;
+}
+
 @media screen and (max-width: 400px){
     .kaakbay-subprogram-title{
         width: 90%;

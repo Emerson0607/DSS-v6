@@ -18,6 +18,15 @@ flask db downgrade
 
 migrate = Migrate(app, db)
 
+class Resources(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    community = db.Column(db.String(255), nullable=True) 
+    program = db.Column(db.String(255), nullable=True)
+    user = db.Column(db.String(255), nullable=True)
+    date = db.Column(db.Date, nullable=True)
+    activity  = db.Column(db.String(255), nullable=True)
+    url = db.Column(db.String(255), nullable=True) 
+  
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     community = db.Column(db.String(255), nullable=False) 
@@ -136,7 +145,7 @@ class Archive(db.Model):
     program = db.Column(db.String(255), nullable=False)
     subprogram = db.Column(db.String(255), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    end_date = db.Column(db.Date, nullable=False)   
     week = db.Column(db.Integer, nullable=True)
     totalWeek = db.Column(db.Integer, nullable=False)
     user = db.Column(db.String(255), nullable=False)
@@ -249,6 +258,18 @@ def insert_userx():
     lastname = 'Banocnoc2'
     email = '1ls1ucesu50@gmail.com'
     program = 'CESU'
+    password = '@123ABCabc'
+    role = 'Admin'
+    
+    user_insert = Users(username=username, firstname=firstname, lastname=lastname, program=program, email=email, password=password, role=role)
+    db.session.add(user_insert)
+    db.session.commit()
+
+    username = 'admin1'
+    firstname = 'Joselle1'
+    lastname = 'Banocnoc1'
+    email = '1ls1ucesu501@gmail.com'
+    program = 'CESU '
     password = '@123ABCabc'
     role = 'Admin'
     

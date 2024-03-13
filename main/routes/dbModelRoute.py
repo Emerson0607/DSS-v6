@@ -1,5 +1,5 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department, Resources
 from main import db
 from flask import Response
 import secrets
@@ -1275,6 +1275,7 @@ def archive_project():
     subprogram = data['subprogram']
     program = data['program']
     status = data['status']
+    url = data.get('url', '')
 
     data_to_move = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
     # Iterate through the data and move it to CPFARCHIVE
@@ -1301,7 +1302,7 @@ def archive_project():
         cna=data_to_move.cna,
         department_A = data_to_move.department_A, 
         volunteer=data_to_move.volunteer,
-        url = "None"
+        url=url  # Assign the URL value
     )
     userlog = g.current_user
     action = f'ARCHIVED {program} project of {community}'
@@ -2521,3 +2522,113 @@ def update_picture():
             flash('Account updated successfully!', 'edit_account')
 
         return redirect(url_for('dbModel.edit_profile'))
+
+
+################## RESOURCES ################3333
+@dbModel_route.route("/resources")
+def resources():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    form = Form()
+    placeholder_choice = ("", "-- Select Program --")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    # Dynamically generate the years
+    current_year = datetime.now().year
+     # Fetch all user records from the database
+    all_data = Resources.query.all()
+    program8 = Program.query.all()
+    user1 = Users.query.all()
+    return render_template("resources.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1)
+
+
+@dbModel_route.route("/add_resources", methods=["POST"])
+def add_resources():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        community = request.form.get("community")
+        program = request.form.get("program")
+        user = request.form.get("user")
+        date1 = request.form.get("date")
+        activity = request.form.get("activity")
+        url = request.form.get("url")
+     
+        #Convert date
+        date = convert_date(date1)
+    
+        existing_resources= Resources.query.filter_by(user= user, community=community, program = program, activity=activity).first()
+
+        if existing_resources is None:
+        
+            new_resources = Resources(community=community, program=program, user=user, date=date, activity=activity, url=url)
+
+            userlog = g.current_user
+            action = f'ADDED new {program} project resources.'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            db.session.add(new_resources)
+            db.session.commit()
+            flash('New resources added', 'add_community')
+        else:
+            flash(f"Sorry, resources is already exist.", 'existing_community')
+        return redirect(url_for('dbModel.resources'))
+    return redirect(url_for('dbModel.resources'))
+
+@dbModel_route.route('/delete_resources/<int:id>', methods=['GET'])
+def delete_resources(id):
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    resources = Resources.query.get(id)
+    program = request.args.get('program')
+    community_name = request.args.get('community')
+
+    if resources:
+        userlog = g.current_user
+        action = f'DELETED {program} project of {community_name} from CESU planner'
+        ph_tz = pytz.timezone('Asia/Manila')
+        ph_time = datetime.now(ph_tz)
+        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = convert_date1(timestamp1)
+        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+        if insert_logs:
+            db.session.add(insert_logs)
+            db.session.commit()  
+
+        try:
+            # Delete the user from the database
+            db.session.delete(resources)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+    
+    flash('Delete successfully!', 'delete_account')
+    return redirect(url_for('dbModel.resources'))
+
+

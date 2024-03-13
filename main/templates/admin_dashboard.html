@@ -132,8 +132,10 @@
                     </a>
                     <div class="dropdown-content-files" id="dropdown-content-files">
                         <a class="blue-link" href="{{ url_for('file.files') }}">CESU files</a>
+                        
+                        <a class="blue-link" href="{{ url_for('dbModel.archived_files') }}">Archived files</a>
+                        <a class="blue-link" href="{{ url_for('dbModel.resources') }}">Resources</a>
                         <a class="blue-link" href="{{ url_for('dbModel.project_files') }}">Community projects file</a>
-                        <a class="blue-link" href="{{ url_for('dbModel.archived_files') }}">Archive</a>
                     </div>
                 </div>
 
@@ -161,7 +163,7 @@
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
                         {% if profile_picture_base64 %}
-                            <img class="invert-blue" src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+                            <img  src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
                         {% else %}
                             <img class="invert-blue" src="/static/images/user-blue.png" alt="CESU-LOGO">
                         {% endif %}

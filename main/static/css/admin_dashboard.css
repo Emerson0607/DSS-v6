@@ -510,7 +510,7 @@ main {
     position: absolute;
     background-color: #f9f9f9;
     width: 13rem;
-    height: 8rem;
+    height: 10.5rem;
     top: 2;
     right: 0;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -858,16 +858,6 @@ main {
         color: #ffffff;
     }
 
-    .invert-blue {
-        content: url("/static/images/user-invert-blue.png");
-        /* Change the image source for mobile */
-    }
-
-    .invert-green {
-        content: url("/static/images/user-invert-green.png");
-        /* Change the image source for mobile */
-    }
-
 
 }
 
@@ -881,16 +871,7 @@ main {
         left: 3rem;
     }
 
-    .invert-blue {
-        content: url("/static/images/user-invert-blue.png");
-        /* Change the image source for mobile */
-    }
-
-    .invert-green {
-        content: url("/static/images/user-invert-green.png");
-        /* Change the image source for mobile */
-    }
-
+   
     aside .top .blue-link {
         color: var(--color-admin);
     }
