@@ -11,7 +11,7 @@ from flask_mail import Mail, Message
 import pytz, re
 import base64
 # LINE BELOW IS FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED)
-#from werkzeug.security import generate_password_hash, check_password_hash 
+from werkzeug.security import generate_password_hash, check_password_hash 
 
 # Get the timezone for the Philippines
 
@@ -67,6 +67,7 @@ def send_recovery_mail():
 
     return redirect(url_for('dbModel.login'))
 
+
 @dbModel_route.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     if request.method == "POST":
@@ -80,47 +81,51 @@ def reset_password():
 
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'newpassword_space')
-           
+            return render_template('reset_password.html', email=email)
+
         if user:
             if user.otp == otp_entered:
                 expiration_time = user.otp_timestamp + timedelta(minutes=5)
 
                 if datetime.utcnow() < expiration_time:
+
                     if new_password == confirm_password:
+                        # Hash the new password
+                        hashed_password = generate_password_hash(new_password)
+                        user.password = hashed_password
 
-            # 2 LINES BELOW ARE FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED) 
-                        #hashed_password = generate_password_hash(new_password)
-                        #user.password = hashed_password
-
-                        user.password = new_password
+                        # Clear OTP fields
                         user.otp = None
                         user.otp_timestamp = None
+
+                        # Commit changes to the database
                         db.session.commit()
 
+                        # Log the password reset action
                         userlog = user.username
                         action = "Successfully recovered account."
                         ph_tz = pytz.timezone('Asia/Manila')
                         ph_time = datetime.now(ph_tz)
                         timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                         timestamp = convert_date1(timestamp1)
-                        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
-                        if insert_logs:
-                            db.session.add(insert_logs)
-                            db.session.commit()
+                        insert_logs = Logs(userlog=userlog, timestamp=timestamp, action=action)
+                        db.session.add(insert_logs)
+                        db.session.commit()
+
                         flash('Password reset successful. You can now log in with your new password.')
                         return redirect(url_for('dbModel.login'))
                     else:
                         flash('New password and confirmation do not match.', 'not_match')
-                        return render_template('reset_password.html', email = email)
+                        return render_template('reset_password.html', email=email)
                 else:
                     flash('OTP has expired. Please request a new one.', 'not_match')
-                    return render_template('reset_password.html', email = email)
+                    return render_template('reset_password.html', email=email)
             else:
                 flash('Invalid OTP.', 'not_match')
-                return render_template('reset_password.html', email = email)
+                return render_template('reset_password.html', email=email)
         else:
             flash('User not found.', 'not_match')
-            return render_template('reset_password.html', email = email)
+            return render_template('reset_password.html', email=email)
     return render_template('reset_password.html')
 
 @dbModel_route.route("/send_mail")
@@ -205,25 +210,24 @@ def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        user = Users.query.filter_by(username=username, password=password).first()
+        user = Users.query.filter_by(username=username).first()
 
-        if user:
+        if user and check_password_hash(user.password, password):
             userlog = username
             action = f'{user.firstname} {user.lastname} Logged in.'
             ph_tz = pytz.timezone('Asia/Manila')
             ph_time = datetime.now(ph_tz)
             timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
             timestamp = convert_date1(timestamp1)
-            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
-            if insert_logs:
-                db.session.add(insert_logs)
-                db.session.commit()
+            insert_logs = Logs(userlog=userlog, timestamp=timestamp, action=action)
+            db.session.add(insert_logs)
+            db.session.commit()
 
             session['user_id'] = user.id
-            if user.role == 'Admin' or user.role == 'BOR':  # Admin or BOR
+            if user.role == 'Admin' or user.role == 'BOR':
                 flash(f'Login successful!', 'success')
                 return redirect(url_for('dbModel.dashboard'))
-            else:      #------------------------- COORDINATOR PAGE ---------------------
+            else:
                 return redirect(url_for('coordinator.coordinator_dashboard'))
         else:
             flash(f'Invalid username or password.', 'login_error')

@@ -1,0 +1,249 @@
+/* -----Root Variable */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+
+/* Root Variable */
+:root {
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light)
+}
+
+main .profile-container {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    padding-bottom: 4rem;
+    position: relative;
+    border-bottom-left-radius: var(--border-radius-2);
+    /* Top left corner radius */
+    border-bottom-right-radius: var(--border-radius-2);
+    /* Top right corner radius */
+
+}
+
+
+.change_profile_title {
+    background-color: #2f9e36;
+    color: #ffffff;
+    padding: 10px;
+    border-top-left-radius: var(--border-radius-2);
+    /* Top left corner radius */
+    border-top-right-radius: var(--border-radius-2);
+    /* Top right corner radius */
+    display: flex;
+    /* Use flexbox to control alignment */
+    align-items: center;
+    /* Vertically center the content */
+    justify-content: flex-start;
+    /* Align content to the start */
+    height: 6rem;
+    margin-top: 1rem;
+}
+
+
+.change_profile_title-blue {
+    background-color: #303396;
+
+}
+
+.change_profile_title .accountcircle {
+    padding-right: 0.5rem;
+    /* Add some right padding to the lock icon */
+    font-size: 3rem;
+    /* Adjust the icon size as needed */
+    padding-left: 1rem;
+}
+
+#profile-picture {
+    width: 13rem;
+    /* Set the desired width */
+    height: 13rem;
+    /* Set the desired height */
+    margin-top: 1rem;
+    /* Adjust the top margin as needed */
+    margin-left: 20rem;
+}
+
+.cpf_delete {
+    position: absolute;
+    /* Position the delete button relative to its container */
+    top: 3.5rem;
+    right: 43rem;
+    height: 2rem;
+    background: #ff0000;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    border-radius: 4px;
+}
+
+.form-usn-ln .form-group {
+    padding-left: 7rem;
+    display: inline-block;
+    width: calc(55% - 105px);
+    /* Initial width with some space between */
+}
+
+.form-row {
+    width: 90%;
+    padding-left: 7rem;
+}
+
+.profile-container .btn-change {
+    position: absolute;
+    top: 10rem;
+    left: 40rem;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.profile-container .form-group .btn-change {
+    width: 9.5rem;
+    height: 2.6rem;
+    font-size: 16px;
+}
+
+.profile-container .form-group .btn-change:hover {
+    position: absolute;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #303396;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s ease;
+}
+
+/* Style the custom file input button */
+.custom-file-upload {
+    position: absolute;
+    top: 7.5rem;
+    left: 44.8rem;
+    transform: translate(-50%, -50%);
+    display: inline-block;
+    cursor: pointer;
+    padding: 5px 5px;
+    background-color: #fff;
+    color: #000000;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    font-size: 16px;
+}
+
+.custom-file-upload:hover {
+    background-color: #303396;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s ease;
+}
+
+.profile-container .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+}
+
+.profile-container .text-info {
+    color: #9fa9a3;
+}
+
+.profile-container .btn-submit {
+    position: relative;
+    margin-top: 3rem;
+    margin-left: 56rem;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 5px 5px;
+}
+
+.profile-container .btn-submit:hover {
+    background-color: #303396;
+    transition: 0.3s ease;
+    color: #fff;
+}
+
+.profile-container h1 {
+    font-size: 1.5rem;
+    margin-left: 1.5rem;
+}
+
+.change_profile_title .editprof {
+    padding-left: 0.5rem;
+    font-size: 2.3rem;
+}
+
+
+
+@media screen and (max-width: 400px) {
+
+    .change_profile_title {
+        width: 90%;
+        margin: 0 auto;
+        margin-top: 2rem;
+    }
+
+    .change_profile_title .editprof {
+
+        font-size: 2rem;
+
+    }
+
+    .profile-container {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+
+    .cpf_delete {
+        position: absolute;
+        /* Position the delete button relative to its container */
+        top: 3.5rem;
+        right: 24rem;
+        height: 2rem;
+        background: #ff0000;
+        color: rgb(255, 255, 255);
+        border-radius: 4px;
+    }
+
+    .form-usn-ln .form-group {
+        padding-left: 7rem;
+        display: inline-block;
+        width: calc(55% - 80px);
+        /* Initial width with some space between */
+    }
+
+    .profile-container .btn-submit {
+        margin-top: 3rem;
+        border: 1px solid #000000;
+        border-radius: 4px;
+        font-size: 16px;
+        padding: 5px 10px;
+        right: 12.5rem;
+    }
+
+
+}
