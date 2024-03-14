@@ -1,6 +1,13 @@
 {% extends "admin_dashboard.html" %}
 {% block title %}Change Profile{% endblock %}
 {% block content %}
+
+        <!--Style is for responsive-->
+        <style>
+            .profile-container .form-group .profile-image {
+                content: url("data:image/jpeg;base64,{{ profile_picture_base64 }}");
+            }
+        </style>
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['new_password', 'not_match', 'wrong_old', 'newpassword_space'],
 with_categories=true) %}
@@ -15,6 +22,7 @@ with_categories=true) %}
 {% endif %}
 {% endwith %}
 
+
 <div class="change_profile_title change_profile_title-blue">
     <h1>
         <span class="material-symbols-sharp accountcircle">
@@ -25,34 +33,31 @@ with_categories=true) %}
 </div>
 
 <div class="profile-container">
-    <input type="file" class="form-control" name="new_profile_picture" accept="image/*" id="profile-picture-input"
-        required onchange="previewImage(event, 'preview')" style="display: none;">
-    <input type="hidden" name="id" id="edit-id" value="{{id}}">
-    <label for="profile-picture-input" class="custom-file-upload">Change Picture</label>
 
-    <div class="form-group">
-        <button class="btn-change" type="submit" id="saveChangesBtn">Save Profile</button>
-    </div>
-    <!--Style is for responsive-->
-    <style>
-        .profile-container .form-group .profile-image {
-            content: url("data:image/jpeg;base64,{{ profile_picture_base64 }}");
-        }
-    </style>
-
-    <form action="{{ url_for('dbModel.update_picture') }}" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
+    <div class="picture_box">
+    <form class="picture_form" action="{{ url_for('dbModel.update_picture') }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group file_box_picture">
             {% if profile_picture_base64 %}
             <img id="profile-picture" class="profile-image" src="data:image/jpeg;base64,{{ profile_picture_base64 }}"
                 alt="Profile Picture">
             {% else %}
             <img id="profile-picture" class="profile-image" src="/static/images/user-blue.png" alt="CESU-LOGO">
             {% endif %}
+       
+        </div>
+      
+        <div class="form-group input_profile_picture">
+            <input type="file" class="form-control" name="new_profile_picture" accept="image/*" id="profile-picture-input"
+            required onchange="previewImage(event, 'preview')" style="display: none;">
+            <input style="display: none;" type="hidden" name="id" id="edit-id" value="{{id}}">
+            <label for="profile-picture-input" class="custom-file-upload">Change Picture</label>
+
+            <button class="btn-change" type="submit" id="saveChangesBtn">Save Profile</button>
         </div>
     </form>
     
-    <div class="cpf_del">
-        <form action="{{ url_for('dbModel.delete_picture') }}" method="POST" style="display: inline;"
+    
+        <form class="delete_form" action="{{ url_for('dbModel.delete_picture') }}" method="POST" style="display: inline;"
             onsubmit="return confirm('Are you sure you want to delete this?')">
             <input style="display: none;" type="text" class="form-control" name="edit-id" value="{{id}}" required>
             <button class="cpf_delete" type="submit" title="Delete Profile"><span class="material-symbols-sharp">
@@ -60,7 +65,8 @@ with_categories=true) %}
                 </span></button>
 
         </form>
-    </div>
+   
+</div>
     <form action="{{ url_for('dbModel.update_profile') }}" method="POST" enctype="multipart/form-data">
         <div class="form-usn-ln">
             <div class="form-group fn">

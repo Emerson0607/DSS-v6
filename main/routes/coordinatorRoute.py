@@ -973,8 +973,8 @@ def cAdd_resources():
             flash('New resources added', 'add_community')
         else:
             flash(f"Sorry, resources is already exist.", 'existing_community')
-        return redirect(url_for('dbModel.cResources'))
-    return redirect(url_for('dbModel.cResources'))
+        return redirect(url_for('coordinator.cResources'))
+    return redirect(url_for('coordinator.cResources'))
 
 @coordinator_route.route('/cDelete_resources/<int:id>', methods=['GET'])
 def cDelete_resources(id):
@@ -1010,4 +1010,4 @@ def cDelete_resources(id):
         flash('User not found. Please try again.', 'error')
     
     flash('Delete successfully!', 'delete_account')
-    return redirect(url_for('dbModel.cResources'))
+    return redirect(url_for('coordinator.cResources'))

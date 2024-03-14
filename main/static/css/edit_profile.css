@@ -35,6 +35,7 @@ main .profile-container {
     transition: all 300ms ease;
     padding-bottom: 4rem;
     position: relative;
+    padding-bottom: 6rem;
     border-bottom-left-radius: var(--border-radius-2);
     /* Top left corner radius */
     border-bottom-right-radius: var(--border-radius-2);
@@ -85,23 +86,16 @@ main .profile-container {
     margin-left: 20rem;
 }
 
-.cpf_delete {
-    position: absolute;
-    /* Position the delete button relative to its container */
-    top: 3.5rem;
-    right: 43rem;
-    height: 2rem;
-    background: #ff0000;
-    box-shadow: var(--box-shadow);
-    cursor: pointer;
-    color: rgb(255, 255, 255);
-    border-radius: 4px;
-}
+
 
 .form-usn-ln .form-group {
     padding-left: 7rem;
     display: inline-block;
     width: calc(55% - 105px);
+    /* Initial width with some space between */
+}
+.form-usn-ln .ln{
+  margin-left: 1rem;
     /* Initial width with some space between */
 }
 
@@ -112,18 +106,18 @@ main .profile-container {
 
 .profile-container .btn-change {
     position: absolute;
-    top: 10rem;
-    left: 40rem;
+    top: 8rem;
+    right: 22rem;
     border: 1px solid #555;
     border-radius: 4px;
     background-color: #ffffff;
-}
 
-.profile-container .form-group .btn-change {
     width: 9.5rem;
     height: 2.6rem;
     font-size: 16px;
 }
+
+
 
 .profile-container .form-group .btn-change:hover {
     position: absolute;
@@ -135,11 +129,16 @@ main .profile-container {
     transition: 0.3s ease;
 }
 
+.profile-container .picture_box .file_box_picture{
+    position: relative;
+}
+
+
 /* Style the custom file input button */
 .custom-file-upload {
     position: absolute;
-    top: 7.5rem;
-    left: 44.8rem;
+    top: 5rem;
+    right: 17rem;
     transform: translate(-50%, -50%);
     display: inline-block;
     cursor: pointer;
@@ -158,26 +157,22 @@ main .profile-container {
     transition: 0.3s ease;
 }
 
-.profile-container .form-control {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 
-}
 
 .profile-container .text-info {
     color: #9fa9a3;
 }
 
 .profile-container .btn-submit {
-    position: relative;
-    margin-top: 3rem;
-    margin-left: 56rem;
+    position: absolute;
+    bottom: 2rem;
+    right: 8.6rem;
     border: 1px solid #000000;
-    border-radius: 4px;
+    border-radius: 5px;
+    background-color: white;
     font-size: 16px;
-    padding: 5px 5px;
+    padding: 0.6rem 1rem 0.6rem 1rem;
+    cursor: pointer;
 }
 
 .profile-container .btn-submit:hover {
@@ -196,6 +191,32 @@ main .profile-container {
     font-size: 2.3rem;
 }
 
+.profile-container .picture_box {
+    position: relative;
+    margin-bottom: 2rem;
+    
+   
+}
+.profile-container .cpf_delete{   
+    position: absolute;
+    /* Position the delete button relative to its container */
+    top: 0rem;
+    left: 30rem;
+    height: 2rem;
+    padding: 2px 2px 25px 2px;
+    background: #ff0000;
+    border-radius: 50%;
+    border: solid 5px white;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    color: rgb(255, 255, 255);
+    transition: transform 0.3s; 
+ 
+}
+
+.profile-container .cpf_delete:hover {
+    transform: scale(1.2); /* Scale down to 80% on hover */
+}
 
 
 @media screen and (max-width: 400px) {
@@ -218,19 +239,17 @@ main .profile-container {
     }
 
 
-    .cpf_delete {
+ 
+    .profile-container .cpf_delete{   
         position: absolute;
         /* Position the delete button relative to its container */
-        top: 3.5rem;
-        right: 24rem;
-        height: 2rem;
-        background: #ff0000;
-        color: rgb(255, 255, 255);
-        border-radius: 4px;
+
     }
 
+    
+
     .form-usn-ln .form-group {
-        padding-left: 7rem;
+        padding-left: 0rem;
         display: inline-block;
         width: calc(55% - 80px);
         /* Initial width with some space between */
@@ -245,5 +264,17 @@ main .profile-container {
         right: 12.5rem;
     }
 
+    .form-row {
+        width: 90%;
+        padding-left: 0rem;
+    }
 
+    #profile-picture {
+        width: 13rem;
+        /* Set the desired width */
+        height: 13rem;
+        /* Set the desired height */
+        margin-top: 1rem;
+    }
+    
 }

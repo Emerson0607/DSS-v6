@@ -39,7 +39,7 @@
                     <th>Role</th>   
                     <th>Department</th>         
                     <th>Program</th>              
-                    <th>Action</th>
+                    <th style="width: 9rem;">Action</th>
                 </tr>
                  {% for row in users %}
                 
@@ -258,13 +258,15 @@
                     <th>ID</th>
                     <th>Acronym</th>
                     <th>Department</th>
+                    <th style="width: 9rem;">Action</th>
+
                 </tr>
                  {% for row in department %}
                  <tr>
                     <td>{{ row.id }}</td>
                     <td>{{ row.department_A }}</td>
                     <td>{{ row.department_F }}</td>
-                    <td >
+                    <td style="width: 9rem;">
                         <a href="{{ url_for('dbModel.edit_department', id=row.id) }}" class="btn-edit delete_update_box" data-bs-toggle="modal" data-bs-target="#modaledit_d{{row.id}}"><span class="material-symbols-sharp update_department_btn">
                             edit
                             </span></a>

@@ -147,7 +147,8 @@ main .manageUser table tr:last-child td {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 35rem;
+    top:2rem;
+    left: 16rem;
 
 }
 
@@ -238,6 +239,10 @@ main .manageUser table tr:last-child td {
     max-height: 20rem;
 }
 
+.manageUser .jumbotron{
+   position: relative;
+}
+
 /*FOR DEPARTMENT TABLE*/
 
 
@@ -279,6 +284,17 @@ main .manageDepartment table td {
 main .manageDepartment table tr:last-child td {
     border: none;
 }
+
+main .manageDepartment .jumbotron{
+    width: 100%;
+    max-width: 40rem;
+    
+}
+
+main .manageDepartment table td {
+    text-align: center;
+}
+
 
 
 /*------------------ MANAGE DEPARTMENT TABLE MODAL ------------------*/
@@ -514,6 +530,11 @@ main .manageDepartment table tr:last-child td {
         max-height: 30rem;
     }
 
+    main .manageUser table th:last-child{
+        padding: 0 3rem 0 3rem; 
+    }
+
+ 
     main .manageUser table td {
         height: 3rem;
         border-bottom: 1px solid lightgray;
@@ -526,21 +547,69 @@ main .manageDepartment table tr:last-child td {
     }
 
     .manageUser .btn-delete1 {
-        padding-top: 1px;
-        padding-bottom: 1px;
-        padding-left: 5px;
-        /* Adjust padding as needed */
-        padding-right: 5px;
-
+       padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+ 
     }
 
     .manageUser .btn-edit {
-        padding-top: 1px;
-        padding-bottom: 1px;
-        padding-left: 3px;
-        /* Adjust padding as needed */
-        padding-right: 3px;
+        padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+
     }
+
+    .manageUser .btn-add {
+      
+        position: absolute;
+        left: 16rem;
+        top: 1.9rem;
+    
+    }
+
+    
+
+    
+main .manageDepartment {
+   
+    width:90%;
+    margin: 0 auto;
+    padding-top: 1rem;
+    width: 90%;
+    
+}
+
+main .manageDepartment .modal-content {
+    width: 90%;
+}
+
+main .manageDepartment .jumbo {
+    overflow: auto;
+    width: 20rem;
+    max-height: 30rem;
+
+}
+
+
+main .manageDepartment .jumbotron{
+    width: 100%;
+    max-width: 40rem;
+    
+}
+
+main .manageDepartment table th:last-child{
+    padding: 0 2rem 0 2rem;
+
+    
+}
+
+/* Styling for the modal content */
+.manageDepartment .modal-content {
+    background-color: #fff;
+    margin: 30% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 7px;
+    width: 50%;
+    position: relative;
+}
 
 
 }

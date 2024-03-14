@@ -876,4 +876,10 @@ main {
         color: var(--color-admin);
     }
 
+    .dropdown-content {
+    
+        height: 8rem;
+       
+    }
+
 }

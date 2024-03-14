@@ -13,22 +13,26 @@ with_categories=true) %}
 {% endif %}
 {% endwith %}
 
-<div class="cesu_plans_Card">
+<div class="resources_Card">
     <div class="jumbotron">
-        <h2 style="margin-bottom: 1rem;">Resources
-            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal"
-                style="float: right;">
-                <span class="material-symbols-sharp" style="float: right;">add</span>
-            </button>
-        </h2>
-        <div class="year-filter">
-            <label for="year">Select Year:</label>
-            <select id="year" onchange="filterByYear()">
-                {% for year in range(current_year, current_year + 5) %}
-                <option value="{{ year }}">{{ year }}</option>
-                {% endfor %}
-            </select>
-            <button class="show-all-button" onclick="showAllData()">Show All</button>
+        
+        <div class="for_filter">
+            <div class="year-filter1">
+                <label for="year">Select Year:</label>
+                <select id="year" onchange="filterByYear()">
+                    {% for year in range(current_year, current_year + 5) %}
+                    <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <button class="show-all-button" onclick="showAllData()">Show All</button>
+            </div>
+        
+            <h2 style="margin-bottom: 1rem;">Resources
+                <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal"
+                    style="float: right;">
+                    <span class="material-symbols-sharp" style="float: right;">add</span>
+                </button>
+            </h2>
         </div>
         <div class="table-card">
             <table class="table table-striped" id="logs_table">

@@ -120,7 +120,7 @@ main .for_filter .year-filter1 {
 
 }
 
-.projectFilesCard .jumbotron .year-filter {
+.archived_table .jumbotron .year-filter1 {
     position: absolute;
 }
 
@@ -131,19 +131,22 @@ main .for_filter .year-filter1 {
     right: 30rem;
 }
 
-.projectFilesCard .year-filter label {
+.archived_table .year-filter1 label {
     font-weight: bold;
     margin-right: 10px;
     font-size: 12px;
 }
 
-.projectFilesCard .year-filter select {
-    font-size: 12px;
+.archived_table .year-filter1 select {
+    font-size: 14px;
+    padding: 8px 12px;
     border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
 
 }
 
-.projectFilesCard .year-filter select:hover {
+.archived_table .year-filter1 select:hover {
     border-color: #555;
     cursor: pointer;
 }
@@ -151,7 +154,7 @@ main .for_filter .year-filter1 {
 
 
 /* Show all btn */
-.projectFilesCard .year-filter .show-all-button {
+.archived_table .year-filter1 .show-all-button {
     font-size: 12px;
     background-color: #ffffff;
     color: rgb(0, 0, 0);
@@ -159,14 +162,14 @@ main .for_filter .year-filter1 {
     border-radius: 4px;
 }
 
-.projectFilesCard .year-filter .show-all-button:hover {
+.archived_table .year-filter1 .show-all-button:hover {
     border-color: #555;
 }
 
 
 
 /* Show all btn */
-.projectFilesCard .jumbotron .year-filter .show-all-button {
+.archived_table .jumbotron .year-filter1 .show-all-button {
     padding: 8px 12px;
     font-size: 14px;
     background-color: #ffffff;
@@ -176,7 +179,7 @@ main .for_filter .year-filter1 {
     cursor: pointer;
 }
 
-.projectFilesCard .jumbotron .year-filter .show-all-button:hover {
+.archived_table .jumbotron .year-filter1 .show-all-button:hover {
     border-color: #555;
 }
 

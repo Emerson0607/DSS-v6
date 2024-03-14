@@ -171,6 +171,9 @@ main .communityCard>div {
     margin-top: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
+
+
+    
 }
 
 main .communityCard .table-card {
@@ -286,6 +289,11 @@ main .communityCard table tr:last-child td {
 }
 
 
+  .communityCard .jumbotron {
+    position: relative;
+  }
+
+
 .communityCard .btn-add {
     background-color: #4a4cd7;
     /* Change this to your desired color */
@@ -294,7 +302,7 @@ main .communityCard table tr:last-child td {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 36.5rem;
+    left: 17.5rem;
 }
 
 .communityCard .btn-add:hover {

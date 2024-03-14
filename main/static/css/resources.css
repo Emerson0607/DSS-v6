@@ -24,7 +24,7 @@
 }
 
 
-main .cesu_plans_Card {
+main .resources_Card {
     display: grid;
     grid-template-columns: 1fr;
     overflow: auto;
@@ -35,7 +35,7 @@ main .cesu_plans_Card {
 
 
 /* file upload button */
-.cesu_plans_Card input[type="file"]::file-selector-button {
+.resources_Card input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -47,19 +47,19 @@ main .cesu_plans_Card {
 }
 
 /* file upload button hover state */
-.cesu_plans_Card input[type="file"]::file-selector-button:hover {
+.resources_Card input[type="file"]::file-selector-button:hover {
     background-color: #f3f4f6;
 }
 
 /* file upload button active state */
-.cesu_plans_Card input[type="file"]::file-selector-button:active {
+.resources_Card input[type="file"]::file-selector-button:active {
     background-color: #e5e7eb;
 }
 
 
 
 
-main .cesu_plans_Card>div {
+main .resources_Card>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -68,33 +68,33 @@ main .cesu_plans_Card>div {
     transition: all 300ms ease;
 }
 
-main .cesu_plans_Card .table-card {
+main .resources_Card .table-card {
     max-height: 35rem;
     overflow: auto;
 }
 
-main .cesu_plans_Card>div:hover {
+main .resources_Card>div:hover {
     box-shadow: none;
 }
 
-.cesu_plans_Card table {
+.resources_Card table {
 
     width: 100%;
 
 }
 
-main .cesu_plans_Card table td {
+main .resources_Card table td {
     height: 2.8rem;
     border-bottom: 1px solid lightgray;
     color: var(--color-dark);
 }
 
-main .cesu_plans_Card table tr:last-child td {
+main .resources_Card table tr:last-child td {
     border: none;
 }
 
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
-.cesu_plans_Card .modal {
+.resources_Card .modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -106,7 +106,7 @@ main .cesu_plans_Card table tr:last-child td {
 }
 
 /* Styling for the modal content */
-.cesu_plans_Card .modal-content {
+.resources_Card .modal-content {
     background-color: #fff;
     margin: 5% auto;
     padding: 20px;
@@ -117,13 +117,13 @@ main .cesu_plans_Card table tr:last-child td {
 
 }
 
-.cesu_plans_Card .modal h4 {
+.resources_Card .modal h4 {
     font-size: 1.4rem;
     margin-bottom: 0.5rem;
 }
 
 /* Style for the form container */
-.cesu_plans_Card .modal-body {
+.resources_Card .modal-body {
     padding: 20px;
     max-height: 400px;
     /* Set a maximum height for scrollability */
@@ -133,17 +133,17 @@ main .cesu_plans_Card table tr:last-child td {
 }
 
 /* Style for form labels and inputs */
-.cesu_plans_Card .form-group label {
+.resources_Card .form-group label {
     font-weight: 100;
 }
 
-.cesu_plans_Card .label-category {
+.resources_Card .label-category {
     font-weight: 700;
     font-size: 1rem;
 }
 
 
-.cesu_plans_Card .form-control {
+.resources_Card .form-control {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -152,7 +152,7 @@ main .cesu_plans_Card table tr:last-child td {
 }
 
 /* Style for select elements */
-.cesu_plans_Card .form-select {
+.resources_Card .form-select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -162,7 +162,7 @@ main .cesu_plans_Card table tr:last-child td {
 
 
 /* Style for submit button */
-.cesu_plans_Card .btn-submit {
+.resources_Card .btn-submit {
     background-color: #4a4cd7;
     color: #fff;
     padding: 10px 12px;
@@ -175,17 +175,17 @@ main .cesu_plans_Card table tr:last-child td {
 
 }
 
-.cesu_plans_Card .btn-submit:hover {
+.resources_Card .btn-submit:hover {
     background-color: #303396;
 }
 
-.cesu_plans_Card .jumbotron {
+.resources_Card .jumbotron {
     position: relative;
 
 }
 
 
-.cesu_plans_Card .btn-add {
+.resources_Card .btn-add {
     background-color: #4a4cd7;
     /* Change this to your desired color */
     color: #fff;
@@ -194,10 +194,10 @@ main .cesu_plans_Card table tr:last-child td {
     border-radius: 7px;
     position: absolute;
     left: 11rem;
-    top: 0.2rem;
+    top: 2rem;
 }
 
-.cesu_plans_Card .btn-add:hover {
+.resources_Card .btn-add:hover {
     background-color: #303396;
     cursor: pointer;
 
@@ -205,7 +205,7 @@ main .cesu_plans_Card table tr:last-child td {
 
 
 
-.cesu_plans_Card .btn-delete1 {
+.resources_Card .btn-delete1 {
     background-color: #ff5555;
     /* Red background color */
     color: #fff;
@@ -221,13 +221,13 @@ main .cesu_plans_Card table tr:last-child td {
 }
 
 
-.cesu_plans_Card .btn-delete1:hover {
+.resources_Card .btn-delete1:hover {
     background-color: #ff3333;
     /* Red background color on hover */
 }
 
 /* Styling for the close button */
-.cesu_plans_Card .btn-close {
+.resources_Card .btn-close {
     background-color: #ffffff;
     color: #2a2a2a;
     border: none;
@@ -239,21 +239,21 @@ main .cesu_plans_Card table tr:last-child td {
     top: .5rem;
 }
 
-.cesu_plans_Card .btn-close:hover {
+.resources_Card .btn-close:hover {
 
     color: var(--color-danger);
 }
 
-.cesu_plans_Card table td {
+.resources_Card table td {
     text-align: center;
 }
 
-.cesu_plans_Card .file-box {
+.resources_Card .file-box {
     margin-bottom: 1rem;
 }
 
 /* Year Filter */
-main .cesu_plans_Card .for_filter .year-filter {
+main .resources_Card .for_filter .year-filter {
     position: absolute;
     right: 1rem;
 }
@@ -264,7 +264,7 @@ main .cesu_plans_Card .for_filter .year-filter {
 
 }
 
-.cesu_plans_Card .jumbotron .year-filter1 {
+.resources_Card .jumbotron .year-filter1 {
     position: absolute;
 }
 
@@ -275,13 +275,13 @@ main .cesu_plans_Card .for_filter .year-filter {
     right: 30rem;
 }
 
-.cesu_plans_Card .year-filter1 label {
+.resources_Card .year-filter1 label {
     font-weight: bold;
     margin-right: 10px;
     font-size: 12px;
 }
 
-.cesu_plans_Card .year-filter1 select {
+.resources_Card .year-filter1 select {
     font-size: 14px;
     padding: 8px 12px;
     border-radius: 4px;
@@ -290,7 +290,7 @@ main .cesu_plans_Card .for_filter .year-filter {
     
 }
 
-.cesu_plans_Card .year-filter1 select:hover {
+.resources_Card .year-filter1 select:hover {
     border-color: #555;
     cursor: pointer;
 }
@@ -298,7 +298,7 @@ main .cesu_plans_Card .for_filter .year-filter {
 
 
 /* Show all btn */
-.cesu_plans_Card .year-filter1 .show-all-button {
+.resources_Card .year-filter1 .show-all-button {
     font-size: 12px;
     background-color: #ffffff;
     color: rgb(0, 0, 0);
@@ -306,14 +306,14 @@ main .cesu_plans_Card .for_filter .year-filter {
     border-radius: 4px;
 }
 
-.cesu_plans_Card .year-filter1 .show-all-button:hover {
+.resources_Card .year-filter1 .show-all-button:hover {
     border-color: #555;
 }
 
 
 
 /* Show all btn */
-.cesu_plans_Card .jumbotron .year-filter1 .show-all-button {
+.resources_Card .jumbotron .year-filter1 .show-all-button {
     padding: 8px 12px;
     font-size: 14px;
     background-color: #ffffff;
@@ -323,7 +323,7 @@ main .cesu_plans_Card .for_filter .year-filter {
     cursor: pointer;
 }
 
-.cesu_plans_Card .jumbotron .year-filter1 .show-all-button:hover {
+.resources_Card .jumbotron .year-filter1 .show-all-button:hover {
     border-color: #555;
 }
 
@@ -331,16 +331,16 @@ main .cesu_plans_Card .for_filter .year-filter {
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
-    .communityCard .cesu_plans_Card .modal-content {
+    .resources_Card .modal-content {
         position: relative;
     }
 
-    .cesu_plans_Card .modal-body {
+    .resources_Card .modal-body {
         height: 40rem;
 
     }
 
-    .cesu_plans_Card .btn-close {
+    .resources_Card .btn-close {
         position: absolute;
         right: 25px;
         bottom: 2px;
@@ -349,37 +349,37 @@ main .cesu_plans_Card .for_filter .year-filter {
 
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px) {
-    .cesu_plans_Card {
+    .resources_Card {
         margin: 0 auto;
         padding-top: 2rem;
 
     }
 
-    .cesu_plans_Card .jumbotron {
+    .resources_Card .jumbotron {
         width: 90%;
         margin: 0 auto;
     }
 
-    .cesu_plans_Card .modal-content {
+    .resources_Card .modal-content {
         width: 90%;
     }
 
-    .cesu_plans_Card .table-card {
+    .resources_Card .table-card {
         width: 19rem;
         overflow: auto;
     }
 
-    .cesu_plans_Card .table-card th {
+    .resources_Card .table-card th {
         padding-right: 1rem;
     }
 
-    .cesu_plans_Card .btn-close {
+    .resources_Card .btn-close {
         height: 2rem;
         right: .5rem;
     }
 
     /* Year Filter */
-    .for_filter {
+    .resources_Card .for_filter {
         border: solid 0px black;
         position: relative;
         width: 100%;
@@ -388,8 +388,9 @@ main .cesu_plans_Card .for_filter .year-filter {
 
     }
 
-    .for_filter h2 {
+    .resources_Card .for_filter h2 {
         width: 65%;
+     
 
     }
 
@@ -408,7 +409,7 @@ main .cesu_plans_Card .for_filter .year-filter {
 
 
 
-    .cesu_plans_Card .jumbotron .year-filter1 {
+    .resources_Card .jumbotron .year-filter1 {
         position: absolute;
         top: 2rem;
         right: 1rem;
@@ -416,7 +417,7 @@ main .cesu_plans_Card .for_filter .year-filter {
 
 
 
-    .cesu_plans_Card .jumbotron .year-filter1 select {
+    .resources_Card .jumbotron .year-filter1 select {
         padding: 4px;
         font-size: 10px;
         border: 1px solid #ccc;
@@ -424,7 +425,7 @@ main .cesu_plans_Card .for_filter .year-filter {
     }
 
     /* Show all btn */
-    .cesu_plans_Card .jumbotron .year-filter1 .show-all-button {
+    .resources_Card .jumbotron .year-filter1 .show-all-button {
         padding: 4px 6px;
         font-size: 10px;
         background-color: #ffffff;
@@ -432,5 +433,18 @@ main .cesu_plans_Card .for_filter .year-filter {
         border-radius: 4px;
         cursor: pointer;
     }
+
+    .resources_Card .btn-add {
+        background-color: #4a4cd7;
+        /* Change this to your desired color */
+        color: #fff;
+        /* Change the text color */
+        border: none;
+        border-radius: 7px;
+        position: absolute;
+        left: 8rem;
+        top: 0.2rem;
+    }
+    
 
 }
