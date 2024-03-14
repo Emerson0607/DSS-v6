@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="/static/css/Logfile.css">
     <link rel="stylesheet" href="/static/css/plan_details.css">
     <link rel="stylesheet" href="/static/css/fund.css">
+    <link rel="stylesheet" href="/static/css/edit_profile.css">
 
     <link rel="stylesheet" href="/static/css/tooltip.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
@@ -132,7 +133,7 @@
                     </a>
                     <div class="dropdown-content-files" id="dropdown-content-files">
                         <a class="blue-link" href="{{ url_for('file.files') }}">CESU files</a>
-                        
+
                         <a class="blue-link" href="{{ url_for('dbModel.archived_files') }}">Archived files</a>
                         <a class="blue-link" href="{{ url_for('dbModel.resources') }}">Resources</a>
                         <a class="blue-link" href="{{ url_for('dbModel.project_files') }}">Community projects file</a>
@@ -158,21 +159,22 @@
                 </div>
                 <div class="profile">
                     <div class="profile-info">
-                        <p>Hi, <b style="text-transform: uppercase;">{{current_firstname}} <span>{{current_lastname}}</span></b></p>
+                        <p>Hi, <b style="text-transform: uppercase;">{{current_firstname}}
+                                <span>{{current_lastname}}</span></b></p>
                         <small class="text-muted">{{current_role}}</small>
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
                         {% if profile_picture_base64 %}
-                            <img  src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+                        <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
                         {% else %}
-                            <img class="invert-blue" src="/static/images/user-blue.png" alt="CESU-LOGO">
+                        <img class="invert-blue" src="/static/images/user-blue.png" alt="CESU-LOGO">
                         {% endif %}
 
                         <div class="dropdown-content" id="dropdown-content">
-                           
+
                             <div class="edit-hover"><a class="edit-button edit-button-blue"
-                                href="{{ url_for('dbModel.edit_profile') }}" id="edit-button">Edit
-                                Profile</a></div>
+                                    href="{{ url_for('dbModel.edit_profile') }}" id="edit-button">Edit
+                                    Profile</a></div>
 
                             <div class="password-div password-div-blue"><a class="password-button password-button-blue"
                                     href="{{ url_for('dbModel.change_password') }}" id="password-button">Change
