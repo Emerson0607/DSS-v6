@@ -326,6 +326,9 @@ def add_account():
         mobile_number = request.form.get("mobile_number")
         profile_picture = request.files['profile_picture'].read()  # Use .get() instead of ['']
 
+        # Hash the password
+        hashed_password = generate_password_hash(password)
+
 
         # Check if the username already exists in the database
         existing_username = Users.query.filter_by(username=username).first()
@@ -364,7 +367,7 @@ def add_account():
                     if existing_mobile_number:
                         flash('Mobile number already exists.', 'existing_username')
                     else:
-                        new_user = Users(username=username, firstname=firstname, lastname=lastname, email=email, password=password, role = role, program = program, department_A=department_A, mobile_number=mobile_number, profile_picture=profile_picture )
+                        new_user = Users(username=username, firstname=firstname, lastname=lastname,password=hashed_password, email=email, role = role, program = program, department_A=department_A, mobile_number=mobile_number, profile_picture=profile_picture )
                         try: 
                             userlog = g.current_user
                             action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
@@ -413,6 +416,9 @@ def edit_account():
             flash('Password cannot contain spaces.', 'username_space')
             return redirect(url_for('dbModel.manage_account'))
         
+        # Hash the password
+        hashed_password = generate_password_hash(new_password)
+        
         # Check if the email format is valid and ends with '@gmail.com'
         if not is_valid_email(new_email):
             flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
@@ -455,9 +461,6 @@ def edit_account():
                 flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'existing_username')
                 return redirect(url_for('dbModel.manage_account'))
 
-
-
-
             # Rest of your code for updating the user's account...
 
 
@@ -484,7 +487,7 @@ def edit_account():
             user.email = new_email
             user.firstname = new_firstname
             user.lastname = new_lastname
-            user.password = new_password
+            user.password = hashed_password
             user.role = new_role
             user.program = new_program
             user.department_A= new_department_A
@@ -1437,7 +1440,7 @@ def change_password():
         return redirect(url_for('dbModel.login'))
     return render_template("change_password.html")
 
-@dbModel_route.route("/new_password", methods=["GET", "POST"])
+@dbModel_route.route("/new_password", methods=["POST"])
 def new_password():
     if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
@@ -1451,31 +1454,47 @@ def new_password():
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
 
-        user = Users.query.filter_by(id=session['user_id'], password=old_password).first()
+        user = Users.query.filter_by(id=session['user_id']).first()
+
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'newpassword_space')
             return redirect(url_for('dbModel.change_password'))
+        
         if user:
-            if new_password == confirm_password:
-                userlog = g.current_user
-                action = f'CHANGED password'
-                ph_tz = pytz.timezone('Asia/Manila')
-                ph_time = datetime.now(ph_tz)
-                timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
-                timestamp = convert_date1(timestamp1)
-                insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
-                if insert_logs:
-                    db.session.add(insert_logs)
+            # Retrieve the hashed password from the database
+            hashed_password = user.password
+            
+            # Check if the old password matches the hashed password stored in the database
+            if check_password_hash(hashed_password, old_password):
+                if new_password == confirm_password:
+                    # Hash the new password before storing
+                    hashed_new_password = generate_password_hash(new_password)
+                    user.password = hashed_new_password
+                    
+                    # Commit changes to the database
                     db.session.commit()
+                    
+                    # Log the password change action
+                    userlog = g.current_user
+                    action = f'CHANGED password'
+                    ph_tz = pytz.timezone('Asia/Manila')
+                    ph_time = datetime.now(ph_tz)
+                    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+                    timestamp = convert_date1(timestamp1)
+                    insert_logs = Logs(userlog=userlog, timestamp=timestamp, action=action)
+                    if insert_logs:
+                        db.session.add(insert_logs)
+                        db.session.commit()
 
-                user.password = new_password
-                db.session.commit()
-                flash('Password successfully changed.', 'new_password')
-                return redirect(url_for('dbModel.change_password'))
+                    flash('Password successfully changed.', 'new_password')
+                    return redirect(url_for('dbModel.change_password'))
+                else:
+                    flash('New password and confirmation do not match.', 'not_match')
             else:
-                flash('New password and confirmation do not match.', 'not_match')
+                flash('Incorrect old password.', 'wrong_old')
         else:
-            flash('Wrong old password.', 'wrong_old')
+            flash('User not found.', 'user_not_found')
+    
     return redirect(url_for('dbModel.change_password'))
 
 ############################### CURRENT PROJECT FILES ###############################

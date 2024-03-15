@@ -1,3 +1,4 @@
+/* Root Variable */
 :root {
     --color-primary: #7380ec;
     --color-danger: #ff7782;
@@ -33,6 +34,16 @@ main .resources_Card {
 }
 
 
+main .resources_Card>div {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+}
+
+
 
 /* file upload button */
 .resources_Card input[type="file"]::file-selector-button {
@@ -56,21 +67,10 @@ main .resources_Card {
     background-color: #e5e7eb;
 }
 
-
-
-
-main .resources_Card>div {
-    background: var(--color-white);
-    padding: var(--card-padding);
-    border-radius: var(--card-border-radius);
-    margin-top: 1rem;
-    box-shadow: var(--box-shadow);
-    transition: all 300ms ease;
-}
-
-main .resources_Card .table-card {
+main .resources_Card .jumbotron .table-card {
     max-height: 35rem;
     overflow: auto;
+
 }
 
 main .resources_Card>div:hover {
@@ -83,6 +83,8 @@ main .resources_Card>div:hover {
 
 }
 
+
+
 main .resources_Card table td {
     height: 2.8rem;
     border-bottom: 1px solid lightgray;
@@ -91,7 +93,10 @@ main .resources_Card table td {
 
 main .resources_Card table tr:last-child td {
     border: none;
+    
 }
+
+
 
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
 .resources_Card .modal {
@@ -181,6 +186,7 @@ main .resources_Card table tr:last-child td {
 
 .resources_Card .jumbotron {
     position: relative;
+  
 
 }
 
@@ -193,8 +199,8 @@ main .resources_Card table tr:last-child td {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 11rem;
-    top: 2rem;
+    left: 9rem;
+    top: 0.1rem;
 }
 
 .resources_Card .btn-add:hover {
@@ -246,6 +252,7 @@ main .resources_Card table tr:last-child td {
 
 .resources_Card table td {
     text-align: center;
+    
 }
 
 .resources_Card .file-box {

@@ -416,6 +416,10 @@ main .cCommunity table tr:last-child td {
 
     }
 
+    .cCommunity .btn-add{
+        left: 70%;
+    }
+
 
     .cCommunity .jumbotron {
         width: 90%;

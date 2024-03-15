@@ -146,7 +146,7 @@ main .cfile-container:hover{
         margin: 0 auto;
     }
   
-    .file-container .btn-submit{
+    .cfile-container .btn-submit{
         right: 1.9rem;
     }
 }
@@ -158,7 +158,7 @@ main .cfile-container:hover{
     }
 
 
-    .file-container , .file_title{
+    .cfile-container , .cfile_title{
         margin: 0 auto;
         width: 90%;
         padding-right: 0;
@@ -172,5 +172,10 @@ main .cfile-container:hover{
     .cfile_title{
         margin-top: 2rem;
     }
+
+
+
+
+    
 }
 

@@ -7,6 +7,7 @@ from datetime import datetime
 from sqlalchemy import func, case
 import pytz, re
 import base64
+from werkzeug.security import generate_password_hash, check_password_hash 
 
 
 coordinator_route = Blueprint('coordinator', __name__)
@@ -306,7 +307,7 @@ def cChange_password():
 
 ############# changepassword ##############
 
-@coordinator_route.route("/cNew_password", methods=["GET", "POST"])
+@coordinator_route.route("/cNew_password", methods=["POST"])
 def cNew_password():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
@@ -317,23 +318,29 @@ def cNew_password():
         new_password = request.form['new_password']
         confirm_password = request.form['confirm_password']
 
-        user = Users.query.filter_by(id=session['user_id'], password=old_password).first()
-        if ' ' in new_password:
-            flash('Password cannot contain spaces.', 'newpassword_space')
-            return redirect(url_for('coordinator.cChange_password'))
-        if user:
+        user = Users.query.filter_by(id=session['user_id']).first()
+        
+        if not user:
+            flash('User not found.', 'user_not_found')
+            return redirect(url_for('dbModel.login'))
+
+        # Check if the old password matches the hashed password stored in the database
+        if check_password_hash(user.password, old_password):
             if new_password == confirm_password:
-                user.password = new_password
+                # Hash the new password before storing
+                hashed_new_password = generate_password_hash(new_password)
+                user.password = hashed_new_password
                 db.session.commit()
                 flash('Password successfully changed.', 'new_password')
 
+                # Log the password change action
                 userlog = g.current_user
                 action = f'CHANGED password'
                 ph_tz = pytz.timezone('Asia/Manila')
                 ph_time = datetime.now(ph_tz)
                 timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
                 timestamp = convert_date1(timestamp1)
-                insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+                insert_logs = Logs(userlog=userlog, timestamp=timestamp, action=action)
                 if insert_logs:
                     db.session.add(insert_logs)
                     db.session.commit()
@@ -341,8 +348,10 @@ def cNew_password():
             else:
                 flash('New password and confirmation do not match.', 'not_match')
         else:
-            flash('Wrong old password.', 'wrong_old')
+            flash('Incorrect old password.', 'wrong_old')
+
     return redirect(url_for('coordinator.cChange_password'))
+
 
 ############################### COORDINATOR CURRENT PROJECT FILES ###############################
 

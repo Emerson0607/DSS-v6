@@ -63,6 +63,15 @@ main .manageUser table tr:last-child td {
     border: none;
 }
 
+.truncate-text {
+    max-width: 10ch;
+    /* set maximum width to 10 characters */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
 .manageUser .modal {
     display: none;

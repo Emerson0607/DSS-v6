@@ -44,6 +44,7 @@
 }
 
 .logs-container {
+    
     background: var(--color-white);
     padding: var(--card-padding);
     box-shadow: var(--box-shadow);
@@ -55,7 +56,7 @@
     /* Top right corner radius */
     padding-bottom: 2.5rem;
     position: relative;
-    overflow-x: auto;
+    overflow: auto;
     /* Horizontal scroll if needed */
     max-height: 545px;
     /* Set a maximum height for vertical scroll */
@@ -93,6 +94,12 @@
 .logs-container table td {
     height: 2.3rem;
     text-align: left;
+
+}
+
+.logs-container table td:last-child {
+    max-width: 5rem !important;
+    white-space: normal;
 }
 
 .logs-container table {
@@ -185,6 +192,7 @@ main .logs-container table td {
 
     .logs-container {
         height: 30rem;
+        
     }
 
 
@@ -236,6 +244,8 @@ main .logs-container table td {
         text-align: center;
         padding-left: 1rem;
     }
+
+    
 }
 
 @media screen and (max-width: 385px) {
