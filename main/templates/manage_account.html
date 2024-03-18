@@ -50,7 +50,7 @@
                     <td><img src="data:image/jpeg;base64,{{ profile_pictures_base64[row.id] }}" alt="Profile Picture"
                             style="width: 50px; height: 50px; border-radius: 50%; padding: 5px;"></td>
                     {% else %}
-                    <td>No image</td>
+                    <td><img style="width: 50px; height: 50px; border-radius: 50%; padding: 5px;" class="invert-blue" src="/static/images/user-blue.png" alt="CESU-LOGO"></td>
                     {% endif %}
                     <td>{{ row.username }}</td>
                     <td>{{ row.firstname|truncate(10, '...') }}</td>
@@ -178,19 +178,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="{{ url_for('dbModel.add_account') }}" method="POST" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label>Profile Picture:</label>
-
-                                <img id="preview" src="#" alt="Profile Picture"
-                                    style="display: none; width: 100px; height: 100px; margin-top: 10px;">
-
-
-                                <input type="file" class="form-control" name="profile_picture" accept="image/*" required
-                                    onchange="previewImage2(event, 'preview')">
-
-
-
-                            </div>
+                            
                             <div class="form-group">
                                 <label>Username:</label>
                                 <input type="text" class="form-control" name="username" required>
@@ -212,10 +200,12 @@
                             </div>
                             <div class="form-group pass-toggle-container">
                                 <label>Password:</label>
+                                <div class="toggle_password_eye">
                                 <input type="password" class="form-control pass-input passadd" name="password"
                                     minlength="8" id="pass" minlength="8" required>
-                                <i class="toggle-password2 material-symbols-sharp"
+                                   <i class="toggle-password2 material-symbols-sharp"
                                     id="toggle-add-password">visibility</i>
+                                </div>
                             </div>
 
 
@@ -394,18 +384,6 @@
         var reader = new FileReader();
         reader.onload = function () {
             var preview = document.getElementById(previewId);
-            preview.src = reader.result;
-            preview.style.display = 'block';
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-
-
-
-    function previewImage2(event) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            var preview = document.getElementById('preview');
             preview.src = reader.result;
             preview.style.display = 'block';
         };

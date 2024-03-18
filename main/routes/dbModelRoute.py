@@ -324,7 +324,7 @@ def add_account():
         program = request.form.get("program")
         department_A = request.form.get("department_A")
         mobile_number = request.form.get("mobile_number")
-        profile_picture = request.files['profile_picture'].read()  # Use .get() instead of ['']
+        #profile_picture = request.files['profile_picture'].read()  # Use .get() instead of ['']
 
         # Hash the password
         hashed_password = generate_password_hash(password)
@@ -367,7 +367,7 @@ def add_account():
                     if existing_mobile_number:
                         flash('Mobile number already exists.', 'existing_username')
                     else:
-                        new_user = Users(username=username, firstname=firstname, lastname=lastname,password=hashed_password, email=email, role = role, program = program, department_A=department_A, mobile_number=mobile_number, profile_picture=profile_picture )
+                        new_user = Users(username=username, firstname=firstname, lastname=lastname,password=hashed_password, email=email, role = role, program = program, department_A=department_A, mobile_number=mobile_number)
                         try: 
                             userlog = g.current_user
                             action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
@@ -2588,6 +2588,12 @@ def add_resources():
         activity = request.form.get("activity")
         url = request.form.get("url")
      
+
+        # Validate URL
+        if not re.match(r'https?://(?:www\.)?\w+\.\w+', url):
+            flash('Invalid URL format. Please enter a valid URL starting with http:// or https:// and containing a valid domain.', 'existing_community')
+            return redirect(url_for('dbModel.resources'))
+        
         #Convert date
         date = convert_date(date1)
     

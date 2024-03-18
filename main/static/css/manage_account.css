@@ -32,7 +32,7 @@ main .manageUser {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-    max-height: 400px;
+    
 }
 
 main .manageUser>div {
@@ -227,9 +227,14 @@ main .manageUser table tr:last-child td {
 
 }
 
-.manageUser table td {
+.manageUser table td , .manageUser table th{
+    text-align: left;
+}
+
+.manageUser table td:last-child , .manageUser table th:last-child{
     text-align: center;
 }
+
 
 .manageUser .pass-toggle-container {
     position: relative;
@@ -250,6 +255,18 @@ main .manageUser table tr:last-child td {
 
 .manageUser .jumbotron{
    position: relative;
+   
+}
+
+.manageUser .toggle_password_eye{
+    position: relative;
+}
+
+.manageUser .toggle_password_eye .toggle-password2{
+    position: absolute;
+    top:0.5rem;
+    right: 1rem;
+    cursor: pointer;
 }
 
 /*FOR DEPARTMENT TABLE*/
@@ -300,9 +317,6 @@ main .manageDepartment .jumbotron{
     
 }
 
-main .manageDepartment table td {
-    text-align: center;
-}
 
 
 
@@ -472,8 +486,16 @@ main .manageDepartment table td {
 
 }
 
-.manageDepartment table td {
+.manageDepartment table td, .manageDepartment table th {
     text-align: left;
+}
+
+.manageDepartment table td:last-child{
+    text-align: center;
+}
+
+.manageDepartment table th:last-child{
+    text-align: center;
 }
 
 .manageDepartment .pass-toggle-container {
@@ -529,6 +551,8 @@ main .manageDepartment table td {
         width: 90%;
     }
 
+
+
     .manageUser .modal-content {
         width: 90%;
     }
@@ -571,6 +595,10 @@ main .manageDepartment table td {
         left: 16rem;
         top: 1.9rem;
     
+    }
+
+    .manageUser .jumbo{
+        max-height: 18rem;
     }
 
     
@@ -619,6 +647,7 @@ main .manageDepartment table th:last-child{
     width: 50%;
     position: relative;
 }
+
 
 
 }

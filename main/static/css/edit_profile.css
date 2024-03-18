@@ -222,6 +222,24 @@
     border-radius:50%; width: 15rem; height:15rem;
 }
 
+@media screen and (max-width: 386px){
+ 
+    .edit_profile_container .form3{
+
+        padding: 0.3rem !important;
+        padding-bottom: 3rem !important;
+        
+    }
+
+
+    .edit_profile_container .picture_top_container .form2{
+        left: 35% !important;
+    }
+
+    .edit_profile_container .btn-submit1{
+        right: 2.1rem !important;
+    }
+}
 
 @media screen and (max-width: 400px){
 
@@ -243,14 +261,14 @@
     }
     
     .edit_profile_container  .current_picture{
-        width: 10rem; 
-        height:10rem;
+        width: 8rem; 
+        height:8rem;
     }
 
     .edit_profile_container .form1{
         display: grid;
         grid-template-columns: repeat(2, 2fr);
-        gap: 1rem;
+        gap: 2rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
     }
@@ -267,8 +285,8 @@
 
     .edit_profile_container .form1 .left_picture .preview_picture {
 
-        width: 10rem; 
-        height:10rem;
+        width: 8rem; 
+        height:8rem;
     }
 
     .edit_profile_container .picture_top_container .form2{
@@ -282,4 +300,5 @@
         right: 3rem;
     }
 }
+
 

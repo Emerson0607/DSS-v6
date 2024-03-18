@@ -70,7 +70,7 @@ main .resources_Card>div {
 main .resources_Card .jumbotron .table-card {
     max-height: 35rem;
     overflow: auto;
-
+ 
 }
 
 main .resources_Card>div:hover {
@@ -78,9 +78,7 @@ main .resources_Card>div:hover {
 }
 
 .resources_Card table {
-
     width: 100%;
-
 }
 
 
@@ -250,8 +248,8 @@ main .resources_Card table tr:last-child td {
     color: var(--color-danger);
 }
 
-.resources_Card table td {
-    text-align: center;
+.resources_Card table td, .resources_Card table th {
+    text-align: left;
     
 }
 
