@@ -240,6 +240,7 @@
     }
 }
 
+
 @media screen and (max-width: 400px){
 
     .edit_profile_container{
@@ -260,8 +261,8 @@
     }
     
     .edit_profile_container  .current_picture{
-        width: 10rem; 
-        height:10rem;
+        width: 8rem; 
+        height:8rem;
     }
 
     .edit_profile_container .form1{
