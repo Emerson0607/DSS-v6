@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 binago mo ako at nagbago
+=======
+binago mo ako wawa
+>>>>>>> 5ab6d4bd04aca6ef5a9bd6929ec07197628ab8c6
