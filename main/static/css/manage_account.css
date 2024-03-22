@@ -71,6 +71,12 @@ main .manageUser table tr:last-child td {
     white-space: nowrap;
 }
 
+.swipe-indicator{
+    color: #818181;
+    display: none;
+}
+
+
 
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
 .manageUser .modal {
@@ -549,6 +555,14 @@ main .manageDepartment .jumbotron{
         padding-top: 1rem;
         width: 90%;
     }
+    
+    .swipe-indicator{
+        margin-left: 5.8rem;
+        color: #818181;
+        display: block;
+        font-size: 10px;
+    }
+    
 
 
 
