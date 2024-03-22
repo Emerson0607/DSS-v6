@@ -33,12 +33,12 @@
     <link rel="stylesheet" href="/static/css/cEdit_profile.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
         type="image/x-icon">
+    
     <style>
         @media screen and (max-width: 400px) {
-
             .invert-green {
                 content: url("/static/images/user-invert-green.png");
-                /* Change the image source for mobile */
+            
             }
 
         }
@@ -131,11 +131,11 @@
                     </div>
                     <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
                         {% if profile_picture_base64 %}
-                        <img class="invert-green" src="data:image/jpeg;base64,{{ profile_picture_base64 }}"
-                            alt="Profile Picture">
+                        <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
                         {% else %}
-                        <img class="invert-green" src="/static/images/user-blue.png" alt="CESU-LOGO">
+                        <img class="invert-green" src="/static/images/user.png" alt="CESU-LOGO">
                         {% endif %}
+
                         <div class="dropdown-content" id="dropdown-content">
                             <div class="edit-hover"><a class="edit-button"
                                     href="{{ url_for('coordinator.cEdit_profile') }}" id="edit-button">Edit
