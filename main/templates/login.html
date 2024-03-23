@@ -160,6 +160,34 @@
 
     </script>
 
+
+<!--RETAIN INPUTS-->
+<script>
+    // Function to save form inputs to local storage
+    function saveFormInputs() {
+        localStorage.setItem('username', document.getElementById('username').value);
+        // You might not want to save passwords for security reasons
+        // localStorage.setItem('password', document.getElementById('password').value);
+    }
+
+    // Function to load form inputs from local storage
+    function loadFormInputs() {
+        document.getElementById('username').value = localStorage.getItem('username') || '';
+        // You might not want to load passwords for security reasons
+        // document.getElementById('password').value = localStorage.getItem('password') || '';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Load form inputs when the page is loaded
+        loadFormInputs();
+
+        // Save form inputs when the form is submitted
+        document.getElementById('loginForm').addEventListener('submit', saveFormInputs);
+    });
+
+    window.addEventListener('beforeunload', saveFormInputs); // Save form inputs before leaving the page
+</script>
+
 </body>
 
 </html>
