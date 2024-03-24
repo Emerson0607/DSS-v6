@@ -12,7 +12,6 @@ closeBtn.addEventListener('click', () => {
     sideMenu.style.display = 'none'; // Hide sidebar
 });
 
-// Function to get the current date and day
 function getCurrentDateAndDay() {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const currentDate = new Date();
@@ -21,9 +20,21 @@ function getCurrentDateAndDay() {
     const year = currentDate.getFullYear();
     const dayOfWeek = daysOfWeek[currentDate.getDay()];
 
-    const formattedDate = `${day}<span class="small-exponent">th</span> of ${month}, ${dayOfWeek}`;
+    let daySuffix;
+    if (day === 1 || day === 21 || day === 31) {
+        daySuffix = "st";
+    } else if (day === 2 || day === 22) {
+        daySuffix = "nd";
+    } else if (day === 3 || day === 23) {
+        daySuffix = "rd";
+    } else {
+        daySuffix = "th";
+    }
+
+    const formattedDate = `${day}<span class="small-exponent">${daySuffix}</span> of ${month}, ${dayOfWeek}`;
     return formattedDate;
 }
+
 
 // Display the current date and day in the specified element
 const dateContainer = document.getElementById('date-container');
@@ -66,3 +77,4 @@ $(document).ready(function() {
         });
     });
 });
+ 

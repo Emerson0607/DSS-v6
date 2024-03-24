@@ -389,6 +389,11 @@ main .cCommunity table tr:last-child td {
     /* Adjust as needed */
 }
 
+.swipe-indicator{
+    color: #818181;
+    display: none;
+}
+
 
 
 /*smaller laptop*/
@@ -407,6 +412,14 @@ main .cCommunity table tr:last-child td {
         right: 25px;
         bottom: 2px;
     }
+    
+    .swipe-indicator{
+        margin-left: 5.8rem;
+        color: #818181;
+        display: block;
+        font-size: 10px;
+    }
+    
 }
 
 /* ------------------- MOBILE -------------------- */
@@ -415,6 +428,12 @@ main .cCommunity table tr:last-child td {
         margin: 0 auto;
         padding-top: 2rem;
 
+    }
+    .swipe-indicator{
+        margin-left: 5.8rem;
+        color: #818181;
+        display: block;
+        font-size: 10px;
     }
 
     .cCommunity .btn-add{

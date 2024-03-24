@@ -60,7 +60,7 @@
                     <td>{{ row.mobile_number }}</td>
                     <td>{{ row.role }}</td>
                     <td>{{ row.department_A }}</td>
-                    <td>{{ row.program|truncate(10, '...') }}</td>
+                    <td>{{ row.program }}</td>
                     <td style="width: 9rem;">
 
                         <a href="{{ url_for('dbModel.edit_account', id=row.id) }}" class="btn-edit"
@@ -262,7 +262,9 @@
                 </div>
             </div>
         </div> <!--end add modal-->
+        <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div><!--end jumbotronnnn-->
+   
 </div>
 
 
@@ -372,6 +374,7 @@
                 </div>
             </div>
         </div> <!--end add modal-->
+        <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div><!--end jumbotronnnn-->
 </div>
 
