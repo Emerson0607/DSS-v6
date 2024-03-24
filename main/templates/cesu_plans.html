@@ -213,10 +213,13 @@ with_categories=true) %}
             
             // Display notification if there are invalid characters
             if (value !== e.target.value) {
-                notification.textContent = "INVALID INPUT! ONLY use NUMBERS, COMMA(,), and PERIOD(.).";
+                notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
             } else {
                 notification.textContent = "";
             }
+            
+            // Remove existing commas
+            value = value.replace(/,/g, '');
             
             // Split the value into integer and decimal parts
             var parts = value.split('.');
