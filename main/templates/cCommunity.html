@@ -92,8 +92,9 @@
                                     pattern="[1-9][0-9]?" title="Please enter a number between 1 and 99">
                             </div>
                             <div class="form-group">
-                                <label>Budget:</label>
-                                <input type="number" class="form-control" name="budget" required>
+                                <p id="notification" style="color: red; font-style: italic;"></p>
+                                <label for="budget">Budget:</label>
+                                <input type="text" class="form-control" id="budget" name="budget" required>
                             </div>
                             <br>
                             <!-- ACCOUNTABILITY -->
@@ -195,6 +196,49 @@
         </span>
     </div>
 </div>
+
+
+<!--BUDGET-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var budgetInput = document.getElementById('budget');
+        var notification = document.getElementById('notification');
+        
+        budgetInput.addEventListener('input', function(e) {
+            var value = e.target.value;
+            
+            // Remove non-numeric characters except comma and period
+            value = value.replace(/[^0-9,.]/g, '');
+            
+            // Display notification if there are invalid characters
+            if (value !== e.target.value) {
+                notification.textContent = "INVALID INPUT! ONLY use NUMBERS, COMMA(,), and PERIOD(.).";
+            } else {
+                notification.textContent = "";
+            }
+            
+            // Split the value into integer and decimal parts
+            var parts = value.split('.');
+            
+            // Format integer part with commas
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            // Join the parts back together
+            value = parts.join('.');
+            
+            // Update the input value
+            e.target.value = value;
+        });
+        
+        // Add event listener to clear notification on click outside the input field
+        document.addEventListener('click', function(event) {
+            if (event.target !== budgetInput) {
+                notification.textContent = "";
+            }
+        });
+    });
+</script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
