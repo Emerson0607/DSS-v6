@@ -14,8 +14,8 @@ with_categories=true) %}
 {% endif %}
 {% endwith %}
 
-<div class="pending_detailsCard">
-    <div class="pending_detailsBox">
+<div class="cPending_detailsCard">
+    <div class="cPending_detailsBox">
         <h2 style="margin-bottom: 1rem;">Pending <b>Project Details</b></h2>
         <form action="{{ url_for('coordinator.update_pending')}}" method="POST" enctype="multipart/form-data"
             id="upload-form">
@@ -54,9 +54,8 @@ with_categories=true) %}
                 </div>
             </div>
             <div class="form-group">
-                <p id="notification" style="color: red; font-style: italic;"></p>
-                <label for="budget">Budget:</label>
-                <input type="text" class="form-control" id="budget" name="budget" value="{{budget}}" required>
+                <label>Budget:</label>
+                <input type="number" class="form-control" name="budget" value="{{budget}}" required>
             </div>
             <br>
             <!-- ACCOUNTABILITY -->
@@ -91,7 +90,7 @@ with_categories=true) %}
                     <p for="CPF">Community Profiling Form</p>
                     {% if cpf_filename %}
                     <span id="tooltipText">download</span>
-                    <a
+                    <a class="cpf_relative"
                         href="{{ url_for('coordinator.cView_cpf', program=program, subprogram=subprogram, community=community, cpf_filename = cpf_filename) }}">{{
                         cpf_filename }}</a>
                     {% else %}
@@ -105,7 +104,7 @@ with_categories=true) %}
                     <p for="CESAP">CES Activity Proposal</p>
                     {% if cesap_filename %}
                     <span id="tooltipText2">download</span>
-                    <a
+                    <a class="cesap_relative"
                         href="{{ url_for('coordinator.cView_cesap', program=program, subprogram=subprogram, community=community, cesap_filename = cesap_filename) }}">{{
                         cesap_filename }}</a>
                     {% else %}
@@ -122,7 +121,7 @@ with_categories=true) %}
 
                     {% if cna_filename %}
                     <span id="tooltipText3">download</span>
-                    <a
+                    <a class="cna_relative"
                         href="{{ url_for('coordinator.cView_cna', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">{{
                         cna_filename }}</a>
                     <!-- Your other code related to cna_filename -->
@@ -149,79 +148,55 @@ with_categories=true) %}
         <div class="cpf_del">
             <form action="{{ url_for('coordinator.CPF_delete') }}" method="POST" style="display: inline;"
                 onsubmit="return confirm('Are you sure you want to delete this?')">
-                <input style="display: none;" type="text" class="form-control" name="cpf_id" value="{{id}}" required>
-                <button class="cpf_delete" type="submit"><span class="material-symbols-outlined">
-                        delete
-                    </span></button>
+
+                    {% if cpf_filename %}
+                    <input style="display: none;" type="text" class="form-control" name="cpf_id" value="{{id}}" required>
+                    <button class="cpf_delete" type="submit"><span class="material-symbols-outlined">
+                            delete
+                        </span></button>
+                    {% else %}
+
+                   <button style="display: none !important;" class="cpf_delete" type="submit"><span class="material-symbols-outlined">
+                            delete
+                        </span></button>
+                    {% endif %}
+
 
             </form>
         </div>
         <div class="cesap_del">
             <form action="{{ url_for('coordinator.CESAP_delete') }}" method="POST" style="display: inline;"
                 onsubmit="return confirm('Are you sure you want to delete this?')">
+                {% if cesap_filename %}
                 <input style="display: none;" type="text" class="form-control" name="cesap_id" value="{{id}}" required>
                 <button class="cesap_delete" type="submit"><span class="material-symbols-outlined">
                         delete
                     </span></button>
+
+                    {% else %}
+                    <button class="cesap_delete" style="display: none;" type="submit"><span class="material-symbols-outlined">
+                        delete
+                    </span></button>
+                    {% endif %}
             </form>
         </div>
         <div class="cna_del">
             <form action="{{ url_for('coordinator.CNA_delete') }}" method="POST" style="display: inline;"
                 onsubmit="return confirm('Are you sure you want to delete this?')">
+                {% if cna_filename %}
                 <input style="display: none;" type="text" class="form-control" name="cna_id" value="{{id}}" required>
                 <button class="cna_delete" type="submit"><span class="material-symbols-outlined">
                         delete
                     </span></button>
+                    {% else %}
+                    <button class="cna_delete" style="display: none;" type="submit"><span class="material-symbols-outlined">
+                        delete
+                    </span></button>
+                    {% endif %}
             </form>
         </div>
     </div>
 </div>
-
-
-<!--BUDGET-->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var budgetInput = document.getElementById('budget');
-        var notification = document.getElementById('notification');
-        
-        budgetInput.addEventListener('input', function(e) {
-            var value = e.target.value;
-            
-            // Remove non-numeric characters except comma and period
-            value = value.replace(/[^0-9,.]/g, '');
-            
-            // Display notification if there are invalid characters
-            if (value !== e.target.value) {
-                notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
-            } else {
-                notification.textContent = "";
-            }
-            
-            // Remove existing commas
-            value = value.replace(/,/g, '');
-            
-            // Split the value into integer and decimal parts
-            var parts = value.split('.');
-            
-            // Format integer part with commas
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            
-            // Join the parts back together
-            value = parts.join('.');
-            
-            // Update the input value
-            e.target.value = value;
-        });
-        
-        // Add event listener to clear notification on click outside the input field
-        document.addEventListener('click', function(event) {
-            if (event.target !== budgetInput) {
-                notification.textContent = "";
-            }
-        });
-    });
-</script>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

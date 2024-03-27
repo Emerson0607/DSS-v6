@@ -21,31 +21,57 @@
     </div>
 </div>
 <script>
+    // Function to store result data in localStorage
+    function storeResultData(data) {
+        localStorage.setItem('resultData', JSON.stringify(data));
+    }
+
+    // Function to retrieve result data from localStorage
+    function getResultData() {
+        const storedData = localStorage.getItem('resultData');
+        return storedData ? JSON.parse(storedData) : null;
+    }
+
+    // Function to display result data on the page
+    function displayResultData(data) {
+        $('#result-container').html(data);
+    }
+
     // Attach an event handler for the form submission
-    if (window.history.replaceState ) {
-        window.history.replaceState( null, null, window.location.href );
-    }
-    function myfunction(){
-        // Create a FormData object to send the file
-        var formData = new FormData(this);
+    $(document).ready(function() {
+        $('#upload-form').submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            
+            // Create a FormData object to send the file
+            var formData = new FormData(this);
 
-        // Send an Ajax POST request to the server
-        $.ajax({
-            url: "{{ url_for('randomForest.programWithCSV') }}",
-            type: "POST",
-            data: formData,
-            processData: false, // Prevent jQuery from converting the data to a query string
-            contentType: false, // Prevent jQuery from setting the content type
-            success: function(response) {
-                // Update the content of the result container with the response
-                $('#result-container').html(response);
-            },
-            error: function(xhr, status, error) {
-                console.error("Ajax request failed:", error);
-            }
+            // Send an Ajax POST request to the server
+            $.ajax({
+                url: "{{ url_for('randomForest.programWithCSV') }}",
+                type: "POST",
+                data: formData,
+                processData: false, // Prevent jQuery from converting the data to a query string
+                contentType: false, // Prevent jQuery from setting the content type
+                success: function(response) {
+                    // Store the result data in localStorage
+                    storeResultData(response);
+
+                    // Display the result data on the page
+                    displayResultData(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Ajax request failed:", error);
+                }
+            });
         });
-    }
-</script>
 
+        // Check if result data exists in localStorage when the page loads
+        const resultData = getResultData();
+        if (resultData) {
+            // If result data exists, display it on the page
+            displayResultData(resultData);
+        }
+    });
+</script>
 {% block results %}{% endblock %}     
 {% endblock %}

@@ -58,8 +58,10 @@ flashes.forEach(function(flash) {
         flash.addEventListener('transitionend', function() {
             flash.remove();
         });
+        window.location.reload();
     }, 3000);
 });
+
 
 // Tooltips (using jQuery)
 $(document).ready(function() {

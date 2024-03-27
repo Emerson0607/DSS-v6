@@ -1,62 +1,34 @@
-:root {
-    --color-primary: #7380ec;
-    --color-danger: #ff7782;
-    --color-success: #41f1b6;
-    --color-warning: #ffbb55;
-    --color-white: #fff;
-    --color-info-dark: #7d8da1;
-    --color-info-light: #dce1eb;
-    --color-dark: #363949;
-    --color-light: rgba(132, 139, 200, 0.18);
-    --color-primary-variant: #111e88;
-    --color-dark-variant: #677483;
-    --color-background: #f6f6f9;
-
-    --card-border-radius: 2rem;
-    --border-radius-1: 0.4rem;
-    --border-radius-2: 0.8rem;
-    --border-radius-3: 1.2rem;
-
-    --card-padding: 1.8rem;
-    --padding-1: 1.2rem;
-
-    --box-shadow: 0 2rem 3rem var(--color-light);
-}
-
-main .pending_detailsCard .time-frame,
-.fileces {
+main .cPending_detailsCard .time-frame, .fileces{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
     margin-bottom: 2rem;
 }
 
-
-main .pending_detailsCard {
+main .cPending_detailsCard{
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
     position: relative;
 }
 
-
-main .pending_detailsCard .pending_detailsBox {
+main .cPending_detailsCard .cPending_detailsBox{
     padding: 3rem 5rem;
+    padding-bottom: 6rem;
 }
 
-main .pending_detailsCard .file-box p {
+main .cPending_detailsCard .file-box p{
     margin-bottom: .5rem;
 }
 
-main .pending_detailsCard .file-box a {
+main .cPending_detailsCard .file-box a{
     color: #05ae11;
     font-weight: 600;
     padding: 2px;
     margin-top: 1rem;
-
+    
 }
-
-main .pending_detailsCard>div {
+main .cPending_detailsCard > div{
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -66,14 +38,14 @@ main .pending_detailsCard>div {
 }
 
 
-main .pending_detailsCard>div:hover {
+main .cPending_detailsCard > div:hover{
     box-shadow: none;
 }
 
 
 
 /* file upload button */
-.pending_detailsCard input[type="file"]::file-selector-button {
+.cPending_detailsCard  input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -82,59 +54,127 @@ main .pending_detailsCard>div:hover {
     border: 1px solid rgba(0, 0, 0, 0.16);
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
     transition: background-color 200ms;
-}
-
-/* file upload button hover state */
-.pending_detailsCard input[type="file"]::file-selector-button:hover {
+  }
+  
+  /* file upload button hover state */
+  .cPending_detailsCard  input[type="file"]::file-selector-button:hover {
     background-color: #f3f4f6;
-}
-
-/* file upload button active state */
-.pending_detailsCard input[type="file"]::file-selector-button:active {
+  }
+  
+  /* file upload button active state */
+  .cPending_detailsCard  input[type="file"]::file-selector-button:active {
     background-color: #e5e7eb;
-}
+  }
 
 
 /* Style for submit button */
-.pending_detailsCard .btn-submit {
+.cPending_detailsCard .btn-submit {
     background-color: #49a14f;
     color: #fff;
-    padding: 10px 12px;
-    border: none;
-    border-radius: 5px;
+    padding: 8px 10px;
+    border: 1.5px solid #49a14f;
+    border-radius: 1px;
     cursor: pointer;
     position: absolute;
-    bottom: 1rem;
+    bottom: 2.5rem;
     right: 5rem;
+    width: 5rem;
 }
 
-.pending_detailsCard .btn-submit:hover {
-    background-color: #05ae11;
+/* Style for decline button */
+.cPending_detailsCard .btn-decline {
+    background-color:#fff;
+    color: #49a14f;
+    width: 5rem;
+    border: 1.5px solid #49a14f;
+    padding: 8px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 2.5rem;
+    right: 11rem;
+}
+
+.cPending_detailsCard .btn-decline:hover {
+    background-color: #048b0d;
+    color: #fff;
+}
+
+.cPending_detailsCard .btn-submit:hover {
+    background-color: #048b0d;
+    color: #fff;
+}
+
+.cPending_detailsCard .cpf_delete {
+   background-color: #fff;
+    color: #ff7782;
+    cursor: pointer;
+    position: absolute;
+    right: 47rem;
+    bottom: 13.5rem;
+}
+
+.cPending_detailsCard .cesap_delete {
+    background-color: #fff;
+    color: #ff7782;
+    cursor: pointer;
+    position: absolute;
+    right: 25rem;
+    bottom: 13.5rem;
+}
+
+.cPending_detailsCard .cna_delete {
+    color: #ff7782;
+    background-color: #fff;
+    cursor: pointer;
+    position: absolute;
+    right: 7rem;
+    bottom: 13.5rem;
 }
 
 /* ------------------- MOBILE -------------------- */
-@media screen and (max-width: 400px) {
-    .pending_detailsCard {
+@media screen and (max-width: 400px){
+    .cPending_detailsCard{ 
         margin: 0 auto;
         padding-top: 1rem;
         width: 90%;
-
+        
     }
 
-
-
-    main .pending_detailsCard .pending_detailsBox {
+    main .cPending_detailsCard .cPending_detailsBox{
         padding: 2rem 2rem;
     }
 
-    main .pending_detailsCard .time-frame,
-    .fileces {
-        grid-template-columns: 1fr;
+    main .cPending_detailsCard .time-frame, .fileces{
+        grid-template-columns:1fr;
     }
 
-    /* Style for submit button */
-    .pending_detailsCard .btn-submit {
+    .cPending_detailsCard .btn-decline {
         bottom: 1rem;
-        right: 1rem;
+        left: 3rem;
     }
+
+    .cPending_detailsCard .btn-submit {
+        bottom: 1rem;
+        right: 2rem;
+    }
+    main .cPending_detailsCard .cPending_detailsBox{
+        padding-bottom: 4rem;
+    }
+
+    .cPending_detailsCard .cpf_delete {
+    
+        right: 1rem;
+        bottom: 21rem;
+     }
+     
+     .cPending_detailsCard .cesap_delete {
+        right: 1rem;
+        bottom: 16rem;
+     }
+     
+     .cPending_detailsCard .cna_delete {
+        right: 1rem;
+        bottom: 11rem;
+     }
 }
