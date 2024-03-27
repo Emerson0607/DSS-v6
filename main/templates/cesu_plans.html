@@ -124,7 +124,7 @@ with_categories=true) %}
                                 </div>
                                 <div class="form-group">
                                     <label>Total Week:</label>
-                                    <input type="number" class="form-control" name="totalWeek" required>
+                                    <input type="number" class="form-control mobile-input" name="totalWeek" required>
                                 </div>
                                 <br>
                                 <div class="form-group">
@@ -157,7 +157,7 @@ with_categories=true) %}
                                 </div>
                                 <div class="form-group">
                                     <label>Volunteer(s) Count:</label>
-                                    <input type="number" class="form-control" name="volunteer" required>
+                                    <input type="text" class="form-control" name="volunteer" required>
                                 </div>
                                 <br>
                                 <!-- FILE -->
@@ -241,6 +241,31 @@ with_categories=true) %}
             }
         });
     });
+</script>
+
+
+<!--WEEKS-->
+<script>
+    document.querySelectorAll(".mobile-input").forEach(function (element) {
+element.addEventListener("input", function (event) {
+    // Remove any non-numeric characters from the input
+    this.value = this.value.replace(/\D/g, "");
+
+    // Ensure only two digits are allowed
+    if (this.value.length > 2) {
+        this.value = this.value.slice(0, 2);
+    }
+});
+});
+</script>
+
+
+<!--VOLUNTEERS-->
+<script>
+    document.querySelector('input[name="volunteer"]').addEventListener("input", function(event) {
+    // Remove any non-numeric characters from the input
+    this.value = this.value.replace(/\D/g, "");
+});
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
