@@ -246,26 +246,48 @@ with_categories=true) %}
 
 <!--WEEKS-->
 <script>
-    document.querySelectorAll(".mobile-input").forEach(function (element) {
-element.addEventListener("input", function (event) {
-    // Remove any non-numeric characters from the input
-    this.value = this.value.replace(/\D/g, "");
-
-    // Ensure only two digits are allowed
-    if (this.value.length > 2) {
-        this.value = this.value.slice(0, 2);
-    }
-});
-});
 </script>
 
 
 <!--VOLUNTEERS-->
 <script>
-    document.querySelector('input[name="volunteer"]').addEventListener("input", function(event) {
-    // Remove any non-numeric characters from the input
-    this.value = this.value.replace(/\D/g, "");
-});
+    document.addEventListener("DOMContentLoaded", function() {
+        var volunteerInput = document.querySelector('input[name="volunteer"]');
+        var notification = document.getElementById('notification');
+        
+        volunteerInput.addEventListener('input', function(e) {
+            var value = e.target.value;
+            
+            // Remove non-numeric characters
+            value = value.replace(/\D/g, '');
+            
+            // Remove leading zeros
+            value = value.replace(/^0+/, '');
+            
+            // Limit input to six digits
+            if (value.length > 6) {
+                value = value.slice(0, 6);
+            }
+            
+            // Add commas for better readability
+            value = numberWithCommas(value);
+            
+            // Update the input value
+            e.target.value = value;
+        });
+        
+        // Add event listener to clear notification on click outside the input field
+        document.addEventListener('click', function(event) {
+            if (event.target !== volunteerInput) {
+                notification.textContent = "";
+            }
+        });
+    });
+
+    // Function to add commas to a number
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

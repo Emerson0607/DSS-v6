@@ -54,8 +54,9 @@ with_categories=true) %}
                 </div>
             </div>
             <div class="form-group">
+                <p id="notification" style="color: red; font-style: italic;"></p>
                 <label>Budget:</label>
-                <input type="number" class="form-control" name="budget" value="{{budget}}" required>
+                <input type="text" class="form-control" id="budget" name="budget" value="{{budget}}" required>
             </div>
             <br>
             <!-- ACCOUNTABILITY -->
@@ -78,7 +79,7 @@ with_categories=true) %}
             </div>
             <div class="form-group">
                 <label>Volunteer(s):</label>
-                <input type="number" class="form-control" name="volunteer" value="{{volunteer}}" required>
+                <input type="text" class="form-control" name="volunteer" value="{{volunteer}}" required>
             </div>
             <br>
 
@@ -197,6 +198,105 @@ with_categories=true) %}
         </div>
     </div>
 </div>
+
+
+<!--BUDGET-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var budgetInput = document.getElementById('budget');
+        var notification = document.getElementById('notification');
+        
+        budgetInput.addEventListener('input', function(e) {
+            var value = e.target.value;
+            
+            // Remove non-numeric characters except comma and period
+            value = value.replace(/[^0-9,.]/g, '');
+            
+            // Check if the input starts with zero
+            if (value.charAt(0) === '0') {
+                // If the input starts with zero, and its length is greater than 1,
+                // remove the leading zero
+                if (value.length > 1) {
+                    value = value.slice(1);
+                } else {
+                    // If the input is just zero, set the value to empty
+                    value = '';
+                }
+            }
+            
+            // Display notification if there are invalid characters
+            if (value !== e.target.value) {
+                notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
+            } else {
+                notification.textContent = "";
+            }
+            
+            // Remove existing commas
+            value = value.replace(/,/g, '');
+            
+            // Split the value into integer and decimal parts
+            var parts = value.split('.');
+            
+            // Format integer part with commas
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            
+            // Join the parts back together
+            value = parts.join('.');
+            
+            // Update the input value
+            e.target.value = value;
+        });
+        
+        // Add event listener to clear notification on click outside the input field
+        document.addEventListener('click', function(event) {
+            if (event.target !== budgetInput) {
+                notification.textContent = "";
+            }
+        });
+    });
+</script>
+
+<!--VOLUNTEERS-->
+<script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var volunteerInput = document.querySelector('input[name="volunteer"]');
+        var notification = document.getElementById('notification');
+        
+        volunteerInput.addEventListener('input', function(e) {
+            var value = e.target.value;
+            
+            // Remove non-numeric characters
+            value = value.replace(/\D/g, '');
+            
+            // Remove leading zeros
+            value = value.replace(/^0+/, '');
+            
+            // Limit input to six digits
+            if (value.length > 6) {
+                value = value.slice(0, 6);
+            }
+            
+            // Add commas for better readability
+            value = numberWithCommas(value);
+            
+            // Update the input value
+            e.target.value = value;
+        });
+        
+        // Add event listener to clear notification on click outside the input field
+        document.addEventListener('click', function(event) {
+            if (event.target !== volunteerInput) {
+                notification.textContent = "";
+            }
+        });
+    });
+
+    // Function to add commas to a number
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+</script>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>

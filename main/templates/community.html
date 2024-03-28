@@ -224,6 +224,18 @@ with_categories=true) %}
             // Remove non-numeric characters except comma and period
             value = value.replace(/[^0-9,.]/g, '');
             
+            // Check if the input starts with zero
+            if (value.charAt(0) === '0') {
+                // If the input starts with zero, and its length is greater than 1,
+                // remove the leading zero
+                if (value.length > 1) {
+                    value = value.slice(1);
+                } else {
+                    // If the input is just zero, set the value to empty
+                    value = '';
+                }
+            }
+            
             // Display notification if there are invalid characters
             if (value !== e.target.value) {
                 notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
@@ -256,7 +268,6 @@ with_categories=true) %}
     });
 </script>
 
-
 <!--WEEKS-->
 <script>
         document.querySelectorAll(".mobile-input").forEach(function (element) {
@@ -274,10 +285,43 @@ with_categories=true) %}
 
 <!--VOLUNTEERS-->
 <script>
-    document.querySelector('input[name="volunteer"]').addEventListener("input", function(event) {
-    // Remove any non-numeric characters from the input
-    this.value = this.value.replace(/\D/g, "");
-});
+       document.addEventListener("DOMContentLoaded", function() {
+        var volunteerInput = document.querySelector('input[name="volunteer"]');
+        var notification = document.getElementById('notification');
+        
+        volunteerInput.addEventListener('input', function(e) {
+            var value = e.target.value;
+            
+            // Remove non-numeric characters
+            value = value.replace(/\D/g, '');
+            
+            // Remove leading zeros
+            value = value.replace(/^0+/, '');
+            
+            // Limit input to six digits
+            if (value.length > 6) {
+                value = value.slice(0, 6);
+            }
+            
+            // Add commas for better readability
+            value = numberWithCommas(value);
+            
+            // Update the input value
+            e.target.value = value;
+        });
+        
+        // Add event listener to clear notification on click outside the input field
+        document.addEventListener('click', function(event) {
+            if (event.target !== volunteerInput) {
+                notification.textContent = "";
+            }
+        });
+    });
+
+    // Function to add commas to a number
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 </script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

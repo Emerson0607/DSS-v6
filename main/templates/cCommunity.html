@@ -119,7 +119,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Volunteer(s) Count:</label>
-                                <input type="number" class="form-control" name="volunteer" required>
+                                <input type="text" class="form-control" name="volunteer" required>
                             </div>
                             <br>
                             <!-- FILE -->
@@ -210,6 +210,18 @@
             // Remove non-numeric characters except comma and period
             value = value.replace(/[^0-9,.]/g, '');
             
+            // Check if the input starts with zero
+            if (value.charAt(0) === '0') {
+                // If the input starts with zero, and its length is greater than 1,
+                // remove the leading zero
+                if (value.length > 1) {
+                    value = value.slice(1);
+                } else {
+                    // If the input is just zero, set the value to empty
+                    value = '';
+                }
+            }
+            
             // Display notification if there are invalid characters
             if (value !== e.target.value) {
                 notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
@@ -242,6 +254,48 @@
     });
 </script>
 
+<!--VOLUNTEERS-->
+<script>
+     document.addEventListener("DOMContentLoaded", function() {
+        var volunteerInput = document.querySelector('input[name="volunteer"]');
+        var notification = document.getElementById('notification');
+        
+        volunteerInput.addEventListener('input', function(e) {
+            var value = e.target.value;
+            
+            // Remove non-numeric characters
+            value = value.replace(/\D/g, '');
+            
+            // Remove leading zeros
+            value = value.replace(/^0+/, '');
+            
+            // Limit input to six digits
+            if (value.length > 6) {
+                value = value.slice(0, 6);
+            }
+            
+            // Add commas for better readability
+            value = numberWithCommas(value);
+            
+            // Update the input value
+            e.target.value = value;
+        });
+        
+        // Add event listener to clear notification on click outside the input field
+        document.addEventListener('click', function(event) {
+            if (event.target !== volunteerInput) {
+                notification.textContent = "";
+            }
+        });
+    });
+
+    // Function to add commas to a number
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+</script>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
@@ -249,7 +303,7 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
-    <script>
+<script>
         // Remove any non-letter characters from the input
         document.querySelectorAll(".letters-with-space-input").forEach(function(element) {
            element.addEventListener("input", function(event) {
@@ -259,7 +313,7 @@
         
            });
        });
-   </script>
+</script>
 
 
 <script>
