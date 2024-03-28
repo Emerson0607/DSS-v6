@@ -155,6 +155,7 @@ aside .top {
     justify-content: space-between;
     margin-top: 1.4rem;
     cursor: pointer;
+    margin-left: 1.5rem;
 
 }
 
@@ -237,6 +238,7 @@ aside .sidebar a:hover {
     background: var(--color-light);
     color: var(--color-darkgreen);
     margin-left: 0 !important;
+    transform: scale(1.1);
 }
 
 
@@ -272,14 +274,43 @@ aside .sidebar .blue-link:hover {
     color: #303396;
 }
 
-aside .sidebar .pending-container .pending-badge {
+
+.sidebar .pending-container .pending-badge {
     color: white;
-    background-color: rgb(231, 49, 49);
+    background-color: rgb(110, 49, 231);
     border: .2rem solid white;
-    padding: 0 .5rem 0 .5rem;
+    padding: 0 .5rem;
     border-radius: 50%;
     font-size: .8rem;
+    position: absolute;
+    right: .5rem;
+    transition: transform 0.3s ease; /* Apply transition for smooth effect */
 }
+
+/* Zoom effect on hover */
+.sidebar .pending-container:hover .pending-badge {
+    transform: scale(1.2);
+    color: white;
+}
+
+/* Style for the pending badge */
+.sidebar .pending-container .pending-badge1 {
+    color: white;
+    background-color: #49a14f;
+    border: .2rem solid white;
+    padding: 0 .5rem;
+    border-radius: 50%;
+    font-size: .8rem;
+    position: absolute;
+    right: .5rem;
+    transition: transform 0.3s ease; /* Apply transition for smooth effect */
+}
+
+/* Zoom effect on hover */
+.sidebar .pending-container:hover .pending-badge1 {
+    transform: scale(1.2);
+}
+
 
 
 
@@ -531,13 +562,10 @@ main {
 }
 
 .sidebar .dropdown-files .sidebar-link .arrow_drop_down {
-    margin-left: 3rem;
+    position: absolute;
+    right: 0.5rem;
+   
 }
-
-
-
-
-
 
 
 /*smaller laptop*/
@@ -546,6 +574,14 @@ main {
     .container1 {
         width: 94%;
         grid-template-columns: 5rem auto 15rem;
+    }
+
+    aside{
+        margin-left: -1rem;
+    }
+
+    aside .top{
+        margin-left: 1rem;
     }
 
     aside .logo h2 {
@@ -869,6 +905,28 @@ main {
     .sidebar .dropdown-files .dropdown-content-files {
         position: absolute;
         left: 3rem;
+    }
+
+    .sidebar .dropdown-files .sidebar-link .arrow_drop_down {
+        position: absolute;
+        right: 2rem;
+       
+    }
+
+    .sidebar .pending-container .pending-badge1 {
+        position: absolute;
+        right: 2rem;
+    }
+
+    .sidebar .pending-container .pending-badge {
+        position: absolute;
+        right: 2rem;
+    }
+    
+
+    aside .top .cesu-mobile{
+        margin-left: 1rem;
+
     }
 
    
