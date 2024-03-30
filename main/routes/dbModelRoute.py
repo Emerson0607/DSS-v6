@@ -2070,24 +2070,6 @@ def view_cpf_plan(program, subprogram, community, cpf_filename):
         return response
     return "File not found", 404
 
-########################Fundraising Activity#############################
-@dbModel_route.route("/fundraising_activity")
-def fund():
-    # Check if the user is an admin
-    if g.current_role != "Admin" and g.current_role != "BOR":
-        return redirect(url_for('dbModel.login'))
-
-    # Check if the user is logged in
-    if 'user_id' not in session:
-        flash('Please log in first.', 'error')
-        return redirect(url_for('dbModel.login'))
-
-    # Dynamically generate the years
-    current_year = datetime.now().year
-
-    # Render the template with the current year and the next four years
-    return render_template("fund.html", current_year=current_year)
-
 
 @dbModel_route.route('/view_cna_plan/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
 def view_cna_plan(program, subprogram, community, cna_filename):

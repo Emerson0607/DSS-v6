@@ -1,11 +1,5 @@
-/* -----Root Variable */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-
-/* Root Variable */
 :root {
     --color-primary: #7380ec;
-    --color-kaakbay: #2f9e36;
     --color-danger: #ff7782;
     --color-success: #41f1b6;
     --color-warning: #ffbb55;
@@ -29,255 +23,296 @@
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
-/* BACKGROUND TITLE */
-.fund_title {
-    background-color: #303396;
-    color: #ffffff;
-    padding: 10px;
-    border-top-left-radius: var(--border-radius-2);
-    border-top-right-radius: var(--border-radius-2);
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    height: 6rem;
+
+
+.fundraising_card {
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: auto;
+    max-height: 90%;
+
+}
+
+.fundraising_card>div {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
     margin-top: 1rem;
-}
-
-.fund-container {
-    background: var(--color-white);
-    padding: var(--card-padding);
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
-    padding-bottom: 2.5rem;
-    border-bottom-left-radius: var(--border-radius-2);
-    /* Top left corner radius */
-    border-bottom-right-radius: var(--border-radius-2);
-    /* Top right corner radius */
-    padding-bottom: 2.5rem;
-    position: relative;
-    overflow-x: auto;
-    /* Horizontal scroll if needed */
-    max-height: 500px;
-    /* Set a maximum height for vertical scroll */
-
 }
 
-/* ICON */
-.fund_title .crowdsource {
-    padding-right: 0.5rem;
-    /* Add some right padding to the lock icon */
-    font-size: 2.3rem;
-    /* Adjust the icon size as needed */
-    padding-left: 1rem;
+
+/* file upload button */
+.fundraising_card input[type="file"]::file-selector-button {
+    border-radius: 4px;
+    padding: 0 16px;
+    height: 40px;
+    cursor: pointer;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.16);
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+    transition: background-color 200ms;
 }
 
-/* ICON TITLE */
-.fund_title .changetxt {
-    padding-left: 0.5rem;
-    font-size: 2.3rem;
+/* file upload button hover state */
+.fundraising_card input[type="file"]::file-selector-button:hover {
+    background-color: #f3f4f6;
 }
 
-.fund_title .fund-container {
-    background: var(--color-white);
-    padding: var(--card-padding);
-    box-shadow: var(--box-shadow);
-    transition: all 300ms ease;
-    padding-bottom: 4rem;
-    position: relative;
-    border-bottom-left-radius: var(--border-radius-2);
-    /* Top left corner radius */
-    border-bottom-right-radius: var(--border-radius-2);
-    /* Top right corner radius */
+/* file upload button active state */
+.fundraising_card input[type="file"]::file-selector-button:active {
+    background-color: #e5e7eb;
 }
 
-.fund-container table td {
-    height: 2.3rem;
-    text-align: left;
+
+
+main .fundraising_card .table-card {
+    max-height: 35rem;
+    overflow: auto;
 }
 
-.fund-container table {
+main .fundraising_card>div:hover {
+    box-shadow: none;
+}
+
+.fundraising_card table {
+
     width: 100%;
+
 }
 
-
-.fund-container table th:first-child {
-    text-align: left;
-    padding-left: 7rem;
-}
-
-.fund-container table td:first-child {
-    text-align: left;
-    padding-left: 7rem;
-}
-
-.fund-container table tr th:nth-child(2) {
-    text-align: left;
-    width: 25%;
-    padding-left: 11rem;
-}
-
-.fund-container table tr td:nth-child(2) {
-    text-align: left;
-    width: 25%;
-    padding-left: 10rem;
-}
-
-.fund-container table tr th:nth-child(3) {
-    text-align: center;
-    width: 25%;
-    padding-left: 7rem;
-}
-
-.fund-container table tr td:nth-child(3) {
-    text-align: center;
-    width: 25%;
-    padding-left: 7rem;
-}
-
-.fund-container table tr td:nth-child(4) {
-    text-align: left;
-    width: 45%;
-    padding-left: 14rem;
-}
-
-
-
-main .logs-container table td {
+main .fundraising_card table td {
+    height: 2.8rem;
     border-bottom: 1px solid lightgray;
     color: var(--color-dark);
 }
 
-#search_text {
-    width: 25rem;
-    /* Adjust the width as needed */
-    margin-left: 2rem;
-    /* Adjust the left margin as needed */
-    margin-top: 1rem;
-    /* Adjust the top margin as needed */
+main .fundraising_card table tr:last-child td {
+    border: none;
+}
+
+/*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
+.fundraising_card .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Styling for the modal content */
+.fundraising_card .modal-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 7px;
+    width: 50%;
+    position: relative;
+
+}
+
+.fundraising_card .modal h4 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Style for the form container */
+.fundraising_card .modal-body {
+    padding: 20px;
+    max-height: 400px;
+    /* Set a maximum height for scrollability */
+    overflow-y: auto;
+    /* Enable vertical scrolling when the content overflows */
+    margin-bottom: 4rem;
+}
+
+/* Style for form labels and inputs */
+.fundraising_card .form-group label {
+    font-weight: 100;
+}
+
+.fundraising_card .label-category {
+    font-weight: 700;
+    font-size: 1rem;
 }
 
 
-@media screen and (max-width: 760px) {
-    .margin-top {
-        height: 4rem;
-    }
+.fundraising_card .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style for select elements */
+.fundraising_card .form-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+/* Style for submit button */
+.fundraising_card .btn-submit {
+    background-color: #4a4cd7;
+    color: #fff;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 1rem;
+    right: 1.3rem;
+
+}
+
+.fundraising_card .btn-submit:hover {
+    background-color: #303396;
+}
+
+.fundraising_card .jumbotron {
+    position: relative;
+
+}
+
+
+.fundraising_card .btn-add {
+    background-color: #4a4cd7;
+    /* Change this to your desired color */
+    color: #fff;
+    /* Change the text color */
+    border: none;
+    border-radius: 7px;
+    position: absolute;
+    left: 11rem;
+    top: 0.2rem;
+}
+
+.fundraising_card .btn-add:hover {
+    background-color: #303396;
+    cursor: pointer;
+
 }
 
 
 
-
-@media screen and (max-width: 400px) {
-
-    .margin-top {
-        height: 4rem;
-
-    }
-
-    .logs-container {
-        margin: 0 auto;
-        width: 90%;
-    }
-
-
-    .logs_title {
-        margin: 0 auto;
-        width: 90%;
-        margin-top: 2rem;
-        position: relative;
-    }
-
-    .logs_title .search_form {
-        padding: 0;
-    }
-
-    #search_text {
-        width: 9rem;
-        /* Set the width of the input field to 100% */
-        box-sizing: border-box;
-        /* Include padding and border in the element's total width and height */
-    }
-
-    .logs-container {
-        height: 30rem;
-    }
+.fundraising_card .btn-delete1 {
+    background-color: #ff5555;
+    /* Red background color */
+    color: #fff;
+    /* White text color */
+    padding: 5px 10px;
+    /* Adjust padding as needed */
+    border: none;
+    border-radius: 4px;
+    /* Rounded corners */
+    cursor: pointer;
+    text-decoration: none;
+    /* Remove underlines for links */
+}
 
 
-    .logs_title .changetxt {
-        padding-left: 0.5rem;
-        font-size: 1.7rem;
-        line-height: 2rem;
-    }
+.fundraising_card .btn-delete1:hover {
+    background-color: #ff3333;
+    /* Red background color on hover */
+}
 
-    .logs-container .table-card {
-        max-width: 20rem;
-        overflow: auto;
+/* Styling for the close button */
+.fundraising_card .btn-close {
+    background-color: #ffffff;
+    color: #2a2a2a;
+    border: none;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    position: absolute;
+    right: 1rem;
+    top: .5rem;
+}
 
-    }
+.fundraising_card .btn-close:hover {
 
+    color: var(--color-danger);
+}
 
-    .logs-container table td {
-        height: 2.3rem;
-        text-align: left;
-    }
+.fundraising_card table td {
+    text-align: center;
+}
 
-    .logs-container table tr td:nth-child(2) {
-        text-align: center;
-        padding-left: 0;
-    }
-
-    .logs-container table tr td:nth-child(3) {
-        text-align: center;
-        padding: 0;
-    }
-
-    .logs-container table tr td:nth-child(4) {
-        text-align: left;
-
-        padding-left: 1rem;
-    }
-
-    .logs-container table th:nth-child(4) {
-        text-align: center;
-        padding-left: 0;
-    }
-
-    .logs-container table th:nth-child(3) {
-        text-align: center;
-        padding-left: 1rem;
-    }
-
-    .logs-container table th:nth-child(2) {
-        text-align: center;
-        padding-left: 1rem;
-    }
+.fundraising_card .file-box {
+    margin-bottom: 1rem;
 }
 
 /* Year Filter */
-.year-filter {
-    margin-bottom: .5rem;
-    margin-left: 30rem;
+main .fundraising_card .for_filter .year-filter {
+    position: absolute;
+    right: 1rem;
 }
 
-.year-filter label {
+
+.for_filter {
+    position: relative;
+
+}
+
+.fundraising_card .jumbotron .year-filter1 {
+    position: absolute;
+}
+
+.project-year-table {
+    width: 100%;
+    height: 6rem;
+    position: relative;
+    right: 30rem;
+}
+
+.fundraising_card .year-filter1 label {
     font-weight: bold;
     margin-right: 10px;
-    font-size: large;
+    font-size: 12px;
 }
 
-.year-filter select {
-    padding: 8px;
+.fundraising_card .year-filter1 select {
     font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    
+}
+
+.fundraising_card .year-filter1 select:hover {
+    border-color: #555;
+    cursor: pointer;
+}
+
+
+
+/* Show all btn */
+.fundraising_card .year-filter1 .show-all-button {
+    font-size: 12px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
     border: 1px solid #ccc;
     border-radius: 4px;
 }
 
-.year-filter select:hover {
+.fundraising_card .year-filter1 .show-all-button:hover {
     border-color: #555;
-    /* Change border color on hover */
 }
 
+
+
 /* Show all btn */
-.show-all-button {
+.fundraising_card .jumbotron .year-filter1 .show-all-button {
     padding: 8px 12px;
     font-size: 14px;
     background-color: #ffffff;
@@ -287,6 +322,114 @@ main .logs-container table td {
     cursor: pointer;
 }
 
-.show-all-button:hover {
+.fundraising_card .jumbotron .year-filter1 .show-all-button:hover {
     border-color: #555;
+}
+
+
+
+/*smaller laptop*/
+@media screen and (max-width: 1200px) {
+    .communityCard .fundraising_card .modal-content {
+        position: relative;
+    }
+
+    .fundraising_card .modal-body {
+        height: 40rem;
+
+    }
+
+    .fundraising_card .btn-close {
+        position: absolute;
+        right: 25px;
+        bottom: 2px;
+    }
+}
+
+/* ------------------- MOBILE -------------------- */
+@media screen and (max-width: 400px) {
+    .fundraising_card {
+        margin: 0 auto;
+        padding-top: 2rem;
+
+    }
+
+    .fundraising_card .jumbotron {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .fundraising_card .modal-content {
+        width: 90%;
+    }
+
+    .fundraising_card .table-card {
+        width: 19rem;
+        overflow: auto;
+    }
+
+    .fundraising_card .table-card th {
+        padding-right: 1rem;
+    }
+
+    .fundraising_card .btn-close {
+        height: 2rem;
+        right: .5rem;
+    }
+
+    /* Year Filter */
+    .for_filter {
+        border: solid 0px black;
+        position: relative;
+        width: 100%;
+        height: 5rem;
+        margin-bottom: -1rem;
+
+    }
+
+    .for_filter h2 {
+        width: 65%;
+
+    }
+
+    .for_filter .year-filter1 {
+        position: absolute;
+        margin-right: -2rem;
+        margin-top: -1.7rem;
+    }
+
+    .for_filter .year-filter1 label {
+        display: block;
+        margin-left: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+
+
+
+
+    .fundraising_card .jumbotron .year-filter1 {
+        position: absolute;
+        top: 2rem;
+        right: 1rem;
+    }
+
+
+
+    .fundraising_card .jumbotron .year-filter1 select {
+        padding: 4px;
+        font-size: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    /* Show all btn */
+    .fundraising_card .jumbotron .year-filter1 .show-all-button {
+        padding: 4px 6px;
+        font-size: 10px;
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
 }

@@ -112,10 +112,22 @@
                     <h3>Program Recommendation</h3>
                 </a>
 
-                <a href="{{ url_for('dbModel.fund') }}" class="sidebar-link blue-link">
-                    <span class="material-symbols-sharp">crowdsource</span>
-                    <h3>Fundraiser</h3>
-                </a>
+
+                <!--FUNDRAISING-->
+                <div class="fundraising-files" onclick="toggleFundraising()">
+                    <a href="#" class="sidebar-link blue-link">
+                        <span class="material-symbols-sharp">crowdsource</span>
+                        <h3>Fundraising</h3>
+                        <span class="material-symbols-sharp arrow_drop_down">
+                            arrow_drop_down
+                        </span>
+                    </a>
+                    <div class="fundraising-content-files" id="fundraising-content-files">
+                        <a class="blue-link" href="{{ url_for('fundraising.fund') }}">Manage Fundraising</a>
+                        <a class="blue-link" href="#">Fundrasing Programs</a>
+                        <a class="blue-link" href="#">Archived</a>
+                    </div>
+                </div>
 
 
                 <a href="{{ url_for('dbModel.logs_activity') }}" class="sidebar-link blue-link">
@@ -210,6 +222,17 @@
             dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
         }
     </script>
+
+    <script>
+        function toggleFundraising() {
+            var dropdownContent = document.getElementById("fundraising-content-files");
+            dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+        }
+    </script>
+
+
+
+
     <script>
         var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
 
