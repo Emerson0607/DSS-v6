@@ -84,95 +84,79 @@ with_categories=true) %}
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h4 class="modal-title">Fundraising details</h4>
+                            <h4 class="modal-title">COMMUNITY FUNDRAISING PROPOSAL FORM</h4>
                         </div>
                         <div class="modal-body">
                             <form class="uploading" action="{{ url_for('dbModel.add_plan') }}" method="POST"
                                 enctype="multipart/form-data" id="upload-form">
                                 <!-- PPA -->
-                                <label class="PPA label-category">PPA (Program, Project, Activity)</label>
+                                <label class="PPA label-category">FUNDRAISING PROJECT</label>
                                 <div class="form-group">
-                                    <label>Community:</label>
+                                    <label>Project Name:</label>
                                     <input type="text" class="form-control" name="community" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Program:</label>
-                                   
+                                    {{ form.program(class="form-select", value=form.program.default) }}
                                 </div>
                                 <div class="form-group">
-                                    <label>Sub-program:</label>
-                                    <input type="text" class="form-control" name="subprogram" required>
+                                    <label>Venue:</label>
+                                    <input type="text" class="form-control" name="community" required>
                                 </div>
+               
                                 <br>
                                 <!-- TIMEFRAME -->
                                 <label class="timeframe label-category">TIMEFRAME</label>
                                 <div class="form-group">
-                                    <label>Start date:</label>
+                                    <label>Date Proposed:</label>
                                     <input type="text" class="form-control" name="start_date" id="start_date_input"
                                         placeholder="Select Date..." required>
                                 </div>
                                 <div class="form-group">
-                                    <label>End date:</label>
+                                    <label>Target Date:</label>
                                     <input type="text" class="form-control" name="end_date" id="end_date_input"
                                         placeholder="Select Date..." required>
                                 </div>
-                                <div class="form-group">
-                                    <label>Total Week:</label>
-                                    <input type="number" class="form-control mobile-input" name="totalWeek" required>
-                                </div>
                                 <br>
-                                <div class="form-group">
-                                    <p id="notification" style="color: red; font-style: italic;"></p>
-                                    <label for="budget">Budget:</label>
-                                    <input type="text" class="form-control" id="budget" name="budget" required>
-                                </div>
-                                <br>
-                                <!-- ACCOUNTABILITY -->
-                                <label class="accountability label-category">ACCOUNTABILITY</label><br>
-                                <div class="form-group">
-                                    <label>Coordinator:</label>
-                                    <select class="form-select" name="user" id="userSelect" required>
+                                 <!-- ACCOUNTABILITY -->
+                                 <label class="accountability label-category">ACCOUNTABILITY</label><br>
+                                 <div class="form-group">
+                                    <label>Coordinator: </label><br>
+                                    <select class="form-select">
+                                        <option value="" selected disabled>-- Select Coordinator --</option>
+                                        {% for coordinator in coordinators %}
+                                            <option value="{{ coordinator.id }}">{{ coordinator.firstname }} {{ coordinator.lastname }}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
+                                
+                                
+                                 <div class="form-group">
+                                     <label>Event Organizer:</label>
+                                     <input type="text" class="form-control letters-with-space-input" name="lead"
+                                         required>
+                                 </div>
+                                 <div class="form-group">
+                                     <label>Lead Proponent / Designation:</label>
+                                     <input type="text" class="form-control letters-with-space-input" name="support"
+                                         required>
+                                 </div>
+                                 <br>
+                                 <label class="accountability label-category">OTHERS</label><br>
                                 <div class="form-group">
-                                    <label>Department:</label>
-                                    <select class="form-select" name="department_A" id="departmentSelect" required>
+                                    <label>Contact Details:</label>
+                                    <input type="text" class="form-control mobile-input" name="totalWeek" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Form of donation:</label><br>
+                                    <select class="form-select" name="donation_type" required>
+                                        <option value="" selected disabled>-- Select Form of Donation --</option>
+                                        <option value="In-Kind">In-Kind</option>
+                                        <option value="Cash">Cash</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>LEAD:</label>
-                                    <input type="text" class="form-control letters-with-space-input" name="lead"
-                                        required>
-                                </div>
-                                <div class="form-group">
-                                    <label>SUPPORT:</label>
-                                    <input type="text" class="form-control letters-with-space-input" name="support"
-                                        required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Volunteer(s) Count:</label>
-                                    <input type="text" class="form-control" name="volunteer" required>
-                                </div>
-                                <br>
-                                <!-- FILE -->
-                                <label class="file label-category">CESU FILE</label><br>
-                                <label for="CPF">Community Profiling Form</label>
-                                <div class="form-group file-box">
-
-                                    <input class="CPF" type="file" name="CPF" id="CPF" accept=".pdf, .docx" required>
-                                </div>
-
-                                <label for="CESAP">CES Activity Proposal</label>
-                                <div class="form-group file-box">
-                                    <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx"
-                                        required>
-                                </div>
-
-
-                                <label for="CNA">Community Needs Assessment</label>
-                                <div class="form-group file-box">
-                                    <input class="CNA" type="file" name="CNA" id="CNA" accept=".csv" required>
-                                </div>
+                                
+                                
                                 <div class="form-group">
                                     <button class="btn-submit" type="submit" value="Upload">Add project</button>
                                 </div>
@@ -192,97 +176,76 @@ with_categories=true) %}
     </div> <!--end jumbotron-->
 </div>
 
+<div class="pending_fund_card fundraising_card">
+    <div class="jumbotron">
+        <div class="for_filter">
+            <div class="year-filter1 ">
+                <label for="year">Select Year:</label>
+                <select id="year" onchange="filterByYear()">
+                    {% for year in range(current_year, current_year + 5) %}
+                    <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+                <button class="show-all-button" onclick="showAllData()">Show All</button>
+            </div>
+            <h2 style="margin-bottom: 1rem;">Pending Projects</h2>
 
-<!--BUDGET-->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var budgetInput = document.getElementById('budget');
-        var notification = document.getElementById('notification');
-        
-        budgetInput.addEventListener('input', function(e) {
-            var value = e.target.value;
-            
-            // Remove non-numeric characters except comma and period
-            value = value.replace(/[^0-9,.]/g, '');
-            
-            // Display notification if there are invalid characters
-            if (value !== e.target.value) {
-                notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
-            } else {
-                notification.textContent = "";
-            }
-            
-            // Remove existing commas
-            value = value.replace(/,/g, '');
-            
-            // Split the value into integer and decimal parts
-            var parts = value.split('.');
-            
-            // Format integer part with commas
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            
-            // Join the parts back together
-            value = parts.join('.');
-            
-            // Update the input value
-            e.target.value = value;
-        });
-        
-        // Add event listener to clear notification on click outside the input field
-        document.addEventListener('click', function(event) {
-            if (event.target !== budgetInput) {
-                notification.textContent = "";
-            }
-        });
-    });
-</script>
+        </div>
+     
+        <div class="table-card">
+            <table class="table table-striped" id="logs_table">
+                <thead>
+                    <tr>
+                        <th style="display: none;">ID</th>
+                        <th>Project Name</th>
+                        <th>Venue</th>
+                        <th>Target Date</th>
+                        <th>Event Organizer</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                {% for row in community %}
+                <tbody>
+                    <tr>
+                        <td style="display: none;"><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.id
+                                }}</a>
+                        </td>
+                        <td style="display: none;"><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.community
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.program
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.subprogram
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.start_date
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.end_date
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
+                                row.totalWeek
+                                }}</a></td>
+                        <td>
+                            <a href="{{ url_for('dbModel.delete_plan', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
+                                class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+            <p id="noRecordsMessage" style="display: none;">No records found.</p>
+
+           
+        </div>
+        <!--end add modal account-->
+        <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+    </div> <!--end jumbotron-->
+</div>
 
 
-<!--WEEKS-->
-<script>
-</script>
-
-
-<!--VOLUNTEERS-->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var volunteerInput = document.querySelector('input[name="volunteer"]');
-        var notification = document.getElementById('notification');
-        
-        volunteerInput.addEventListener('input', function(e) {
-            var value = e.target.value;
-            
-            // Remove non-numeric characters
-            value = value.replace(/\D/g, '');
-            
-            // Remove leading zeros
-            value = value.replace(/^0+/, '');
-            
-            // Limit input to six digits
-            if (value.length > 6) {
-                value = value.slice(0, 6);
-            }
-            
-            // Add commas for better readability
-            value = numberWithCommas(value);
-            
-            // Update the input value
-            e.target.value = value;
-        });
-        
-        // Add event listener to clear notification on click outside the input field
-        document.addEventListener('click', function(event) {
-            if (event.target !== volunteerInput) {
-                notification.textContent = "";
-            }
-        });
-    });
-
-    // Function to add commas to a number
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-</script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -292,7 +255,7 @@ with_categories=true) %}
 
 <script>
     $(document).ready(function () {
-        coordinator_name();
+       
         date_picker();
     });
 </script>
@@ -310,43 +273,6 @@ with_categories=true) %}
 </script>
 
 <script>
-
-    function coordinator_name() {
-        program_select = document.getElementById('program')
-        program_select.onchange = function () {
-            var program = program_select.value;
-            fetch('/subprogram1/' + program).then(function (response) {
-                response.json().then(function (data) {
-                    var optionHTML = '';
-                    var selectElement = document.getElementById('userSelect');
-
-                    for (user of data.users) {
-                        // Combine firstname and lastname and set it as the option value
-                        var fullname = user.firstname + ' ' + user.lastname;
-                        optionHTML += '<option value="' + fullname + '">' + fullname + '</option>'
-                    }
-
-                    selectElement.innerHTML = optionHTML;
-                });
-            });
-
-            fetch('/department1/' + program).then(function (response) {
-                response.json().then(function (data) {
-                    var optionHTML = '';
-                    var selectElement = document.getElementById('departmentSelect');
-
-                    for (user of data.users) {
-                        // Set department_A as the option value
-                        var department_A = user.department_A;
-                        optionHTML += '<option value="' + department_A + '">' + department_A + '</option>'
-                    }
-
-                    selectElement.innerHTML = optionHTML;
-                });
-            });
-        }
-    }
-
     //date picker
     var startDateInput;
     function date_picker() {

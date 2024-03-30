@@ -56,6 +56,14 @@ def inject_current_user():
 ########################Fundraising Activity#############################
 @fundraising_route.route("/fundraising_activity")
 def fund():
+    form = Form()
+    placeholder_choice = ("", "-- Select Program --")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    form=form
+
+
     # Check if the user is an admin
     if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
@@ -64,9 +72,10 @@ def fund():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-
+    
+    coordinators = Users.query.filter_by(role='Coordinator').all()
     # Dynamically generate the years
     current_year = datetime.now().year
 
     # Render the template with the current year and the next four years
-    return render_template("fund.html", current_year=current_year)
+    return render_template("fund.html",form=form, current_year=current_year, coordinators=coordinators)

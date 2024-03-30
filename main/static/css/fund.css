@@ -68,7 +68,8 @@
 
 
 main .fundraising_card .table-card {
-    max-height: 35rem;
+    height: 15rem;
+    max-height: 25rem;
     overflow: auto;
 }
 
