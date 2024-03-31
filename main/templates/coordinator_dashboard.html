@@ -31,6 +31,11 @@
     <link rel="stylesheet" href="/static/css/cDlfiles.css">
     <link rel="stylesheet" href="/static/css/cResources.css">
     <link rel="stylesheet" href="/static/css/cEdit_profile.css">
+    
+    <link rel="stylesheet" href="/static/css/fund.css">
+    
+    <link rel="stylesheet" href="/static/css/fund_details.css">
+
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
         type="image/x-icon">
     
@@ -88,6 +93,21 @@
                     <span class="material-symbols-sharp">neurology</span>
                     <h3>Program Recommendation</h3>
                 </a>
+
+                <!--FUNDRAISING-->
+                <div class="cFundraising-files" onclick="toggleFundraising()">
+                    <a href="#" class="sidebar-link">
+                        <span class="material-symbols-sharp">crowdsource</span>
+                        <h3>Fundraising</h3>
+                        <span class="material-symbols-sharp arrow_drop_down">
+                            arrow_drop_down
+                        </span>
+                    </a>
+                    <div class="cFundraising-content-files" id="fundraising-content-files">
+                        <a href="{{ url_for('fundraising.cFund') }}">Manage Fundraising</a>
+                        <a href="#">Fundrasing Programs</a>
+                    </div>
+                </div>
                 <!---------------------------   NEWLY ADDED    -------------------------------->
 
                 <div class="dropdown-files" onclick="toggleDropdownFile()">
@@ -179,6 +199,13 @@
             dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
         }
     </script>
+
+<script>
+    function toggleFundraising() {
+        var dropdownContent = document.getElementById("fundraising-content-files");
+        dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+    }
+</script>
 
     <!--
 <script>

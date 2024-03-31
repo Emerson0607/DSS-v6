@@ -37,6 +37,9 @@
     <link rel="stylesheet" href="/static/css/fund.css">
     <link rel="stylesheet" href="/static/css/edit_profile.css">
     <link rel="stylesheet" href="/static/css/resources.css">
+    <link rel="stylesheet" href="/static/css/fund_details.css">
+    <link rel="stylesheet" href="/static/css/archived_fund.css">
+    <link rel="stylesheet" href="/static/css/fund_archived_details.css">
 
     <link rel="stylesheet" href="/static/css/tooltip.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
@@ -125,7 +128,7 @@
                     <div class="fundraising-content-files" id="fundraising-content-files">
                         <a class="blue-link" href="{{ url_for('fundraising.fund') }}">Manage Fundraising</a>
                         <a class="blue-link" href="#">Fundrasing Programs</a>
-                        <a class="blue-link" href="#">Archived</a>
+                        <a class="blue-link" href="{{ url_for('fundraising.archived_fund') }}">Archived</a>
                     </div>
                 </div>
 

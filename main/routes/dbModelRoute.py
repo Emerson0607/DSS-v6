@@ -1901,9 +1901,8 @@ def cesu_plans():
     current_year = datetime.now().year
      # Fetch all user records from the database
     all_data = Plan.query.filter_by(status="Planning").all()
-    program8 = Program.query.all()
-    user1 = Users.query.all()
-    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1)
+    
+    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form)
 
 @dbModel_route.route("/add_plan", methods=["POST"])
 def add_plan():

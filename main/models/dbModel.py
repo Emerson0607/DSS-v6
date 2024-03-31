@@ -7,7 +7,9 @@ from sqlalchemy import func
 import secrets
 
 """
-flask db migrate -m "volunteer change to int"
+flask db init
+
+flask db migrate -m "added new table archive"
 flask db upgrade
 
 
@@ -161,6 +163,53 @@ class Archive(db.Model):
     cesap_filename = db.Column(db.String(255), nullable=True)
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
+    url = db.Column(db.String(255), nullable=True)
+
+
+#FOR FUNDRAISING TABLE
+class Fundraising(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=False)
+    coordinator = db.Column(db.String(255), nullable=False)
+    project_name = db.Column(db.String(255), nullable=False)
+    proposed_date = db.Column(db.Date, nullable=False)
+    target_date = db.Column(db.Date, nullable=False)
+    venue = db.Column(db.String(255), nullable=False)
+    event_organizer = db.Column(db.String(255), nullable=False)
+    lead_proponent = db.Column(db.String(255), nullable=False)
+    contact_details = db.Column(db.String(255), nullable=False)
+    donation_type = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.String(255), nullable=False)
+    
+
+class Pending_fund(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=False)
+    coordinator = db.Column(db.String(255), nullable=False)
+    project_name = db.Column(db.String(255), nullable=False)
+    proposed_date = db.Column(db.Date, nullable=False)
+    target_date = db.Column(db.Date, nullable=False)
+    venue = db.Column(db.String(255), nullable=False)
+    event_organizer = db.Column(db.String(255), nullable=False)
+    lead_proponent = db.Column(db.String(255), nullable=False)
+    contact_details = db.Column(db.String(255), nullable=False)
+    donation_type = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.String(255), nullable=False)
+    comments = db.Column(db.String(255), nullable=True)
+
+class Archive_fund(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=False)
+    coordinator = db.Column(db.String(255), nullable=False)
+    project_name = db.Column(db.String(255), nullable=False)
+    proposed_date = db.Column(db.Date, nullable=False)
+    target_date = db.Column(db.Date, nullable=False)
+    venue = db.Column(db.String(255), nullable=False)
+    event_organizer = db.Column(db.String(255), nullable=False)
+    lead_proponent = db.Column(db.String(255), nullable=False)
+    contact_details = db.Column(db.String(255), nullable=False)
+    donation_type = db.Column(db.String(255), nullable=False)
+    status = db.Column(db.String(255), nullable=False)
     url = db.Column(db.String(255), nullable=True)
 
 # --------------------- LOGS ------------------------#
