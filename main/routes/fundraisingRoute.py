@@ -258,7 +258,120 @@ def view_pending_fund(fund_id):
 
     p = Pending_fund.query.get(fund_id)
 
-    return render_template("pending_fund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type )
+    return render_template("pending_fund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, comments=p.comments  )
+
+@fundraising_route.route("/approve_fund", methods=["POST"])
+def approve_fund():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    if request.method == "POST":
+        fund_id = request.form.get("id")
+        project_name = request.form.get("project_name")
+        program = request.form.get("program")
+ 
+        existing_fund = Fundraising.query.filter_by(project_name= project_name, program=program).first()
+
+        if existing_fund is None:
+            p = Pending_fund.query.filter_by(id=fund_id).first()
+            # Iterate through the data and move it to CPFARCHIVE
+        
+                # Create a new row in CPFARCHIVE
+            new_row = Fundraising(
+                project_name = p.project_name,
+                program = p.program,
+                venue = p.venue,
+                proposed_date = p.proposed_date,
+                target_date = p.target_date,
+                coordinator = p.coordinator,
+                event_organizer = p.event_organizer,
+                lead_proponent = p.lead_proponent,
+                contact_details = p.contact_details,
+                status = p.status,
+                donation_type = p.donation_type
+        )
+
+            userlog = g.current_user
+            action = f'APPROVE pending {project_name} project of {program}'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+                db.session.add(new_row)
+                db.session.commit()
+                flash('Approved fundraising project!', 'add_community')
+
+            pending_delete = Pending_fund.query.filter_by(id=fund_id).first()
+            if pending_delete:
+                try:
+                    # Delete the user from the database
+                    db.session.delete(pending_delete)
+                    db.session.commit()
+                except Exception as e:
+                    db.session.rollback()
+                    # You may want to log the exception for debugging purposes
+            else:
+                flash('Project not found. Please try again.', 'error')
+        else:
+            flash(f"Sorry, '{project_name}' is already taken.", 'existing_community')
+  
+        return redirect(url_for('fundraising.fund'))
+       
+    return redirect(url_for('fundraising.fund'))
+    
+@fundraising_route.route("/decline_fund", methods=["POST"])
+def decline_fund():
+    if g.current_role not in ["Admin", "BOR"]:
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    # Extract data from the form
+    project_name = request.form.get('project_name')
+    program = request.form.get('program')
+    fund_id = request.form.get('id')
+    comments = request.form.get('comments')
+
+    # Check if the request method is POST
+    if request.method == "POST":
+        # Query the pending fund by ID
+        p = Pending_fund.query.filter_by(id=fund_id).first()
+
+        # Update the status and comments if the fund exists
+        if p:
+            p.status = "Declined"
+            p.comments = comments
+
+            # Commit changes to the database
+            db.session.commit()
+
+            # Log the action
+            userlog = g.current_user
+            action = f'DECLINED {project_name} project of {program}'
+            ph_tz = pytz.timezone('Asia/Manila')
+            ph_time = datetime.now(ph_tz)
+            timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+            timestamp = convert_date1(timestamp1)
+            insert_logs = Logs(userlog=userlog, timestamp=timestamp, action=action)
+            if insert_logs:
+                db.session.add(insert_logs)
+                db.session.commit()
+
+            # Redirect to the fundraising page after processing the form
+            return redirect(url_for('fundraising.fund'))
+
+    # If the request method is not POST or the form submission fails, redirect back to the fundraising page
+    return redirect(url_for('fundraising.fund'))
 
 
 
@@ -350,7 +463,7 @@ def cView_pending_fund(fund_id):
 
     p = Pending_fund.query.get(fund_id)
 
-    return render_template("cPending_fund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type )
+    return render_template("cPending_fund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, comments=p.comments )
 
 @fundraising_route.route('/cDelete_fund/<int:id>', methods=['GET'])
 def cDelete_fund(id):

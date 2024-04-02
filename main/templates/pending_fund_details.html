@@ -10,21 +10,24 @@
     <div class="fund_details_card">
       <div class="fund_details_box">
         <h2 style="margin-bottom: 1rem">CESU <b>Fundraising Details</b></h2>
-        <input
-          type="text"
-          style="display: none"
-          class="form-control"
-          name="id"
-          value="{{id}}"
-          readonly
-        />
+       
+        
+
         <form
           class="uploading"
-          action="{{ url_for('fundraising.add_fund') }}"
+          action="{{ url_for('fundraising.approve_fund') }}"
           method="POST"
           enctype="multipart/form-data"
           id="upload-form"
         >
+        <input
+        type="text"
+        style="display: none"
+        class="form-control"
+        name="id"
+        value="{{id}}"
+        readonly
+      />
           <!-- PPA -->
           <label class="PPA label-category">FUNDRAISING PROJECT</label>
           <div class="form-group">
@@ -141,7 +144,28 @@
               value="{{donation_type}}"
             />
           </div>
+          <div class="form-group">
+            <button class="btn-submit" type="submit" value="Upload">Accept</button>
+        </div>
+
         </form>
+
+        
+
+        <form action="{{ url_for('fundraising.decline_fund') }}" method="POST" enctype="multipart/form-data" id="upload-form">
+          <!-- Hidden input fields to pass data -->
+          <input type="hidden" name="project_name" value="{{ project_name }}">
+          <input type="hidden" name="program" value="{{ program }}">
+          <input type="hidden" name="id" value="{{ id }}">
+         
+          <div class="form-group">
+              <label>Comments:</label>
+              <input type="text" class="form-control" name="comments" required>
+          </div>
+          <button class="btn-decline" type="submit">Decline</button>
+      </form>
+      
+
       </div>
     </div>
     

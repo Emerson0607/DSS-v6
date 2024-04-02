@@ -10,6 +10,14 @@
     <div class="fund_details_card">
       <div class="fund_details_box">
         <h2 style="margin-bottom: 1rem">Pending Fundraising Details</h2>
+        
+        <form
+          class="uploading"
+          action="#"
+          method="POST"
+          enctype="multipart/form-data"
+          id="upload-form"
+        >
         <input
           type="text"
           style="display: none"
@@ -18,13 +26,6 @@
           value="{{id}}"
           readonly
         />
-        <form
-          class="uploading"
-          action="#"
-          method="POST"
-          enctype="multipart/form-data"
-          id="upload-form"
-        >
           <!-- PPA -->
           <label class="PPA label-category">FUNDRAISING PROJECT</label>
           <div class="form-group">
@@ -139,6 +140,16 @@
               name="donation_type"
               readonly
               value="{{donation_type}}"
+            />
+          </div>
+          <div class="form-group">
+            <label>Comments:</label>
+            <input
+              type="text"
+              class="form-control"
+              name="Comments"
+              value="{{Comments}}"
+              readonly
             />
           </div>
         </form>
