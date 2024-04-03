@@ -1,5 +1,15 @@
-{% extends "coordinator_dashboard.html" %} {% block title %}Fundraising Details{%
-endblock %} {% block content %}
+{% extends "coordinator_dashboard.html" %}
+{% block title %}Fundraising Details{% endblock %}
+{% block content %}
+
+<style>
+  /* Hide the first option in the select field */
+  .fund_details_card .fund_details_box form .form-select option:first-child {
+    display: none;
+  }
+</style>
+
+
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['delete_account',
 'add_community', 'existing_community'], with_categories=true) %} {% if messages
@@ -11,22 +21,25 @@ endblock %} {% block content %}
   <div class="fund_details_box">
     <h2 style="margin-bottom: 1rem">Pending Fundraising Details</h2>
 
-    <form class="uploading" action="#" method="POST" enctype="multipart/form-data" id="upload-form">
-      <input type="text" style="display: none" class="form-control" name="id" value="{{id}}" readonly />
+    <form class="uploading" action="{{ url_for('fundraising.update_pending_fund') }}" method="POST"
+      enctype="multipart/form-data" id="upload-form">
+      <input type="text" style="display: none" class="form-control" name="id" value="{{id}}" />
       <!-- PPA -->
       <label class="PPA label-category">FUNDRAISING PROJECT</label>
       <div class="form-group">
         <label>Project Name:</label>
-        <input type="text" class="form-control" name="project_name" value="{{project_name}}" readonly />
+        <input type="text" class="form-control" name="project_name" value="{{project_name}}" />
       </div>
 
       <div class="form-group">
         <label>Program:</label>
-        <input type="text" class="form-control" name="program" value="{{program}}" readonly />
+        {{ form.program(class="form-select",
+        value=form.program.default) }}
       </div>
+
       <div class="form-group">
         <label>Venue:</label>
-        <input type="text" class="form-control" name="venue" value="{{venue}}" readonly />
+        <input type="text" class="form-control" name="venue" value="{{venue}}" />
       </div>
 
       <br />
@@ -35,12 +48,12 @@ endblock %} {% block content %}
       <div class="form-group">
         <label>Date Proposed:</label>
         <input type="text" class="form-control" name="proposed_date" id="start_date_input" placeholder="Select Date..."
-          disabled value="{{proposed_date}}" />
+          value="{{proposed_date}}" />
       </div>
       <div class="form-group">
         <label>Target Date:</label>
         <input type="text" class="form-control" name="target_date" id="end_date_input" placeholder="Select Date..."
-          disabled value="{{target_date}}" />
+          value="{{target_date}}" />
       </div>
       <br />
       <!-- ACCOUNTABILITY -->
@@ -52,28 +65,41 @@ endblock %} {% block content %}
 
       <div class="form-group">
         <label>Event Organizer:</label>
-        <input type="text" class="form-control letters-with-space-input" name="event_organizer" readonly
+        <input type="text" class="form-control letters-with-space-input" name="event_organizer"
           value="{{event_organizer}}" />
       </div>
       <div class="form-group">
         <label>Lead Proponent / Designation:</label>
-        <input type="text" class="form-control letters-with-space-input" name="lead_proponent" readonly
+        <input type="text" class="form-control letters-with-space-input" name="lead_proponent"
           value="{{lead_proponent}}" />
       </div>
       <br />
       <label class="accountability label-category">OTHERS</label><br />
       <div class="form-group">
         <label>Contact Details:</label>
-        <input type="text" class="form-control mobile-input" name="contact_details" readonly
-          value="{{contact_details}}" />
+        <input type="text" class="form-control mobile-input" name="contact_details" value="{{contact_details}}" />
       </div>
+
       <div class="form-group">
         <label>Form of donation:</label><br />
-        <input type="text" class="form-control mobile-input" name="donation_type" readonly value="{{donation_type}}" />
+        <select class="form-select" name="donation_type" required>
+          <option value="{{donation_type}}" selected style="display: none;">
+            {{donation_type}}
+          </option>
+          <option value="In-Kind">In-Kind</option>
+          <option value="Cash">Cash</option>
+        </select>
       </div>
+
       <div class="form-group">
         <label>Comments:</label>
-        <input type="text" class="form-control" name="Comments" value="{{Comments}}" readonly />
+        <input type="text" class="form-control" name="comments" value="{{comments}}" readonly />
+      </div>
+
+
+
+      <div class="form-group">
+        <button class="btn-submit" type="submit" value="Upload">Save</button>
       </div>
     </form>
   </div>

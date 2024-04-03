@@ -9,7 +9,7 @@ import secrets
 """
 flask db init
 
-flask db migrate -m "added new table archive"
+flask db migrate -m "added new column coordinator_id"
 flask db upgrade
 
 
@@ -191,6 +191,7 @@ class Fundraising(db.Model):
     contact_details = db.Column(db.String(255), nullable=False)
     donation_type = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(255), nullable=False)
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 
 class Pending_fund(db.Model):
@@ -207,7 +208,7 @@ class Pending_fund(db.Model):
     donation_type = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(255), nullable=False)
     comments = db.Column(db.String(255), nullable=True)
-
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 class Archive_fund(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -223,7 +224,7 @@ class Archive_fund(db.Model):
     donation_type = db.Column(db.String(255), nullable=False)
     status = db.Column(db.String(255), nullable=False)
     url = db.Column(db.String(255), nullable=True)
-
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 # --------------------- LOGS ------------------------#
 class Logs(db.Model):
