@@ -183,8 +183,8 @@ main .Cproject_table_files .btn-delete1 {
 
     }
 
-       /* Year Filter */
-       .Cproject_table_files .for_filter {
+    /* Year Filter */
+    .Cproject_table_files .for_filter {
         position: relative;
         width: 100%;
         height: 5rem;
@@ -195,7 +195,7 @@ main .Cproject_table_files .btn-delete1 {
 
     .Cproject_table_files .for_filter h2 {
         width: 65%;
-     
+
 
     }
 
@@ -238,6 +238,7 @@ main .Cproject_table_files .btn-delete1 {
         border-radius: 4px;
         cursor: pointer;
     }
+
     .Cproject_table_files .jumbotron .year-filter1 label {
         font-weight: bold;
         margin-right: 10px;

@@ -92,7 +92,7 @@ main .resources_Card1 table td {
 
 main .resources_Card1 table tr:last-child td {
     border: none;
-    
+
 }
 
 
@@ -185,7 +185,7 @@ main .resources_Card1 table tr:last-child td {
 
 .resources_Card1 .jumbotron1 {
     position: relative;
-  
+
 
 }
 
@@ -249,9 +249,10 @@ main .resources_Card1 table tr:last-child td {
     color: var(--color-danger);
 }
 
-.resources_Card1 table td, .resources_Card1 table th {
+.resources_Card1 table td,
+.resources_Card1 table th {
     text-align: left;
-    
+
 }
 
 .resources_Card1 .file-box {
@@ -272,7 +273,7 @@ main .resources_Card1 .for_filter .year-filter1 {
 
 .resources_Card1 .jumbotron1 .year-filter1 {
     position: absolute;
-    
+
 }
 
 .project-year-table {
@@ -294,7 +295,7 @@ main .resources_Card1 .for_filter .year-filter1 {
     border-radius: 4px;
     border: 1px solid #ccc;
     background-color: #ffffff;
-    
+
 }
 
 .resources_Card1 .year-filter1 select:hover {
@@ -397,7 +398,7 @@ main .resources_Card1 .for_filter .year-filter1 {
 
     .resources_Card1 .for_filter h2 {
         width: 65%;
-     
+
 
     }
 
@@ -452,6 +453,6 @@ main .resources_Card1 .for_filter .year-filter1 {
         left: 8rem;
         top: 0.2rem;
     }
-    
+
 
 }

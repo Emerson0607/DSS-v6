@@ -150,17 +150,18 @@ with_categories=true) %}
             <form action="{{ url_for('coordinator.CPF_delete') }}" method="POST" style="display: inline;"
                 onsubmit="return confirm('Are you sure you want to delete this?')">
 
-                    {% if cpf_filename %}
-                    <input style="display: none;" type="text" class="form-control" name="cpf_id" value="{{id}}" required>
-                    <button class="cpf_delete" type="submit"><span class="material-symbols-outlined">
-                            delete
-                        </span></button>
-                    {% else %}
+                {% if cpf_filename %}
+                <input style="display: none;" type="text" class="form-control" name="cpf_id" value="{{id}}" required>
+                <button class="cpf_delete" type="submit"><span class="material-symbols-outlined">
+                        delete
+                    </span></button>
+                {% else %}
 
-                   <button style="display: none !important;" class="cpf_delete" type="submit"><span class="material-symbols-outlined">
-                            delete
-                        </span></button>
-                    {% endif %}
+                <button style="display: none !important;" class="cpf_delete" type="submit"><span
+                        class="material-symbols-outlined">
+                        delete
+                    </span></button>
+                {% endif %}
 
 
             </form>
@@ -174,11 +175,12 @@ with_categories=true) %}
                         delete
                     </span></button>
 
-                    {% else %}
-                    <button class="cesap_delete" style="display: none;" type="submit"><span class="material-symbols-outlined">
+                {% else %}
+                <button class="cesap_delete" style="display: none;" type="submit"><span
+                        class="material-symbols-outlined">
                         delete
                     </span></button>
-                    {% endif %}
+                {% endif %}
             </form>
         </div>
         <div class="cna_del">
@@ -189,11 +191,11 @@ with_categories=true) %}
                 <button class="cna_delete" type="submit"><span class="material-symbols-outlined">
                         delete
                     </span></button>
-                    {% else %}
-                    <button class="cna_delete" style="display: none;" type="submit"><span class="material-symbols-outlined">
+                {% else %}
+                <button class="cna_delete" style="display: none;" type="submit"><span class="material-symbols-outlined">
                         delete
                     </span></button>
-                    {% endif %}
+                {% endif %}
             </form>
         </div>
     </div>
@@ -202,16 +204,16 @@ with_categories=true) %}
 
 <!--BUDGET-->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var budgetInput = document.getElementById('budget');
         var notification = document.getElementById('notification');
-        
-        budgetInput.addEventListener('input', function(e) {
+
+        budgetInput.addEventListener('input', function (e) {
             var value = e.target.value;
-            
+
             // Remove non-numeric characters except comma and period
             value = value.replace(/[^0-9,.]/g, '');
-            
+
             // Check if the input starts with zero
             if (value.charAt(0) === '0') {
                 // If the input starts with zero, and its length is greater than 1,
@@ -223,32 +225,32 @@ with_categories=true) %}
                     value = '';
                 }
             }
-            
+
             // Display notification if there are invalid characters
             if (value !== e.target.value) {
                 notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
             } else {
                 notification.textContent = "";
             }
-            
+
             // Remove existing commas
             value = value.replace(/,/g, '');
-            
+
             // Split the value into integer and decimal parts
             var parts = value.split('.');
-            
+
             // Format integer part with commas
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            
+
             // Join the parts back together
             value = parts.join('.');
-            
+
             // Update the input value
             e.target.value = value;
         });
-        
+
         // Add event listener to clear notification on click outside the input field
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (event.target !== budgetInput) {
                 notification.textContent = "";
             }
@@ -258,33 +260,33 @@ with_categories=true) %}
 
 <!--VOLUNTEERS-->
 <script>
-      document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         var volunteerInput = document.querySelector('input[name="volunteer"]');
         var notification = document.getElementById('notification');
-        
-        volunteerInput.addEventListener('input', function(e) {
+
+        volunteerInput.addEventListener('input', function (e) {
             var value = e.target.value;
-            
+
             // Remove non-numeric characters
             value = value.replace(/\D/g, '');
-            
+
             // Remove leading zeros
             value = value.replace(/^0+/, '');
-            
+
             // Limit input to six digits
             if (value.length > 6) {
                 value = value.slice(0, 6);
             }
-            
+
             // Add commas for better readability
             value = numberWithCommas(value);
-            
+
             // Update the input value
             e.target.value = value;
         });
-        
+
         // Add event listener to clear notification on click outside the input field
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (event.target !== volunteerInput) {
                 notification.textContent = "";
             }

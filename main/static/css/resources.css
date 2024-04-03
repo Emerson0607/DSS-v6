@@ -70,7 +70,7 @@ main .resources_Card>div {
 main .resources_Card .jumbotron .table-card {
     max-height: 35rem;
     overflow: auto;
- 
+
 }
 
 main .resources_Card>div:hover {
@@ -91,7 +91,7 @@ main .resources_Card table td {
 
 main .resources_Card table tr:last-child td {
     border: none;
-    
+
 }
 
 
@@ -184,7 +184,7 @@ main .resources_Card table tr:last-child td {
 
 .resources_Card .jumbotron {
     position: relative;
-  
+
 
 }
 
@@ -248,9 +248,10 @@ main .resources_Card table tr:last-child td {
     color: var(--color-danger);
 }
 
-.resources_Card table td, .resources_Card table th {
+.resources_Card table td,
+.resources_Card table th {
     text-align: left;
-    
+
 }
 
 .resources_Card .file-box {
@@ -292,7 +293,7 @@ main .resources_Card .for_filter .year-filter {
     border-radius: 4px;
     border: 1px solid #ccc;
     background-color: #ffffff;
-    
+
 }
 
 .resources_Card .year-filter1 select:hover {
@@ -395,7 +396,7 @@ main .resources_Card .for_filter .year-filter {
 
     .resources_Card .for_filter h2 {
         width: 65%;
-     
+
 
     }
 
@@ -450,6 +451,6 @@ main .resources_Card .for_filter .year-filter {
         left: 8rem;
         top: 0.2rem;
     }
-    
+
 
 }

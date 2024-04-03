@@ -44,7 +44,7 @@
 }
 
 .logs-container {
-    
+
     background: var(--color-white);
     padding: var(--card-padding);
     box-shadow: var(--box-shadow);
@@ -192,7 +192,7 @@ main .logs-container table td {
 
     .logs-container {
         height: 30rem;
-        
+
     }
 
 
@@ -245,7 +245,7 @@ main .logs-container table td {
         padding-left: 1rem;
     }
 
-    
+
 }
 
 @media screen and (max-width: 385px) {

@@ -66,7 +66,7 @@
     padding-left: 1rem;
 }
 
-.edit_profile_container{
+.edit_profile_container {
     background: var(--color-white);
     padding: var(--card-padding);
     box-shadow: var(--box-shadow);
@@ -80,7 +80,7 @@
     /* Top right corner radius */
 }
 
-.edit_profile_container .form1{
+.edit_profile_container .form1 {
     display: grid;
     grid-template-columns: repeat(2, 2fr);
     gap: 2rem;
@@ -89,19 +89,24 @@
 }
 
 .edit_profile_container .form1 div {
-    justify-self: center; /* horizontally center the div */
-    align-self: center; /* vertically center the div */
+    justify-self: center;
+    /* horizontally center the div */
+    align-self: center;
+    /* vertically center the div */
 
 }
+
 .edit_profile_container .form1 .left_picture {
-    justify-self: end; /* aligns the first div to the right */
+    justify-self: end;
+    /* aligns the first div to the right */
 }
 
 .edit_profile_container .form1 .right_picture {
-    justify-self: start; /* aligns the second div to the left */
+    justify-self: start;
+    /* aligns the second div to the left */
 }
 
-.edit_profile_container .form1 .right_picture .change_picture  {
+.edit_profile_container .form1 .right_picture .change_picture {
     border: 1px solid #101010;
     border-radius: 4px;
     background-color: #ffffff;
@@ -111,10 +116,10 @@
     padding: 0.5rem 1rem 0.5rem 1rem;
     cursor: pointer;
 
-  
+
 }
 
-.edit_profile_container .form1 .right_picture .save_changes  {
+.edit_profile_container .form1 .right_picture .save_changes {
     border: 1px solid #555;
     border-radius: 4px;
     background-color: #ffffff;
@@ -125,43 +130,45 @@
 }
 
 
-.edit_profile_container .form1 .right_picture .top_input{
+.edit_profile_container .form1 .right_picture .top_input {
     margin-bottom: 2rem;
-   
+
 }
 
-.edit_profile_container .form1 .right_picture .change_picture:hover, .edit_profile_container .form1 .right_picture .save_changes:hover  {
+.edit_profile_container .form1 .right_picture .change_picture:hover,
+.edit_profile_container .form1 .right_picture .save_changes:hover {
     background-color: #2f9e36;
     cursor: pointer;
     color: #fff;
     transition: 0.3s ease;
 }
 
-.edit_profile_container .picture_top_container{
+.edit_profile_container .picture_top_container {
     position: relative;
-    
+
 }
 
-.edit_profile_container .picture_top_container .form2{
+.edit_profile_container .picture_top_container .form2 {
     position: absolute;
     top: 0rem;
     left: 42%;
 }
 
-.edit_profile_container .picture_top_container .delete_profile{
-    padding: 0.3rem 0.3rem 0.1rem 0.3rem    ;
+.edit_profile_container .picture_top_container .delete_profile {
+    padding: 0.3rem 0.3rem 0.1rem 0.3rem;
     background: #ff0000;
     border-radius: 50%;
     border: solid 5px white;
     box-shadow: var(--box-shadow);
     cursor: pointer;
     color: rgb(255, 255, 255);
-    transition: transform 0.3s ease; 
-    
+    transition: transform 0.3s ease;
+
 }
 
 .edit_profile_container .picture_top_container .form2:hover {
-    transform: scale(1.2); /* Scale down to 80% on hover */
+    transform: scale(1.2);
+    /* Scale down to 80% on hover */
 }
 
 
@@ -169,14 +176,14 @@
     position: absolute;
     top: -0.7rem;
     border-radius: 50%;
-    display: none; 
-    width: 15rem; 
-    height:15rem; 
+    display: none;
+    width: 15rem;
+    height: 15rem;
     margin-top: 10px;
-    
+
 }
 
-.edit_profile_container .form3 .form-control{
+.edit_profile_container .form3 .form-control {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -185,18 +192,18 @@
     background-color: white;
 }
 
-.edit_profile_container .fullname_box{
+.edit_profile_container .fullname_box {
     display: grid;
 
     grid-template-columns: repeat(2, 2fr);
     gap: 2rem;
 }
 
-.edit_profile_container .form3{
+.edit_profile_container .form3 {
     padding: 3rem;
 }
 
-.edit_profile_container .btn-submit1{
+.edit_profile_container .btn-submit1 {
     position: absolute;
     bottom: 2rem;
     right: 5rem;
@@ -209,46 +216,49 @@
     cursor: pointer;
 }
 
-.edit_profile_container .btn-submit1:hover{
+.edit_profile_container .btn-submit1:hover {
     background-color: #18851f;
     transition: 0.3s ease;
     color: white;
 }
 
-.edit_profile_container  .current_picture{
-    width: 15rem; 
-    height:15rem;
-    border-radius:50%; width: 15rem; height:15rem;
+.edit_profile_container .current_picture {
+    width: 15rem;
+    height: 15rem;
+    border-radius: 50%;
+    width: 15rem;
+    height: 15rem;
 }
 
-@media screen and (max-width: 386px){
- 
-    .edit_profile_container .form3{
+@media screen and (max-width: 386px) {
+
+    .edit_profile_container .form3 {
 
         padding: 0.3rem !important;
         padding-bottom: 3rem !important;
-        
+
     }
 
 
-    .edit_profile_container .picture_top_container .form2{
+    .edit_profile_container .picture_top_container .form2 {
         left: 35% !important;
     }
 
-    .edit_profile_container .btn-submit1{
+    .edit_profile_container .btn-submit1 {
         right: 2.1rem !important;
     }
 }
 
 
-@media screen and (max-width: 400px){
+@media screen and (max-width: 400px) {
 
-    .edit_profile_container{
+    .edit_profile_container {
         width: 90%;
         margin: 0 auto;
-        
+
     }
-    .edit_profile_container .form3{
+
+    .edit_profile_container .form3 {
 
         padding: 1rem;
         padding-bottom: 3rem;
@@ -259,13 +269,13 @@
         margin: 0 auto;
         margin-top: 2rem;
     }
-    
-    .edit_profile_container  .current_picture{
-        width: 8rem; 
-        height:8rem;
+
+    .edit_profile_container .current_picture {
+        width: 8rem;
+        height: 8rem;
     }
 
-    .edit_profile_container .form1{
+    .edit_profile_container .form1 {
         display: grid;
         grid-template-columns: repeat(2, 2fr);
         gap: 1rem;
@@ -273,28 +283,28 @@
         margin-bottom: 1rem;
     }
 
-    .edit_profile_container .form1 .right_picture .change_picture  {
+    .edit_profile_container .form1 .right_picture .change_picture {
         width: 8.3rem;
         padding: 0.5rem 0.3rem 0.5rem 0.3rem;
         cursor: pointer;
     }
-    
-    .edit_profile_container .form1 .right_picture .save_changes  {
+
+    .edit_profile_container .form1 .right_picture .save_changes {
         width: 8.3rem;
     }
 
     .edit_profile_container .form1 .left_picture .preview_picture {
-        width: 8rem; 
-        height:8rem;
+        width: 8rem;
+        height: 8rem;
     }
 
-    .edit_profile_container .picture_top_container .form2{
+    .edit_profile_container .picture_top_container .form2 {
         top: 0rem;
-        left:8rem;
+        left: 8rem;
     }
 
-    .edit_profile_container .btn-submit1{
- 
+    .edit_profile_container .btn-submit1 {
+
         bottom: 2rem;
         right: 3rem;
     }

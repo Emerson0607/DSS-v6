@@ -30,7 +30,7 @@ main .Cinsights {
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
     margin-top: 2rem;
-    
+
 }
 
 .Cinsights .community-subprogram-title {
@@ -172,7 +172,7 @@ main .cCommunity>div {
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
     margin-top: 1rem;
-   
+
     transition: all 400ms ease;
     cursor: pointer;
 }
@@ -183,7 +183,7 @@ main .cCommunity .table-card {
 }
 
 main .cCommunity>div:hover {
-    
+
     box-shadow: none;
 }
 
@@ -389,7 +389,7 @@ main .cCommunity table tr:last-child td {
     /* Adjust as needed */
 }
 
-.swipe-indicator{
+.swipe-indicator {
     color: #818181;
     display: none;
 }
@@ -412,14 +412,14 @@ main .cCommunity table tr:last-child td {
         right: 25px;
         bottom: 2px;
     }
-    
-    .swipe-indicator{
+
+    .swipe-indicator {
         margin-left: 5.8rem;
         color: #818181;
         display: block;
         font-size: 10px;
     }
-    
+
 }
 
 /* ------------------- MOBILE -------------------- */
@@ -429,14 +429,15 @@ main .cCommunity table tr:last-child td {
         padding-top: 2rem;
 
     }
-    .swipe-indicator{
+
+    .swipe-indicator {
         margin-left: 5.8rem;
         color: #818181;
         display: block;
         font-size: 10px;
     }
 
-    .cCommunity .btn-add{
+    .cCommunity .btn-add {
         left: 70%;
     }
 

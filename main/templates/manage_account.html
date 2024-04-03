@@ -50,7 +50,8 @@
                     <td><img src="data:image/jpeg;base64,{{ profile_pictures_base64[row.id] }}" alt="Profile Picture"
                             style="width: 50px; height: 50px; border-radius: 50%; padding: 5px;"></td>
                     {% else %}
-                    <td><img style="width: 50px; height: 50px; border-radius: 50%; padding: 5px;" class="invert-blue" src="/static/images/user-blue.png" alt="CESU-LOGO"></td>
+                    <td><img style="width: 50px; height: 50px; border-radius: 50%; padding: 5px;" class="invert-blue"
+                            src="/static/images/user-blue.png" alt="CESU-LOGO"></td>
                     {% endif %}
                     <td>{{ row.username }}</td>
                     <td>{{ row.firstname|truncate(10, '...') }}</td>
@@ -178,7 +179,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="{{ url_for('dbModel.add_account') }}" method="POST" enctype="multipart/form-data">
-                            
+
                             <div class="form-group">
                                 <label>Username:</label>
                                 <input type="text" class="form-control" name="username" required>
@@ -201,10 +202,10 @@
                             <div class="form-group pass-toggle-container">
                                 <label>Password:</label>
                                 <div class="toggle_password_eye">
-                                <input type="password" class="form-control pass-input passadd" name="password"
-                                    minlength="8" id="pass" minlength="8" required>
-                                   <i class="toggle-password2 material-symbols-sharp"
-                                    id="toggle-add-password">visibility</i>
+                                    <input type="password" class="form-control pass-input passadd" name="password"
+                                        minlength="8" id="pass" minlength="8" required>
+                                    <i class="toggle-password2 material-symbols-sharp"
+                                        id="toggle-add-password">visibility</i>
                                 </div>
                             </div>
 
@@ -264,7 +265,7 @@
         </div> <!--end add modal-->
         <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div><!--end jumbotronnnn-->
-   
+
 </div>
 
 
@@ -382,19 +383,19 @@
 
 <!--FOR PREVIEW IMAGE-->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         // Function to convert input value to uppercase
         function convertToUpperCase(e) {
             e.target.value = e.target.value.toUpperCase();
         }
 
         // Attach event listeners to the input fields
-        document.querySelectorAll('.acronym, .department').forEach(function(input) {
+        document.querySelectorAll('.acronym, .department').forEach(function (input) {
             input.addEventListener('input', convertToUpperCase);
         });
 
-          // Attach event listeners to the input fields
-          document.querySelectorAll('.acronym, .department').forEach(function(input) {
+        // Attach event listeners to the input fields
+        document.querySelectorAll('.acronym, .department').forEach(function (input) {
             input.addEventListener('input', convertToUpperCase);
         });
     });
@@ -410,7 +411,7 @@
     }
 
 
-  
+
 </script>
 
 

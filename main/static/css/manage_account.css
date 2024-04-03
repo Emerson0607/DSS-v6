@@ -32,7 +32,7 @@ main .manageUser {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-    
+
 }
 
 main .manageUser>div {
@@ -71,7 +71,7 @@ main .manageUser table tr:last-child td {
     white-space: nowrap;
 }
 
-.swipe-indicator{
+.swipe-indicator {
     color: #818181;
     display: none;
 }
@@ -162,7 +162,7 @@ main .manageUser table tr:last-child td {
     border: none;
     border-radius: 7px;
     position: absolute;
-    top:2rem;
+    top: 2rem;
     left: 16rem;
 
 }
@@ -233,11 +233,13 @@ main .manageUser table tr:last-child td {
 
 }
 
-.manageUser table td , .manageUser table th{
+.manageUser table td,
+.manageUser table th {
     text-align: left;
 }
 
-.manageUser table td:last-child , .manageUser table th:last-child{
+.manageUser table td:last-child,
+.manageUser table th:last-child {
     text-align: center;
 }
 
@@ -254,23 +256,23 @@ main .manageUser table tr:last-child td {
 }
 
 
-.manageUser .jumbo{
+.manageUser .jumbo {
     overflow: auto;
     max-height: 20rem;
 }
 
-.manageUser .jumbotron{
-   position: relative;
-   
+.manageUser .jumbotron {
+    position: relative;
+
 }
 
-.manageUser .toggle_password_eye{
+.manageUser .toggle_password_eye {
     position: relative;
 }
 
-.manageUser .toggle_password_eye .toggle-password2{
+.manageUser .toggle_password_eye .toggle-password2 {
     position: absolute;
-    top:0.5rem;
+    top: 0.5rem;
     right: 1rem;
     cursor: pointer;
 }
@@ -285,7 +287,7 @@ main .manageDepartment {
     gap: 1.6rem;
     max-height: 300px;
     margin-top: 2rem;
-    
+
 }
 
 main .manageDepartment>div {
@@ -317,10 +319,10 @@ main .manageDepartment table tr:last-child td {
     border: none;
 }
 
-main .manageDepartment .jumbotron{
+main .manageDepartment .jumbotron {
     width: 100%;
     max-width: 40rem;
-    
+
 }
 
 
@@ -411,9 +413,7 @@ main .manageDepartment .jumbotron{
     border-radius: 7px;
     position: absolute;
     left: 17.5rem;
-    top:2rem
-   
-
+    top: 2rem
 }
 
 .manageDepartment .btn-add:hover {
@@ -492,14 +492,16 @@ main .manageDepartment .jumbotron{
 
 }
 
-.manageDepartment table td, .manageDepartment table th {
+.manageDepartment table td,
+.manageDepartment table th {
     text-align: left;
-   
+
 }
 
-.manageDepartment table td:last-child, .manageDepartment table th:last-child{
+.manageDepartment table td:last-child,
+.manageDepartment table th:last-child {
     text-align: center;
- 
+
 }
 
 .manageDepartment .pass-toggle-container {
@@ -513,7 +515,7 @@ main .manageDepartment .jumbotron{
     cursor: pointer;
 }
 
-.manageDepartment .delete_update_box{
+.manageDepartment .delete_update_box {
     position: relative;
     width: 1;
     padding: 1.2rem;
@@ -522,7 +524,7 @@ main .manageDepartment .jumbotron{
     margin-left: 0.2rem;
 }
 
-.manageDepartment .update_department_btn{
+.manageDepartment .update_department_btn {
     position: absolute;
     width: 1rem;
     height: 1rem;
@@ -530,7 +532,7 @@ main .manageDepartment .jumbotron{
     color: rgb(246, 246, 246);
 }
 
-.manageDepartment .delete_department_btn  {
+.manageDepartment .delete_department_btn {
     position: absolute;
     width: 1rem;
     height: 1rem;
@@ -538,7 +540,7 @@ main .manageDepartment .jumbotron{
     color: rgb(246, 246, 246);
 }
 
-.manageDepartment .jumbo{
+.manageDepartment .jumbo {
     overflow: auto;
     max-height: 11rem;
     width: 100%;
@@ -555,14 +557,14 @@ main .manageDepartment .jumbotron{
         padding-top: 1rem;
         width: 90%;
     }
-    
-    .swipe-indicator{
+
+    .swipe-indicator {
         margin-left: 5.8rem;
         color: #818181;
         display: block;
         font-size: 10px;
     }
-    
+
 
 
 
@@ -576,11 +578,11 @@ main .manageDepartment .jumbotron{
         max-height: 30rem;
     }
 
-    main .manageUser table th:last-child{
-        padding: 0 3rem 0 3rem; 
+    main .manageUser table th:last-child {
+        padding: 0 3rem 0 3rem;
     }
 
- 
+
     main .manageUser table td {
         height: 3rem;
         border-bottom: 1px solid lightgray;
@@ -593,8 +595,8 @@ main .manageDepartment .jumbotron{
     }
 
     .manageUser .btn-delete1 {
-       padding: 0.3rem 0.5rem 0.3rem 0.5rem;
- 
+        padding: 0.3rem 0.5rem 0.3rem 0.5rem;
+
     }
 
     .manageUser .btn-edit {
@@ -603,63 +605,63 @@ main .manageDepartment .jumbotron{
     }
 
     .manageUser .btn-add {
-      
+
         position: absolute;
         left: 16rem;
         top: 1.9rem;
-    
+
     }
 
-    .manageUser .jumbo{
+    .manageUser .jumbo {
         max-height: 18rem;
     }
 
-    
-
-    
-main .manageDepartment {
-   
-    width:90%;
-    margin: 0 auto;
-    padding-top: 1rem;
-    width: 90%;
-    
-}
-
-main .manageDepartment .modal-content {
-    width: 90%;
-}
-
-main .manageDepartment .jumbo {
-    overflow: auto;
-    width: 20rem;
-    max-height: 30rem;
-
-}
 
 
-main .manageDepartment .jumbotron{
-    width: 100%;
-    max-width: 40rem;
-    
-}
 
-main .manageDepartment table th:last-child{
-    padding: 0 2rem 0 2rem;
+    main .manageDepartment {
 
-    
-}
+        width: 90%;
+        margin: 0 auto;
+        padding-top: 1rem;
+        width: 90%;
 
-/* Styling for the modal content */
-.manageDepartment .modal-content {
-    background-color: #fff;
-    margin: 30% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    border-radius: 7px;
-    width: 50%;
-    position: relative;
-}
+    }
+
+    main .manageDepartment .modal-content {
+        width: 90%;
+    }
+
+    main .manageDepartment .jumbo {
+        overflow: auto;
+        width: 20rem;
+        max-height: 30rem;
+
+    }
+
+
+    main .manageDepartment .jumbotron {
+        width: 100%;
+        max-width: 40rem;
+
+    }
+
+    main .manageDepartment table th:last-child {
+        padding: 0 2rem 0 2rem;
+
+
+    }
+
+    /* Styling for the modal content */
+    .manageDepartment .modal-content {
+        background-color: #fff;
+        margin: 30% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 7px;
+        width: 50%;
+        position: relative;
+    }
 
 
 

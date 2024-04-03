@@ -23,7 +23,8 @@
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
-main .plan_detailsCard .time-frame, .fileces{
+main .plan_detailsCard .time-frame,
+.fileces {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
@@ -31,15 +32,15 @@ main .plan_detailsCard .time-frame, .fileces{
 }
 
 
-main .plan_detailsCard{
+main .plan_detailsCard {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
     position: relative;
-    
+
 }
 
-main .plan_detailsCard > div{
+main .plan_detailsCard>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -48,33 +49,33 @@ main .plan_detailsCard > div{
     transition: all 300ms ease;
 }
 
-main .plan_detailsCard .plan_detailsBox{
+main .plan_detailsCard .plan_detailsBox {
     padding: 3rem 5rem;
     padding-bottom: 6rem;
 }
 
 
 
-main .plan_detailsCard > div:hover{
+main .plan_detailsCard>div:hover {
     box-shadow: none;
 }
 
-main .plan_detailsCard .file-box p{
+main .plan_detailsCard .file-box p {
     margin-bottom: .5rem;
 }
 
 
 
-main .plan_detailsCard .file-box a{
+main .plan_detailsCard .file-box a {
     color: #05ae11;
     font-weight: 600;
     padding: 2px;
     margin-top: 1rem;
-    
+
 }
 
 /* file upload button */
-.plan_detailsCard  input[type="file"]::file-selector-button {
+.plan_detailsCard input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -83,19 +84,19 @@ main .plan_detailsCard .file-box a{
     border: 1px solid rgba(0, 0, 0, 0.16);
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
     transition: background-color 200ms;
-  }
-  
-  /* file upload button hover state */
-  .plan_detailsCard  input[type="file"]::file-selector-button:hover {
-    background-color: #f3f4f6;
-  }
-  
-  /* file upload button active state */
-  .plan_detailsCard  input[type="file"]::file-selector-button:active {
-    background-color: #e5e7eb;
-  }
+}
 
-  .plan_detailsCard .btn-deploy {
+/* file upload button hover state */
+.plan_detailsCard input[type="file"]::file-selector-button:hover {
+    background-color: #f3f4f6;
+}
+
+/* file upload button active state */
+.plan_detailsCard input[type="file"]::file-selector-button:active {
+    background-color: #e5e7eb;
+}
+
+.plan_detailsCard .btn-deploy {
     background-color: #49a14f;
     color: #fff;
     padding: 8px 10px;
@@ -110,7 +111,7 @@ main .plan_detailsCard .file-box a{
 
 /* Style for update button */
 .plan_detailsCard .btn-submit {
-    background-color:#fff;
+    background-color: #fff;
     color: #49a14f;
     width: 5rem;
     border: 1.5px solid #49a14f;
@@ -135,55 +136,56 @@ main .plan_detailsCard .file-box a{
 
 .plan_detailsCard .cpf_delete {
     background-color: #fff;
-     color: #ff7782;
-     cursor: pointer;
-     position: absolute;
-     right: 47rem;
-     bottom: 8.5rem;
- }
- 
- .plan_detailsCard .cesap_delete {
-     background-color: #fff;
-     color: #ff7782;
-     cursor: pointer;
-     position: absolute;
-     right: 25rem;
-     bottom: 8.5rem;
- }
- 
- .plan_detailsCard .cna_delete {
-     color: #ff7782;
-     background-color: #fff;
-     cursor: pointer;
-     position: absolute;
-     right: 7rem;
-     bottom: 8.5rem;
- }
+    color: #ff7782;
+    cursor: pointer;
+    position: absolute;
+    right: 47rem;
+    bottom: 8.5rem;
+}
+
+.plan_detailsCard .cesap_delete {
+    background-color: #fff;
+    color: #ff7782;
+    cursor: pointer;
+    position: absolute;
+    right: 25rem;
+    bottom: 8.5rem;
+}
+
+.plan_detailsCard .cna_delete {
+    color: #ff7782;
+    background-color: #fff;
+    cursor: pointer;
+    position: absolute;
+    right: 7rem;
+    bottom: 8.5rem;
+}
 
 
 /* ------------------- MOBILE -------------------- */
-@media screen and (max-width: 400px){
-    .plan_detailsCard{ 
+@media screen and (max-width: 400px) {
+    .plan_detailsCard {
         margin: 0 auto;
         padding-top: 1rem;
         width: 90%;
-        
+
     }
 
-    main .plan_detailsCard .plan_detailsBox{
+    main .plan_detailsCard .plan_detailsBox {
         padding: 2rem 2rem;
-    
+
     }
 
-    main .plan_detailsCard .time-frame, .fileces{
+    main .plan_detailsCard .time-frame,
+    .fileces {
         display: grid;
-        grid-template-columns:1fr;
+        grid-template-columns: 1fr;
         gap: 1.6rem;
         position: relative;
     }
 
- 
-    .plan_detailsCard .btn-deploy{
+
+    .plan_detailsCard .btn-deploy {
         bottom: 1rem;
         right: 2rem;
     }
@@ -192,26 +194,25 @@ main .plan_detailsCard .file-box a{
         bottom: 1rem;
         left: 3rem;
     }
-    main .plan_detailsCard .plan_detailsBox{
+
+    main .plan_detailsCard .plan_detailsBox {
         padding-bottom: 3rem;
     }
 
     .plan_detailsCard .cpf_delete {
-    
+
         right: 1rem;
         bottom: 13.8rem;
-     }
-     
-     .plan_detailsCard .cesap_delete {
+    }
+
+    .plan_detailsCard .cesap_delete {
         right: 1rem;
         bottom: 8.8rem;
-     }
-     
-     .plan_detailsCard .cna_delete {
+    }
+
+    .plan_detailsCard .cna_delete {
         right: 1rem;
         bottom: 4.5rem;
-     }
-   
+    }
+
 }
-
-

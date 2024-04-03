@@ -103,17 +103,17 @@ small {
 
 .profile-photo {
     margin-right: .5rem;
- 
- }
- 
- /* Initially hide the dropdown content */
- .profile-photo img{
-     width: 3.5rem;
- height: 3.5rem;
-     cursor: pointer;
-     border-radius: 50%;
-    
- }
+
+}
+
+/* Initially hide the dropdown content */
+.profile-photo img {
+    width: 3.5rem;
+    height: 3.5rem;
+    cursor: pointer;
+    border-radius: 50%;
+
+}
 
 .text-muted {
     color: var(--color-info-dark)
@@ -194,7 +194,7 @@ aside .logo {
 
 aside .logo img {
     width: 3.5rem;
- height: 3.5rem;    
+    height: 3.5rem;
 }
 
 aside .close {
@@ -284,7 +284,8 @@ aside .sidebar .blue-link:hover {
     font-size: .8rem;
     position: absolute;
     right: .5rem;
-    transition: transform 0.3s ease; /* Apply transition for smooth effect */
+    transition: transform 0.3s ease;
+    /* Apply transition for smooth effect */
 }
 
 /* Zoom effect on hover */
@@ -303,7 +304,8 @@ aside .sidebar .blue-link:hover {
     font-size: .8rem;
     position: absolute;
     right: .5rem;
-    transition: transform 0.3s ease; /* Apply transition for smooth effect */
+    transition: transform 0.3s ease;
+    /* Apply transition for smooth effect */
 }
 
 /* Zoom effect on hover */
@@ -554,7 +556,7 @@ main {
 .sidebar .dropdown-files .sidebar-link .arrow_drop_down {
     position: absolute;
     right: 0.5rem;
-   
+
 }
 
 /*DROP DOWN FOR FUNDRAISING*/
@@ -602,7 +604,7 @@ main {
 .sidebar .fundraising-files .sidebar-link .arrow_drop_down {
     position: absolute;
     right: 0.5rem;
-   
+
 }
 
 
@@ -617,11 +619,11 @@ main {
         grid-template-columns: 5rem auto 15rem;
     }
 
-    aside{
+    aside {
         margin-left: -1rem;
     }
 
-    aside .top{
+    aside .top {
         margin-left: 1rem;
     }
 
@@ -951,7 +953,7 @@ main {
     .sidebar .dropdown-files .sidebar-link .arrow_drop_down {
         position: absolute;
         right: 2rem;
-       
+
     }
 
     .sidebar .pending-container .pending-badge1 {
@@ -963,22 +965,22 @@ main {
         position: absolute;
         right: 2rem;
     }
-    
 
-    aside .top .cesu-mobile{
+
+    aside .top .cesu-mobile {
         margin-left: 1rem;
 
     }
 
-   
+
     aside .top .blue-link {
         color: var(--color-admin);
     }
 
     .dropdown-content {
-    
+
         height: 8rem;
-       
+
     }
 
 }

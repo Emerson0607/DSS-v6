@@ -1,182 +1,100 @@
 {% extends "admin_dashboard.html" %} {% block title %}Fundraising Details{%
-    endblock %} {% block content %}
-    <div class="margin-top"></div>
-    {% with messages = get_flashed_messages(category_filter=['delete_account',
-    'add_community', 'existing_community'], with_categories=true) %} {% if messages
-    %} {% for category, message in messages %}
-    <div class="flash flash-{{ category }}">{{ message }}</div>
-    {% endfor %} {% endif %} {% endwith %}
-    
-    <div class="fund_archived_details_card">
-      <div class="fund_details_box">
-        <h2 style="margin-bottom: 1rem">CESU <b>Fundraising Details</b></h2>
-        <input
-          type="text"
-          style="display: none"
-          class="form-control"
-          name="id"
-          value="{{id}}"
-          readonly
-        />
-        <form
-          class="uploading"
-          action="#"
-          method="POST"
-          enctype="multipart/form-data"
-          id="upload-form"
-        >
-          <!-- PPA -->
-          <label class="PPA label-category">FUNDRAISING PROJECT</label>
-          <div class="form-group">
-            <label>Project Name:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="project_name"
-              value="{{project_name}}"
-              readonly
-            />
-          </div>
-          <div class="form-group">
-            <label>Program:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="program"
-              value="{{program}}"
-              readonly
-            />
-          </div>
-          <div class="form-group">
-            <label>Venue:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="venue"
-              value="{{venue}}"
-              readonly
-            />
-          </div>
-    
-          <br />
-          <!-- TIMEFRAME -->
-          <label class="timeframe label-category">TIMEFRAME</label>
-          <div class="form-group">
-            <label>Date Proposed:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="proposed_date"
-              id="start_date_input"
-              placeholder="Select Date..."
-              disabled
-              value="{{proposed_date}}"
-            />
-          </div>
-          <div class="form-group">
-            <label>Target Date:</label>
-            <input
-              type="text"
-              class="form-control"
-              name="target_date"
-              id="end_date_input"
-              placeholder="Select Date..."
-              disabled
-              value="{{target_date}}"
-            />
-          </div>
-          <br />
-          <!-- ACCOUNTABILITY -->
-          <label class="accountability label-category">ACCOUNTABILITY</label><br>
-          <div class="form-group">
-            <label>Coordinator: </label><br />
-            <input
-              type="text"
-              class="form-control"
-              name="coordinator"
-              readonly
-              value="{{coordinator}}"
-            />
-          </div>
-    
-          <div class="form-group">
-            <label>Event Organizer:</label>
-            <input
-              type="text"
-              class="form-control letters-with-space-input"
-              name="event_organizer"
-              readonly
-              value="{{event_organizer}}"
-            />
-          </div>
-          <div class="form-group">
-            <label>Lead Proponent / Designation:</label>
-            <input
-              type="text"
-              class="form-control letters-with-space-input"
-              name="lead_proponent"
-              readonly
-              value="{{lead_proponent}}"
-            />
-          </div>
-          <br />
-          <label class="accountability label-category">OTHERS</label><br />
-          <div class="form-group">
-            <label>Contact Details:</label>
-            <input
-              type="text"
-              class="form-control mobile-input"
-              name="contact_details"
-              readonly
-              value="{{contact_details}}"
-            />
-          </div>
-          <div class="form-group">
-            <label>Form of donation:</label><br />
-            <input
-              type="text"
-              class="form-control mobile-input"
-              name="donation_type"
-              readonly
-              value="{{donation_type}}"
-            />
-          </div>
-          <div class="form-group">
-            <label>URL:</label>
-            <input
-              type="text"
-              class="form-control letters-with-space-input"
-              name="url"
-              readonly
-              value="{{url}}"
-            />
-          </div>
-          <br />
-        </form>
+endblock %} {% block content %}
+<div class="margin-top"></div>
+{% with messages = get_flashed_messages(category_filter=['delete_account',
+'add_community', 'existing_community'], with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="flash flash-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}
+
+<div class="fund_archived_details_card">
+  <div class="fund_details_box">
+    <h2 style="margin-bottom: 1rem">CESU <b>Fundraising Details</b></h2>
+    <input type="text" style="display: none" class="form-control" name="id" value="{{id}}" readonly />
+    <form class="uploading" action="#" method="POST" enctype="multipart/form-data" id="upload-form">
+      <!-- PPA -->
+      <label class="PPA label-category">FUNDRAISING PROJECT</label>
+      <div class="form-group">
+        <label>Project Name:</label>
+        <input type="text" class="form-control" name="project_name" value="{{project_name}}" readonly />
       </div>
-    </div>
-    
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-      crossorigin="anonymous"
-    ></script>
-    
-    <script>
-      flatpickr("#start_date_input", {
-        dateFormat: "Y-m-d",
-        altInput: true,
-        altFormat: "F j, Y",
-      });
-    
-      flatpickr("#end_date_input", {
-        dateFormat: "Y-m-d",
-        altInput: true,
-        altFormat: "F j, Y",
-      });
-    </script>
-    
-    {% endblock %}
-    
+      <div class="form-group">
+        <label>Program:</label>
+        <input type="text" class="form-control" name="program" value="{{program}}" readonly />
+      </div>
+      <div class="form-group">
+        <label>Venue:</label>
+        <input type="text" class="form-control" name="venue" value="{{venue}}" readonly />
+      </div>
+
+      <br />
+      <!-- TIMEFRAME -->
+      <label class="timeframe label-category">TIMEFRAME</label>
+      <div class="form-group">
+        <label>Date Proposed:</label>
+        <input type="text" class="form-control" name="proposed_date" id="start_date_input" placeholder="Select Date..."
+          disabled value="{{proposed_date}}" />
+      </div>
+      <div class="form-group">
+        <label>Target Date:</label>
+        <input type="text" class="form-control" name="target_date" id="end_date_input" placeholder="Select Date..."
+          disabled value="{{target_date}}" />
+      </div>
+      <br />
+      <!-- ACCOUNTABILITY -->
+      <label class="accountability label-category">ACCOUNTABILITY</label><br>
+      <div class="form-group">
+        <label>Coordinator: </label><br />
+        <input type="text" class="form-control" name="coordinator" readonly value="{{coordinator}}" />
+      </div>
+
+      <div class="form-group">
+        <label>Event Organizer:</label>
+        <input type="text" class="form-control letters-with-space-input" name="event_organizer" readonly
+          value="{{event_organizer}}" />
+      </div>
+      <div class="form-group">
+        <label>Lead Proponent / Designation:</label>
+        <input type="text" class="form-control letters-with-space-input" name="lead_proponent" readonly
+          value="{{lead_proponent}}" />
+      </div>
+      <br />
+      <label class="accountability label-category">OTHERS</label><br />
+      <div class="form-group">
+        <label>Contact Details:</label>
+        <input type="text" class="form-control mobile-input" name="contact_details" readonly
+          value="{{contact_details}}" />
+      </div>
+      <div class="form-group">
+        <label>Form of donation:</label><br />
+        <input type="text" class="form-control mobile-input" name="donation_type" readonly value="{{donation_type}}" />
+      </div>
+      <div class="form-group">
+        <label>URL:</label>
+        <input type="text" class="form-control letters-with-space-input" name="url" readonly value="{{url}}" />
+      </div>
+      <br />
+    </form>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+<script>
+  flatpickr("#start_date_input", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "F j, Y",
+  });
+
+  flatpickr("#end_date_input", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "F j, Y",
+  });
+</script>
+
+{% endblock %}

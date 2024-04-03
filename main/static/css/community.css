@@ -142,9 +142,11 @@ main .communityCard>div {
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
     margin-top: 1rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Updated box-shadow */
-    transition: box-shadow 0.3s ease; /* Added transition */
-    
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Updated box-shadow */
+    transition: box-shadow 0.3s ease;
+    /* Added transition */
+
 }
 
 main .communityCard>div:hover {
@@ -283,9 +285,9 @@ main .communityCard table tr:last-child td {
 }
 
 
-  .communityCard .jumbotron {
+.communityCard .jumbotron {
     position: relative;
-  }
+}
 
 
 .communityCard .btn-add {
@@ -304,6 +306,7 @@ main .communityCard table tr:last-child td {
     cursor: pointer;
 
 }
+
 /* coordinator add */
 
 .communityCard .btn-add .green-add {

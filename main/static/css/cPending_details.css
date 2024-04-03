@@ -1,34 +1,36 @@
-main .cPending_detailsCard .time-frame, .fileces{
+main .cPending_detailsCard .time-frame,
+.fileces {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
     margin-bottom: 2rem;
 }
 
-main .cPending_detailsCard{
+main .cPending_detailsCard {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
     position: relative;
 }
 
-main .cPending_detailsCard .cPending_detailsBox{
+main .cPending_detailsCard .cPending_detailsBox {
     padding: 3rem 5rem;
     padding-bottom: 6rem;
 }
 
-main .cPending_detailsCard .file-box p{
+main .cPending_detailsCard .file-box p {
     margin-bottom: .5rem;
 }
 
-main .cPending_detailsCard .file-box a{
+main .cPending_detailsCard .file-box a {
     color: #05ae11;
     font-weight: 600;
     padding: 2px;
     margin-top: 1rem;
-    
+
 }
-main .cPending_detailsCard > div{
+
+main .cPending_detailsCard>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -38,14 +40,14 @@ main .cPending_detailsCard > div{
 }
 
 
-main .cPending_detailsCard > div:hover{
+main .cPending_detailsCard>div:hover {
     box-shadow: none;
 }
 
 
 
 /* file upload button */
-.cPending_detailsCard  input[type="file"]::file-selector-button {
+.cPending_detailsCard input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -54,17 +56,17 @@ main .cPending_detailsCard > div:hover{
     border: 1px solid rgba(0, 0, 0, 0.16);
     box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
     transition: background-color 200ms;
-  }
-  
-  /* file upload button hover state */
-  .cPending_detailsCard  input[type="file"]::file-selector-button:hover {
+}
+
+/* file upload button hover state */
+.cPending_detailsCard input[type="file"]::file-selector-button:hover {
     background-color: #f3f4f6;
-  }
-  
-  /* file upload button active state */
-  .cPending_detailsCard  input[type="file"]::file-selector-button:active {
+}
+
+/* file upload button active state */
+.cPending_detailsCard input[type="file"]::file-selector-button:active {
     background-color: #e5e7eb;
-  }
+}
 
 
 /* Style for submit button */
@@ -83,7 +85,7 @@ main .cPending_detailsCard > div:hover{
 
 /* Style for decline button */
 .cPending_detailsCard .btn-decline {
-    background-color:#fff;
+    background-color: #fff;
     color: #49a14f;
     width: 5rem;
     border: 1.5px solid #49a14f;
@@ -106,7 +108,7 @@ main .cPending_detailsCard > div:hover{
 }
 
 .cPending_detailsCard .cpf_delete {
-   background-color: #fff;
+    background-color: #fff;
     color: #ff7782;
     cursor: pointer;
     position: absolute;
@@ -133,20 +135,21 @@ main .cPending_detailsCard > div:hover{
 }
 
 /* ------------------- MOBILE -------------------- */
-@media screen and (max-width: 400px){
-    .cPending_detailsCard{ 
+@media screen and (max-width: 400px) {
+    .cPending_detailsCard {
         margin: 0 auto;
         padding-top: 1rem;
         width: 90%;
-        
+
     }
 
-    main .cPending_detailsCard .cPending_detailsBox{
+    main .cPending_detailsCard .cPending_detailsBox {
         padding: 2rem 2rem;
     }
 
-    main .cPending_detailsCard .time-frame, .fileces{
-        grid-template-columns:1fr;
+    main .cPending_detailsCard .time-frame,
+    .fileces {
+        grid-template-columns: 1fr;
     }
 
     .cPending_detailsCard .btn-decline {
@@ -158,23 +161,24 @@ main .cPending_detailsCard > div:hover{
         bottom: 1rem;
         right: 2rem;
     }
-    main .cPending_detailsCard .cPending_detailsBox{
+
+    main .cPending_detailsCard .cPending_detailsBox {
         padding-bottom: 4rem;
     }
 
     .cPending_detailsCard .cpf_delete {
-    
+
         right: 1rem;
         bottom: 21rem;
-     }
-     
-     .cPending_detailsCard .cesap_delete {
+    }
+
+    .cPending_detailsCard .cesap_delete {
         right: 1rem;
         bottom: 16rem;
-     }
-     
-     .cPending_detailsCard .cna_delete {
+    }
+
+    .cPending_detailsCard .cna_delete {
         right: 1rem;
         bottom: 11rem;
-     }
+    }
 }

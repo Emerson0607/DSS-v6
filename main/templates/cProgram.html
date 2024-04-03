@@ -48,10 +48,10 @@
     }
 
     // Attach an event handler for the form submission
-    $(document).ready(function() {
-        $('#upload-form').submit(function(event) {
+    $(document).ready(function () {
+        $('#upload-form').submit(function (event) {
             event.preventDefault(); // Prevent the default form submission
-            
+
             // Create a FormData object to send the file
             var formData = new FormData(this);
 
@@ -62,14 +62,14 @@
                 data: formData,
                 processData: false, // Prevent jQuery from converting the data to a query string
                 contentType: false, // Prevent jQuery from setting the content type
-                success: function(response) {
+                success: function (response) {
                     // Store the result data in localStorage
                     storeResultData(response);
 
                     // Display the result data on the page
                     displayResultData(response);
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     console.error("Ajax request failed:", error);
                 }
             });

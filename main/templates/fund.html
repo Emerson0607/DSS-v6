@@ -23,13 +23,7 @@
       </div>
       <h2 style="margin-bottom: 1rem">Manage <b>Fundraising</b></h2>
 
-      <button
-        type="button"
-        class="btn-add"
-        data-bs-toggle="modal"
-        data-bs-target="#mymodal"
-        style="float: right"
-      >
+      <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right">
         <span class="material-symbols-sharp" style="float: right">add</span>
       </button>
     </div>
@@ -52,61 +46,32 @@
         <tbody>
           <tr>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.id }}</a
-              >
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.id }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.project_name }}</a
-              >
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.project_name
+                }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.venue }}</a
-              >
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.venue }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.target_date }}</a
-              >
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.target_date }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.event_organizer }}</a
-              >
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.event_organizer
+                }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.contact_details }}</a
-              >
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.contact_details
+                }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.status }}</a
-              >
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.status }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.delete_fund', id=row.id, program=row.program, project_name=row.project_name) }}"
-                class="btn-delete1"
-                onclick="return confirm('Are you sure to delete?')"
-                >Delete</a
-              >
+              <a href="{{ url_for('fundraising.delete_fund', id=row.id, program=row.program, project_name=row.project_name) }}"
+                class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
             </td>
           </tr>
         </tbody>
@@ -122,23 +87,13 @@
               <h4 class="modal-title">COMMUNITY FUNDRAISING PROPOSAL FORM</h4>
             </div>
             <div class="modal-body">
-              <form
-                class="uploading"
-                action="{{ url_for('fundraising.add_fund') }}"
-                method="POST"
-                enctype="multipart/form-data"
-                id="upload-form"
-              >
+              <form class="uploading" action="{{ url_for('fundraising.add_fund') }}" method="POST"
+                enctype="multipart/form-data" id="upload-form">
                 <!-- PPA -->
                 <label class="PPA label-category">FUNDRAISING PROJECT</label>
                 <div class="form-group">
                   <label>Project Name:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="project_name"
-                    required
-                  />
+                  <input type="text" class="form-control" name="project_name" required />
                 </div>
                 <div class="form-group">
                   <label>Program:</label>
@@ -147,12 +102,7 @@
                 </div>
                 <div class="form-group">
                   <label>Venue:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="venue"
-                    required
-                  />
+                  <input type="text" class="form-control" name="venue" required />
                 </div>
 
                 <br />
@@ -160,31 +110,17 @@
                 <label class="timeframe label-category">TIMEFRAME</label>
                 <div class="form-group">
                   <label>Date Proposed:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="proposed_date"
-                    id="start_date_input"
-                    placeholder="Select Date..."
-                    required
-                  />
+                  <input type="text" class="form-control" name="proposed_date" id="start_date_input"
+                    placeholder="Select Date..." required />
                 </div>
                 <div class="form-group">
                   <label>Target Date:</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    name="target_date"
-                    id="end_date_input"
-                    placeholder="Select Date..."
-                    required
-                  />
+                  <input type="text" class="form-control" name="target_date" id="end_date_input"
+                    placeholder="Select Date..." required />
                 </div>
                 <br />
                 <!-- ACCOUNTABILITY -->
-                <label class="accountability label-category"
-                  >ACCOUNTABILITY</label
-                ><br />
+                <label class="accountability label-category">ACCOUNTABILITY</label><br />
                 <div class="form-group">
                   <label>Coordinator: </label><br />
                   <select class="form-select" name="coordinator">
@@ -192,9 +128,7 @@
                       -- Select Coordinator --
                     </option>
                     {% for coordinator in coordinators %}
-                    <option
-                      value="{{ coordinator.firstname }} {{ coordinator.lastname }}"
-                    >
+                    <option value="{{ coordinator.firstname }} {{ coordinator.lastname }}">
                       {{ coordinator.firstname }} {{ coordinator.lastname }}
                     </option>
                     {% endfor %}
@@ -203,33 +137,17 @@
 
                 <div class="form-group">
                   <label>Event Organizer:</label>
-                  <input
-                    type="text"
-                    class="form-control letters-with-space-input"
-                    name="event_organizer"
-                    required
-                  />
+                  <input type="text" class="form-control letters-with-space-input" name="event_organizer" required />
                 </div>
                 <div class="form-group">
                   <label>Lead Proponent / Designation:</label>
-                  <input
-                    type="text"
-                    class="form-control letters-with-space-input"
-                    name="lead_proponent"
-                    required
-                  />
+                  <input type="text" class="form-control letters-with-space-input" name="lead_proponent" required />
                 </div>
                 <br />
-                <label class="accountability label-category">OTHERS</label
-                ><br />
+                <label class="accountability label-category">OTHERS</label><br />
                 <div class="form-group">
                   <label>Contact Details:</label>
-                  <input
-                    type="text"
-                    class="form-control mobile-input"
-                    name="contact_details"
-                    required
-                  />
+                  <input type="text" class="form-control mobile-input" name="contact_details" required />
                 </div>
                 <div class="form-group">
                   <label>Form of donation:</label><br />
@@ -258,9 +176,7 @@
       </div>
     </div>
     <!--end add modal account-->
-    <span class="swipe-indicator swipe"
-      >&#8592; Swipe Left or Right &#8594;</span
-    >
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
   </div>
   <!--end jumbotron-->
 </div>
@@ -303,61 +219,35 @@
         <tbody>
           <tr>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.id }}</a
-              >
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{ row.id }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.project_name }}</a
-              >
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{
+                row.project_name }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.venue }}</a
-              >
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{ row.venue
+                }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.target_date }}</a
-              >
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{
+                row.target_date }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.event_organizer }}</a
-              >
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{
+                row.event_organizer }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.contact_details }}</a
-              >
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{
+                row.contact_details }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}"
-                class="btn-edit"
-                >{{ row.status }}</a
-              >
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{ row.status
+                }}</a>
             </td>
             <td>
-              <a
-                href="{{ url_for('fundraising.delete_pending_fund', id=row.id, program=row.program, project_name=row.project_name) }}"
-                class="btn-delete1"
-                onclick="return confirm('Are you sure to delete?')"
-                >Delete</a
-              >
+              <a href="{{ url_for('fundraising.delete_pending_fund', id=row.id, program=row.program, project_name=row.project_name) }}"
+                class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
             </td>
           </tr>
         </tbody>
@@ -366,9 +256,7 @@
       <p id="noRecordsMessage" style="display: none">No records found.</p>
     </div>
     <!--end add modal account-->
-    <span class="swipe-indicator swipe"
-      >&#8592; Swipe Left or Right &#8594;</span
-    >
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
   </div>
   <!--end jumbotron-->
 </div>
@@ -376,11 +264,8 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script
-  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-  crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 <script>
   $(document).ready(function () {
@@ -441,7 +326,7 @@
         ({ day, month, year }) =>
           startDateInput.selectedDates.length === 0 ||
           startDateInput.selectedDates[0].getTime() !==
-            new Date(year, month, day).getTime(),
+          new Date(year, month, day).getTime(),
       ],
     });
   }
