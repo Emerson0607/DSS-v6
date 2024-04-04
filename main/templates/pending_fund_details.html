@@ -7,9 +7,9 @@ endblock %} {% block content %}
 <div class="flash flash-{{ category }}">{{ message }}</div>
 {% endfor %} {% endif %} {% endwith %}
 
-<div class="fund_details_card">
-  <div class="fund_details_box">
-    <h2 style="margin-bottom: 1rem">CESU <b>Fundraising Details</b></h2>
+<div class="pending_fund_details_card">
+  <div class="pending_fund_details_box">
+    <h2 style="margin-bottom: 1rem">CESU <b>Pending Fundraising Details</b></h2>
 
 
 
@@ -74,7 +74,7 @@ endblock %} {% block content %}
         <input type="text" class="form-control mobile-input" name="donation_type" readonly value="{{donation_type}}" />
       </div>
       <div class="form-group">
-        <button class="btn-submit" type="submit" value="Upload">Accept</button>
+        <button class="btn-submit" type="submit" value="Upload">Deploy</button>
       </div>
 
     </form>
