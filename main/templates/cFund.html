@@ -7,7 +7,7 @@
 <div class="flash flash-{{ category }}">{{ message }}</div>
 {% endfor %} {% endif %} {% endwith %}
 
-<div class="fundraising_card">
+<div class="cFundraising_card">
   <div class="jumbotron">
     <div class="for_filter">
       <div class="year-filter1">
@@ -67,7 +67,8 @@
                 }}</a>
             </td>
             <td>
-              <a href="{{ url_for('fundraising.cView_fund', fund_id=row.id)}}" class="btn-edit">{{ row.status }}</a>
+              <a href="{{ url_for('fundraising.cView_fund', fund_id=row.id)}}" class="btn-edit fund_status"
+                data-status="{{ row.status }}">{{ row.status }}</a>
             </td>
 
           </tr>
@@ -176,7 +177,7 @@
 
 
 <!--FOR PENDING FUNDRAISING-->
-<div class="fundraising_card pending_fund_card">
+<div class="cFundraising_card">
   <div class="jumbotron">
     <div class="for_filter">
       <div class="year-filter1">
@@ -235,8 +236,8 @@
                 row.contact_details }}</a>
             </td>
             <td>
-              <a href="{{ url_for('fundraising.cView_pending_fund', fund_id=row.id)}}" class="btn-edit">{{ row.status
-                }}</a>
+              <a href="{{ url_for('fundraising.cView_pending_fund', fund_id=row.id)}}" class="btn-edit pending_status"
+                data-status="{{ row.status }}">{{ row.status}} </a>
             </td>
             <td>
               <a href="{{ url_for('fundraising.cDelete_pending_fund', id=row.id, program=row.program, project_name=row.project_name) }}"
@@ -266,6 +267,36 @@
     date_picker();
   });
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var statusElements = document.querySelectorAll('.pending_status');
+    statusElements.forEach(function (statusElement) {
+      var status = statusElement.getAttribute('data-status');
+      if (status.trim() === 'Declined') {
+        statusElement.style.color = 'red';  // Change the color as needed
+
+      } else {
+        statusElement.style.color = '#0066ff';
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var statusElements = document.querySelectorAll('.fund_status');
+    statusElements.forEach(function (statusElement) {
+      var status = statusElement.getAttribute('data-status');
+      if (status.trim() === 'Ongoing') {
+        statusElement.style.color = 'blue';  // Change the color as needed
+
+      } else {
+        statusElement.style.color = '#00e600';
+      }
+    });
+  });
+</script>
+
+
 
 <script>
   // Remove any non-letter characters from the input

@@ -307,7 +307,7 @@ def approve_fund():
                 event_organizer = p.event_organizer,
                 lead_proponent = p.lead_proponent,
                 contact_details = p.contact_details,
-                status = p.status,
+                status = "Ongoing",
                 donation_type = p.donation_type,
                 coordinator_id = p.coordinator_id
         )

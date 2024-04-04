@@ -25,7 +25,7 @@
 
 
 
-.fundraising_card {
+.cFundraising_card {
     display: grid;
     grid-template-columns: 1fr;
     overflow: auto;
@@ -33,7 +33,7 @@
 
 }
 
-.fundraising_card>div {
+.cFundraising_card>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -44,7 +44,7 @@
 
 
 /* file upload button */
-.fundraising_card input[type="file"]::file-selector-button {
+.cFundraising_card input[type="file"]::file-selector-button {
     border-radius: 4px;
     padding: 0 16px;
     height: 40px;
@@ -56,45 +56,45 @@
 }
 
 /* file upload button hover state */
-.fundraising_card input[type="file"]::file-selector-button:hover {
+.cFundraising_card input[type="file"]::file-selector-button:hover {
     background-color: #f3f4f6;
 }
 
 /* file upload button active state */
-.fundraising_card input[type="file"]::file-selector-button:active {
+.cFundraising_card input[type="file"]::file-selector-button:active {
     background-color: #e5e7eb;
 }
 
 
 
-main .fundraising_card .table-card {
+main .cFundraising_card .table-card {
     height: 15rem;
     max-height: 25rem;
     overflow: auto;
 }
 
-main .fundraising_card>div:hover {
+main .cFundraising_card>div:hover {
     box-shadow: none;
 }
 
-.fundraising_card table {
+.cFundraising_card table {
 
     width: 100%;
 
 }
 
-main .fundraising_card table td {
+main .cFundraising_card table td {
     height: 2.8rem;
     border-bottom: 1px solid lightgray;
     color: var(--color-dark);
 }
 
-main .fundraising_card table tr:last-child td {
+main .cFundraising_card table tr:last-child td {
     border: none;
 }
 
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
-.fundraising_card .modal {
+.cFundraising_card .modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -106,7 +106,7 @@ main .fundraising_card table tr:last-child td {
 }
 
 /* Styling for the modal content */
-.fundraising_card .modal-content {
+.cFundraising_card .modal-content {
     background-color: #fff;
     margin: 5% auto;
     padding: 20px;
@@ -117,13 +117,13 @@ main .fundraising_card table tr:last-child td {
 
 }
 
-.fundraising_card .modal h4 {
+.cFundraising_card .modal h4 {
     font-size: 1.4rem;
     margin-bottom: 0.5rem;
 }
 
 /* Style for the form container */
-.fundraising_card .modal-body {
+.cFundraising_card .modal-body {
     padding: 20px;
     max-height: 400px;
     /* Set a maximum height for scrollability */
@@ -133,17 +133,17 @@ main .fundraising_card table tr:last-child td {
 }
 
 /* Style for form labels and inputs */
-.fundraising_card .form-group label {
+.cFundraising_card .form-group label {
     font-weight: 100;
 }
 
-.fundraising_card .label-category {
+.cFundraising_card .label-category {
     font-weight: 700;
     font-size: 1rem;
 }
 
 
-.fundraising_card .form-control {
+.cFundraising_card .form-control {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -152,7 +152,7 @@ main .fundraising_card table tr:last-child td {
 }
 
 /* Style for select elements */
-.fundraising_card .form-select {
+.cFundraising_card .form-select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -162,7 +162,7 @@ main .fundraising_card table tr:last-child td {
 
 
 /* Style for submit button */
-.fundraising_card .btn-submit {
+.cFundraising_card .btn-submit {
     background-color: #4a4cd7;
     color: #fff;
     padding: 10px 12px;
@@ -175,17 +175,17 @@ main .fundraising_card table tr:last-child td {
 
 }
 
-.fundraising_card .btn-submit:hover {
+.cFundraising_card .btn-submit:hover {
     background-color: #303396;
 }
 
-.fundraising_card .jumbotron {
+.cFundraising_card .jumbotron {
     position: relative;
 
 }
 
 
-.fundraising_card .btn-add {
+.cFundraising_card .btn-add {
     background-color: #4a4cd7;
     /* Change this to your desired color */
     color: #fff;
@@ -197,7 +197,7 @@ main .fundraising_card table tr:last-child td {
     top: 0.2rem;
 }
 
-.fundraising_card .btn-add:hover {
+.cFundraising_card .btn-add:hover {
     background-color: #303396;
     cursor: pointer;
 
@@ -205,7 +205,7 @@ main .fundraising_card table tr:last-child td {
 
 
 
-.fundraising_card .btn-delete1 {
+.cFundraising_card .btn-delete1 {
     background-color: #ff5555;
     /* Red background color */
     color: #fff;
@@ -221,13 +221,13 @@ main .fundraising_card table tr:last-child td {
 }
 
 
-.fundraising_card .btn-delete1:hover {
+.cFundraising_card .btn-delete1:hover {
     background-color: #ff3333;
     /* Red background color on hover */
 }
 
 /* Styling for the close button */
-.fundraising_card .btn-close {
+.cFundraising_card .btn-close {
     background-color: #ffffff;
     color: #2a2a2a;
     border: none;
@@ -239,32 +239,32 @@ main .fundraising_card table tr:last-child td {
     top: .5rem;
 }
 
-.fundraising_card .btn-close:hover {
+.cFundraising_card .btn-close:hover {
 
     color: var(--color-danger);
 }
 
-.fundraising_card table td {
+.cFundraising_card table td {
     text-align: center;
 }
 
-.fundraising_card .file-box {
+.cFundraising_card .file-box {
     margin-bottom: 1rem;
 }
 
 /* Year Filter */
-main .fundraising_card .for_filter .year-filter {
+.cFundraising_card .jumbotron .for_filter .year-filter1 {
     position: absolute;
     right: 1rem;
 }
 
 
-.for_filter {
+.cFundraising_card .jumbotron .for_filter {
     position: relative;
 
 }
 
-.fundraising_card .jumbotron .year-filter1 {
+.cFundraising_card .jumbotron .year-filter1 {
     position: absolute;
 }
 
@@ -275,13 +275,13 @@ main .fundraising_card .for_filter .year-filter {
     right: 30rem;
 }
 
-.fundraising_card .year-filter1 label {
+.cFundraising_card .jumbotron .year-filter1 label {
     font-weight: bold;
     margin-right: 10px;
     font-size: 12px;
 }
 
-.fundraising_card .year-filter1 select {
+.cFundraising_card .jumbotron .year-filter1 select {
     font-size: 14px;
     padding: 8px 12px;
     border-radius: 4px;
@@ -290,7 +290,7 @@ main .fundraising_card .for_filter .year-filter {
 
 }
 
-.fundraising_card .year-filter1 select:hover {
+.cFundraising_card .jumbotron .year-filter1 select:hover {
     border-color: #555;
     cursor: pointer;
 }
@@ -298,7 +298,7 @@ main .fundraising_card .for_filter .year-filter {
 
 
 /* Show all btn */
-.fundraising_card .year-filter1 .show-all-button {
+.cFundraising_card .jumbotron .year-filter1 .show-all-button {
     font-size: 12px;
     background-color: #ffffff;
     color: rgb(0, 0, 0);
@@ -306,14 +306,14 @@ main .fundraising_card .for_filter .year-filter {
     border-radius: 4px;
 }
 
-.fundraising_card .year-filter1 .show-all-button:hover {
+.cFundraising_card .jumbotron .year-filter1 .show-all-button:hover {
     border-color: #555;
 }
 
 
 
 /* Show all btn */
-.fundraising_card .jumbotron .year-filter1 .show-all-button {
+.cFundraising_card .jumbotron .year-filter1 .show-all-button {
     padding: 8px 12px;
     font-size: 14px;
     background-color: #ffffff;
@@ -323,7 +323,7 @@ main .fundraising_card .for_filter .year-filter {
     cursor: pointer;
 }
 
-.fundraising_card .jumbotron .year-filter1 .show-all-button:hover {
+.cFundraising_card .jumbotron .year-filter1 .show-all-button:hover {
     border-color: #555;
 }
 
@@ -331,16 +331,16 @@ main .fundraising_card .for_filter .year-filter {
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
-    .communityCard .fundraising_card .modal-content {
+    .communityCard .cFundraising_card .modal-content {
         position: relative;
     }
 
-    .fundraising_card .modal-body {
+    .cFundraising_card .modal-body {
         height: 40rem;
 
     }
 
-    .fundraising_card .btn-close {
+    .cFundraising_card .btn-close {
         position: absolute;
         right: 25px;
         bottom: 2px;
@@ -349,37 +349,37 @@ main .fundraising_card .for_filter .year-filter {
 
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px) {
-    .fundraising_card {
+    .cFundraising_card {
         margin: 0 auto;
         padding-top: 2rem;
 
     }
 
-    .fundraising_card .jumbotron {
+    .cFundraising_card .jumbotron {
         width: 90%;
         margin: 0 auto;
     }
 
-    .fundraising_card .modal-content {
+    .cFundraising_card .modal-content {
         width: 90%;
     }
 
-    .fundraising_card .table-card {
+    .cFundraising_card .table-card {
         width: 19rem;
         overflow: auto;
     }
 
-    .fundraising_card .table-card th {
+    .cFundraising_card .table-card th {
         padding-right: 1rem;
     }
 
-    .fundraising_card .btn-close {
+    .cFundraising_card .btn-close {
         height: 2rem;
         right: .5rem;
     }
 
     /* Year Filter */
-    .for_filter {
+    .cFundraising_card .jumbotron .for_filter {
         border: solid 0px black;
         position: relative;
         width: 100%;
@@ -388,18 +388,18 @@ main .fundraising_card .for_filter .year-filter {
 
     }
 
-    .for_filter h2 {
+    .cFundraising_card .jumbotron .for_filter h2 {
         width: 65%;
 
     }
 
-    .for_filter .year-filter1 {
+    .cFundraising_card .jumbotron .for_filter .year-filter1 {
         position: absolute;
         margin-right: -2rem;
         margin-top: -1.7rem;
     }
 
-    .for_filter .year-filter1 label {
+    .cFundraising_card .jumbotron .for_filter .year-filter1 label {
         display: block;
         margin-left: 0.3rem;
         margin-bottom: 0.3rem;
@@ -408,7 +408,7 @@ main .fundraising_card .for_filter .year-filter {
 
 
 
-    .fundraising_card .jumbotron .year-filter1 {
+    .cFundraising_card .jumbotron .year-filter1 {
         position: absolute;
         top: 2rem;
         right: 1rem;
@@ -416,7 +416,7 @@ main .fundraising_card .for_filter .year-filter {
 
 
 
-    .fundraising_card .jumbotron .year-filter1 select {
+    .cFundraising_card .jumbotron .year-filter1 select {
         padding: 4px;
         font-size: 10px;
         border: 1px solid #ccc;
@@ -424,7 +424,7 @@ main .fundraising_card .for_filter .year-filter {
     }
 
     /* Show all btn */
-    .fundraising_card .jumbotron .year-filter1 .show-all-button {
+    .cFundraising_card .jumbotron .year-filter1 .show-all-button {
         padding: 4px 6px;
         font-size: 10px;
         background-color: #ffffff;
@@ -434,7 +434,7 @@ main .fundraising_card .for_filter .year-filter {
     }
 
 
-    .fundraising_card .btn-add {
+    .cFundraising_card .btn-add {
 
         left: 10rem;
 

@@ -67,7 +67,8 @@
                 }}</a>
             </td>
             <td>
-              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit">{{ row.status }}</a>
+              <a href="{{ url_for('fundraising.view_fund', fund_id=row.id)}}" class="btn-edit fund_status"
+                data-status="{{row.status}}">{{ row.status }}</a>
             </td>
             <td>
               <a href="{{ url_for('fundraising.delete_fund', id=row.id, program=row.program, project_name=row.project_name) }}"
@@ -242,8 +243,8 @@
                 row.contact_details }}</a>
             </td>
             <td>
-              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit">{{ row.status
-                }}</a>
+              <a href="{{ url_for('fundraising.view_pending_fund', fund_id=row.id)}}" class="btn-edit pending_status"
+                data-status="{{row.status}}">{{row.status}}</a>
             </td>
             <td>
               <a href="{{ url_for('fundraising.delete_pending_fund', id=row.id, program=row.program, project_name=row.project_name) }}"
@@ -270,6 +271,34 @@
 <script>
   $(document).ready(function () {
     date_picker();
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var statusElements = document.querySelectorAll('.pending_status');
+    statusElements.forEach(function (statusElement) {
+      var status = statusElement.getAttribute('data-status');
+      if (status.trim() === 'Declined') {
+        statusElement.style.color = 'red';  // Change the color as needed
+
+      } else {
+        statusElement.style.color = '#0066ff';
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var statusElements = document.querySelectorAll('.fund_status');
+    statusElements.forEach(function (statusElement) {
+      var status = statusElement.getAttribute('data-status');
+      if (status.trim() === 'Ongoing') {
+        statusElement.style.color = 'blue';  // Change the color as needed
+
+      } else {
+        statusElement.style.color = '#00e600';
+      }
+    });
   });
 </script>
 
