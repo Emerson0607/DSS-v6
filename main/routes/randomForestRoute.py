@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, session,
 from collections import Counter
 import pandas as pd
 import joblib, base64, re
-from main.models.dbModel import Users, Subprogram, Pending_project
+from main.models.dbModel import Users, Subprogram, Pending_project, Pending_fund
 from main import db
 
 randomForest_Route = Blueprint('randomForest', __name__)
@@ -27,34 +27,46 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
+        
+        #pending project count for ADMIN
         pending_count = Pending_project.query.filter_by(status="For Review").count()
-            
-        # Set a maximum value for pending_count
         max_pending_count = 9
         pending_count_display = min(pending_count, max_pending_count)
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
-
+        #pending project count for COORDINATOR
         declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count() 
         max_declined_count = 9
         declined_count_display = min(declined_count, max_declined_count)
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
+        
+        #pending fund project count for COORDINATOR
+        cDeclined_fund_count = Pending_fund.query.filter_by(status="Declined", coordinator_id=user.id).count()
+        cMax_declined_fund_count = 9
+        cDeclined_fund_count_display = min(cDeclined_fund_count, cMax_declined_fund_count)
+        cDeclined_fund_count_display = '9+' if cDeclined_fund_count > cMax_declined_fund_count else cDeclined_fund_count
+        
+        #pending fund project count for ADMIN
+        declined_fund_count = Pending_fund.query.filter_by(status="For Review").count()
+        max_declined_fund_count = 9
+        declined_fund_count_display = min(declined_fund_count, max_declined_fund_count)
+        declined_fund_count_display = '9+' if declined_fund_count > max_declined_fund_count else declined_fund_count
         
         profile_picture_base64 = None
         if user:
             if user.profile_picture:
                 # Convert the profile picture to base64 encoding
                 profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
-            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname, profile_picture_base64
-    return None, None, 0, 0, None, None, None
+            return user.username, user.role, pending_count_display, declined_count_display, user.firstname, user.lastname, profile_picture_base64, cDeclined_fund_count_display, declined_fund_count_display
+    return None, None, 0, 0, None, None, None, None, None
 
 @randomForest_Route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display, g.current_firstname, g.current_lastname, g.profile_picture_base64 = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.declined_count_display, g.current_firstname, g.current_lastname, g.profile_picture_base64, g.cDeclined_fund_count_display, g.declined_fund_count_display = get_current_user()
 
 @randomForest_Route.context_processor
 def inject_current_user():
-    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count=g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, profile_picture_base64 = g.profile_picture_base64 )
+    return dict(current_user=g.current_user, current_role=g.current_role, pending_count = g.pending_count_display, declined_count=g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count = g.cDeclined_fund_count_display, declined_fund_count=g.declined_fund_count_display )
 
 @randomForest_Route.route("/program", methods=["GET", "POST"])
 def program():

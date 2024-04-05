@@ -6,19 +6,34 @@
         text-decoration: line-through;
     }
 </style>
+
+
+
+
+
 <div class="notfound1">
     <div class="notfound">
-
         <div class="no-data">
             <h1>No Data Found</h1>
-
-            <p>Sorry, but there is no data available at the moment. Go back to the<a
-                    href="{{url_for('dbModel.kaakbay_program')}}"> Community Project</a> page.</p>
+            <p>Sorry, but there is no data available at the moment. Go back to the
+                <a href="{{url_for('dbModel.kaakbay_program')}}"> Community Project</a>page.
+            </p>
         </div>
 
     </div>
 </div>
 <div class="margin-top"></div>
+{% with messages = get_flashed_messages(category_filter=['existing_username', 'existing_program',
+'edit_account',
+'delete_account', 'add_account', 'password_space', 'username_space'], with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="flash flash-{{ category }}" style="margin-bottom: 1rem;">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
 <div class="kaakbay-subprogram-title">
 
     <h1>{{data}}</h1>
@@ -30,7 +45,9 @@
 </div>
 <div class="coordinatorCard">
 
+
     <div class="insights-div ">
+
         <p class="community-status"></p>
         <div class="community-subprogram-title">
             <div class="subLogo">
@@ -85,6 +102,8 @@
                         <label class="label"></label>
                     </div>
                 </div>
+
+
                 <input type="text" class="link-input" placeholder="Enter Link" style="display: none;">
             </form>
         </div>
@@ -281,7 +300,8 @@
                                     location.reload();
                                 },
                                 error: function (error) {
-                                    console.error("Failed to update status: " + error);
+                                    console.error("Failed to update status: ");
+                                    alert("Invalid URL format. Please enter a valid URL starting with http:// or https:// and containing a valid domain.");
                                 }
                             });
                         }

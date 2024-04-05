@@ -314,6 +314,24 @@ aside .sidebar .blue-link:hover {
 }
 
 
+.sidebar .fund_container_box .fund_container .declined_fund_count {
+    color: white;
+    background-color: #49a14f;
+    border: .2rem solid white;
+    padding: 0 .5rem;
+    border-radius: 50%;
+    font-size: .8rem;
+    position: absolute;
+    right: .5rem;
+    transition: transform 0.3s ease;
+    /* Apply transition for smooth effect */
+}
+
+.sidebar .fund_container_box .fund_container .declined_fund_count:hover {
+    transform: scale(1.2);
+}
+
+
 
 
 /*============ MAIN ====================*/
@@ -966,6 +984,10 @@ main {
         right: 2rem;
     }
 
+    .sidebar .fund_container .declined_fund_count {
+        position: absolute;
+        right: 2rem;
+    }
 
     aside .top .cesu-mobile {
         margin-left: 1rem;

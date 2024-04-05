@@ -119,13 +119,14 @@
 
 
                 <!--FUNDRAISING-->
-                <div class="fundraising-files" onclick="toggleFundraising()">
-                    <a href="#" class="sidebar-link blue-link">
+                <div class="fundraising-files fund_container_box" onclick="toggleFundraising()">
+                    <a href="#" class="sidebar-link blue-link fund_container">
                         <span class="material-symbols-sharp">crowdsource</span>
                         <h3>Fundraising</h3>
                         <span class="material-symbols-sharp arrow_drop_down">
                             arrow_drop_down
                         </span>
+                        <span class="declined_fund_count" id="fund_badge">{{declined_fund_count}}</span>
                     </a>
                     <div class="fundraising-content-files" id="fundraising-content-files">
                         <a class="blue-link" href="{{ url_for('fundraising.fund') }}">Manage Fundraising</a>
@@ -256,6 +257,15 @@
         document.getElementById("dashboardLink2").addEventListener("click", function () {
             window.location.href = "{{ url_for('dbModel.dashboard') }}";
         });
+    </script>
+
+    <script>
+        var pendingCount = '{{declined_fund_count}}'; // Assuming pending_count is a variable in your template
+        // Get the element by ID
+        var pendingBadge = document.getElementById('fund_badge');
+
+        // Set the display property based on the value of pendingCount fund_badge
+        pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
     </script>
 </body>
 

@@ -1,5 +1,5 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department, Resources
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department, Resources, Pending_fund
 from main import db
 from flask import Response
 import secrets
@@ -179,23 +179,29 @@ def get_current_user():
         # If pending_count is 9 or greater, display it as '9+'
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
+        #pending fund project count for ADMIN
+        declined_fund_count = Pending_fund.query.filter_by(status="For Review").count()
+        max_declined_fund_count = 9
+        declined_fund_count_display = min(declined_fund_count, max_declined_fund_count)
+        declined_fund_count_display = '9+' if declined_fund_count > max_declined_fund_count else declined_fund_count
+        
         profile_picture_base64 = None
         if user:
             if user.profile_picture:
                 # Convert the profile picture to base64 encoding
                 profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
 
-            return user.username, user.role, pending_count_display, user.firstname, user.lastname, profile_picture_base64
-    return None, None, 0, None, None, None
+            return user.username, user.role, pending_count_display, user.firstname, user.lastname, profile_picture_base64, declined_fund_count_display
+    return None, None, 0, None, None, None, None
 
 @dbModel_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.pending_count_display, g.current_firstname, g.current_lastname, g.profile_picture_base64 = get_current_user()
+    g.current_user, g.current_role, g.pending_count_display, g.current_firstname, g.current_lastname, g.profile_picture_base64, g.declined_fund_count_display = get_current_user()
 
 @dbModel_route.context_processor
 def inject_current_user():
-    current_user, current_role, pending_count, current_firstname, current_lastname, profile_picture_base64 = get_current_user()
-    return dict(current_user=current_user, current_role=current_role, pending_count=pending_count, current_firstname=current_firstname, current_lastname=current_lastname, profile_picture_base64=profile_picture_base64)
+    current_user, current_role, pending_count, current_firstname, current_lastname, profile_picture_base64, declined_fund_count = get_current_user()
+    return dict(current_user=current_user, current_role=current_role, pending_count=pending_count, current_firstname=current_firstname, current_lastname=current_lastname, profile_picture_base64=profile_picture_base64, declined_fund_count=declined_fund_count)
 
 #################### USERS LOGIN FUNCTION ##################
 
@@ -1284,6 +1290,11 @@ def archive_project():
     status = data['status']
     url = data.get('url', '')
 
+    # Validate URL
+    if url and not re.match(r'^https?://(?:www\.)?\w+\.\w+', url):
+        flash('Invalid URL format. Please enter a valid URL.', 'delete_account')
+        return jsonify({'error': 'Invalid URL format'})
+      
     data_to_move = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
     # Iterate through the data and move it to CPFARCHIVE
         
@@ -1748,7 +1759,7 @@ def view_archived(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("archived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("archived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, url=p.url)
 
 @dbModel_route.route("/delete_archived/<int:project_id>")
 def delete_archived(project_id):
@@ -2389,7 +2400,6 @@ def edit_profile():
 
     return render_template("edit_profile.html", id=p.id, username=p.username, firstname=p.firstname, lastname=p.lastname, email=p.email, mobile_number=p.mobile_number)
 
-
 @dbModel_route.route('/update_profile', methods=['POST'])
 def update_profile():
     if g.current_role != "Admin" and g.current_role != "BOR":
@@ -2457,7 +2467,6 @@ def update_profile():
             flash('Account updated successfully!', 'edit_account')
 
         return redirect(url_for('dbModel.edit_profile'))
-
 
 @dbModel_route.route('/delete_picture', methods=['POST'])
 def delete_picture():
@@ -2550,7 +2559,6 @@ def resources():
     program8 = Program.query.all()
     user1 = Users.query.all()
     return render_template("resources.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1)
-
 
 @dbModel_route.route("/add_resources", methods=["POST"])
 def add_resources():

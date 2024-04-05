@@ -96,15 +96,16 @@
                 </a>
 
                 <!--FUNDRAISING-->
-                <div class="cFundraising-files" onclick="toggleFundraising()">
-                    <a href="#" class="sidebar-link">
+                <div class="cFundraising-files fund_container_box" onclick="toggleFundraising()">
+                    <a href="#" class="sidebar-link fund_container">
                         <span class="material-symbols-sharp">crowdsource</span>
                         <h3>Fundraising</h3>
                         <span class="material-symbols-sharp arrow_drop_down">
                             arrow_drop_down
                         </span>
+                        <span class="declined_fund_count" id="fund_badge">{{cDeclined_fund_count}}</span>
                     </a>
-                    <span class="pending-badge1" id="pending-badge">{{cDeclined_fund_count}}</span>
+
                     <div class="cFundraising-content-files" id="fundraising-content-files">
                         <a href="{{ url_for('fundraising.cFund') }}">Manage Fundraising</a>
                         <a href="#">Fundrasing Programs</a>
@@ -309,15 +310,26 @@
             window.location.href = "{{ url_for('coordinator.coordinator_dashboard') }}";
         });
     </script>
+
     <script>
         var pendingCount = '{{declined_count}}'; // Assuming pending_count is a variable in your template
-
         // Get the element by ID
         var pendingBadge = document.getElementById('pending-badge');
 
-        // Set the display property based on the value of pendingCount
+        // Set the display property based on the value of pendingCount fund_badge
         pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
     </script>
+
+    <script>
+        var pendingCount = '{{cDeclined_fund_count}}'; // Assuming pending_count is a variable in your template
+        // Get the element by ID
+        var pendingBadge = document.getElementById('fund_badge');
+
+        // Set the display property based on the value of pendingCount fund_badge
+        pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
+    </script>
+
+
 </body>
 
 </html>

@@ -32,21 +32,24 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
+        
+        
+        #pending project count
         declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count()
-        cDeclined_fund_count = Pending_fund.query.filter_by(status="Declined", coordinator_id=user.id).count()
-            
-        # Set a maximum value for pending_count
         max_declined_count = 9
         declined_count_display = min(declined_count, max_declined_count)
-
-        # If pending_count is 9 or greater, display it as '9+'
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
 
-         # Set a maximum value for pending_count
+        #pending fund project count for ADMIN
+        declined_fund_count = Pending_fund.query.filter_by(status="For Review").count()
+        max_declined_fund_count = 9
+        declined_fund_count_display = min(declined_fund_count, max_declined_fund_count)
+        declined_fund_count_display = '9+' if declined_fund_count > max_declined_fund_count else declined_fund_count
+        
+        #pending fund project count for COORDINATOR
+        cDeclined_fund_count = Pending_fund.query.filter_by(status="Declined", coordinator_id=user.id).count()
         cMax_declined_fund_count = 9
         cDeclined_fund_count_display = min(cDeclined_fund_count, cMax_declined_fund_count)
-
-        # If pending_count is 9 or greater, display it as '9+'
         cDeclined_fund_count_display = '9+' if cDeclined_fund_count > cMax_declined_fund_count else cDeclined_fund_count
 
         profile_picture_base64 = None
@@ -54,17 +57,17 @@ def get_current_user():
             if user.profile_picture:
                 # Convert the profile picture to base64 encoding
                 profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
-            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64, cDeclined_fund_count_display
-    return None, None, None, 0, None, None, None, None, None
+            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64, cDeclined_fund_count_display, user.id, declined_fund_count_display
+    return None, None, None, 0, None, None, None, None, None, None, None
     
 @fundraising_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64, g.cDeclined_fund_count_display = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64, g.cDeclined_fund_count_display, g.current_id, g.declined_fund_count_display = get_current_user()
 
 @fundraising_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display, current_id=g.current_id, declined_fund_count=g.declined_fund_count_display)
 
 
 ########################Fundraising Activity#############################
@@ -408,8 +411,8 @@ def cFund():
         return redirect(url_for('dbModel.login'))
 
     current_year = datetime.now().year
-    fund_list = Fundraising.query.all()
-    pending_fund_list = Pending_fund.query.all()
+    fund_list = Fundraising.query.filter(Fundraising.coordinator_id==g.current_id).all()
+    pending_fund_list = Pending_fund.query.filter(Pending_fund.coordinator_id==g.current_id).all()
 
     # Render the template with the current year and the next four years
     return render_template("cFund.html", form=form, current_year=current_year, fund_list=fund_list, pending_fund_list=pending_fund_list)

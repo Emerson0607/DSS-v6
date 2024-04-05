@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs, Resources
+from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs, Resources, Pending_fund
 from main import db
 from main import Form
 from flask import Response
@@ -35,6 +35,7 @@ def get_current_user():
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
         declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count()
+        cDeclined_fund_count = Pending_fund.query.filter_by(status="Declined", coordinator_id=user.id).count()
             
         # Set a maximum value for pending_count
         max_declined_count = 9
@@ -42,23 +43,28 @@ def get_current_user():
 
         # If pending_count is 9 or greater, display it as '9+'
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count
+        
+        #for coordinator fund cpending count
+        cMax_declined_fund_count = 9
+        cDeclined_fund_count_display = min(cDeclined_fund_count, cMax_declined_fund_count)
+        cDeclined_fund_count_display = '9+' if cDeclined_fund_count > cMax_declined_fund_count else cDeclined_fund_count
 
         profile_picture_base64 = None
         if user:
             if user.profile_picture:
                 # Convert the profile picture to base64 encoding
                 profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
-            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64
-    return None, None, None, 0, None, None, None, None
+            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64, cDeclined_fund_count_display
+    return None, None, None, 0, None, None, None, None, None
     
 @coordinator_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64 = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64, g.cDeclined_fund_count_display = get_current_user()
 
 @coordinator_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display)
 
 @coordinator_route.route("/cClear_session")
 def cClear_session():
