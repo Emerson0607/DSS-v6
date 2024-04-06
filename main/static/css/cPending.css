@@ -28,7 +28,6 @@ main .cpendingCard {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-    overflow: auto;
     max-height: 90%;
 
 }
@@ -42,14 +41,16 @@ main .cpendingCard>div {
     transition: all 300ms ease;
 }
 
+main .cpendingCard>div:hover {
+    box-shadow: none;
+}
+
 main .cpendingCard .table-card {
     max-height: 35rem;
     overflow: auto;
 }
 
-main .pendingCard>div:hover {
-    box-shadow: none;
-}
+
 
 .cpendingCard table {
     width: 100%;

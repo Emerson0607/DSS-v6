@@ -28,7 +28,6 @@
 main .resources_Card {
     display: grid;
     grid-template-columns: 1fr;
-    overflow: auto;
     max-height: 90%;
 
 }

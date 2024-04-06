@@ -134,7 +134,6 @@ main .cCommunity {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-    overflow: auto;
     max-height: 60%;
 }
 
@@ -166,13 +165,11 @@ main .cCommunity {
 
 
 main .cCommunity>div {
-
-
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
     margin-top: 1rem;
-
+    box-shadow: var(--box-shadow);
     transition: all 400ms ease;
     cursor: pointer;
 }

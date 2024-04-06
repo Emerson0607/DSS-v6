@@ -1893,7 +1893,6 @@ def logs_activity():
     return render_template("Logfolder.html", UserLogs = UserLogs)
 
 ############################### PLANS FILES ###############################
-
 @dbModel_route.route("/cesu_plans")
 def cesu_plans():
     if g.current_role != "Admin" and g.current_role != "BOR":
@@ -2080,7 +2079,6 @@ def view_cpf_plan(program, subprogram, community, cpf_filename):
         return response
     return "File not found", 404
 
-
 @dbModel_route.route('/view_cna_plan/<program>/<subprogram>/<community>/<cna_filename>', methods=['GET'])
 def view_cna_plan(program, subprogram, community, cna_filename):
     upload_entry = Plan.query.filter_by(community = community, program = program, subprogram = subprogram, cna_filename=cna_filename).first()
@@ -2134,7 +2132,6 @@ def view_cesap_plan(program, subprogram, community, cesap_filename):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
-
 
 @dbModel_route.route('/update_plan', methods=['POST'])
 def update_plan():
@@ -2536,7 +2533,6 @@ def update_picture():
 
         return redirect(url_for('dbModel.edit_profile'))
 
-
 ################## RESOURCES ################3333
 @dbModel_route.route("/resources")
 def resources():
@@ -2648,5 +2644,4 @@ def delete_resources(id):
     
     flash('Delete successfully!', 'delete_account')
     return redirect(url_for('dbModel.resources'))
-
 

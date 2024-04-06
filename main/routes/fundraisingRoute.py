@@ -1,5 +1,5 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund
+from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund, Donor_cash
 from main import db
 from flask import Response
 import secrets
@@ -13,20 +13,15 @@ import base64
 # LINE BELOW IS FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED)
 from werkzeug.security import generate_password_hash, check_password_hash 
 
-# Get the timezone for the Philippines
-
-
 fundraising_route = Blueprint('fundraising', __name__)
 token_store = {}
 
 #################### Date Converter ##################
-
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date()
 
 def convert_date1(datetime_str):
     return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
-
 
 def get_current_user():
     if 'user_id' in session:
@@ -68,7 +63,6 @@ def before_request():
 def inject_current_user():
     current_program_coordinator = g.current_program
     return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display, current_id=g.current_id, declined_fund_count=g.declined_fund_count_display)
-
 
 ########################Fundraising Activity#############################
 @fundraising_route.route("/fund")
@@ -393,8 +387,6 @@ def decline_fund():
     # If the request method is not POST or the form submission fails, redirect back to the fundraising page
     return redirect(url_for('fundraising.fund'))
 
-
-
 ######################## Coordinator Fundraising Activity#############################
 @fundraising_route.route("/cFund")
 def cFund():
@@ -592,10 +584,6 @@ def cDelete_pending_fund(id):
         flash('User not found. Please try again.', 'error')
     return redirect(url_for('fundraising.cFund'))
 
-
-
-
-
 ######################## Archived fundraising #############################
 @fundraising_route.route("/archived_fund")
 def archived_fund():
@@ -664,9 +652,6 @@ def delete_archived_fund(id):
         flash('User not found. Please try again.', 'error')
     return redirect(url_for('fundraising.archived_fund'))
 
-
-
-
 @fundraising_route.route('/update_pending_fund', methods=['POST'])
 def update_pending_fund():
     if 'user_id' not in session:
@@ -731,3 +716,74 @@ def update_pending_fund():
 
     return render_template("cPending_fund_details.html",form=form, id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, comments=p.comments )
 
+######################## fundraising programs #############################
+@fundraising_route.route('/fund_programs')
+def fund_programs():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+    
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("fund_programs.html")
+
+@fundraising_route.route("/get_fund_data", methods=['GET'])
+def get_fund_data():
+    try:
+            fund_data = [
+                {
+                    'id': record.id,
+                    'program': record.program,
+                    'coordinator': record.coordinator,
+                    'project_name': record.project_name,
+                    'proposed_date': record.proposed_date,
+                    'target_date': record.target_date,
+                    'venue': record.venue,
+                    'event_organizer': record.event_organizer,
+                    'lead_proponent': record.lead_proponent,
+                    'contact_details': record.contact_details,
+                    'donation_type': record.donation_type,
+                    'status': record.status,
+                    'coordinator_id': record.coordinator_id
+                }
+                for record in Fundraising.query.all()
+            ]
+            if fund_data:
+                return jsonify(fund_data)
+            else:
+                # Handle the case when no data is found
+                return jsonify({'message': 'There are no active projects available for display.'}), 200
+          
+    except Exception as e:
+        # Log the error for debugging
+        print(str(e))
+        return make_response("Internal Server Error", 500)
+   
+@fundraising_route.route('/update_fund', methods=['POST'])
+def update_fund():
+    data = request.get_json()
+    id = data['id']
+    coordinator = data['coordinator']
+    status = data['status']
+    donation_type = data['donation_type']
+    donors = data['donors']
+
+    # Query the database to get a single record with the specified subprogram
+    fund_update = Fundraising.query.filter_by(id=id).first()
+
+    if fund_update:
+        # Update the status for the specific record
+        fund_update.status = status
+
+        # Add donor data
+        for donor in donors:
+            new_donor = Donor_cash(fund_id=id, program=fund_update.program, name=donor)
+            db.session.add(new_donor)
+
+        db.session.commit()
+        return jsonify({'message': 'Status updated successfully.'})
+    else:
+        return jsonify({'message': 'Record not found.'}), 404
+
+    
+    

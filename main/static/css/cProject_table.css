@@ -28,7 +28,6 @@ main .Cproject_table_files {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.6rem;
-    overflow: auto;
     max-height: 90%;
 
 }

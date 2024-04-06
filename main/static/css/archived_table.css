@@ -27,7 +27,6 @@
 main .archived_table {
     display: grid;
     grid-template-columns: 1fr;
-    overflow: auto;
     max-height: 90%;
 
 }

@@ -118,7 +118,7 @@
                 </a>
 
 
-                <!--FUNDRAISING-->
+                <!--FUNDRAISING -->
                 <div class="fundraising-files fund_container_box" onclick="toggleFundraising()">
                     <a href="#" class="sidebar-link blue-link fund_container">
                         <span class="material-symbols-sharp">crowdsource</span>
@@ -126,11 +126,12 @@
                         <span class="material-symbols-sharp arrow_drop_down">
                             arrow_drop_down
                         </span>
-                        <span class="declined_fund_count" id="fund_badge">{{declined_fund_count}}</span>
+                        <span class="declined_fund_count admin_fund_badge"
+                            id="fund_badge">{{declined_fund_count}}</span>
                     </a>
                     <div class="fundraising-content-files" id="fundraising-content-files">
                         <a class="blue-link" href="{{ url_for('fundraising.fund') }}">Manage Fundraising</a>
-                        <a class="blue-link" href="#">Fundrasing Programs</a>
+                        <a class="blue-link" href="{{ url_for('fundraising.fund_programs') }}">Fundrasing Programs</a>
                         <a class="blue-link" href="{{ url_for('fundraising.archived_fund') }}">Archived</a>
                     </div>
                 </div>

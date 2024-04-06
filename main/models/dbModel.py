@@ -29,21 +29,20 @@ class Resources(db.Model):
     activity = db.Column(db.String(255), nullable=True)
     url = db.Column(db.String(255), nullable=True)
 
-
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    community = db.Column(db.String(255), nullable=False)
-    program = db.Column(db.String(255), nullable=False)
-    subprogram = db.Column(db.String(255), nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    community = db.Column(db.String(255), nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    subprogram = db.Column(db.String(255), nullable=True)
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
     week = db.Column(db.Integer, nullable=True)
-    totalWeek = db.Column(db.Integer, nullable=False)
-    user = db.Column(db.String(255), nullable=False)
-    department = db.Column(db.String(255), nullable=False)  # LEAD
-    subDepartment = db.Column(db.String(255), nullable=False)  # SUPPORT
-    status = db.Column(db.String(255), nullable=False)
-    budget = db.Column(db.Integer, nullable=False)
+    totalWeek = db.Column(db.Integer, nullable=True)
+    user = db.Column(db.String(255), nullable=True)
+    department = db.Column(db.String(255), nullable=True)  # LEAD
+    subDepartment = db.Column(db.String(255), nullable=True)  # SUPPORT
+    status = db.Column(db.String(255), nullable=True)
+    budget = db.Column(db.Integer, nullable=True)
     cna = db.Column(db.LargeBinary, nullable=True)
     cpf = db.Column(db.LargeBinary, nullable=True)
     cesap = db.Column(db.LargeBinary, nullable=True)
@@ -53,44 +52,38 @@ class Community(db.Model):
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
 
-
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
+    username = db.Column(db.String(255), nullable=True)
+    email = db.Column(db.String(120), unique=True, nullable=True)
+    password = db.Column(db.String(60), nullable=True)
     otp = db.Column(db.String(6), nullable=True)
     otp_timestamp = db.Column(db.DateTime, nullable=True)
-    program = db.Column(db.String(255), unique=True, nullable=False)
+    program = db.Column(db.String(255), unique=True, nullable=True)
     department_A = db.Column(db.String(255), nullable=True)
-    role = db.Column(db.String(50), nullable=False)
+    role = db.Column(db.String(50), nullable=True)
     firstname = db.Column(db.String(100), nullable=True)
     lastname = db.Column(db.String(100), nullable=True)
     mobile_number = db.Column(db.String(100), nullable=True)
     profile_picture = db.Column(db.LargeBinary, nullable=True)
-
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     department_A = db.Column(db.String(255), nullable=True)
     department_F = db.Column(db.String(255), nullable=True)
 
-
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    program = db.Column(db.String(255), unique=True, nullable=False)
-
+    program = db.Column(db.String(255), unique=True, nullable=True)
 
 class Subprogram(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    program = db.Column(db.String(255), nullable=False)
-    subprogram = db.Column(db.String(255), nullable=False)
-
+    program = db.Column(db.String(255), nullable=True)
+    subprogram = db.Column(db.String(255), nullable=True)
 
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    role = db.Column(db.String(255), nullable=False)
-
+    role = db.Column(db.String(255), nullable=True)
 
 # ----------------------- Upload Files ------------------------------------
 class Upload(db.Model):
@@ -98,24 +91,21 @@ class Upload(db.Model):
     filename = db.Column(db.String(50))
     data = db.Column(db.LargeBinary)
 
-
 # For pending projects
-
-
 class Pending_project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    community = db.Column(db.String(255), nullable=False)
-    program = db.Column(db.String(255), nullable=False)
-    subprogram = db.Column(db.String(255), nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    community = db.Column(db.String(255), nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    subprogram = db.Column(db.String(255), nullable=True)
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
     week = db.Column(db.Integer, nullable=True)
-    totalWeek = db.Column(db.Integer, nullable=False)
-    user = db.Column(db.String(255), nullable=False)
-    department = db.Column(db.String(255), nullable=False)  # LEAD
-    subDepartment = db.Column(db.String(255), nullable=False)  # SUPPORT
-    status = db.Column(db.String(255), nullable=False)
-    budget = db.Column(db.Integer, nullable=False)
+    totalWeek = db.Column(db.Integer, nullable=True)
+    user = db.Column(db.String(255), nullable=True)
+    department = db.Column(db.String(255), nullable=True)  # LEAD
+    subDepartment = db.Column(db.String(255), nullable=True)  # SUPPORT
+    status = db.Column(db.String(255), nullable=True)
+    budget = db.Column(db.Integer, nullable=True)
     cna = db.Column(db.LargeBinary, nullable=True)
     cpf = db.Column(db.LargeBinary, nullable=True)
     cesap = db.Column(db.LargeBinary, nullable=True)
@@ -125,22 +115,21 @@ class Pending_project(db.Model):
     comments = db.Column(db.String(255), nullable=True)
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
-
 
 class Plan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    community = db.Column(db.String(255), nullable=False)
-    program = db.Column(db.String(255), nullable=False)
-    subprogram = db.Column(db.String(255), nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    community = db.Column(db.String(255), nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    subprogram = db.Column(db.String(255), nullable=True)
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
     week = db.Column(db.Integer, nullable=True)
-    totalWeek = db.Column(db.Integer, nullable=False)
-    user = db.Column(db.String(255), nullable=False)
-    department = db.Column(db.String(255), nullable=False)  # LEAD
-    subDepartment = db.Column(db.String(255), nullable=False)  # SUPPORT
-    status = db.Column(db.String(255), nullable=False)
-    budget = db.Column(db.Integer, nullable=False)
+    totalWeek = db.Column(db.Integer, nullable=True)
+    user = db.Column(db.String(255), nullable=True)
+    department = db.Column(db.String(255), nullable=True)  # LEAD
+    subDepartment = db.Column(db.String(255), nullable=True)  # SUPPORT
+    status = db.Column(db.String(255), nullable=True)
+    budget = db.Column(db.Integer, nullable=True)
     cna = db.Column(db.LargeBinary, nullable=True)
     cpf = db.Column(db.LargeBinary, nullable=True)
     cesap = db.Column(db.LargeBinary, nullable=True)
@@ -151,21 +140,20 @@ class Plan(db.Model):
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
 
-
 class Archive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    community = db.Column(db.String(255), nullable=False)
-    program = db.Column(db.String(255), nullable=False)
-    subprogram = db.Column(db.String(255), nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
-    end_date = db.Column(db.Date, nullable=False)
+    community = db.Column(db.String(255), nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    subprogram = db.Column(db.String(255), nullable=True)
+    start_date = db.Column(db.Date, nullable=True)
+    end_date = db.Column(db.Date, nullable=True)
     week = db.Column(db.Integer, nullable=True)
-    totalWeek = db.Column(db.Integer, nullable=False)
-    user = db.Column(db.String(255), nullable=False)
-    department = db.Column(db.String(255), nullable=False)  # LEAD
-    subDepartment = db.Column(db.String(255), nullable=False)  # SUPPORT
-    status = db.Column(db.String(255), nullable=False)
-    budget = db.Column(db.Integer, nullable=False)
+    totalWeek = db.Column(db.Integer, nullable=True)
+    user = db.Column(db.String(255), nullable=True)
+    department = db.Column(db.String(255), nullable=True)  # LEAD
+    subDepartment = db.Column(db.String(255), nullable=True)  # SUPPORT
+    status = db.Column(db.String(255), nullable=True)
+    budget = db.Column(db.Integer, nullable=True)
     cna = db.Column(db.LargeBinary, nullable=True)
     cpf = db.Column(db.LargeBinary, nullable=True)
     cesap = db.Column(db.LargeBinary, nullable=True)
@@ -176,62 +164,68 @@ class Archive(db.Model):
     volunteer = db.Column(db.Integer, nullable=True)
     url = db.Column(db.String(255), nullable=True)
 
-
 # FOR FUNDRAISING TABLE
 class Fundraising(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    program = db.Column(db.String(255), nullable=False)
-    coordinator = db.Column(db.String(255), nullable=False)
-    project_name = db.Column(db.String(255), nullable=False)
-    proposed_date = db.Column(db.Date, nullable=False)
-    target_date = db.Column(db.Date, nullable=False)
-    venue = db.Column(db.String(255), nullable=False)
-    event_organizer = db.Column(db.String(255), nullable=False)
-    lead_proponent = db.Column(db.String(255), nullable=False)
-    contact_details = db.Column(db.String(255), nullable=False)
-    donation_type = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.String(255), nullable=False)
+    program = db.Column(db.String(255), nullable=True)
+    coordinator = db.Column(db.String(255), nullable=True)
+    project_name = db.Column(db.String(255), nullable=True)
+    proposed_date = db.Column(db.Date, nullable=True)
+    target_date = db.Column(db.Date, nullable=True)
+    venue = db.Column(db.String(255), nullable=True)
+    event_organizer = db.Column(db.String(255), nullable=True)
+    lead_proponent = db.Column(db.String(255), nullable=True)
+    contact_details = db.Column(db.String(255), nullable=True)
+    donation_type = db.Column(db.String(255), nullable=True)
+    status = db.Column(db.String(255), nullable=True)
     coordinator_id = db.Column(db.Integer, nullable=True)
-
 
 class Pending_fund(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    program = db.Column(db.String(255), nullable=False)
-    coordinator = db.Column(db.String(255), nullable=False)
-    project_name = db.Column(db.String(255), nullable=False)
-    proposed_date = db.Column(db.Date, nullable=False)
-    target_date = db.Column(db.Date, nullable=False)
-    venue = db.Column(db.String(255), nullable=False)
-    event_organizer = db.Column(db.String(255), nullable=False)
-    lead_proponent = db.Column(db.String(255), nullable=False)
-    contact_details = db.Column(db.String(255), nullable=False)
-    donation_type = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.String(255), nullable=False)
+    program = db.Column(db.String(255), nullable=True)
+    coordinator = db.Column(db.String(255), nullable=True)
+    project_name = db.Column(db.String(255), nullable=True)
+    proposed_date = db.Column(db.Date, nullable=True)
+    target_date = db.Column(db.Date, nullable=True)
+    venue = db.Column(db.String(255), nullable=True)
+    event_organizer = db.Column(db.String(255), nullable=True)
+    lead_proponent = db.Column(db.String(255), nullable=True)
+    contact_details = db.Column(db.String(255), nullable=True)
+    donation_type = db.Column(db.String(255), nullable=True)
+    status = db.Column(db.String(255), nullable=True)
     comments = db.Column(db.String(255), nullable=True)
     coordinator_id = db.Column(db.Integer, nullable=True)
 
 class Archive_fund(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    program = db.Column(db.String(255), nullable=False)
-    coordinator = db.Column(db.String(255), nullable=False)
-    project_name = db.Column(db.String(255), nullable=False)
-    proposed_date = db.Column(db.Date, nullable=False)
-    target_date = db.Column(db.Date, nullable=False)
-    venue = db.Column(db.String(255), nullable=False)
-    event_organizer = db.Column(db.String(255), nullable=False)
-    lead_proponent = db.Column(db.String(255), nullable=False)
-    contact_details = db.Column(db.String(255), nullable=False)
-    donation_type = db.Column(db.String(255), nullable=False)
-    status = db.Column(db.String(255), nullable=False)
+    program = db.Column(db.String(255), nullable=True)
+    coordinator = db.Column(db.String(255), nullable=True)
+    project_name = db.Column(db.String(255), nullable=True)
+    proposed_date = db.Column(db.Date, nullable=True)
+    target_date = db.Column(db.Date, nullable=True)
+    venue = db.Column(db.String(255), nullable=True)
+    event_organizer = db.Column(db.String(255), nullable=True)
+    lead_proponent = db.Column(db.String(255), nullable=True)
+    contact_details = db.Column(db.String(255), nullable=True)
+    donation_type = db.Column(db.String(255), nullable=True)
+    status = db.Column(db.String(255), nullable=True)
     url = db.Column(db.String(255), nullable=True)
     coordinator_id = db.Column(db.Integer, nullable=True)
 
+class Donor_cash(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fund_id = db.Column(db.Integer, nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(255), nullable=True)
+    donation = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+  
 # --------------------- LOGS ------------------------#
 class Logs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    userlog = db.Column(db.String(255), nullable=False)
-    action = db.Column(db.String(255), nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.now, nullable=False)
+    userlog = db.Column(db.String(255), nullable=True)
+    action = db.Column(db.String(255), nullable=True)
+    timestamp = db.Column(db.DateTime, default=datetime.now, nullable=True)
 
 
 # --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
