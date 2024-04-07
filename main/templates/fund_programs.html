@@ -102,6 +102,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="jumbotron">
+            <h2 style="margin-bottom: 1rem;">Fundraising <b>Donor</b></h2>
+            <div class="table-card">
+                <table class="table" id="donor-table">
+                    <thead>
+                        <tr>
+                            <th>Program</th>
+                            <th>Name</th>
+                            <th>Donation</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <!--end add modal account-->
+            <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+        </div>
+
+
+
+
         <!-- Add checkboxes and labels here -->
         <div class="donor_cash_card">
             <h1>Cash</h1>
@@ -131,7 +154,7 @@
 
         </div>
 
-        <!-- <input type="text" class="link-input" placeholder="Enter Link"> -->
+        <input type="text" class="link-input" placeholder="Enter Link">
         <button class="btn btn-primary save-button">Save</button>
         <button class="btn btn-primary archive-button">Archive</button>
     </div>
@@ -212,13 +235,32 @@
                         insightsDiv.find(".donor_qty button").click(function () {
                             var qty = parseInt($(this).siblings("input").val()); // Get the quantity entered by the user
                             if (!isNaN(qty) && qty > 0) { // Check if the entered value is a valid number
-                                for (var i = 0; i < qty; i++) {
+                                var fieldsToAdd = qty; // Calculate the total number of fields to add (4 fields per donor)
+                                for (var i = 0; i < fieldsToAdd; i++) {
                                     var inputField = $("<div>").addClass("input-group mb-3");
-                                    var input = $("<input>").attr("type", "text").addClass("form-control");
+
+                                    // Label for Name
+                                    var nameLabel = $("<label>").addClass("form-label").text("Name");
+                                    var nameInput = $("<input>").attr("type", "text").addClass("form-control name-input");
+
+                                    // Label for Donation
+                                    var donationLabel = $("<label>").addClass("form-label").text("Donation");
+                                    var donationInput = $("<input>").attr("type", "text").addClass("form-control donation-input");
+
+                                    // Label for Date
+                                    var dateLabel = $("<label>").addClass("form-label").text("Date");
+                                    var dateInput = $("<input>").attr("type", "date").addClass("form-control date-input");
+
                                     var button = $("<button>").addClass("btn btn-danger delete-button").text("Delete");
 
-                                    inputField.append(input).append(button); // Append input field and delete button to the donor list
-                                    insightsDiv.find(".donor_list").append(inputField); // Append input field to the donor list
+                                    // Append labels and input fields to the input group
+                                    inputField.append(nameLabel).append(nameInput);
+                                    inputField.append(donationLabel).append(donationInput);
+                                    inputField.append(dateLabel).append(dateInput);
+                                    inputField.append(button); // Append delete button to the input group
+
+                                    // Append input group to the donor list
+                                    insightsDiv.find(".donor_list").append(inputField);
                                 }
 
                                 // Clear the input value after adding input fields
@@ -227,6 +269,8 @@
                                 alert("Please enter a valid quantity.");
                             }
                         });
+
+
 
                         // Deleting input fields from the donor list
                         insightsDiv.on("click", ".delete-button", function () {
@@ -237,6 +281,37 @@
                                 alert("At least one donor field must remain.");
                             }
                         });
+
+                        var fundId = null;
+                        record.donors.forEach(function (donor) {
+                            if (donor.fund_id) { // Check if fund_id exists
+                                fundId = donor.fund_id; // Store the fund_id in the variable
+                            }
+                        });
+
+                        // Populate the donor table only if record.id matches fund_id from donor_cash
+                        if (record.id === fundId) {
+                            var donorTableBody = insightsDiv.find("#donor-table tbody");
+                            // Clear the existing content of the donor table before populating it with new data
+                            donorTableBody.empty();
+                            record.donors.forEach(function (donor) {
+                                var row = $("<tr>");
+                                row.append($("<td>").text(record.program));
+                                row.append($("<td>").text(donor.name));
+                                row.append($("<td>").text(donor.donation));
+                                row.append($("<td>").text(donor.date));
+                                donorTableBody.append(row);
+                            });
+                        }
+
+
+                        // Check if status is "Completed"
+                        if (record.status === "Completed") {
+                            // Hide donor_cash_card and donor_inkind_card
+                            insightsDiv.find('.donor_cash_card').hide();
+                            insightsDiv.find('.donor_inkind_card').hide();
+                        }
+
 
 
                         // archive project
@@ -259,12 +334,13 @@
                         function archive_project(url) {
                             var recordStatus = "Completed";
                             $.ajax({
-                                url: "/archive_project",
+                                url: "/archive_fund_donor",
                                 method: "POST",
                                 contentType: "application/json",
                                 data: JSON.stringify({
                                     id: record.id,
                                     program: record.program,
+                                    project_name: record.project_name,
                                     coordinator: record.coordinator,
                                     status: recordStatus,
                                     url: url // Include the URL in the data to be sent to the server
@@ -280,19 +356,31 @@
                             });
                         }
 
-
                         function update_fund() {
                             var recordStatus = "Completed";
                             var donorData = []; // Array to store donor data
-                            insightsDiv.find(".donor_list .input-group").each(function () {
-                                var donorInputValue = $(this).find("input").val().trim();
-                                if (donorInputValue !== "") { // Check if input value is not empty
-                                    donorData.push(donorInputValue); // Add donor data to the array
+
+                            // Iterate over each input field in the donor list
+                            insightsDiv.find(".donor_cash_card .donor_list .input-group").each(function () {
+                                // Retrieve the values from the input fields
+                                var name = $(this).find(".name-input").val().trim();
+                                var donation = $(this).find(".donation-input").val().trim();
+                                var date = $(this).find(".date-input").val().trim();
+
+                                // Check if all fields are non-empty
+                                if (name !== "" && donation !== "" && date !== "") {
+                                    // Construct an object representing donor data and add it to the array
+                                    donorData.push({
+                                        name: name,
+                                        donation: donation,
+                                        date: date
+                                    });
                                 }
                             });
 
+                            // Send the donorData array to the server
                             $.ajax({
-                                url: "/update_fund", // Use an appropriate URL for updating the status
+                                url: "/update_fund",
                                 method: "POST",
                                 contentType: "application/json",
                                 data: JSON.stringify({
@@ -300,7 +388,7 @@
                                     program: record.program,
                                     coordinator: record.coordinator,
                                     status: recordStatus,
-                                    donation_type: record.donation_type,
+                                    donation_type: record.donation_type, // Specify the donation type as "Cash"
                                     donors: donorData
                                 }),
                                 success: function (response) {
@@ -311,8 +399,9 @@
                                     console.error("Failed to update status: " + error);
                                 }
                             });
-
                         }
+
+
 
 
                         insightsContainer.append(insightsDiv);
