@@ -30,9 +30,10 @@ main .pendingCard {
     gap: 1.6rem;
     max-height: 90%;
 
+
 }
 
-main .pendingCard>div {
+main .pendingCard .pendingBox>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -46,7 +47,7 @@ main .pendingCard .table-card {
     overflow: auto;
 }
 
-main .pendingCard>div:hover {
+main .pendingCard .pendingBox>div:hover {
     box-shadow: none;
 }
 

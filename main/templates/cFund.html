@@ -37,6 +37,7 @@
             <th>Venue</th>
             <th>Target Date</th>
             <th>Event Organizer</th>
+            <th>Coordinator</th>
             <th>Contact</th>
             <th>Status</th>
           </tr>
@@ -60,6 +61,10 @@
             </td>
             <td>
               <a href="{{ url_for('fundraising.cView_fund', fund_id=row.id)}}" class="btn-edit">{{ row.event_organizer
+                }}</a>
+            </td>
+            <td>
+              <a href="{{ url_for('fundraising.cView_fund', fund_id=row.id)}}" class="btn-edit">{{ row.coordinator
                 }}</a>
             </td>
             <td>

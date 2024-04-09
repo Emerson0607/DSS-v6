@@ -170,13 +170,10 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
+        
         pending_count = Pending_project.query.filter_by(status="For Review").count()
-            
-        # Set a maximum value for pending_count
         max_pending_count = 9
         pending_count_display = min(pending_count, max_pending_count)
-
-        # If pending_count is 9 or greater, display it as '9+'
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
         #pending fund project count for ADMIN
@@ -327,7 +324,7 @@ def add_account():
         lastname = request.form.get("lastname")
         password = request.form.get("password")
         role = request.form.get("role")
-        program = request.form.get("program")
+        #program = request.form.get("program")
         department_A = request.form.get("department_A")
         mobile_number = request.form.get("mobile_number")
         #profile_picture = request.files['profile_picture'].read()  # Use .get() instead of ['']
@@ -338,7 +335,7 @@ def add_account():
 
         # Check if the username already exists in the database
         existing_username = Users.query.filter_by(username=username).first()
-        existing_program = Users.query.filter_by(program=program).first()
+        #existing_program = Users.query.filter_by(program=program).first()
         existing_email = Users.query.filter_by(email=email).first()
         existing_mobile_number = Users.query.filter_by(mobile_number=mobile_number).first()
 
@@ -360,20 +357,23 @@ def add_account():
         if len(mobile_number) < 11:
                 flash('Mobile number must be at least 11 digits long.', 'existing_username')
                 return redirect(url_for('dbModel.manage_account'))
-
+        """
         if existing_program:
             flash(f"Sorry, '{program}' is already taken. Please choose another name or check existing programs.", 'existing_program')
         else:
-            if existing_email:
+        """
+        if existing_email:
                 flash(f"Sorry, '{email}' is already taken.", 'existing_program')
-            else:
+        else:
                 if existing_username:
                     flash('Username already exists. Please choose a different username.', 'existing_username')
+                    return redirect(url_for('dbModel.manage_account'))
                 else:
                     if existing_mobile_number:
                         flash('Mobile number already exists.', 'existing_username')
+                        return redirect(url_for('dbModel.manage_account'))
                     else:
-                        new_user = Users(username=username, firstname=firstname, lastname=lastname,password=hashed_password, email=email, role = role, program = program, department_A=department_A, mobile_number=mobile_number)
+                        new_user = Users(username=username, firstname=firstname, lastname=lastname,password=hashed_password, email=email, role = role, department_A=department_A, mobile_number=mobile_number)
                         try: 
                             userlog = g.current_user
                             action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
@@ -411,7 +411,7 @@ def edit_account():
         new_password = request.form['new_password']
         new_role = request.form['new_role']
         new_department_A = request.form['new_department_A']
-        new_program = request.form['new_program']
+        #new_program = request.form['new_program']
         new_mobile_number = request.form['new_mobile_number']
         
 
@@ -435,30 +435,34 @@ def edit_account():
         user = Users.query.get(user_id)
 
         if user:
-            # Check if the user is an admin
+            """
             if user.role == "Admin":
                 # Check if there are any other admin users in the system
                 other_admins = Users.query.filter(Users.role == "Admin", Users.id != user.id).first()
                 if other_admins and user.program != new_program:
                     flash('Cannot change program for admin users.', 'existing_username')
                     return redirect(url_for('dbModel.manage_account'))
-            
+            """
+            if user.role == "Admin" and user.role != new_role:
+                new_role = user.role
             # Check if the new values already exist in the table
             if user.username != new_username:
                 existing_username = Users.query.filter_by(username=new_username).first()
                 if existing_username:
                     flash(f'Username "{new_username}" already exists. Please choose a different username.', 'existing_username')
                     return redirect(url_for('dbModel.manage_account'))
+                
             if user.email != new_email:
                 existing_email = Users.query.filter_by(email=new_email).first()
                 if existing_email:
                     flash(f'Email "{new_email}" already exists. Please choose a different email.', 'existing_username')
                     return redirect(url_for('dbModel.manage_account'))
+            """  
             if user.program != new_program:
                 existing_program = Users.query.filter_by(program=new_program).first()
                 if existing_program:
                     flash(f'Program "{new_program}" already exists. Please choose a different program.', 'existing_username')
-            
+            """
             existing_mobile_number = Users.query.filter_by(mobile_number=new_mobile_number).first()
             if len(new_mobile_number) < 11:
                 flash('Mobile number must be at least 11 digits long.', 'existing_username')
@@ -495,7 +499,7 @@ def edit_account():
             user.lastname = new_lastname
             user.password = hashed_password
             user.role = new_role
-            user.program = new_program
+            #user.program = new_program
             user.department_A= new_department_A
             user.mobile_number= new_mobile_number
 
@@ -760,7 +764,8 @@ def manage_community():
     program8 = Program.query.all()
     department = Department.query.all()
     user1 = Users.query.all()
-    return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1, department=department)
+    coordinators = Users.query.filter_by(role='Coordinator').all()
+    return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1, department=department, coordinators=coordinators)
 
 ############################ ASSIGNED PROGRAM FOR COORDINATOR ############################
 @dbModel_route.route("/subprogram1/<get_program>")
@@ -769,11 +774,26 @@ def get_program(get_program):
     subArray = [{'firstname': user.firstname, 'lastname': user.lastname} for user in sub]  
     return jsonify({'users': subArray})
 
-@dbModel_route.route("/department1/<get_department>")
-def get_department(get_department):
-    sub = Users.query.filter_by(program=get_department).all()
-    subArray = [{'department_A': user.department_A} for user in sub]  
-    return jsonify({'users': subArray})
+@dbModel_route.route("/department1/<coordinator_select>")
+def get_department(coordinator_select):
+
+    coordinator_names = coordinator_select.split()
+    coordinator_first_name = coordinator_names[0]
+    coordinator_last_name = coordinator_names[-1] if len(coordinator_names) > 1 else None
+
+    users = Users.query.filter(
+        Users.firstname.startswith(coordinator_first_name),
+        Users.lastname.startswith(coordinator_last_name)
+    ).all()
+
+    # Check if any users are found
+    if users:
+        # Create a list of dictionaries with the department_A attribute for each user
+        department_data = [{'department_A': user.department_A} for user in users]
+        return jsonify({'users': department_data})
+    else:
+        # Return an empty list if no users are found
+        return jsonify({'users': []})
 
 
 ############################  CRUD FOR MANAGE COMMUNITY  ############################
@@ -811,6 +831,14 @@ def add_community():
         cesap_file = request.files['CESAP']
         cna_file = request.files['CNA']
       
+        coordinator_names = user.split()
+        coordinator_first_name = coordinator_names[0]
+        coordinator_last_name = coordinator_names[-1] if len(coordinator_names) > 1 else None
+
+        coordinator_name = Users.query.filter(
+            Users.firstname.startswith(coordinator_first_name),
+            Users.lastname.startswith(coordinator_last_name)
+        ).first()
 
         existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
 
@@ -821,7 +849,7 @@ def add_community():
 
             new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id)
 
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} .'
@@ -1153,7 +1181,9 @@ def approve():
                     cna_filename = data_to_move.cna_filename, 
                     cna=data_to_move.cna,
                     department_A = data_to_move.department_A, 
-                    volunteer=data_to_move.volunteer
+                    volunteer=data_to_move.volunteer,
+                    coordinator_id=data_to_move.coordinator_id
+                    
             )
 
             userlog = g.current_user
@@ -1320,6 +1350,7 @@ def archive_project():
         cna=data_to_move.cna,
         department_A = data_to_move.department_A, 
         volunteer=data_to_move.volunteer,
+        coordinator_id= data_to_move.coordinator_id,
         url=url  # Assign the URL value
     )
     userlog = g.current_user
@@ -1911,8 +1942,9 @@ def cesu_plans():
     current_year = datetime.now().year
      # Fetch all user records from the database
     all_data = Plan.query.filter_by(status="Planning").all()
+    coordinators = Users.query.filter_by(role='Coordinator').all()
     
-    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form)
+    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form, coordinators=coordinators)
 
 @dbModel_route.route("/add_plan", methods=["POST"])
 def add_plan():
@@ -1948,7 +1980,15 @@ def add_plan():
 
         department_A = request.form.get("department_A")
         volunteer = request.form.get("volunteer")
-      
+
+        coordinator_names = user.split()
+        coordinator_first_name = coordinator_names[0]
+        coordinator_last_name = coordinator_names[-1] if len(coordinator_names) > 1 else None
+
+        coordinator_name = Users.query.filter(
+            Users.firstname.startswith(coordinator_first_name),
+            Users.lastname.startswith(coordinator_last_name)
+        ).first()
 
         existing_plan= Plan.query.filter_by(user= user, status= status, community=community, program = program, subprogram=subprogram).first()
 
@@ -1959,7 +1999,7 @@ def add_plan():
 
             new_plan = Plan(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id)
 
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} for planning.'
@@ -2340,7 +2380,8 @@ def deploy():
                     cna_filename = data_to_move.cna_filename, 
                     cna=data_to_move.cna,
                     department_A = data_to_move.department_A, 
-                    volunteer=data_to_move.volunteer
+                    volunteer=data_to_move.volunteer,
+                    coordinator_id=data_to_move.current_id
             )
 
             userlog = g.current_user
@@ -2378,10 +2419,6 @@ def deploy():
         return redirect(url_for('dbModel.cesu_plans'))
        
     return redirect(url_for('dbModel.cesu_plans'))
-
-
-    ########################## EDIT PROFILE #######################
-
 
 ############################ EDIT PROFILE #############################
 @dbModel_route.route("/edit_profile")

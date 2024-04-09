@@ -102,13 +102,29 @@ with_categories=true) %}
                                     <input type="text" class="form-control" id="budget" name="budget" required>
                                 </div>
                                 <br>
-                                <!-- ACCOUNTABILITY -->
-                                <label class="accountability label-category">ACCOUNTABILITY</label><br>
+                                <!-- ACCOUNTABILITY 
+                                    <label class="accountability label-category">ACCOUNTABILITY</label><br>
+                                    <div class="form-group">
+                                        <label>Coordinator:</label>
+                                        <select class="form-select" name="user" id="userSelect" required>
+                                        </select>
+                                    </div>
+                                -->
+
                                 <div class="form-group">
-                                    <label>Coordinator:</label>
-                                    <select class="form-select" name="user" id="userSelect" required>
+                                    <label>Coordinator: </label><br />
+                                    <select class="form-select" name="user" id="coordinator_selected">
+                                        <option value="" selected disabled>
+                                            -- Select Coordinator --
+                                        </option>
+                                        {% for coordinator in coordinators %}
+                                        <option value="{{ coordinator.firstname }} {{ coordinator.lastname }}">
+                                            {{ coordinator.firstname }} {{ coordinator.lastname }}
+                                        </option>
+                                        {% endfor %}
                                     </select>
                                 </div>
+
                                 <div class="form-group">
                                     <label>Department:</label>
                                     <select class="form-select" name="department_A" id="departmentSelect" required>
@@ -468,7 +484,7 @@ with_categories=true) %}
         });
     }
     function coordinator_name() {
-        program_select = document.getElementById('program')
+        program_select = document.getElementById('program');
         program_select.onchange = function () {
             var program = program_select.value;
             fetch('/subprogram1/' + program).then(function (response) {
@@ -479,14 +495,19 @@ with_categories=true) %}
                     for (user of data.users) {
                         // Combine firstname and lastname and set it as the option value
                         var fullname = user.firstname + ' ' + user.lastname;
-                        optionHTML += '<option value="' + fullname + '">' + fullname + '</option>'
+                        optionHTML += '<option value="' + fullname + '">' + fullname + '</option>';
                     }
 
                     selectElement.innerHTML = optionHTML;
                 });
             });
+        };
 
-            fetch('/department1/' + program).then(function (response) {
+        // Listen for changes in the coordinator select dropdown
+        var coordinatorSelect = document.getElementById('coordinator_selected');
+        coordinatorSelect.addEventListener('change', function () {
+            var coordinatorSelectValue = coordinatorSelect.value;
+            fetch('/department1/' + coordinatorSelectValue).then(function (response) {
                 response.json().then(function (data) {
                     var optionHTML = '';
                     var selectElement = document.getElementById('departmentSelect');
@@ -494,14 +515,16 @@ with_categories=true) %}
                     for (user of data.users) {
                         // Set department_A as the option value
                         var department_A = user.department_A;
-                        optionHTML += '<option value="' + department_A + '">' + department_A + '</option>'
+                        optionHTML += '<option value="' + department_A + '">' + department_A + '</option>';
                     }
 
                     selectElement.innerHTML = optionHTML;
                 });
             });
-        }
+        });
     }
+
+
 
 
     //date picker

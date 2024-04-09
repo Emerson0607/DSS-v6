@@ -28,6 +28,10 @@ def get_current_user():
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
         
+        pending_count = Pending_project.query.filter_by(status="For Review").count()
+        max_pending_count = 9
+        pending_count_display = min(pending_count, max_pending_count)
+        pending_count_display = '9+' if pending_count > max_pending_count else pending_count
         
         #pending project count
         declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count()
@@ -52,17 +56,17 @@ def get_current_user():
             if user.profile_picture:
                 # Convert the profile picture to base64 encoding
                 profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
-            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64, cDeclined_fund_count_display, user.id, declined_fund_count_display
+            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64, cDeclined_fund_count_display, user.id, declined_fund_count_display, pending_count_display
     return None, None, None, 0, None, None, None, None, None, None, None
     
 @fundraising_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64, g.cDeclined_fund_count_display, g.current_id, g.declined_fund_count_display = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64, g.cDeclined_fund_count_display, g.current_id, g.declined_fund_count_display, g.pending_count_display = get_current_user()
 
 @fundraising_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display, current_id=g.current_id, declined_fund_count=g.declined_fund_count_display)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display, current_id=g.current_id, declined_fund_count=g.declined_fund_count_display, pending_count=g.pending_count_display)
 
 ########################Fundraising Activity#############################
 @fundraising_route.route("/fund")
@@ -84,7 +88,7 @@ def fund():
         return redirect(url_for('dbModel.login'))
     
     coordinators = Users.query.filter_by(role='Coordinator').all()
-    # Dynamically generate the years
+    # Dynamically generate the years fund_list = Fundraising.query.filter_by(coordinator_id=g.current_id).all()
     current_year = datetime.now().year
     fund_list = Fundraising.query.all()
     pending_fund_list = Pending_fund.query.filter_by(status="For Review").all()
@@ -118,10 +122,14 @@ def add_fund():
         proposed_date = convert_date(proposed_date1)
         target_date = convert_date(target_date1)
         
-        if coordinator:
-            firstname = coordinator.split()[0]
-            
-        coordinator_name= Users.query.filter_by(firstname=firstname).first()
+        coordinator_names = coordinator.split()
+        coordinator_first_name = coordinator_names[0]
+        coordinator_last_name = coordinator_names[-1] if len(coordinator_names) > 1 else None
+
+        coordinator_name = Users.query.filter(
+            Users.firstname.startswith(coordinator_first_name),
+            Users.lastname.startswith(coordinator_last_name)
+        ).first()
       
         existing_fund= Fundraising.query.filter_by(project_name=project_name, program=program, venue=venue).first()
 
@@ -432,15 +440,11 @@ def cAdd_fund():
         #Convert date
         proposed_date = convert_date(proposed_date1)
         target_date = convert_date(target_date1)
-      
-        if coordinator:
-            firstname = coordinator.split()[0]
-            
-        coordinator_name= Users.query.filter_by(firstname=firstname).first()
+        
         existing_fund= Pending_fund.query.filter_by(project_name=project_name, program=program, venue=venue).first()
 
         if existing_fund is None:
-            new_fund = Pending_fund(project_name=project_name, program=program, venue=venue, proposed_date=proposed_date, target_date=target_date, coordinator=coordinator, event_organizer=event_organizer, lead_proponent=lead_proponent, contact_details=contact_details, status=status, donation_type=donation_type, coordinator_id=coordinator_name.id)
+            new_fund = Pending_fund(project_name=project_name, program=program, venue=venue, proposed_date=proposed_date, target_date=target_date, coordinator=coordinator, event_organizer=event_organizer, lead_proponent=lead_proponent, contact_details=contact_details, status=status, donation_type=donation_type, coordinator_id=g.current_id)
 
             userlog = g.current_user
             action = f'ADDED {program} project {project_name} for review.'
@@ -779,6 +783,53 @@ def get_fund_data():
         # Log the error for debugging
         print(str(e))
         return make_response("Internal Server Error", 500)
+
+@fundraising_route.route("/cGet_fund_data", methods=['GET'])
+def cGet_fund_data():
+    try:
+        fund_data = []
+        # Fetch fundraising projects
+        fundraising_records = Fundraising.query.filter(Fundraising.coordinator_id==g.current_id).all()
+        for record in fundraising_records:
+            # Fetch donor data associated with each fundraising project for cash donations
+            cash_donors = Donor_cash.query.filter_by(project_name=record.project_name, program=record.program).all()
+            cash_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in cash_donors]
+            
+            # Fetch donor data associated with each fundraising project for in-kind donations
+            inkind_donors = Donor_inkind.query.filter_by(project_name=record.project_name, program=record.program).all()
+            inkind_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in inkind_donors]
+            
+            # Combine donor data for cash and in-kind donations
+            all_donors = cash_donor_list_with_fund_id + inkind_donor_list_with_fund_id
+            
+            fund_data.append({
+                'id': record.id,
+                'program': record.program,
+                'coordinator': record.coordinator,
+                'project_name': record.project_name,
+                'proposed_date': record.proposed_date,
+                'target_date': record.target_date,
+                'venue': record.venue,
+                'event_organizer': record.event_organizer,
+                'lead_proponent': record.lead_proponent,
+                'contact_details': record.contact_details,
+                'donation_type': record.donation_type,
+                'status': record.status,
+                'coordinator_id': record.coordinator_id,
+                'donors': all_donors  # Combine cash and in-kind donor data
+            })
+
+        if fund_data:
+            return jsonify(fund_data)
+        else:
+            # Handle the case when no data is found
+            return jsonify({'message': 'There are no active projects available for display.'}), 200
+
+    except Exception as e:
+        # Log the error for debugging
+        print(str(e))
+        return make_response("Internal Server Error", 500)
+
 
 @fundraising_route.route('/cash_update_fund', methods=['POST'])
 def cash_update_fund():

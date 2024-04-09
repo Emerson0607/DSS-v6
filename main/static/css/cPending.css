@@ -32,7 +32,7 @@ main .cpendingCard {
 
 }
 
-main .cpendingCard>div {
+main .cpendingCard .pendingBox>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
@@ -41,7 +41,7 @@ main .cpendingCard>div {
     transition: all 300ms ease;
 }
 
-main .cpendingCard>div:hover {
+main .cpendingCard .pendingBox>div:hover {
     box-shadow: none;
 }
 

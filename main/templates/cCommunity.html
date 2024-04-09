@@ -66,8 +66,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Program:</label>
-                                <input type="text" id="program" class="form-control" value="{{current_program}}"
-                                    name="program" readonly>
+                                {{ form.program(class="form-select",
+                                value=form.program.default) }}
                             </div>
                             <div class="form-group">
                                 <label>Sub-program:</label>

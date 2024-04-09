@@ -28,6 +28,7 @@ class Resources(db.Model):
     date = db.Column(db.Date, nullable=True)
     activity = db.Column(db.String(255), nullable=True)
     url = db.Column(db.String(255), nullable=True)
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 class Community(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +52,7 @@ class Community(db.Model):
     cesap_filename = db.Column(db.String(255), nullable=True)
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -71,7 +73,7 @@ class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     department_A = db.Column(db.String(255), nullable=True)
     department_F = db.Column(db.String(255), nullable=True)
-
+    
 class Program(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     program = db.Column(db.String(255), unique=True, nullable=True)
@@ -115,6 +117,7 @@ class Pending_project(db.Model):
     comments = db.Column(db.String(255), nullable=True)
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 class Plan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -139,6 +142,7 @@ class Plan(db.Model):
     comments = db.Column(db.String(255), nullable=True)
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 class Archive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -163,6 +167,7 @@ class Archive(db.Model):
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
     url = db.Column(db.String(255), nullable=True)
+    coordinator_id = db.Column(db.Integer, nullable=True)
 
 # FOR FUNDRAISING TABLE
 class Fundraising(db.Model):

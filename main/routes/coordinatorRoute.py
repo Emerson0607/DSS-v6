@@ -9,9 +9,7 @@ import pytz, re
 import base64
 from werkzeug.security import generate_password_hash, check_password_hash 
 
-
 coordinator_route = Blueprint('coordinator', __name__)
-
 
 # Function to validate email format
 def is_valid_email(email):
@@ -54,17 +52,17 @@ def get_current_user():
             if user.profile_picture:
                 # Convert the profile picture to base64 encoding
                 profile_picture_base64 = base64.b64encode(user.profile_picture).decode('utf-8')
-            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64, cDeclined_fund_count_display
-    return None, None, None, 0, None, None, None, None, None
+            return user.username, user.role, user.program, declined_count_display, user.firstname, user.lastname, user.department_A, profile_picture_base64, cDeclined_fund_count_display, user.id
+    return None, None, None, 0, None, None, None, None, None, None
     
 @coordinator_route.before_request
 def before_request():
-    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64, g.cDeclined_fund_count_display = get_current_user()
+    g.current_user, g.current_role, g.current_program, g.declined_count_display, g.current_firstname, g.current_lastname, g.current_department_A, g.profile_picture_base64, g.cDeclined_fund_count_display, g.current_id = get_current_user()
 
 @coordinator_route.context_processor
 def inject_current_user():
     current_program_coordinator = g.current_program
-    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display)
+    return dict(current_user=g.current_user, current_role=g.current_role, current_program=g.current_program, declined_count = g.declined_count_display, current_firstname=g.current_firstname, current_lastname=g.current_lastname, current_department_A=g.current_department_A, profile_picture_base64 = g.profile_picture_base64, cDeclined_fund_count=g.cDeclined_fund_count_display, current_id=g.current_id)
 
 @coordinator_route.route("/cClear_session")
 def cClear_session():
@@ -87,7 +85,6 @@ def cCoordinator():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     return render_template("cCoordinator.html")
-
 
 ##################  FOR COMMUNITY CRUD  #######################
 @coordinator_route.route("/cGet_community_data", methods=['GET'])
@@ -112,7 +109,7 @@ def cGet_community_data():
                     'status': record.status,
                     'budget': record.budget
                 }
-                for record in Community.query.filter_by(program=g.current_program).all()
+                for record in Community.query.filter_by(coordinator_id=g.current_id).all()
             ]
             if community_data:
                 return jsonify(community_data)
@@ -146,7 +143,7 @@ def cCommunity_data_list():
                     'status': record.status,
                     'budget': record.budget
             }
-                for record in Community.query.filter_by(program=g.current_program).all()
+                for record in Community.query.filter_by(coordinator_id=g.current_id).all()
             ]
         return jsonify(community_data)
     except Exception as e:
@@ -160,8 +157,14 @@ def cManage_community():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Community.query.filter_by(program=g.current_program).all()
-    return render_template("cCommunity.html", community = all_data)
+    all_data = Community.query.filter_by(coordinator_id=g.current_id).all()
+    form = Form()
+    placeholder_choice = ("", "-- Select Program --")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    form=form
+    return render_template("cCommunity.html", community = all_data, form=form)
 
 # Function to convert date strings to Python date objects
 def convert_date(date_str):
@@ -209,7 +212,7 @@ def cAdd_community():
 
             new_community = Pending_project(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=g.current_id)
             db.session.add(new_community)
             db.session.commit()
             userlog = g.current_user
@@ -366,7 +369,7 @@ def cProject_file_list():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-    project_file_list = Community.query.filter_by(program=g.current_program).all()
+    project_file_list = Community.query.filter_by(coordinator_id=g.current_id).all()
 
     # Dynamically generate the years
     current_year = datetime.now().year
@@ -477,7 +480,7 @@ def cManage_pending():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Pending_project.query.filter_by(program=g.current_program).all()
+    all_data = Pending_project.query.filter_by(coordinator_id=g.current_id).all()
     return render_template("cPending.html", pending_project_data = all_data)
 
 @coordinator_route.route('/cDelete_pending/<int:id>', methods=['GET'])
@@ -760,7 +763,6 @@ def update_pending():
 
     return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
 
-
 ############################### COORDINATOR COMMENTS ###############################
 @coordinator_route.route('/get_comments')
 def get_comments():
@@ -780,7 +782,6 @@ def get_comments():
         print(str(e))
         return make_response("Internal Server Error", 500)
     
-
 ############################ EDIT PROFILE #############################
 @coordinator_route.route("/cEdit_profile")
 def cEdit_profile():
@@ -793,7 +794,6 @@ def cEdit_profile():
     p = Users.query.filter_by(username = g.current_user).first()
 
     return render_template("cEdit_profile.html", id=p.id, username=p.username, firstname=p.firstname, lastname=p.lastname, email=p.email, mobile_number=p.mobile_number)
-
 
 @coordinator_route.route('/cUpdate_profile', methods=['POST'])
 def cUpdate_profile():
@@ -863,8 +863,6 @@ def cUpdate_profile():
 
         return redirect(url_for('coordinator.cEdit_profile'))
 
-
-
 @coordinator_route.route('/cDelete_picture', methods=['POST'])
 def cDelete_picture():
     if request.method == 'POST':
@@ -931,7 +929,6 @@ def cUpdate_picture():
 
         return redirect(url_for('coordinator.cEdit_profile'))
 
-
 ################## RESOURCES ################3333
 @coordinator_route.route("/cResources")
 def cResources():
@@ -942,11 +939,10 @@ def cResources():
     # Dynamically generate the years
     current_year = datetime.now().year
      # Fetch all user records from the database
-    all_data = Resources.query.filter_by(program=g.current_program).all()
+    all_data = Resources.query.filter_by(coordinator_id=g.current_id).all()
     program8 = Program.query.all()
     user1 = Users.query.all()
     return render_template("cResources.html", current_year=current_year, community = all_data)
-
 
 @coordinator_route.route("/cAdd_resources", methods=["POST"])
 def cAdd_resources():
@@ -974,7 +970,7 @@ def cAdd_resources():
 
         if existing_resources is None:
         
-            new_resources = Resources(community=community, program=program, user=user, date=date, activity=activity, url=url)
+            new_resources = Resources(community=community, program=program, user=user, date=date, activity=activity, url=url, coordinator_id=g.current_id)
 
             userlog = g.current_user
             action = f'ADDED new {program} project resources.'
