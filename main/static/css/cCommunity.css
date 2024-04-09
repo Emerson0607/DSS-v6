@@ -270,6 +270,7 @@ main .cCommunity table tr:last-child td {
 }
 
 
+
 /* Style for submit button */
 .cCommunity .btn-submit {
     background-color: #4a4cd7;
@@ -296,7 +297,8 @@ main .cCommunity table tr:last-child td {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 36.5rem;
+    left: 17.5rem;
+    top: 2rem;
 }
 
 .cCommunity .btn-add:hover {
@@ -310,6 +312,7 @@ main .cCommunity table tr:last-child td {
 .cCommunity .btn-add .green-add {
     background-color: #49a14f;
     border-radius: 7px;
+
 }
 
 .cCommunity .btn-add .green-add:hover {
@@ -435,7 +438,8 @@ main .cCommunity table tr:last-child td {
     }
 
     .cCommunity .btn-add {
-        left: 70%;
+        left: 75%;
+
     }
 
 

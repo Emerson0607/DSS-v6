@@ -1,0 +1,724 @@
+/* -----Root Variable */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* Root Variable */
+:root {
+    --color-kaakbay: #2f9e36;
+    --color-admin: #303396;
+    --color-primary: #7380ec;
+    --color-danger: #ff7782;
+    --color-success: #41f1b6;
+    --color-warning: #ffbb55;
+    --color-white: #fff;
+    --color-info-dark: #7d8da1;
+    --color-info-light: #dce1eb;
+    --color-dark: #363949;
+    --color-light: rgba(132, 139, 200, 0.18);
+    --color-primary-variant: #111e88;
+    --color-dark-variant: #677483;
+    --color-background: #f6f6f9;
+    --color-ongoing: rgb(214, 122, 23);
+
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.2rem;
+
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+
+    --box-shadow: 0 2rem 3rem var(--color-light);
+}
+
+.text-orange {
+    color: rgb(45, 63, 232);
+}
+
+.text-green {
+    color: #41f1b6;
+}
+
+
+main .fund_program_card {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem;
+    margin-top: -2rem;
+
+}
+
+main .fund_program_card .donor_num {
+    display: flex;
+    /* Use flexbox */
+    justify-content: flex-start;
+    /* Align items to the left */
+    align-items: center;
+    /* Center items vertically */
+
+}
+
+main .fund_program_card .donor_qty h4 {
+
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-right: 3px;
+
+}
+
+main .fund_program_card .donor_qty input {
+    width: 3rem;
+    height: 2rem;
+    padding: 0;
+    margin-top: 1rem;
+    font-size: 1rem;
+    text-align: center;
+    margin-right: 3px;
+
+}
+
+.fund_program_card .quantity {
+
+    padding: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+
+
+}
+
+.fund_program_card .quantity span {
+
+    /* Change this to your desired color */
+    color: #fff;
+    /* Change the text color */
+    border: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 7px;
+    padding: 0;
+    cursor: pointer;
+    font-size: 1.5rem;
+
+}
+
+.donation-date-wrapper {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto 10rem;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 3px solid #bbb;
+
+}
+
+.donation-label-input,
+.date-label-input,
+.name-label-input {
+    display: flex;
+    align-items: center;
+
+}
+
+.fund_program_card .input-group {
+    position: relative;
+}
+
+.fund_program_card .delete-button {
+    position: absolute;
+    top: 0;
+    right: -0.8rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.505);
+
+}
+
+.fund_program_card .delete-button span {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: 1.5rem;
+    padding: 0;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.505);
+    ;
+    color: red;
+    /* Transparent color */
+
+}
+
+
+
+.fund_program_card .community-subprogram-title {
+    display: grid;
+    grid-template-columns: 4rem auto;
+}
+
+/* Rounded border */
+hr.rounded {
+    border-top: 8px solid #bbb;
+    border-radius: 5px;
+}
+
+
+
+.checked {
+    text-decoration: line-through;
+}
+
+
+.fund_program_card .jumbotron {
+    max-height: 20rem;
+    overflow: auto;
+    margin-bottom: 2rem;
+}
+
+main .jumbotron {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: 5px;
+    margin-top: 1rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    position: relative;
+    cursor: pointer;
+}
+
+main .jumbotron:hover {
+    box-shadow: none;
+}
+
+
+.fund_program_card .table-card1 {
+    max-height: 20rem;
+    overflow: auto;
+    margin-bottom: 2rem;
+}
+
+.fund_program_card table {
+    width: 100%;
+    border-collapse: collapse;
+
+}
+
+.fund_program_card .table-card1 thead {
+    text-align: left;
+}
+
+.fund_program_card .table-card1 td {
+    height: 2.8rem;
+    border-bottom: 1px solid lightgray;
+    color: var(--color-dark);
+    width: auto;
+    margin: 0;
+}
+
+.fund_program_card table tr:last-child td {
+    border: none;
+}
+
+
+.fund_program_card table th {
+    border: 1px solid #ddd;
+    /* Add borders to table headers */
+    padding: 8px;
+    text-align: left;
+    background-color: #f4f4f4;
+}
+
+
+
+@keyframes l1 {
+    33% {
+        border-radius: 0;
+        background: #514b82;
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%)
+    }
+
+    66% {
+        border-radius: 0;
+        background: #ffa516;
+        clip-path: polygon(50% 0, 50% 0, 100% 100%, 0 100%)
+    }
+}
+
+@keyframes anim {
+    0% {
+        stroke-dashoffset: 157.5;
+    }
+}
+
+main .fund_program_card .progress {
+    position: absolute;
+    width: 92px;
+    height: 92px;
+    right: 8rem;
+
+}
+
+.fund_program_card .progress span {
+    background-color: white;
+    color: black;
+
+}
+
+.loader1 {
+
+    display: inline-block;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 48px;
+    letter-spacing: 4px;
+    box-sizing: border-box;
+    padding: 0;
+
+
+}
+
+.loader1::before {
+    content: '';
+    position: absolute;
+    right: 50px;
+
+    bottom: 10px;
+    height: 24px;
+    width: 7px;
+    outline: 1px solid #FFF;
+    color: #FF3D00;
+    box-sizing: border-box;
+    animation: animloader1 1s linear infinite alternate;
+}
+
+.loader1::after {
+
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: #FF3D00;
+    position: absolute;
+    right: 52px;
+    top: 8px;
+    box-sizing: border-box;
+    animation: animloader 1s ease-out infinite alternate;
+}
+
+@keyframes animloader {
+    0% {
+        top: 8px;
+        transform: rotate(0deg) scale(1);
+    }
+
+    100% {
+        top: 0px;
+        transform: rotate(180deg) scale(1.5);
+    }
+}
+
+@keyframes animloader1 {
+    0% {
+        box-shadow: 0 0 inset;
+    }
+
+    100% {
+        box-shadow: 0 -28px inset;
+    }
+}
+
+.loader {
+    position: relative;
+    font-size: 24px;
+    letter-spacing: 2px;
+    right: 20%;
+
+    padding: 0;
+
+}
+
+.loader:before {
+    content: "Completed";
+    color: black;
+
+
+
+}
+
+.loader:after {
+    content: "";
+    width: 20px;
+    height: 20px;
+    background-color: #1cd015;
+    border-radius: 50%;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    right: -12rem;
+    top: -80px;
+    animation: motion 3s ease-in-out infinite;
+}
+
+@keyframes motion {
+
+    0%,
+    50%,
+    100% {
+        transform: translateX(0) scale(1);
+    }
+
+    25% {
+        transform: translateX(-100px) scale(0.3);
+    }
+
+    75% {
+        transform: translateX(100px) scale(0.3);
+    }
+}
+
+
+
+main .fund_program_card>div {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    position: relative;
+    cursor: pointer;
+}
+
+main .fund_program_card>div:hover {
+    box-shadow: none;
+}
+
+main .fund_program_card>div span {
+    background: var(--color-primary);
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--color-white);
+    font-size: 2rem;
+}
+
+main .fund_program_card>div .middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+main .fund_program_card h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 1rem;
+}
+
+
+
+main .fund_program_card small {
+    margin-top: 1.3rem;
+    display: block;
+
+}
+
+
+/* For Checkboxes */
+main .fund_program_card .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1;
+    margin-bottom: 4rem;
+    margin-left: 1rem;
+}
+
+
+main .fund_program_card .form-check .label {
+    font-weight: normal;
+    font-size: 1rem;
+    color: #242424;
+    position: absolute;
+    margin-top: 1rem;
+
+}
+
+
+main .fund_program_card .form-check input {
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-right: 2px;
+
+}
+
+
+main .fund_program_card .insights-div {
+    position: relative !important;
+
+}
+
+
+/* Save Button Styles */
+main .fund_program_card .save-button {
+    background-color: #05ae11;
+    color: #fff;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 1rem;
+    right: 2rem;
+
+}
+
+main .fund_program_card .save-button:hover {
+    background-color: #49a14f;
+    cursor: pointer;
+}
+
+/* Save Button Styles */
+main .fund_program_card .archive-button {
+    background-color: orangered;
+    color: #fff;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+}
+
+main .fund_program_card .archive-button:hover {
+    background-color: var(--color-danger);
+    cursor: pointer;
+}
+
+/* textarea*/
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 1rem;
+}
+
+
+
+/*smaller laptop*/
+@media screen and (max-width: 1200px) {
+    main .fund_program_card {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+}
+
+.fund_program_card .insights-div:first-child {
+    display: none;
+}
+
+/*FOR NO DATA FOUND*/
+
+.notfound1 {
+    display: none;
+}
+
+.notfound {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr;
+    margin-top: 4rem;
+}
+
+.notfound .no-data {
+    text-align: center;
+    width: 35rem;
+    height: 20rem;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+
+}
+
+.notfound h1 {
+    font-size: 2rem;
+    color: #333;
+    margin: 0;
+    margin-top: 2rem;
+}
+
+.notfound p {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #777;
+}
+
+
+/* date start and end*/
+main .fund_program_card .date-card {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem;
+    grid-row-gap: 0;
+    margin-top: 2rem;
+}
+
+main .fund_program_card .date-card .date-card-content {
+    background: var(--color-white);
+    padding: var(--card-padding);
+    border-radius: .6rem;
+    box-shadow: var(--box-shadow);
+    transition: all 300ms ease;
+    position: relative;
+}
+
+main .fund_program_card .date-card .date-title {
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 0.1rem;
+}
+
+main .fund_program_card .date-card .start-title-green {
+    color: var(--color-success);
+}
+
+main .fund_program_card .date-card .end-title-red {
+    color: var(--color-danger);
+}
+
+main .fund_program_card .date-card .date-card-content {
+    padding: 0;
+}
+
+main .fund_program_card .date-card .date-card-content .box-color-green {
+    background-color: var(--color-success);
+    width: 100%;
+    height: 1rem;
+    border-top-left-radius: var(--border-radius-1);
+    /* Top left corner radius */
+    border-top-right-radius: var(--border-radius-1);
+    /* Top right corner radius */
+}
+
+main .fund_program_card .date-card .date-card-content .box-color-red {
+    background-color: var(--color-danger);
+    width: 100%;
+    height: 1rem;
+    border-top-left-radius: var(--border-radius-1);
+    /* Top left corner radius */
+    border-top-right-radius: var(--border-radius-1);
+    /* Top right corner radius */
+}
+
+
+main .fund_program_card .date-card .date-card-content .date-content {
+
+    padding: 2rem;
+
+}
+
+main .fund_program_card .date-card .date-card-content .date-content .text-muted {
+    margin-top: auto;
+    text-align: center;
+    margin-bottom: auto;
+    font-size: 1rem;
+}
+
+main .fund_program_card .community-status {
+    display: none;
+}
+
+
+.kaakbay-subprogram-title h1 {
+    color: white;
+    margin-left: 3rem;
+    position: absolute;
+    font-size: 3rem;
+    margin-top: 2rem;
+}
+
+.kaakbay-design-title {
+
+    border-top-left-radius: var(--border-radius-3);
+    /* Top left corner radius */
+    border-top-right-radius: var(--border-radius-3);
+    /* Top right corner radius */
+
+}
+
+
+/* LINK BEFORE ARCHIVE */
+main .fund_program_card .link-input {
+    margin: 0 0 0.3rem 1rem;
+    width: 65%;
+    height: 2rem;
+}
+
+@media screen and (max-width: 400px) {
+    .kaakbay-subprogram-title {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .fund_program_card {
+        width: 90%;
+        margin: 0 auto;
+    }
+
+    .kaakbay-subprogram-title h1 {
+        color: white;
+        margin-left: 2rem;
+        font-size: 1.5rem;
+        top: 4.5rem;
+    }
+
+    .fund_program_card .table-card1 {
+        width: 16rem;
+        overflow: auto;
+    }
+
+
+
+
+    main .fund_program_card .form-check .label {
+        font-weight: normal;
+        font-size: 1rem;
+        color: #242424;
+        position: absolute;
+        margin-top: 1rem;
+    }
+
+
+    main .fund_program_card .form-check input {
+        width: 1.5rem;
+        height: 1.5rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        margin-right: 2px;
+    }
+
+    /*FOR NO DATA FOUND*/
+
+
+    .notfound .no-data {
+        width: 90%;
+        height: 13rem;
+        margin: 0 auto;
+        margin-top: 7rem;
+    }
+
+    .notfound h1 {
+        margin: 0;
+    }
+
+    main .fund_program_card .progress {
+        display: none;
+
+    }
+
+    main .fund_program_card .community-status {
+        display: block;
+        position: absolute;
+        right: 1rem;
+        top: .5rem;
+        font-size: .8rem;
+    }
+}

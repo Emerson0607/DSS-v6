@@ -216,10 +216,37 @@ class Donor_cash(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fund_id = db.Column(db.Integer, nullable=True)
     program = db.Column(db.String(255), nullable=True)
+    project_name = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(255), nullable=True)
+    donation = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+
+class Donor_cash_total(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fund_id = db.Column(db.Integer, nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    project_name = db.Column(db.String(255), nullable=True)
     name = db.Column(db.String(255), nullable=True)
     donation = db.Column(db.Integer, nullable=True)
     date = db.Column(db.Date, nullable=True)
   
+class Donor_inkind(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fund_id = db.Column(db.Integer, nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    project_name = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(255), nullable=True)
+    donation = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+
+class Donor_inkind_total(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fund_id = db.Column(db.Integer, nullable=True)
+    program = db.Column(db.String(255), nullable=True)
+    project_name = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(255), nullable=True)
+    donation = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
 # --------------------- LOGS ------------------------#
 class Logs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -235,8 +262,6 @@ with app.app_context():
     db.create_all()
 
 ###################### QUERIES #########################
-
-
 def multiple_insert():
     # Create a list of Program instances
     program_insert = [
@@ -355,7 +380,7 @@ def insert_userx():
     db.session.add(user_insert)
     db.session.commit()
 
-    username = "admin1"
+    username = "admin"
     firstname = "Joselle1"
     lastname = "Banocnoc1"
     email = "1ls1ucesu501@gmail.com"

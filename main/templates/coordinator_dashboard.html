@@ -32,7 +32,9 @@
     <link rel="stylesheet" href="/static/css/cResources.css">
     <link rel="stylesheet" href="/static/css/cEdit_profile.css">
 
+
     <link rel="stylesheet" href="/static/css/cFund.css">
+    <link rel="stylesheet" href="/static/css/cFund_programs.css">
 
     <link rel="stylesheet" href="/static/css/cFund_details.css">
     <link rel="stylesheet" href="/static/css/cPending_fund_details.css">
@@ -108,7 +110,7 @@
 
                     <div class="cFundraising-content-files" id="fundraising-content-files">
                         <a href="{{ url_for('fundraising.cFund') }}">Manage Fundraising</a>
-                        <a href="#">Fundrasing Programs</a>
+                        <a href="{{ url_for('fundraising.cFund_programs') }}">Fundrasing Programs</a>
                     </div>
                 </div>
                 <!---------------------------   NEWLY ADDED    -------------------------------->

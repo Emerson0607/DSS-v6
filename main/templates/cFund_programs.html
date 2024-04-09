@@ -1,4 +1,4 @@
-{% extends "admin_dashboard.html" %}
+{% extends "coordinator_dashboard.html" %}
 {% block title %}Fundraising Programs{% endblock %}
 {% block content %}
 
@@ -8,7 +8,7 @@
         <div class="no-data">
             <h1>No Data Found</h1>
             <p>Sorry, but there is no data available at the moment. Go back to the
-                <a href="{{url_for('fundraising.fund')}}"> Manage Fundraising </a>page.
+                <a href="{{url_for('fundraising.cFund')}}"> Manage Fundraising </a>page.
             </p>
         </div>
 
@@ -121,10 +121,8 @@
             </div>
             <div class="donor_details">
                 <div class="donor_list">
-
                 </div>
             </div>
-
         </div>
 
         <input type="text" class="link-input" placeholder="Enter Link">

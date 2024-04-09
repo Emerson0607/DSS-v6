@@ -1,5 +1,5 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund, Donor_cash
+from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund, Donor_cash, Donor_cash_total, Donor_inkind, Donor_inkind_total
 from main import db
 from flask import Response
 import secrets
@@ -727,6 +727,13 @@ def fund_programs():
         return redirect(url_for('dbModel.login'))
     return render_template("fund_programs.html")
 
+@fundraising_route.route('/cFund_programs')
+def cFund_programs():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("cFund_programs.html")
+
 @fundraising_route.route("/get_fund_data", methods=['GET'])
 def get_fund_data():
     try:
@@ -734,11 +741,17 @@ def get_fund_data():
         # Fetch fundraising projects
         fundraising_records = Fundraising.query.all()
         for record in fundraising_records:
-            # Fetch donor data associated with each fundraising project
-            donors = Donor_cash.query.filter_by(fund_id=record.id).all()
-            donor_list = [{'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in donors]
-            # Include fund_id in the donor data
-            donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in donors]
+            # Fetch donor data associated with each fundraising project for cash donations
+            cash_donors = Donor_cash.query.filter_by(project_name=record.project_name, program=record.program).all()
+            cash_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in cash_donors]
+            
+            # Fetch donor data associated with each fundraising project for in-kind donations
+            inkind_donors = Donor_inkind.query.filter_by(project_name=record.project_name, program=record.program).all()
+            inkind_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in inkind_donors]
+            
+            # Combine donor data for cash and in-kind donations
+            all_donors = cash_donor_list_with_fund_id + inkind_donor_list_with_fund_id
+            
             fund_data.append({
                 'id': record.id,
                 'program': record.program,
@@ -753,7 +766,7 @@ def get_fund_data():
                 'donation_type': record.donation_type,
                 'status': record.status,
                 'coordinator_id': record.coordinator_id,
-                'donors': donor_list_with_fund_id  # Use the donor_list_with_fund_id instead of donor_list
+                'donors': all_donors  # Combine cash and in-kind donor data
             })
 
         if fund_data:
@@ -767,11 +780,12 @@ def get_fund_data():
         print(str(e))
         return make_response("Internal Server Error", 500)
 
-@fundraising_route.route('/update_fund', methods=['POST'])
-def update_fund():
+@fundraising_route.route('/cash_update_fund', methods=['POST'])
+def cash_update_fund():
     data = request.get_json()
     fund_id = data['id']
     status = data['status']
+    project_name = data['project_name']
     donation_type = data['donation_type']
     donors = data['donors']
 
@@ -785,7 +799,7 @@ def update_fund():
         # Add donor data
         for donor in donors:
             date1 = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
-            new_donor = Donor_cash(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1)
+            new_donor = Donor_cash(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1, project_name=project_name)
             db.session.add(new_donor)
 
         db.session.commit()
@@ -793,8 +807,8 @@ def update_fund():
     else:
         return jsonify({'message': 'Record not found.'}), 404
 
-@fundraising_route.route('/archive_fund_donor', methods=['POST'])
-def archive_fund_donor():
+@fundraising_route.route('/cash_archive_fund', methods=['POST'])
+def cash_archive_fund():
     if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
@@ -830,6 +844,25 @@ def archive_fund_donor():
         url = url,
         coordinator_id = data_to_move.coordinator_id
     )
+    
+    # Retrieve all donor records from Donor_cash based on the fund_id
+    donors_to_move = Donor_cash.query.filter_by(project_name=project_name, program=program).all()
+    
+    # Iterate over each donor record and move it to Donor_cash_total
+    for donor_to_move in donors_to_move:
+        new_row1 = Donor_cash_total(
+            fund_id=donor_to_move.fund_id,
+            program=donor_to_move.program,
+            project_name=donor_to_move.project_name,
+            name=donor_to_move.name,
+            donation=donor_to_move.donation,
+            date=donor_to_move.date
+        )
+            # Add the new row to the session
+        db.session.add(new_row1)
+    # Commit the changes to move all donor records
+    db.session.commit()
+    
     userlog = g.current_user
     action = f'ARCHIVED {project_name} project of {program}'
     ph_tz = pytz.timezone('Asia/Manila')
@@ -845,10 +878,145 @@ def archive_fund_donor():
     db.session.commit()
 
     fund_delete = Fundraising.query.filter_by(id=fund_id).first()
+    donor_delete = Donor_cash.query.filter_by(project_name=project_name, program=program).delete()
     if fund_delete:
         try:
                 # Delete the user from the database
             db.session.delete(fund_delete)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+                # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+        
+    if donor_delete:
+        try:
+                # Delete the user from the database
+            db.session.delete(donor_delete)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+                # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+    return jsonify({'message': 'Data archived.'})
+
+############## FOR INKIND ######################
+@fundraising_route.route('/inkind_update_fund', methods=['POST'])
+def inkind_update_fund():
+    data = request.get_json()
+    fund_id = data['id']
+    status = data['status']
+    project_name = data['project_name']
+    donation_type = data['donation_type']
+    donors = data['donors']
+
+    # Query the database to get the fundraising record
+    fund_update = Fundraising.query.get(fund_id)
+
+    if fund_update:
+        # Update the status for the specific record
+        fund_update.status = status
+
+        # Add donor data
+        for donor in donors:
+            date1 = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
+            new_donor = Donor_inkind(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1, project_name=project_name)
+            db.session.add(new_donor)
+
+        db.session.commit()
+        return jsonify({'message': 'Status updated successfully.'})
+    else:
+        return jsonify({'message': 'Record not found.'}), 404
+
+@fundraising_route.route('/inkind_archive_fund', methods=['POST'])
+def inkind_archive_fund():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    data = request.get_json()
+    fund_id = data['id']
+    project_name = data['project_name']
+    program = data['program']
+    coordinator = data['coordinator']
+    status = data['status']
+    url = data.get('url', '')
+
+    # Validate URL
+    if url and not re.match(r'^https?://(?:www\.)?\w+\.\w+', url):
+        flash('Invalid URL format. Please enter a valid URL.', 'delete_account')
+        return jsonify({'error': 'Invalid URL format'})
+      
+    data_to_move = Fundraising.query.filter_by(id=fund_id).first()
+    # Iterate through the data and move it to CPFARCHIVE
+        
+        # Create a new row in CPFARCHIVE
+    new_row = Archive_fund(
+        program = data_to_move.program,
+        coordinator = data_to_move.coordinator,
+        project_name = data_to_move.project_name,
+        proposed_date = data_to_move.proposed_date,
+        target_date = data_to_move.target_date,
+        venue = data_to_move.venue,
+        event_organizer = data_to_move.event_organizer,
+        lead_proponent = data_to_move.lead_proponent,
+        contact_details = data_to_move.contact_details,
+        donation_type = data_to_move.donation_type,
+        status = data_to_move.status,
+        url = url,
+        coordinator_id = data_to_move.coordinator_id
+    )
+    
+    # Retrieve all donor records from Donor_cash based on the fund_id
+    donors_to_move = Donor_inkind.query.filter_by(project_name=project_name, program=program).all()
+    
+    # Iterate over each donor record and move it to Donor_cash_total
+    for donor_to_move in donors_to_move:
+        new_row1 = Donor_inkind_total(
+            fund_id=donor_to_move.fund_id,
+            program=donor_to_move.program,
+            project_name=donor_to_move.project_name,
+            name=donor_to_move.name,
+            donation=donor_to_move.donation,
+            date=donor_to_move.date
+        )
+            # Add the new row to the session
+        db.session.add(new_row1)
+    # Commit the changes to move all donor records
+    db.session.commit()
+    
+    userlog = g.current_user
+    action = f'ARCHIVED {project_name} project of {program}'
+    ph_tz = pytz.timezone('Asia/Manila')
+    ph_time = datetime.now(ph_tz)
+    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = convert_date1(timestamp1)
+    insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+    if insert_logs:
+        db.session.add(insert_logs)
+        db.session.commit()
+
+    db.session.add(new_row)
+    db.session.commit()
+
+    fund_delete = Fundraising.query.filter_by(id=fund_id).first()
+    donor_delete = Donor_inkind.query.filter_by(project_name=project_name, program=program).delete()
+    if fund_delete:
+        try:
+                # Delete the user from the database
+            db.session.delete(fund_delete)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+                # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+        
+    if donor_delete:
+        try:
+                # Delete the user from the database
+            db.session.delete(donor_delete)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
