@@ -653,6 +653,10 @@ main .fund_program_card .link-input {
 }
 
 @media screen and (max-width: 400px) {
+    main .fund_program_card>div {
+        margin-top: 1rem;
+    }
+
     .kaakbay-subprogram-title {
         width: 90%;
         margin: 0 auto;
@@ -720,5 +724,9 @@ main .fund_program_card .link-input {
         right: 1rem;
         top: .5rem;
         font-size: .8rem;
+    }
+
+    .fund_program_card .donor_qty {
+        margin-bottom: 2rem;
     }
 }

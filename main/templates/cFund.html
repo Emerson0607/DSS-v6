@@ -141,8 +141,13 @@
                 <label class="accountability label-category">OTHERS</label><br />
                 <div class="form-group">
                   <label>Contact Details:</label>
-                  <input type="text" class="form-control mobile-input" name="contact_details" required />
+
+                  <input type="text" class="form-control mobile-number mobile-input" name="contact_details" required
+                    minlength="11" maxlength="11" />
+                  <div class="mobile-number-error" style="color: red; display: none;">Mobile
+                    number must start with 09</div>
                 </div>
+
                 <div class="form-group">
                   <label>Form of donation:</label><br />
                   <select class="form-select" name="donation_type" required>
@@ -312,6 +317,39 @@
         );
       });
     });
+
+
+  const mobileNumberInputs = document.querySelectorAll('.mobile-number');
+
+  // Loop through each input element
+  mobileNumberInputs.forEach(function (input) {
+    // Get the corresponding error message element
+    const errorMessage = input.nextElementSibling;
+
+    // Event listener for input field
+    input.addEventListener('input', function (event) {
+      // Get the entered mobile number
+      const mobileNumber = event.target.value;
+
+      // Check if the entered mobile number starts with "09"
+      if (!mobileNumber.startsWith('09')) {
+        // If not, display the error message
+        errorMessage.style.display = 'block';
+        input.setCustomValidity('Mobile number must start with 09');
+      } else {
+        // If it starts with "09", hide the error message
+        errorMessage.style.display = 'none';
+        input.setCustomValidity('');
+      }
+    });
+  });
+
+  document.querySelectorAll(".mobile-input").forEach(function (element) {
+    element.addEventListener("input", function (event) {
+      // Remove any non-numeric characters from the input
+      this.value = this.value.replace(/\D/g, "");
+    });
+  });
 </script>
 
 <script>

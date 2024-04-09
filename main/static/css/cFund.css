@@ -162,7 +162,7 @@ main .cFundraising_card table tr:last-child td {
 
 /* Style for submit button */
 .cFundraising_card .btn-submit {
-    background-color: #4a4cd7;
+    background-color: #2f9e36;
     color: #fff;
     padding: 10px 12px;
     border: none;
@@ -175,7 +175,7 @@ main .cFundraising_card table tr:last-child td {
 }
 
 .cFundraising_card .btn-submit:hover {
-    background-color: #303396;
+    background-color: #237929;
 }
 
 .cFundraising_card .jumbotron {
@@ -185,7 +185,7 @@ main .cFundraising_card table tr:last-child td {
 
 
 .cFundraising_card .btn-add {
-    background-color: #4a4cd7;
+    background-color: #2f9e36;
     /* Change this to your desired color */
     color: #fff;
     /* Change the text color */
@@ -197,7 +197,7 @@ main .cFundraising_card table tr:last-child td {
 }
 
 .cFundraising_card .btn-add:hover {
-    background-color: #303396;
+    background-color: #288a2f;
     cursor: pointer;
 
 }

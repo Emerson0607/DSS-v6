@@ -30,7 +30,7 @@
 
     <h1 class="fund_title">Fundraising Programs</h1>
     <svg class="kaakbay-design-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path fill="#303396" fill-opacity="1"
+        <path fill="#2f9e36" fill-opacity="1"
             d="M0,256L48,240C96,224,192,192,288,202.7C384,213,480,267,576,266.7C672,267,768,213,864,197.3C960,181,1056,203,1152,224C1248,245,1344,267,1392,277.3L1440,288L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
         </path>
     </svg>
@@ -99,7 +99,7 @@
             <div class="donor_qty" style="margin-bottom: 2rem;">
                 <div class="donor_num">
                     <h4>Cash No. Donors </h4>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control mobile-number mobile-input">
                     <button class="btn-primary quantity"><span class="material-symbols-sharp">add</span></button>
                 </div>
             </div>
@@ -115,7 +115,7 @@
             <div class="donor_qty">
                 <div class="donor_num">
                     <h4>In-Kind No. Donors</h4>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control mobile-number mobile-input">
                     <button class="btn-primary quantity"><span class="material-symbols-sharp">add</span></button>
                 </div>
             </div>
@@ -232,6 +232,37 @@
                                     var donationInput = $("<input>").attr("type", "text").addClass("form-control donation-input");
                                     donationWrapper.append(donationLabel).append(donationInput);
 
+                                    if (record.donation_type === "Cash") {
+                                        donationInput.on("input", function () {
+                                            // Remove any non-digit characters from the input
+                                            var inputValue = $(this).val().replace(/[^\d.]/g, '');
+
+                                            // Prevent adding leading zeros
+                                            if (inputValue.length > 1 && inputValue[0] === '0') {
+                                                inputValue = inputValue.slice(1);
+                                            }
+
+                                            // If the input is empty or starts with a decimal point, prepend "0"
+                                            if (inputValue === "" || inputValue[0] === ".") {
+                                                inputValue = "0" + inputValue;
+                                            }
+
+                                            // Limit to one decimal point
+                                            var parts = inputValue.split('.');
+                                            if (parts.length > 1) {
+                                                parts = [parts[0], parts[1].slice(0, 2)]; // Limit digits after decimal to two
+                                                inputValue = parts.join('.');
+                                            }
+
+                                            // Format the input value with thousands separator and ".00" for decimal values
+                                            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                            inputValue = parts.join('.');
+
+                                            // Update the input field value
+                                            $(this).val(inputValue);
+                                        });
+                                    }
+
                                     // Date input and its wrapper
                                     var dateWrapper = $("<div>").addClass("date-wrapper custom-class");
                                     var dateLabel = $("<label>").addClass("form-label").text("Date");
@@ -263,6 +294,19 @@
                                 alert("Please enter a valid quantity.");
                             }
                         });
+
+                        $(".mobile-input, .mobile-number").on('input', function () {
+                            // Remove any non-numeric characters from the input
+                            var inputValue = this.value.replace(/\D/g, "");
+                            // Limit input to 2 digits
+                            if (inputValue.length > 2) {
+                                inputValue = inputValue.slice(0, 2);
+                            }
+                            // Update the input field value
+                            this.value = inputValue;
+                        });
+
+
                         // Removing input fields from the donor list and then smoothly hide them
                         insightsDiv.on("click", ".delete-button", function () {
                             var inputField = $(this).closest(".input-group");

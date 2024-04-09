@@ -444,6 +444,13 @@
         });
     });
 
+    document.querySelectorAll(".mobile-input").forEach(function (element) {
+        element.addEventListener("input", function (event) {
+            // Remove any non-numeric characters from the input
+            this.value = this.value.replace(/\D/g, "");
+        });
+    });
+
 
     // Get all elements with the class 'mobile-number'
     const mobileNumberInputs2 = document.querySelectorAll('.mobile-number2');
@@ -473,12 +480,7 @@
 </script>
 
 <script>
-    document.querySelectorAll(".mobile-input").forEach(function (element) {
-        element.addEventListener("input", function (event) {
-            // Remove any non-numeric characters from the input
-            this.value = this.value.replace(/\D/g, "");
-        });
-    });
+
 
     // Remove any non-letter characters from the input
     document.querySelectorAll(".letters-with-space-input").forEach(function (element) {
