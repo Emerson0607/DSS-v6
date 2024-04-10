@@ -2682,3 +2682,15 @@ def delete_resources(id):
     flash('Delete successfully!', 'delete_account')
     return redirect(url_for('dbModel.resources'))
 
+
+###################################### HELPPP ME ##############################
+@dbModel_route.route("/help")
+def help():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login')) 
+
+     # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("help.html")

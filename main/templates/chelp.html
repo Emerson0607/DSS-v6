@@ -1,0 +1,358 @@
+{% extends "coordinator_dashboard.html" %}
+{% block title %}Help{% endblock %}
+{% block content %}
+
+<div class="margin-top"></div>
+
+{% with messages = get_flashed_messages(category_filter=['add_community'], with_categories=true) %}
+{% if messages %}
+<div>
+    {% for category, message in messages %}
+    <div class="flash flash-{{ category }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
+<div class="help_page">
+    <div class="jumbotron_help">
+        <div class="container">
+        <h2 style="margin-bottom: 6rem;">
+            <span class="material-symbols-outlined" style="font-size: 2rem;">contact_support</span>Help
+        </h2>
+
+        <h2>
+            <span class="material-symbols-outlined">person</span>User's Account Information
+        </h2>
+
+        <!-- For Change Profile Information -->
+        <div class="help-container">
+            <button class="questions" onclick="toggleExplanations()">
+                How to Change Profile Information?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="explanations">
+                <p>To change your profile information:</p>
+                <ul>
+                    <li>1. Click on your profile icon in the top right corner.</li>
+                    <li>2. Select "Edit Profile" from the dropdown menu.</li>
+                    <li>3. Update your profile details as needed.</li>
+                    <li>4. Click "Save" to apply the changes.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- For Change Password -->
+        <div class="help-container">
+            <button class="questions" onclick="togglePasswordExplanations()">
+                How to Change Password?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="password_explanations">
+                <p>To change your password:</p>
+                <ul>
+                    <li>1. Click on your profile icon in the top right corner.</li>
+                    <li>2. Select "Change Password" from the dropdown menu.</li>
+                    <li>3. Enter your current password and then your new password.</li>
+                    <li>4. Click "Save" to apply the changes.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- For Forgot Password -->
+        <div class="help-container">
+            <button class="questions" onclick="toggleForgotPasswordExplanations()">
+                Forgot Password?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="forgot_password_explanations">
+                <p>If you forgot your password:</p>
+                <ul>
+                    <li>1. Visit the login page.</li>
+                    <li>2. Click on the "Forgot Password?" link.</li>
+                    <li>3. Enter your email address.</li>
+                    <li>4. Follow the instructions sent to your email to reset your password.</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 style="margin-top: 6rem;">
+            <span class="material-symbols-outlined">
+                settings
+                </span>CESU's System Manual
+        </h2>
+
+        <!-- For Creating Community -->
+        <div class="help-container">
+            <button class="questions" onclick="toggleCommunityExplanations()">
+                How to create a Community Project?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="community_project">
+                <p>To Create a Community Project:</p>
+                <ul>
+                    <li>1. Click "<span class="material-symbols-sharp" style="font-size: 1rem;">groups</span> Community" located at the left Side Bar.</li>
+                    <li>2. Click the "<span class="material-symbols-outlined" style="font-size: 1rem;">
+                        add_box
+                        </span>" button and fill out all the information.</li>
+                    <li>3. Click "Add Project" to create.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- For Extension/Out Reach Program Monitoring -->
+        <div class="help-container">
+            <button class="questions" onclick="toggleMonitoringExplanations()">
+                Extension/Out Reach Program Monitoring
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="Monitoring">
+                <p>To Monitor Extension/Ount Reach Program:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1rem;">
+                        monitoring
+                    </span> Extension/Out Reach Program Monitoring" located at the left Side Bar.</li>
+                    <li>2. Click any programs to see the actual phase of the project(s).</li>
+                    <li>3. Click "Weeks" to add a week progress to the project.</li>
+                    <li><div style="display: flex; align-items: center;  color: red;">
+                        <span class="material-symbols-outlined" style="font-size: 1rem;">info</span> 
+                        <h6 style="font-style: italic; margin-left: 5px;">Additional Information: Click the previews week first before clicking the next week to apply check mark.</h6>
+                        </div> 
+                    </li>
+                    <li>4. Click "Save" to apply changes.</li>
+                </ul>
+            </div>
+        </div>
+
+         <!-- For Pending Projects -->
+         <div class="help-container">
+            <button class="questions" onclick="togglePendingExplanations()">
+                How to use Pending Projects?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="Pendings">
+                <p>To use Pending Projects:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1rem;">
+                        pending
+                    </span> Pending Projects" located at the left Side Bar.</li>
+                    <li>2. Click "For Review" to see and modify the information if necessary.</li>
+                    <li>3. Click "Delete" button to delete the pending project(s).</li>
+                </ul>
+            </div>
+        </div>
+
+
+         <!-- For Program Recommendations -->
+         <div class="help-container">
+            <button class="questions" onclick="togglePredictExplanations()">
+                How to use Program Recommendation?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="Predict">
+                <p>To use Program Recommendation:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1rem;">neurology</span> Prgoram Recommendation" located at the left Side Bar.</li>
+                    <li>2. Click "Choose File" and choose the file you want to upload.</li>
+                    <li><div style="display: flex; align-items: center;  color: red;">
+                        <span class="material-symbols-outlined" style="font-size: 1rem;">info</span> 
+                        <h6 style="font-style: italic; margin-left: 5px;">Additional Information: ONLY choose a file with a (.CSV) Extension.</h6>
+                        </div> 
+                    </li>
+                    <li>3. Click "Upload" button to see the result.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- For Fundraising -->
+        <div class="help-container">
+            <button class="questions" onclick="toggleFundExplanations()">
+                How to use Fundraising?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="Fund">
+                <p>To Manage Fundraising:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1.2rem;">crowdsource</span> Fundraising" located at the left Side Bar.</li>
+                    <li>2. Click "Manage Fundraising".</li>
+                    <li>3. Click the " <span class="material-symbols-outlined" style="font-size: 1rem;">
+                        add_box
+                        </span>" button and fill out all the information.</li>
+                    <li>4. Click the any on the list to show its detailed information.</li>
+                </ul>
+
+
+                <p style="margin-top: 2rem;">To use Pending Projects in Fundraising:</p>
+                <ul>
+                    <li>1. Click "For Review" to see and modify the information if necessary.</li>
+                    <li>2. Click "Save" button to apply changes.</li>
+                    <li>3. Click "Delete" button to delete the pending project(s).</li>
+                </ul>
+
+
+                <p style="margin-top: 2rem;">To use Fundraising Programs:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1.2rem;">crowdsource</span> Fundraising" located at the left Side Bar.</li>
+                    <li>3. Input Number of Donators in the blank</li>
+                    <li>2. Click the "<span class="material-symbols-outlined" style="font-size: 1rem;">
+                        add_box
+                        </span>" button and fill out all the necessary information.</li>
+                    <li>4. Click "Save" button to apply changes.</li>
+                </ul>
+
+            </div>
+        </div>
+
+
+
+        <!-- For Files -->
+        <div class="help-container">
+            <button class="questions" onclick="toggleFilesExplanations()">
+                How to Manage Files?
+                <span class="material-symbols-outlined">expand_more</span>
+            </button>
+            <div class="explanations" id="Files">
+                <p>To Manage CESU Files:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1rem;">
+                        folder
+                    </span> Files" located at the left Side Bar.</li>
+                    <li>2. Click any files on the list to view or download you want.</li>
+                </ul>
+
+                <p style="margin-top: 2rem;">To Add Resources:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1rem;">
+                        folder
+                    </span> Files" located at the left Side Bar.</li>
+                    <li>2. Click "Resources".</li>
+                    <li>3. Click the "<span class="material-symbols-outlined" style="font-size: 1rem;">
+                        add_box
+                        </span>" button and fill out all the information.</li>
+                    <li>4. Click "link" to view.</li>
+                    <li>5. Click "Delete" button to delete the resources.</li>
+                </ul>
+
+                <p style="margin-top: 2rem;">To Manage Community Projects File:</p>
+                <ul>
+                    <li>1. Click " <span class="material-symbols-sharp" style="font-size: 1rem;">
+                        folder
+                    </span> Files" located at the left Side Bar.</li>
+                    <li>2. Click "Community projects file".</li>
+                    <li>3. Click the "<span class="material-symbols-outlined" style="font-size: 1rem;">
+                        add_box
+                        </span>" button and fill out all the information.</li>
+                    <li>4. Choose and Click a program to view all of its content.</li>
+                    <li>5. Click any of the list to view the details.</li>
+                </ul>
+            </div>
+        </div>
+          
+
+        <span class="swipe-indicator">&#8592; Swipe Left or Right &#8594;</span>
+    </div>
+    </div>
+</div>
+
+<script>
+    // For Change Profile Information
+    function toggleExplanations() {
+        var explanations = document.getElementById("explanations");
+        if (explanations.style.display === "none" || explanations.style.display === "") { 
+            explanations.style.display = "block";
+        } else {
+            explanations.style.display = "none";
+        }
+    }
+
+    // For Change Password
+    function togglePasswordExplanations() {
+        var passwordExplanations = document.getElementById("password_explanations");
+        if (passwordExplanations.style.display === "none" || passwordExplanations.style.display === "") {
+            passwordExplanations.style.display = "block";
+        } else {
+            passwordExplanations.style.display = "none";
+        }
+    }
+
+    // For Forgot Password
+    function toggleForgotPasswordExplanations() {
+        var forgotPasswordExplanations = document.getElementById("forgot_password_explanations");
+        if (forgotPasswordExplanations.style.display === "none" || forgotPasswordExplanations.style.display === "") {
+            forgotPasswordExplanations.style.display = "block";
+        } else {
+            forgotPasswordExplanations.style.display = "none";
+        }
+    }
+
+     // For Creating Community
+     function toggleCommunityExplanations() {
+        var communityExplenations = document.getElementById("community_project");
+        if (communityExplenations.style.display === "none" || communityExplenations.style.display === "") { 
+            communityExplenations.style.display = "block";
+        } else {
+            communityExplenations.style.display = "none";
+        }
+    }
+
+
+    
+    // For Monitoring Extension/Out Reach Programs
+    function toggleMonitoringExplanations() {
+        var MonitoringExplanations = document.getElementById("Monitoring");
+        if (MonitoringExplanations.style.display === "none" || MonitoringExplanations.style.display === "") { 
+            MonitoringExplanations.style.display = "block";
+        } else {
+            MonitoringExplanations.style.display = "none";
+        }
+    }
+
+    // For Pending Projects
+    function togglePendingExplanations() {
+        var PendingsExplanations = document.getElementById("Pendings");
+        if (PendingsExplanations.style.display === "none" || PendingsExplanations.style.display === "") { 
+            PendingsExplanations.style.display = "block";
+        } else {
+            PendingsExplanations.style.display = "none";
+        }
+    }
+
+
+     // For Program Recommendations
+     function togglePredictExplanations() {
+        var PredictExplanations = document.getElementById("Predict");
+        if (PredictExplanations.style.display === "none" || PredictExplanations.style.display === "") { 
+            PredictExplanations.style.display = "block";
+        } else {
+            PredictExplanations.style.display = "none";
+        }
+    }
+
+     // For Fundraising
+     function toggleFundExplanations() {
+        var FundExplanations = document.getElementById("Fund");
+        if (FundExplanations.style.display === "none" || FundExplanations.style.display === "") { 
+            FundExplanations.style.display = "block";
+        } else {
+            FundExplanations.style.display = "none";
+        }
+    }
+
+
+     // For Files
+     function toggleFilesExplanations() {
+        var FilesExplanations = document.getElementById("Files");
+        if (FilesExplanations.style.display === "none" || FilesExplanations.style.display === "") { 
+            FilesExplanations.style.display = "block";
+        } else {
+            FilesExplanations.style.display = "none";
+        }
+    }
+
+
+</script>
+
+{% endblock %}
