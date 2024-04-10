@@ -267,6 +267,10 @@
                                     var dateWrapper = $("<div>").addClass("date-wrapper custom-class");
                                     var dateLabel = $("<label>").addClass("form-label").text("Date");
                                     var dateInput = $("<input>").attr("type", "date").addClass("form-control date-input");
+                                    // Set minimum date to current date
+                                    var currentDate = new Date().toISOString().split('T')[0];
+                                    dateInput.attr("min", currentDate);
+
                                     dateWrapper.append(dateLabel).append(dateInput);
 
                                     // Create the span element
@@ -427,14 +431,22 @@
                             var donorData = []; // Array to store donor data
 
                             // Iterate over each input field in the donor list
+                            var allFieldsFilled = true; // Flag to track if all required fields are filled
+
+                            // Iterate over each input field in the donor list
                             insightsDiv.find(".donor_cash_card .donor_list .input-group").each(function () {
                                 // Retrieve the values from the input fields
                                 var name = $(this).find(".name-input").val().trim();
                                 var donation = $(this).find(".donation-input").val().trim();
                                 var date = $(this).find(".date-input").val().trim();
 
-                                // Check if all fields are non-empty
-                                if (name !== "" && donation !== "" && date !== "") {
+                                // Check if any required field is empty
+                                if (name === "" || donation === "" || date === "") {
+                                    // Set the flag to false if any required field is empty
+                                    allFieldsFilled = false;
+                                    // Optionally, you can highlight the empty fields or display an error message
+                                    // Example: $(this).addClass("error"); or alert("Please fill in all required fields.");
+                                } else {
                                     // Construct an object representing donor data and add it to the array
                                     donorData.push({
                                         name: name,
@@ -444,28 +456,34 @@
                                 }
                             });
 
-                            // Send the donorData array to the server
-                            $.ajax({
-                                url: "/cash_update_fund",
-                                method: "POST",
-                                contentType: "application/json",
-                                data: JSON.stringify({
-                                    id: record.id,
-                                    project_name: record.project_name,
-                                    program: record.program,
-                                    coordinator: record.coordinator,
-                                    status: recordStatus,
-                                    donation_type: record.donation_type, // Specify the donation type as "Cash"
-                                    donors: donorData
-                                }),
-                                success: function (response) {
-                                    console.log("Status updated successfully.");
-                                    location.reload();
-                                },
-                                error: function (error) {
-                                    console.error("Failed to update status: " + error);
-                                }
-                            });
+                            // Check if all required fields are filled before proceeding
+                            if (allFieldsFilled) {
+                                // Send the donorData array to the server
+                                $.ajax({
+                                    url: "/cash_update_fund",
+                                    method: "POST",
+                                    contentType: "application/json",
+                                    data: JSON.stringify({
+                                        id: record.id,
+                                        project_name: record.project_name,
+                                        program: record.program,
+                                        coordinator: record.coordinator,
+                                        status: recordStatus,
+                                        donation_type: record.donation_type, // Specify the donation type as "Cash"
+                                        donors: donorData
+                                    }),
+                                    success: function (response) {
+                                        console.log("Status updated successfully.");
+                                        location.reload();
+                                    },
+                                    error: function (error) {
+                                        console.error("Failed to update status: " + error);
+                                    }
+                                });
+                            } else {
+                                // Optionally, you can display an error message or take appropriate action
+                                alert("Please fill in all required fields.");
+                            }
                         }
 
 
@@ -511,21 +529,25 @@
                             });
                         }
 
-                        // for inkind inkind_update_fund
                         function inkind_update_fund() {
                             var recordStatus = "Completed";
                             var donorData = []; // Array to store donor data
 
                             // Iterate over each input field in the donor list
+                            var allFieldsFilled = true; // Flag to track if all required fields are filled
                             insightsDiv.find(".donor_inkind_card .donor_list .input-group").each(function () {
-
                                 // Retrieve the values from the input fields
                                 var name = $(this).find(".name-input").val().trim();
                                 var donation = $(this).find(".donation-input").val().trim();
                                 var date = $(this).find(".date-input").val().trim();
 
-                                // Check if all fields are non-empty
-                                if (name !== "" && donation !== "" && date !== "") {
+                                // Check if any required field is empty
+                                if (name === "" || donation === "" || date === "") {
+                                    // Set the flag to false if any required field is empty
+                                    allFieldsFilled = false;
+                                    // Optionally, you can highlight the empty fields or display an error message
+                                    // Example: $(this).addClass("error"); or alert("Please fill in all required fields.");
+                                } else {
                                     // Construct an object representing donor data and add it to the array
                                     donorData.push({
                                         name: name,
@@ -535,29 +557,36 @@
                                 }
                             });
 
-                            // Send the donorData array to the server
-                            $.ajax({
-                                url: "/inkind_update_fund",
-                                method: "POST",
-                                contentType: "application/json",
-                                data: JSON.stringify({
-                                    id: record.id,
-                                    project_name: record.project_name,
-                                    program: record.program,
-                                    coordinator: record.coordinator,
-                                    status: recordStatus,
-                                    donation_type: record.donation_type, // Specify the donation type as "Cash"
-                                    donors: donorData
-                                }),
-                                success: function (response) {
-                                    console.log("Status updated successfully.");
-                                    location.reload();
-                                },
-                                error: function (error) {
-                                    console.error("Failed to update status: " + error);
-                                }
-                            });
+                            // Check if all required fields are filled before proceeding
+                            if (allFieldsFilled) {
+                                // Send the donorData array to the server
+                                $.ajax({
+                                    url: "/inkind_update_fund",
+                                    method: "POST",
+                                    contentType: "application/json",
+                                    data: JSON.stringify({
+                                        id: record.id,
+                                        project_name: record.project_name,
+                                        program: record.program,
+                                        coordinator: record.coordinator,
+                                        status: recordStatus,
+                                        donation_type: record.donation_type, // Specify the donation type as "In-Kind"
+                                        donors: donorData
+                                    }),
+                                    success: function (response) {
+                                        console.log("Status updated successfully.");
+                                        location.reload();
+                                    },
+                                    error: function (error) {
+                                        console.error("Failed to update status: " + error);
+                                    }
+                                });
+                            } else {
+                                // Optionally, you can display an error message or take appropriate action
+                                alert("Please fill in all required fields.");
+                            }
                         }
+
                         insightsContainer.append(insightsDiv);
                         insightsDiv.removeClass("insights-div");
                     });

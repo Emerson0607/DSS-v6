@@ -259,6 +259,32 @@ class Logs(db.Model):
     action = db.Column(db.String(255), nullable=True)
     timestamp = db.Column(db.DateTime, default=datetime.now, nullable=True)
 
+# FOR BUDGET
+class Cash_list(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=True)
+    total_cash = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+    
+class Total_budget(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=True)
+    budget_type = db.Column(db.Integer, nullable=True)
+    total = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+
+class Budget(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    budget_type = db.Column(db.Integer, nullable=True)
+    total = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+
+class Budget_cost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=True)
+    budget_type = db.Column(db.Integer, nullable=True)
+    total_cost = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
 
 # --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
 

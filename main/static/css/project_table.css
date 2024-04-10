@@ -26,7 +26,7 @@
 main .projectFilesCard {
     display: grid;
     grid-template-columns: 1fr;
-    overflow: auto;
+
     max-height: 90%;
 
 }
