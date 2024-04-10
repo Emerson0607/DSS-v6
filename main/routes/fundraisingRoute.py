@@ -1,5 +1,5 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund, Donor_cash, Donor_cash_total, Donor_inkind, Donor_inkind_total
+from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund, Donor_cash, Donor_cash_total, Donor_inkind, Donor_inkind_total, Cash_list, Total_budget, Budget, Budget_cost
 from main import db
 from flask import Response
 import secrets
@@ -164,9 +164,14 @@ def view_fund(fund_id):
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
 
-    p = Fundraising.query.get(fund_id)
+    p = Fundraising.query.filter_by(id=fund_id).first()
+    
+    if p.donation_type == "Cash":
+        archived_fund_list = Donor_cash.query.filter_by(project_name=p.project_name, program=p.program).all()
+    else:
+        archived_fund_list = Donor_inkind.query.filter_by(project_name=p.project_name, program=p.program).all()
 
-    return render_template("fund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type )
+    return render_template("fund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, archived_fund_list=archived_fund_list )
 
 @fundraising_route.route('/delete_fund/<int:id>', methods=['GET'])
 def delete_fund(id):
@@ -471,9 +476,14 @@ def cView_fund(fund_id):
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
 
-    p = Fundraising.query.get(fund_id)
+    p = Fundraising.query.filter_by(id=fund_id).first()
+    
+    if p.donation_type == "Cash":
+        archived_fund_list = Donor_cash.query.filter_by(project_name=p.project_name, program=p.program).all()
+    else:
+        archived_fund_list = Donor_inkind.query.filter_by(project_name=p.project_name, program=p.program).all()
 
-    return render_template("cFund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type )
+    return render_template("cFund_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, archived_fund_list=archived_fund_list )
 
 @fundraising_route.route("/cView_pending_fund/<int:fund_id>")
 def cView_pending_fund(fund_id):
@@ -614,10 +624,15 @@ def view_archived_fund(fund_id):
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
+    p = Archive_fund.query.filter_by(id=fund_id).first()
 
-    p = Archive_fund.query.get(fund_id)
-
-    return render_template("fund_archived_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, url=p.url )
+    if p.donation_type == "Cash":
+        archived_fund_list = Donor_cash_total.query.filter_by(project_name=p.project_name, program=p.program).all()
+    else:
+        archived_fund_list = Donor_inkind_total.query.filter_by(project_name=p.project_name, program=p.program).all()
+    
+    return render_template("fund_archived_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, url=p.url, archived_fund_list=archived_fund_list)
 
 @fundraising_route.route('/delete_archived_fund/<int:id>', methods=['GET'])
 def delete_archived_fund(id):
@@ -830,7 +845,6 @@ def cGet_fund_data():
         print(str(e))
         return make_response("Internal Server Error", 500)
 
-
 @fundraising_route.route('/cash_update_fund', methods=['POST'])
 def cash_update_fund():
     data = request.get_json()
@@ -843,6 +857,50 @@ def cash_update_fund():
     # Query the database to get the fundraising record
     fund_update = Fundraising.query.get(fund_id)
 
+    if donation_type == 'Cash':
+        cash_list = []
+
+        total_donation = 0
+        donation_date = None  # Initialize the donation date variable
+
+        # Iterate through the donors' data to calculate total donation and extract donation date
+        for donor in donors:
+            donation_amount = float(donor['donation'].replace(',', ''))
+            total_donation += donation_amount
+            cash_list.append(round(donation_amount, 2))
+            # Extract the donation date from the first donor's data
+            if not donation_date:
+                donation_date = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
+
+        print("Total Donation:", total_donation)
+
+        # Create a new record in the Cash_list table with the total donation and donation date
+        if donation_date:
+            new_cash_record = Cash_list(total_cash=total_donation, date=donation_date, program=fund_update.program)
+            db.session.add(new_cash_record)
+            db.session.commit()
+
+            # Update Total_budget table
+        total_budget = Total_budget.query.filter_by(program=fund_update.program, budget_type="Donation").first()
+        if total_budget:
+            # If a record exists, update the total cash
+            total_budget.total += total_donation
+        else:
+            # If no record exists, create a new one
+            total_budget = Total_budget(program=fund_update.program,  budget_type="Donation", total=total_donation, date=donation_date)
+            db.session.add(total_budget)
+            db.session.commit()
+            # Update Total_budget table
+        budget = Budget.query.filter_by(budget_type="Donation").first()
+        if budget:
+            # If a record exists, update the total cash
+            budget.total += total_donation
+        else:
+            # If no record exists, create a new one
+            budget = Budget(budget_type="Donation", total=total_donation, date=donation_date)
+            db.session.add(budget)
+            db.session.commit()
+        
     if fund_update:
         # Update the status for the specific record
         fund_update.status = status
@@ -1075,6 +1133,3 @@ def inkind_archive_fund():
     else:
         flash('User not found. Please try again.', 'error')
     return jsonify({'message': 'Data archived.'})
-
-
-    

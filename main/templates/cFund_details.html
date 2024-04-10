@@ -1,11 +1,99 @@
 {% extends "coordinator_dashboard.html" %} {% block title %}Fundraising Details{%
 endblock %} {% block content %}
+
+<style>
+  main .cArchived_fund_card .table-card {
+    max-height: 40rem;
+    overflow: auto;
+  }
+
+  .cArchived_fund_card table td {
+    height: 2.8rem;
+    border-bottom: 1px solid lightgray !important;
+    color: var(--color-dark);
+    text-align: center;
+  }
+
+  main .cArchived_fund_card table tr:last-child td {
+    border: none;
+  }
+
+  main .cArchived_fund_card>div:hover {
+    box-shadow: none;
+  }
+
+  .cArchived_fund_card table {
+    width: 100%;
+
+  }
+
+  @media screen and (max-width: 400px) {
+
+
+    .cArchived_fund_card .jumbotron {
+      width: 90%;
+      margin: 0 auto;
+    }
+
+
+
+    .cArchived_fund_card .table-card {
+      width: 19rem;
+      overflow: auto;
+    }
+
+    .cArchived_fund_card .table-card th {
+      padding-right: 1rem;
+    }
+
+
+  }
+</style>
+
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['delete_account',
 'add_community', 'existing_community'], with_categories=true) %} {% if messages
 %} {% for category, message in messages %}
 <div class="flash flash-{{ category }}">{{ message }}</div>
 {% endfor %} {% endif %} {% endwith %}
+
+
+<div class="cArchived_fund_card">
+  <div class="jumbotron">
+    <div class="for_filter">
+      <h2 style="margin-bottom: 1rem">Donors <b>Details</b></h2>
+    </div>
+
+    <div class="table-card">
+      <table class="table table-striped" id="logs_table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Donation</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        {% for row in archived_fund_list %}
+        <tbody>
+          <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.donation}}</td>
+            <td>{{row.date }}</td>
+          </tr>
+        </tbody>
+        {% endfor %}
+      </table>
+      <p id="noRecordsMessage" style="display: none">No records found.</p>
+
+    </div>
+    <!--end add modal account-->
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+  </div>
+  <!--end jumbotron-->
+</div>
+
 
 <div class="fund_details_card">
   <div class="fund_details_box">

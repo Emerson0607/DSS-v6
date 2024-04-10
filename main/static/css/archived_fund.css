@@ -67,9 +67,19 @@
 
 
 main .archived_fund_card .table-card {
-    height: 15rem;
-    max-height: 25rem;
+    max-height: 40rem;
     overflow: auto;
+}
+
+.archived_fund_card table td {
+    height: 2.8rem;
+    border-bottom: 1px solid lightgray !important;
+    color: var(--color-dark);
+    text-align: center;
+}
+
+main .archived_fund_card table tr:last-child td {
+    border: none;
 }
 
 main .archived_fund_card>div:hover {
@@ -82,15 +92,7 @@ main .archived_fund_card>div:hover {
 
 }
 
-main .archived_fund_card table td {
-    height: 2.8rem;
-    border-bottom: 1px solid lightgray;
-    color: var(--color-dark);
-}
 
-main .archived_fund_card table tr:last-child td {
-    border: none;
-}
 
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
 .archived_fund_card .modal {
@@ -243,9 +245,6 @@ main .archived_fund_card table tr:last-child td {
     color: var(--color-danger);
 }
 
-.archived_fund_card table td {
-    text-align: center;
-}
 
 .archived_fund_card .file-box {
     margin-bottom: 1rem;

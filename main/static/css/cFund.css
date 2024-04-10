@@ -84,7 +84,7 @@ main .cFundraising_card>div:hover {
 
 main .cFundraising_card table td {
     height: 2.8rem;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid lightgray !important;
     color: var(--color-dark);
 }
 

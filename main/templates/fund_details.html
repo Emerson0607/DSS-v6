@@ -7,6 +7,44 @@ endblock %} {% block content %}
 <div class="flash flash-{{ category }}">{{ message }}</div>
 {% endfor %} {% endif %} {% endwith %}
 
+<div class="archived_fund_card">
+  <div class="jumbotron">
+    <div class="for_filter">
+      <h2 style="margin-bottom: 1rem">Donors <b>Details</b></h2>
+    </div>
+
+    <div class="table-card">
+      <table class="table table-striped" id="logs_table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Donation</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        {% for row in archived_fund_list %}
+        <tbody>
+          <tr>
+            <td>{{ row.id }}</td>
+            <td>{{ row.name }}</td>
+            <td>{{ row.donation}}</td>
+            <td>{{row.date }}</td>
+          </tr>
+        </tbody>
+        {% endfor %}
+      </table>
+      <p id="noRecordsMessage" style="display: none">No records found.</p>
+
+    </div>
+    <!--end add modal account-->
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+  </div>
+  <!--end jumbotron-->
+</div>
+
+
+
 <div class="fund_details_card">
   <div class="fund_details_box">
     <h2 style="margin-bottom: 1rem">CESU <b>Fundraising Details</b></h2>
