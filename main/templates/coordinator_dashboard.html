@@ -31,9 +31,13 @@
     <link rel="stylesheet" href="/static/css/cDlfiles.css">
     <link rel="stylesheet" href="/static/css/cResources.css">
     <link rel="stylesheet" href="/static/css/cEdit_profile.css">
+<<<<<<< HEAD
+    <link rel="stylesheet" href="/static/css/help.css">
+=======
 
     <link rel="stylesheet" href="/static/css/cArchived_fund_card.css">
 
+>>>>>>> da49506e11ddf8effd38b6a5f4da2686233dfec7
 
     <link rel="stylesheet" href="/static/css/cFund.css">
     <link rel="stylesheet" href="/static/css/cFund_programs.css">
@@ -133,6 +137,15 @@
                         <a href="{{ url_for('coordinator.cProject_file_list') }}">Community projects file</a>
                     </div>
                 </div>
+
+                <div style="border-top: 1px solid #ccc; margin-top: 5rem;"></div>
+
+                <a href="{{ url_for('coordinator.chelp') }}" class="sidebar-link">
+                    <span class="material-symbols-outlined">
+                        contact_support
+                        </span>
+                    <h3>Help</h3>
+                </a>
 
             </div>
         </aside>

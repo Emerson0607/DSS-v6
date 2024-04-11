@@ -42,6 +42,7 @@
     <link rel="stylesheet" href="/static/css/fund_archived_details.css">
     <link rel="stylesheet" href="/static/css/pending_fund_details.css">
     <link rel="stylesheet" href="/static/css/fund_programs.css">
+    <link rel="stylesheet" href="/static/css/help.css">
 
     <link rel="stylesheet" href="/static/css/tooltip.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
@@ -159,6 +160,16 @@
                         <a class="blue-link" href="{{ url_for('dbModel.project_files') }}">Community projects file</a>
                     </div>
                 </div>
+
+                <div style="border-top: 1px solid #ccc; margin-top: 5rem;"></div>
+
+                <a href="{{ url_for('dbModel.help') }}" class="sidebar-link blue-link">
+                    <span class="material-symbols-outlined">
+                        contact_support
+                        </span>
+                    <h3>Help</h3>
+                </a>
+
 
             </div>
         </aside>

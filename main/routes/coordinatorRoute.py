@@ -1026,3 +1026,14 @@ def cDelete_resources(id):
     
     flash('Delete successfully!', 'delete_account')
     return redirect(url_for('coordinator.cResources'))
+
+
+###################################### HELPPP ME ##############################
+@coordinator_route.route("/chelp")
+def chelp():
+    
+     # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    return render_template("chelp.html")
