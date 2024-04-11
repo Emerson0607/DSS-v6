@@ -403,35 +403,34 @@
 
 <script>
   function filterByYear() {
-    var selectedYear = $("#year").val();
-    var recordsFound = false;
+        var selectedYear = $("#year").val();
+        var recordsFound = false;
 
-    // You can use AJAX to fetch data for the selected year and update the table accordingly
-    // For simplicity, let's assume the data is already present and just hide/show rows
-    $("#logs_table tbody tr").each(function () {
-      var rowYear = $(this).find("td:eq(4)").text().split("-")[0]; // Assuming the year is in the second column
-      if (rowYear === selectedYear || selectedYear === "All") {
-        $(this).show();
-        recordsFound = true;
-      } else {
-        $(this).hide();
-      }
-    });
+        $("#logs_table tbody tr").each(function () {
+            var rowYear = parseInt($(this).find("td:eq(3)").text().split('-')[0]);
+            if (rowYear === parseInt(selectedYear) || selectedYear === "All") {
+                $(this).show();
+                recordsFound = true;
+            } else {
+                $(this).hide();
+            }
+        });
 
-    // Display or hide the "No records found" message
-    if (recordsFound) {
-      $("#noRecordsMessage").hide();
-    } else {
-      $("#noRecordsMessage").show();
+        // Display or hide the "No records found" message
+        if (recordsFound) {
+            $("#noRecordsMessage").hide();
+        } else {
+            $("#noRecordsMessage").show();
+        }
     }
-  }
 
-  function showAllData() {
-    // Show all rows
-    $("#logs_table tbody tr").show();
+    function showAllData() {
+        // Show all rows
+        $("#logs_table tbody tr").show();
 
-    // Hide the "No records found" message
-    $("#noRecordsMessage").hide();
-  }
+        // Hide the "No records found" message
+        $("#noRecordsMessage").hide();
+    }
 </script>
+
 {% endblock %}

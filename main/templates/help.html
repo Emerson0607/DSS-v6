@@ -347,127 +347,114 @@
 <script>
     // For Change Profile Information
     function toggleExplanations() {
-        var explanations = document.getElementById("explanations");
-        if (explanations.style.display === "none" || explanations.style.display === "") { 
-            explanations.style.display = "block";
-        } else {
-            explanations.style.display = "none";
-        }
+        hideAllExcept("explanations");
+        toggle("explanations");
+        scrollToView("explanations");
     }
 
     // For Change Password
     function togglePasswordExplanations() {
-        var passwordExplanations = document.getElementById("password_explanations");
-        if (passwordExplanations.style.display === "none" || passwordExplanations.style.display === "") {
-            passwordExplanations.style.display = "block";
-        } else {
-            passwordExplanations.style.display = "none";
-        }
+        hideAllExcept("password_explanations");
+        toggle("password_explanations");
+        scrollToView("password_explanations");
     }
 
     // For Forgot Password
     function toggleForgotPasswordExplanations() {
-        var forgotPasswordExplanations = document.getElementById("forgot_password_explanations");
-        if (forgotPasswordExplanations.style.display === "none" || forgotPasswordExplanations.style.display === "") {
-            forgotPasswordExplanations.style.display = "block";
-        } else {
-            forgotPasswordExplanations.style.display = "none";
-        }
+        hideAllExcept("forgot_password_explanations");
+        toggle("forgot_password_explanations");
+        scrollToView("forgot_password_explanations");
     }
 
-     // For Creating Community
-     function toggleCommunityExplanations() {
-        var communityExplenations = document.getElementById("community_project");
-        if (communityExplenations.style.display === "none" || communityExplenations.style.display === "") { 
-            communityExplenations.style.display = "block";
-        } else {
-            communityExplenations.style.display = "none";
-        }
+    // For Creating Community
+    function toggleCommunityExplanations() {
+        hideAllExcept("community_project");
+        toggle("community_project");
+        scrollToView("community_project");
     }
 
     // For Creating CESU Plans and Programs
     function toggleCESUExplanations() {
-        var CESUExplanations = document.getElementById("CESU_Plans");
-        if (CESUExplanations.style.display === "none" || CESUExplanations.style.display === "") { 
-            CESUExplanations.style.display = "block";
-        } else {
-            CESUExplanations.style.display = "none";
-        }
+        hideAllExcept("CESU_Plans");
+        toggle("CESU_Plans");
+        scrollToView("CESU_Plans");
     }
-    
+
     // For Monitoring Extension/Out Reach Programs
     function toggleMonitoringExplanations() {
-        var MonitoringExplanations = document.getElementById("Monitoring");
-        if (MonitoringExplanations.style.display === "none" || MonitoringExplanations.style.display === "") { 
-            MonitoringExplanations.style.display = "block";
-        } else {
-            MonitoringExplanations.style.display = "none";
-        }
+        hideAllExcept("Monitoring");
+        toggle("Monitoring");
+        scrollToView("Monitoring");
     }
 
     // For Pending Projects
     function togglePendingExplanations() {
-        var PendingsExplanations = document.getElementById("Pendings");
-        if (PendingsExplanations.style.display === "none" || PendingsExplanations.style.display === "") { 
-            PendingsExplanations.style.display = "block";
-        } else {
-            PendingsExplanations.style.display = "none";
-        }
+        hideAllExcept("Pendings");
+        toggle("Pendings");
+        scrollToView("Pendings");
     }
 
     // For Users Accounts
     function toggleUsersExplanations() {
-        var UsersExplanations = document.getElementById("Users_Acc");
-        if (UsersExplanations.style.display === "none" || UsersExplanations.style.display === "") { 
-            UsersExplanations.style.display = "block";
-        } else {
-            UsersExplanations.style.display = "none";
-        }
+        hideAllExcept("Users_Acc");
+        toggle("Users_Acc");
+        scrollToView("Users_Acc");
     }
 
-     // For Program Recommendations
-     function togglePredictExplanations() {
-        var PredictExplanations = document.getElementById("Predict");
-        if (PredictExplanations.style.display === "none" || PredictExplanations.style.display === "") { 
-            PredictExplanations.style.display = "block";
-        } else {
-            PredictExplanations.style.display = "none";
-        }
+    // For Program Recommendations
+    function togglePredictExplanations() {
+        hideAllExcept("Predict");
+        toggle("Predict");
+        scrollToView("Predict");
     }
 
-     // For Fundraising
-     function toggleFundExplanations() {
-        var FundExplanations = document.getElementById("Fund");
-        if (FundExplanations.style.display === "none" || FundExplanations.style.display === "") { 
-            FundExplanations.style.display = "block";
-        } else {
-            FundExplanations.style.display = "none";
-        }
+    // For Fundraising
+    function toggleFundExplanations() {
+        hideAllExcept("Fund");
+        toggle("Fund");
+        scrollToView("Fund");
     }
 
     // For Logs
     function toggleLogsExplanations() {
-        var LogsExplanations = document.getElementById("Logs");
-        if (LogsExplanations.style.display === "none" || LogsExplanations.style.display === "") { 
-            LogsExplanations.style.display = "block";
+        hideAllExcept("Logs");
+        toggle("Logs");
+        scrollToView("Logs");
+    }
+
+    // For Files
+    function toggleFilesExplanations() {
+        hideAllExcept("Files");
+        toggle("Files");
+        scrollToView("Files");
+    }
+
+    // Function to hide all explanations except the given one
+    function hideAllExcept(id) {
+        var explanations = document.querySelectorAll(".explanations");
+        explanations.forEach(function(explanation) {
+            if (explanation.id !== id) {
+                explanation.style.display = "none";
+            }
+        });
+    }
+
+    // Function to toggle display of an explanation
+    function toggle(id) {
+        var element = document.getElementById(id);
+        if (element.style.display === "none" || element.style.display === "") {
+            element.style.display = "block";
         } else {
-            LogsExplanations.style.display = "none";
+            element.style.display = "none";
         }
     }
 
-
-
-     // For Files
-     function toggleFilesExplanations() {
-        var FilesExplanations = document.getElementById("Files");
-        if (FilesExplanations.style.display === "none" || FilesExplanations.style.display === "") { 
-            FilesExplanations.style.display = "block";
-        } else {
-            FilesExplanations.style.display = "none";
-        }
+    // Function to scroll to the expanded button
+    function scrollToView(id) {
+        var button = document.getElementById(id).previousElementSibling;
+        button.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-
-
 </script>
+
 
 {% endblock %}
