@@ -387,11 +387,11 @@ main .CcoordinatorCard .community-status {
         margin: 0 auto;
     }
 
-    .kaakbay-subprogram-title h1 {
+    .kaakbay-subprogram-title .out_reach {
         color: white;
-        margin-left: 2rem;
-        font-size: 2rem;
-        top: 4.5rem;
+        margin-left: 1rem;
+        font-size: 1.5rem;
+        top: 4.8rem;
     }
 
     /* For Checkboxes */

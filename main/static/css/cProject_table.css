@@ -58,7 +58,7 @@ main .Cproject_table_files table {
 
 main .Cproject_table_files table td {
     height: 2.8rem;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid lightgray !important;
     color: var(--color-dark);
     text-align: center;
 }

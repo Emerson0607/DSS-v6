@@ -2,6 +2,11 @@
 {% block title %}KAAKBAY Programs{% endblock %}
 {% block content %}
 
+<style>
+    .kaakbay_container .coordinator {
+        display: none !important;
+    }
+</style>
 
 <div class="kaakbay_container">
     <a class="literacy kaakbay_card" href="{{url_for('dbModel.coordinator', data='Literacy')}}">

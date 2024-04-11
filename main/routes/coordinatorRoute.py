@@ -517,8 +517,14 @@ def cDelete_pending(id):
 @coordinator_route.route('/cView_pending/<int:pending_id>', methods=['GET'])
 def cView_pending(pending_id):
     p = Pending_project.query.get(pending_id)
+    form = Form()
+    placeholder_choice = (p.program, p.program)
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    form=form
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form)
 
 @coordinator_route.route('/cView_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def cView_cpf(program, subprogram, community, cpf_filename):
@@ -760,8 +766,14 @@ def update_pending():
             flash('Pending updated successfully!', 'edit_account')
 
         p = Pending_project.query.get(pending_id)
+        form = Form()
+        placeholder_choice = (p.program, p.program)
+        form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form.program.default = ""
+        form.process()
+        form=form
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form)
 
 ############################### COORDINATOR COMMENTS ###############################
 @coordinator_route.route('/get_comments')

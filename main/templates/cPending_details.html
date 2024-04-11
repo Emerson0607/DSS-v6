@@ -26,10 +26,14 @@ with_categories=true) %}
                 <label>Community:</label>
                 <input type="text" class="form-control" name="community" value="{{community}}" required>
             </div>
+
+
             <div class="form-group">
                 <label>Program:</label>
-                <input type="text" class="form-control" name="program" value="{{program}}" readonly>
+                {{ form.program(class="form-select", value=form.program.default) }}
             </div>
+
+
             <div class="form-group">
                 <label>Sub-program:</label>
                 <input type="text" class="form-control" name="subprogram" value="{{subprogram}}" required>

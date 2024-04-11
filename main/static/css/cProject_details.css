@@ -74,6 +74,16 @@ main .Cproject_detailsCard .file-box a {
 
 }
 
+main .Cproject_detailsCard .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+}
+
+
 /* file upload button */
 .Cproject_detailsCard input[type="file"]::file-selector-button {
     border-radius: 4px;

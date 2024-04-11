@@ -336,9 +336,6 @@ main .fund_program_card .progress {
 .loader:before {
     content: "Completed";
     color: black;
-
-
-
 }
 
 .loader:after {
@@ -463,6 +460,7 @@ main .fund_program_card .save-button {
     position: absolute;
     bottom: 1rem;
     right: 2rem;
+    width: 5rem;
 
 }
 

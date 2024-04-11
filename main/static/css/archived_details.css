@@ -96,6 +96,15 @@ main .archived_details .file-box a {
     background-color: #e5e7eb;
 }
 
+.archived_details .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+}
+
 
 /* Style for submit button */
 .archived_details .btn-submit {

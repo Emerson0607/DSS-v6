@@ -48,6 +48,16 @@ main .fund_archived_details_card>div {
   transition: all 300ms ease;
 }
 
+
+.fund_archived_details_card .form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+
+}
+
 main .fund_archived_details_card .fund_details_box {
   padding: 3rem 5rem;
   padding-bottom: 6rem;

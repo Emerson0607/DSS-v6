@@ -57,7 +57,7 @@ main .projectFilesCard table {
 
 main .projectFilesCard table td {
     height: 2.8rem;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid lightgray !important;
     color: var(--color-dark);
     text-align: center;
 }

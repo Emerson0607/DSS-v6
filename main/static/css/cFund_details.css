@@ -38,6 +38,7 @@ main .fund_details_card {
   position: relative;
 }
 
+
 main .fund_details_card>div {
   background: var(--color-white);
   padding: var(--card-padding);
