@@ -117,6 +117,32 @@ main .manageUser table tr:last-child td {
     margin-bottom: 5rem;
 }
 
+/* For Scroll Bar */
+main .manageUser .modal-body::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .manageUser .modal-body::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .manageUser .modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .manageUser .modal-body::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
+
+
+
 /* Style for form labels and inputs */
 .manageUser .form-group label {
     font-weight: bold;
@@ -260,6 +286,32 @@ main .manageUser table tr:last-child td {
     overflow: auto;
     max-height: 20rem;
 }
+
+
+
+/* For Scroll Bar */
+main .manageUser .jumbo::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .manageUser .jumbo::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .manageUser .jumbo::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .manageUser .jumbo::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
 
 .manageUser .jumbotron {
     position: relative;
@@ -546,6 +598,29 @@ main .manageDepartment .jumbotron {
     width: 100%;
 }
 
+
+/* For Scroll Bar */
+main .manageDepartment .jumbo::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .manageDepartment .jumbo::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .manageDepartment .jumbo::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .manageDepartment .jumbo::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
 
 
 /*FOR DEPARTMENT TABLE -- END*/

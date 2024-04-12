@@ -987,7 +987,7 @@ main {
 
     .sidebar .fund_container .declined_fund_count {
         position: absolute;
-        right: 2rem;
+        right: 2rem !important;
     }
 
     aside .top .cesu-mobile {

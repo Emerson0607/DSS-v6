@@ -72,6 +72,30 @@ main .cesu_plans_Card .table-card {
     overflow: auto;
 }
 
+/* For Scroll Bar */
+main .cesu_plans_Card .table-card::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .cesu_plans_Card .table-card::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .cesu_plans_Card .table-card::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .cesu_plans_Card .table-card::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
+
 main .cesu_plans_Card>div:hover {
     box-shadow: none;
 }
@@ -130,6 +154,31 @@ main .cesu_plans_Card table tr:last-child td {
     /* Enable vertical scrolling when the content overflows */
     margin-bottom: 4rem;
 }
+
+/* For Scroll Bar */
+main .cesu_plans_Card .modal-body::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .cesu_plans_Card .modal-body::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .cesu_plans_Card .modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .cesu_plans_Card .modal-body::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
+
 
 /* Style for form labels and inputs */
 .cesu_plans_Card .form-group label {
@@ -209,7 +258,7 @@ main .cesu_plans_Card table tr:last-child td {
     /* Red background color */
     color: #fff;
     /* White text color */
-    padding: 5px 10px;
+    padding: 5px 10px !important;
     /* Adjust padding as needed */
     border: none;
     border-radius: 4px;

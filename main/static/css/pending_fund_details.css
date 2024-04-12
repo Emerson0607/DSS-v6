@@ -172,6 +172,15 @@ main .pending_fund_details_card .file-box a {
     bottom: 8.5rem;
 }
 
+.pending_fund_details_card .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+}
+
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px) {
     .pending_fund_details_card {

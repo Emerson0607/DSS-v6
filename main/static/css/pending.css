@@ -47,6 +47,32 @@ main .pendingCard .table-card {
     overflow: auto;
 }
 
+
+
+
+/* For Scroll Bar */
+main .pendingCard .table-card::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .pendingCard .table-card::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .pendingCard .table-card::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .pendingCard .table-card::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
 main .pendingCard .pendingBox>div:hover {
     box-shadow: none;
 }
@@ -71,7 +97,7 @@ main .pendingCard table tr:last-child td {
     /* Red background color */
     color: #fff;
     /* White text color */
-    padding: 5px 10px;
+    padding: 5px 10px !important;
     /* Adjust padding as needed */
     border: none;
     border-radius: 4px;

@@ -45,6 +45,31 @@ main .archived_table .table-card {
     overflow: auto;
 }
 
+
+/* For Scroll Bar */
+main .archived_table .table-card::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .archived_table .table-card::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .archived_table .table-card::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .archived_table .table-card::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
+
 main .archived_table>div:hover {
     box-shadow: none;
 }
@@ -71,7 +96,7 @@ main .archived_table .btn-delete1 {
     /* Red background color */
     color: #fff;
     /* White text color */
-    padding: 5px 10px;
+    padding: 5px 10px !important;
     /* Adjust padding as needed */
     border: none;
     border-radius: 4px;

@@ -1,5 +1,5 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs, Resources, Pending_fund
+from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs, Resources, Pending_fund, Archive
 from main import db
 from main import Form
 from flask import Response
@@ -84,6 +84,7 @@ def cCoordinator():
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
     return render_template("cCoordinator.html")
 
 ##################  FOR COMMUNITY CRUD  #######################
@@ -91,9 +92,9 @@ def cCoordinator():
 def cGet_community_data():
     try:
         # Retrieve the "program" parameter from the query string
-        program = request.args.get("program")
+        current_id = request.args.get("current_id")
 
-        if program:
+        if current_id:
             community_data = [
                 {
                     'community': record.community,
@@ -280,6 +281,95 @@ def cUpdate_status():
         community.status = status
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
+
+@coordinator_route.route('/cAdd_week', methods=['POST'])
+def cAdd_week():
+    data = request.get_json()
+    community = data['community']
+    subprogram = data['subprogram']
+    program = data['program']
+
+    # Query the database to get a single record with the specified subprogram
+    community_to_update = Community.query.filter_by(community=community, program=program, subprogram=subprogram).first()
+
+    if community_to_update:
+        # Update the status for the specific record
+        community_to_update.totalWeek = community_to_update.totalWeek + 1
+        db.session.commit()
+        return jsonify({'message': 'Status updated successfully.'})
+    else:
+        return jsonify({'message': 'Record not found.'}), 404
+
+@coordinator_route.route('/cArchive_project', methods=['POST'])
+def cArchive_project():
+
+    data = request.get_json()
+    community = data['community']
+    subprogram = data['subprogram']
+    program = data['program']
+    url = data.get('url', '')
+
+    # Validate URL
+    if url and not re.match(r'^https?://(?:www\.)?\w+\.\w+', url):
+        flash('Invalid URL format. Please enter a valid URL.', 'delete_account')
+        return jsonify({'error': 'Invalid URL format'})
+      
+    data_to_move = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+    # Iterate through the data and move it to CPFARCHIVE
+        
+        # Create a new row in CPFARCHIVE
+    new_row = Archive(
+        community=data_to_move.community, 
+        program=data_to_move.program, 
+        subprogram=data_to_move.subprogram, 
+        start_date=data_to_move.start_date,
+        end_date=data_to_move.end_date, 
+        week=data_to_move.week, 
+        totalWeek=data_to_move.totalWeek, 
+        user=data_to_move.user, 
+        department=data_to_move.department, 
+        subDepartment=data_to_move.subDepartment, 
+        status="Completed", 
+        budget = data_to_move.budget, 
+        cpf_filename=data_to_move.cpf_filename, 
+        cpf=data_to_move.cpf, 
+        cesap_filename=data_to_move.cesap_filename, 
+        cesap=data_to_move.cesap,
+        cna_filename = data_to_move.cna_filename, 
+        cna=data_to_move.cna,
+        department_A = data_to_move.department_A, 
+        volunteer=data_to_move.volunteer,
+        coordinator_id= data_to_move.coordinator_id,
+        url=url  # Assign the URL value
+    )
+    userlog = g.current_user
+    action = f'ARCHIVED {program} project of {community}'
+    ph_tz = pytz.timezone('Asia/Manila')
+    ph_time = datetime.now(ph_tz)
+    timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = convert_date1(timestamp1)
+    insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+    if insert_logs:
+        db.session.add(insert_logs)
+        db.session.commit()
+
+    db.session.add(new_row)
+    db.session.commit()
+
+    community_delete = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+    if community_delete:
+        try:
+                # Delete the user from the database
+            db.session.delete(community_delete)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+                # You may want to log the exception for debugging purposes
+    else:
+        flash('User not found. Please try again.', 'error')
+   
+
+    return jsonify({'message': 'Data archived.'})
 
 
 #display kaakbay program and coordinator
@@ -470,6 +560,32 @@ def cView_cesap_project(program, subprogram, community, cesap_filename):
                                 content_type="application/pdf")
         return response
     return "File not found", 404
+
+############################### COORDINATOR ARCHIVED FILES ###############################
+@coordinator_route.route("/cArchived_table")
+def cArchived_table():
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    # Dynamically generate the years
+    current_year = datetime.now().year
+    archived_file_list = Archive.query.filter_by(coordinator_id=g.current_id, status="Completed").all()
+    return render_template("cArchived_table.html", current_year=current_year, archived_file_list=archived_file_list)
+
+
+@coordinator_route.route("/cView_archived/<int:project_id>")
+def cView_archived(project_id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    p = Archive.query.get(project_id)
+
+    cpf_data_filename = p.cpf_filename
+    cesap_data_filename = p.cesap_filename
+    cna_data_filename = p.cna_filename
+
+    return render_template("cArchived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, url=p.url)
 
 
 
@@ -952,9 +1068,14 @@ def cResources():
     current_year = datetime.now().year
      # Fetch all user records from the database
     all_data = Resources.query.filter_by(coordinator_id=g.current_id).all()
-    program8 = Program.query.all()
-    user1 = Users.query.all()
-    return render_template("cResources.html", current_year=current_year, community = all_data)
+    form = Form()
+    placeholder_choice = ("", "-- Select Program --")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+
+    
+    return render_template("cResources.html", current_year=current_year, community = all_data, form=form)
 
 @coordinator_route.route("/cAdd_resources", methods=["POST"])
 def cAdd_resources():

@@ -38,6 +38,8 @@
 
     <link rel="stylesheet" href="/static/css/cFund_details.css">
     <link rel="stylesheet" href="/static/css/cPending_fund_details.css">
+    <link rel="stylesheet" href="/static/css/archived_table.css">
+    <link rel="stylesheet" href="/static/css/archived_details.css">
 
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
         type="image/x-icon">
@@ -127,6 +129,7 @@
                     </a>
                     <div class="coordinator_dropdown-content-files dropdown-content-files" id="dropdown-content-files">
                         <a href="{{ url_for('file.cFiles') }}">CESU files</a>
+                        <a class="green-link" href="{{ url_for('coordinator.cArchived_table') }}">Archived files</a>
                         <a class="green-link" href="{{ url_for('coordinator.cResources') }}">Resources</a>
                         <a href="{{ url_for('coordinator.cProject_file_list') }}">Community projects file</a>
                     </div>
@@ -219,9 +222,6 @@
                 fundraisingContent.style.display = "none"; // Close fundraising dropdown
             }
         }
-    </script>
-
-    <script>
         function toggleFundraising() {
             var dropdownContent = document.getElementById("fundraising-content-files");
             var filesDropdownContent = document.getElementById("dropdown-content-files");
@@ -234,7 +234,6 @@
             }
         }
     </script>
-
 
     <!--
 <script>

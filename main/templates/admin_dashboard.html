@@ -237,17 +237,27 @@
     <script>
         function toggleDropdownFile() {
             var dropdownContent = document.getElementById("dropdown-content-files");
-            dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
-        }
-    </script>
+            var fundraisingContent = document.getElementById("fundraising-content-files");
 
-    <script>
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+                fundraisingContent.style.display = "none"; // Close fundraising dropdown
+            }
+        }
         function toggleFundraising() {
             var dropdownContent = document.getElementById("fundraising-content-files");
-            dropdownContent.style.display = (dropdownContent.style.display === "block") ? "none" : "block";
+            var filesDropdownContent = document.getElementById("dropdown-content-files");
+
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+                filesDropdownContent.style.display = "none"; // Close files dropdown
+            }
         }
     </script>
-
 
 
 

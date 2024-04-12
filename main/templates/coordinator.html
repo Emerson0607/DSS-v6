@@ -18,6 +18,7 @@
 
     </div>
 </div>
+
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['existing_username', 'existing_program',
 'edit_account',
@@ -27,9 +28,11 @@
 <div class="flash flash-{{ category }}" style="margin-bottom: 1rem;">
     {{ message }}
 </div>
+
 {% endfor %}
 {% endif %}
 {% endwith %}
+
 <div class="kaakbay-subprogram-title">
 
     <h1>{{data}}</h1>
@@ -39,9 +42,8 @@
         </path>
     </svg>
 </div>
+
 <div class="coordinatorCard">
-
-
     <div class="insights-div ">
 
         <p class="community-status"></p>
@@ -86,29 +88,25 @@
         <!-- Add checkboxes and labels here -->
 
         <div class="checkboxes">
-            <form>
-                <div class="form-group">
-                    <!--  <label for=""> <br>Comment </label> -->
-                    <textarea class="form-control" id="textarea" rows="1" style="display: none;"></textarea>
-                    <br>
-                </div>
+            <form style="position: relative; margin-bottom: 1rem;">
+
                 <div class="checkbox-group">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="" value="">
                         <label class="label"></label>
                     </div>
                 </div>
-
-
-                <input type="text" class="link-input" placeholder="Enter Link" style="display: none;">
+                <input type="text" class="link-input form-control" placeholder="Enter Link" style="display: none;">
+                <button class="add-week-button">Add Week</button>
             </form>
         </div>
 
         <button class="btn btn-primary save-button">Save</button>
-        <button class="btn btn-primary archive-button">Archive</button>
+        <button class="archive-button">Archive</button>
     </div>
 
 </div>
+
 <div id="program-data" data-program="{{ data }}"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -153,6 +151,7 @@
                             insightsDiv.find(".save-button").css("display", "block");
                         } else if (statusText === 'Completed') {
 
+                            insightsDiv.find(".add-week-button").css("display", "none");
                             insightsDiv.find(".save-button").css("display", "none");
                             insightsDiv.find(".archive-button").css("display", "block");
                             insightsDiv.find(".link-input").css("display", "block");
@@ -258,6 +257,15 @@
                                     updatePercentage();
 
                                 }
+                            }
+                        });
+
+                        // Add a click event handler for saving data to the database
+                        insightsDiv.find(".add-week-button").click(function () {
+
+                            var userConfirmed = confirm("Are you sure you want to proceed?");
+                            if (userConfirmed) {
+                                add_week();
                             }
                         });
 
@@ -376,6 +384,26 @@
 
 
 
+                        }
+
+                        function add_week() {
+                            $.ajax({
+                                url: "/add_week",
+                                method: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    community: record.community,
+                                    subprogram: record.subprogram,
+                                    program: record.program
+                                }),
+                                success: function (response) {
+                                    console.log("Week updated successfully.");
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    console.error("Failed to update week: " + error);
+                                }
+                            });
                         }
 
                         function update_status() {

@@ -93,8 +93,16 @@ with_categories=true) %}
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Coordinator:</label>
-                                    <select class="form-select" name="user" id="userSelect" required>
+                                    <label>Coordinator: </label><br />
+                                    <select class="form-select" name="user" id="coordinator_selected">
+                                        <option value="" selected disabled>
+                                            -- Select Coordinator --
+                                        </option>
+                                        {% for coordinator in coordinators %}
+                                        <option value="{{ coordinator.firstname }} {{ coordinator.lastname }}">
+                                            {{ coordinator.firstname }} {{ coordinator.lastname }}
+                                        </option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                                 <!-- DATE -->

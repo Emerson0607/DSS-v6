@@ -41,7 +41,7 @@ main .kaakbay_container>a {
     margin-top: 1rem;
     box-shadow: var(--box-shadow);
     transition: all 400ms ease;
-    height: 12.7rem;
+    height: 15rem;
     cursor: pointer;
 }
 
@@ -61,12 +61,13 @@ main .kaakbay_container>a:hover {
     text-align: left;
     display: flex;
     align-items: center;
+    padding: 3rem 0 3rem 0;
 }
 
 
 .kaakbay_container .kaakbay_title h1 {
     color: white;
-    font-size: 1.3rem;
+    font-size: 2rem;
     margin-left: 2rem;
 }
 
@@ -78,7 +79,8 @@ main .kaakbay_container>a:hover {
 }
 
 .kaakbay_container .kaakbay_content {
-    margin: 1rem;
+    margin: 2rem;
+
 }
 
 .kaakbay_container .text-muted {
@@ -95,7 +97,7 @@ main .kaakbay_container .status {
 
 main .kaakbay_container .status h2 {
     text-align: center;
-    font-size: 12px;
+    font-size: 1.5rem;
 
 }
 
@@ -108,9 +110,10 @@ main .kaakbay_container .statusNumber {
 }
 
 main .kaakbay_container .statusNumber h2 {
-    margin-top: 1rem;
+
     text-align: center;
-    font-weight: 500
+    font-weight: 500;
+    font-size: 2rem;
 }
 
 main .kaakbay_container .status span {
@@ -123,7 +126,7 @@ main .kaakbay_card .status .green {
 
 
 main .kaakbay_card .status .orange {
-    color: rgb(220, 140, 55);
+    color: #0b61e3;
 }
 
 @media screen and (max-width: 400px) {
@@ -144,17 +147,13 @@ main .kaakbay_card .status .orange {
     }
 
     main .kaakbay_container .kaakbay_title h1 {
-        font-size: 1.5rem;
+        font-size: 2rem;
         margin-left: 1rem;
     }
 
     main .kaakbay_container .status h2 {
-        margin-top: 1rem;
+
         text-align: center;
-
     }
-
-
-
 
 }

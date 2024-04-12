@@ -1287,6 +1287,7 @@ def update_week():
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
 
+
 ############################### UPDATE STATUS BASED FROM Subprogram ###############################
 @dbModel_route.route('/update_status', methods=['POST'])
 def update_status():
@@ -1302,6 +1303,26 @@ def update_status():
     if community_to_update:
         # Update the status for the specific record
         community_to_update.status = status
+        db.session.commit()
+        return jsonify({'message': 'Status updated successfully.'})
+    else:
+        return jsonify({'message': 'Record not found.'}), 404
+
+
+########################### UPDATE TOTAL WEEK ##############################333
+@dbModel_route.route('/add_week', methods=['POST'])
+def add_week():
+    data = request.get_json()
+    community = data['community']
+    subprogram = data['subprogram']
+    program = data['program']
+
+    # Query the database to get a single record with the specified subprogram
+    community_to_update = Community.query.filter_by(community=community, program=program, subprogram=subprogram).first()
+
+    if community_to_update:
+        # Update the status for the specific record
+        community_to_update.totalWeek = community_to_update.totalWeek + 1
         db.session.commit()
         return jsonify({'message': 'Status updated successfully.'})
     else:
@@ -2381,7 +2402,7 @@ def deploy():
                     cna=data_to_move.cna,
                     department_A = data_to_move.department_A, 
                     volunteer=data_to_move.volunteer,
-                    coordinator_id=data_to_move.current_id
+                    coordinator_id=data_to_move.coordinator_id
             )
 
             userlog = g.current_user
@@ -2581,6 +2602,7 @@ def resources():
     form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
     form.program.default = ""
     form.process()
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -2591,7 +2613,8 @@ def resources():
     all_data = Resources.query.all()
     program8 = Program.query.all()
     user1 = Users.query.all()
-    return render_template("resources.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1)
+    coordinators = Users.query.filter_by(role='Coordinator').all()
+    return render_template("resources.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1, coordinators=coordinators)
 
 @dbModel_route.route("/add_resources", methods=["POST"])
 def add_resources():
@@ -2616,6 +2639,15 @@ def add_resources():
             flash('Invalid URL format. Please enter a valid URL starting with http:// or https:// and containing a valid domain.', 'existing_community')
             return redirect(url_for('dbModel.resources'))
         
+        coordinator_names = user.split()
+        coordinator_first_name = coordinator_names[0]
+        coordinator_last_name = coordinator_names[-1] if len(coordinator_names) > 1 else None
+
+        coordinator_name = Users.query.filter(
+            Users.firstname.startswith(coordinator_first_name),
+            Users.lastname.startswith(coordinator_last_name)
+        ).first()
+        
         #Convert date
         date = convert_date(date1)
     
@@ -2623,7 +2655,7 @@ def add_resources():
 
         if existing_resources is None:
         
-            new_resources = Resources(community=community, program=program, user=user, date=date, activity=activity, url=url)
+            new_resources = Resources(community=community, program=program, user=user, date=date, activity=activity, url=url, coordinator_id=coordinator_name.id)
 
             userlog = g.current_user
             action = f'ADDED new {program} project resources.'

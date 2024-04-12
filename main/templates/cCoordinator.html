@@ -6,19 +6,33 @@
         text-decoration: line-through;
     }
 </style>
+
 <div class="notfound1">
     <div class="notfound">
-
         <div class="no-data">
             <h1>No Data Found</h1>
-
-            <p>Sorry, but there is no data available at the moment. Go back to the<a
-                    href="{{url_for('coordinator.cCoordinator')}}"> Community Project</a> page.</p>
+            <p>Sorry, but there is no data available at the moment. Go back to the
+                <a href="{{url_for('coordinator.cCoordinator')}}"> Community Project</a>page.
+            </p>
         </div>
 
     </div>
 </div>
+
 <div class="margin-top"></div>
+{% with messages = get_flashed_messages(category_filter=['existing_username', 'existing_program',
+'edit_account',
+'delete_account', 'add_account', 'password_space', 'username_space'], with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="flash flash-{{ category }}" style="margin-bottom: 1rem;">
+    {{ message }}
+</div>
+
+{% endfor %}
+{% endif %}
+{% endwith %}
+
 <div class="kaakbay-subprogram-title">
 
     <h1 class="out_reach">CESU OUT REACH PROGRAMS</h1>
@@ -28,8 +42,11 @@
         </path>
     </svg>
 </div>
+
+
 <div class="CcoordinatorCard">
-    <div class="insights-div">
+    <div class="insights-div ">
+
         <p class="community-status"></p>
         <div class="community-subprogram-title">
             <div class="subLogo">
@@ -72,26 +89,26 @@
         <!-- Add checkboxes and labels here -->
 
         <div class="checkboxes">
-            <form>
-                <div class="form-group">
-                    <label for=""> <br>Comment </label>
-                    <textarea class="form-control" id="textarea" rows="1" style="display: none;"></textarea>
-                    <br>
-                </div>
+            <form style="position: relative; margin-bottom: 1rem;">
+
                 <div class="checkbox-group">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="" value="">
                         <label class="label"></label>
                     </div>
                 </div>
-
+                <input type="text" class="link-input form-control" placeholder="Enter Link" style="display: none;">
+                <button class="add-week-button">Add Week</button>
             </form>
         </div>
+
         <button class="btn btn-primary save-button">Save</button>
+        <button class="archive-button">Archive</button>
     </div>
 
 </div>
-<div id="program-data" data-program="{{ current_program }}"></div>
+
+<div id="coordinator-data" data-coordinator="{{ current_id }}"></div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
@@ -100,13 +117,13 @@
     });
 
     function function_name() {
-        var program = $("#program-data").data("program");
-        console.log(program);
+        var currentId = $("#coordinator-data").data("coordinator");
+
         $.ajax({
             url: "/cGet_community_data",
             method: "GET",
             dataType: "json",
-            data: { program: program },
+            data: { current_id: currentId },
             success: function (data) {
                 if (data.message === 'No data found for the program.') {
                     console.log('No data found.');
@@ -130,9 +147,15 @@
                         var colorClass = statusText === 'Ongoing' ? 'text-orange' : 'text-green';
 
                         if (statusText === 'Ongoing') {
+
+                            insightsDiv.find(".archive-button").css("display", "none");
                             insightsDiv.find(".save-button").css("display", "block");
                         } else if (statusText === 'Completed') {
+
+                            insightsDiv.find(".add-week-button").css("display", "none");
                             insightsDiv.find(".save-button").css("display", "none");
+                            insightsDiv.find(".archive-button").css("display", "block");
+                            insightsDiv.find(".link-input").css("display", "block");
                         }
 
                         // Update the content within the newly created insights-div
@@ -223,12 +246,70 @@
 
                         // Add a click event handler for saving data to the database
                         insightsDiv.find(".save-button").click(function () {
+
                             var userConfirmed = confirm("Are you sure you want to proceed?");
+
+
                             if (userConfirmed) {
                                 // Execute update_status and updatePercentage if the user confirmed
-                                updatePercentage();
+                                if (record.week === record.totalWeek) {
+                                    update_status();
+                                } else {
+                                    updatePercentage();
+
+                                }
                             }
                         });
+
+                        // Add a click event handler for saving data to the database
+                        insightsDiv.find(".add-week-button").click(function () {
+
+                            var userConfirmed = confirm("Are you sure you want to proceed?");
+                            if (userConfirmed) {
+                                add_week();
+                            }
+                        });
+
+                        // archive project
+                        insightsDiv.find(".archive-button").click(function () {
+                            // Select the input field based on its parent container
+                            var linkInput = insightsDiv.find(".link-input").val().trim();
+
+                            if (linkInput === "") {
+                                console.log("URL is empty.");
+                                alert("Please enter a URL before archiving the project.");
+                            } else {
+                                var userConfirmed = confirm("Are you sure you want to proceed?");
+                                if (userConfirmed) {
+                                    // Execute update_status and updatePercentage if the user confirmed
+                                    archive_project(linkInput); // Pass the URL input value to the archive_project function
+                                }
+                            }
+                        });
+
+                        function archive_project(url) {
+                            var recordStatus = "Completed";
+                            $.ajax({
+                                url: "/cArchive_project",
+                                method: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    community: record.community,
+                                    program: record.program,
+                                    subprogram: record.subprogram,
+                                    status: recordStatus,
+                                    url: url // Include the URL in the data to be sent to the server
+                                }),
+                                success: function (response) {
+                                    console.log("Status updated successfully.");
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    console.error("Failed to update status: ");
+                                    alert("Invalid URL format. Please enter a valid URL starting with http:// or https:// and containing a valid domain.");
+                                }
+                            });
+                        }
 
                         var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
                         var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
@@ -236,6 +317,7 @@
                         insightsDiv.find(".number").text(percentage + "%");
 
                         function updatePercentage() {
+
                             var checkedCheckboxes = checkboxGroup.find("input:checkbox:checked").length;
                             var totalCheckboxes = checkboxGroup.find("input:checkbox").length;
                             var percentage = Math.floor((checkedCheckboxes * 100) / totalCheckboxes);
@@ -252,7 +334,7 @@
                                 var recordStatus = "Completed";
 
                                 $.ajax({
-                                    url: "/cUpdate_status", // Use an appropriate URL for updating the status
+                                    url: "/update_status", // Use an appropriate URL for updating the status
                                     method: "POST",
                                     contentType: "application/json",
                                     data: JSON.stringify({
@@ -281,7 +363,7 @@
                             }
 
                             $.ajax({
-                                url: "/cUpdate_week",
+                                url: "/update_week",
                                 method: "POST",
                                 contentType: "application/json",
                                 data: JSON.stringify({
@@ -298,11 +380,34 @@
                                     console.error("Failed to update week: " + error);
                                 }
                             });
+
+
+
+
+
                         }
 
+                        function add_week() {
+                            $.ajax({
+                                url: "/cAdd_week",
+                                method: "POST",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    community: record.community,
+                                    subprogram: record.subprogram,
+                                    program: record.program
+                                }),
+                                success: function (response) {
+                                    console.log("Week updated successfully.");
+                                    location.reload();
+                                },
+                                error: function (error) {
+                                    console.error("Failed to update week: " + error);
+                                }
+                            });
+                        }
 
                         function update_status() {
-
                             var recordStatus = "Completed";
 
                             $.ajax({
@@ -317,6 +422,7 @@
                                 }),
                                 success: function (response) {
                                     console.log("Status updated successfully.");
+                                    location.reload();
                                 },
                                 error: function (error) {
                                     console.error("Failed to update status: " + error);
@@ -343,6 +449,7 @@
                         }
 
 
+                        // Inside the loop where you create insightsDiv elements
                         var iconText = "analytics"; // Default icon text
 
 
@@ -374,6 +481,10 @@
                                 iconText = "compare";
                                 break;
                         }
+                        //hanggang dito
+
+
+                        // Update the text inside the span element to reflect the icon text
                         insightsDiv.find(".material-symbols-sharp").text(iconText);
 
                         insightsContainer.append(insightsDiv);
@@ -381,10 +492,9 @@
                     });
 
                     insightsContainer.find("> div:first-child").css("display", "none");
-
-
-
                 }
+
+
             },
             error: function () {
                 console.log("Failed to load community data.");
