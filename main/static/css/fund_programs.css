@@ -185,13 +185,11 @@ main .jumbotron:hover {
     box-shadow: none;
 }
 
-
 .fund_program_card .table-card1 {
     max-height: 15rem;
     overflow: auto;
     margin-bottom: 2rem;
 }
-
 
 /* For Scroll Bar */
 main .fund_program_card .table-card1::-webkit-scrollbar {

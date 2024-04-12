@@ -1,6 +1,8 @@
 {% extends "admin_dashboard.html" %}
 {% block title %}Community{% endblock %}
 {% block content %}
+
+
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['delete_account', 'add_community', 'existing_community'],
 with_categories=true) %}
@@ -184,12 +186,14 @@ with_categories=true) %}
         <!--end add modal account-->
         <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div> <!--end jumbotron-->
+
+
+
 </div>
-
 <!--FOR BUDGET-->
-
-
-
+<div class="budget_card">
+    <button class="btn_budget">Budget</button>
+</div>
 
 <div class="insights">
     <div class="insights-div">
