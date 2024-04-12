@@ -226,6 +226,13 @@
                                     var nameLabel = $("<label>").addClass("form-label").text("Name");
                                     var nameInput = $("<input>").attr("type", "text").addClass("form-control name-input");
 
+                                    nameInput.on("input", function () {
+                                        // Remove any non-alphabetic characters and multiple spaces from the input
+                                        var inputValue = $(this).val().replace(/[^A-Za-z\s]+|(\s){2,}/g, "$1");
+                                        // Update the input field value
+                                        $(this).val(inputValue);
+                                    });
+
                                     // Donation input and its wrapper
                                     var donationWrapper = $("<div>").addClass("donation-wrapper custom-class");
                                     var donationLabel = $("<label>").addClass("form-label").text("Donation");

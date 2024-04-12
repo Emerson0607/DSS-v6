@@ -179,6 +179,30 @@ main .cCommunity .table-card {
     overflow: auto;
 }
 
+/* For Scroll Bar */
+main .cCommunity .table-card::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .cCommunity .table-card::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .cCommunity .table-card::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .cCommunity .table-card::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
+
 main .cCommunity>div:hover {
 
     box-shadow: none;
@@ -239,6 +263,29 @@ main .cCommunity table tr:last-child td {
     overflow-y: auto;
     /* Enable vertical scrolling when the content overflows */
     margin-bottom: 4rem;
+}
+
+/* For Scroll Bar */
+main .cCommunity .modal-body::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .cCommunity .modal-body::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .cCommunity .modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .cCommunity .modal-body::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
 }
 
 /* Style for form labels and inputs */

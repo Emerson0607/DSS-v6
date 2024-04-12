@@ -71,6 +71,30 @@ main .resources_Card1 .jumbotron1 .table-card {
     overflow: auto;
 }
 
+
+/* For Scroll Bar */
+main .resources_Card1 .table-card::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .resources_Card1 .table-card::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .resources_Card1 .table-card::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .resources_Card1 .table-card::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
 main .resources_Card1>div:hover {
     box-shadow: none;
 }
@@ -134,6 +158,35 @@ main .resources_Card1 table tr:last-child td {
     /* Enable vertical scrolling when the content overflows */
     margin-bottom: 4rem;
 }
+
+
+
+/* For Scroll Bar */
+main .resources_Card1 .modal-body::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .resources_Card1 .modal-body::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .resources_Card1 .modal-body::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .resources_Card1 .modal-body::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
+
+
+
 
 /* Style for form labels and inputs */
 .resources_Card1 .form-group label {

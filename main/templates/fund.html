@@ -99,7 +99,7 @@
                 <label class="PPA label-category">FUNDRAISING PROJECT</label>
                 <div class="form-group">
                   <label>Project Name:</label>
-                  <input type="text" class="form-control" name="project_name" required />
+                  <input type="text" class="form-control letters-with-space-input" name="project_name" required />
                 </div>
                 <div class="form-group">
                   <label>Program:</label>
@@ -403,34 +403,34 @@
 
 <script>
   function filterByYear() {
-        var selectedYear = $("#year").val();
-        var recordsFound = false;
+    var selectedYear = $("#year").val();
+    var recordsFound = false;
 
-        $("#logs_table tbody tr").each(function () {
-            var rowYear = parseInt($(this).find("td:eq(3)").text().split('-')[0]);
-            if (rowYear === parseInt(selectedYear) || selectedYear === "All") {
-                $(this).show();
-                recordsFound = true;
-            } else {
-                $(this).hide();
-            }
-        });
+    $("#logs_table tbody tr").each(function () {
+      var rowYear = parseInt($(this).find("td:eq(3)").text().split('-')[0]);
+      if (rowYear === parseInt(selectedYear) || selectedYear === "All") {
+        $(this).show();
+        recordsFound = true;
+      } else {
+        $(this).hide();
+      }
+    });
 
-        // Display or hide the "No records found" message
-        if (recordsFound) {
-            $("#noRecordsMessage").hide();
-        } else {
-            $("#noRecordsMessage").show();
-        }
+    // Display or hide the "No records found" message
+    if (recordsFound) {
+      $("#noRecordsMessage").hide();
+    } else {
+      $("#noRecordsMessage").show();
     }
+  }
 
-    function showAllData() {
-        // Show all rows
-        $("#logs_table tbody tr").show();
+  function showAllData() {
+    // Show all rows
+    $("#logs_table tbody tr").show();
 
-        // Hide the "No records found" message
-        $("#noRecordsMessage").hide();
-    }
+    // Hide the "No records found" message
+    $("#noRecordsMessage").hide();
+  }
 </script>
 
 {% endblock %}

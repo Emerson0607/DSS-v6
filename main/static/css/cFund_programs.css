@@ -200,6 +200,46 @@ main .jumbotron:hover {
 
 }
 
+.fund_program_card .donor_details {
+    overflow: auto;
+
+    max-height: 15rem;
+    margin-bottom: 2.5rem;
+}
+
+.fund_program_card .donor_list {
+    width: 95%;
+    margin-left: 0.5rem;
+}
+
+
+/* For Scroll Bar */
+main .fund_program_card .donor_details::-webkit-scrollbar {
+    width: 10px;
+    /* Width of the scrollbar */
+}
+
+main .fund_program_card .donor_details::-webkit-scrollbar-thumb {
+    background-color: #888;
+    /* Color of the thumb */
+    border-radius: 5px;
+    /* Rounded corners */
+}
+
+main .fund_program_card .donor_details::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+    /* Color of the thumb on hover */
+}
+
+main .fund_program_card .donor_details::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the track */
+}
+
+
+
+
+
 .fund_program_card .table-card1 thead {
     text-align: left;
 }

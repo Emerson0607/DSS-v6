@@ -845,6 +845,8 @@ def cGet_fund_data():
         print(str(e))
         return make_response("Internal Server Error", 500)
 
+
+############3## FOR CASH #####################333
 @fundraising_route.route('/cash_update_fund', methods=['POST'])
 def cash_update_fund():
     data = request.get_json()
@@ -918,9 +920,6 @@ def cash_update_fund():
 
 @fundraising_route.route('/cash_archive_fund', methods=['POST'])
 def cash_archive_fund():
-    if g.current_role != "Admin" and g.current_role != "BOR":
-        return redirect(url_for('dbModel.login'))
-
     data = request.get_json()
     fund_id = data['id']
     project_name = data['project_name']
@@ -1041,9 +1040,6 @@ def inkind_update_fund():
 
 @fundraising_route.route('/inkind_archive_fund', methods=['POST'])
 def inkind_archive_fund():
-    if g.current_role != "Admin" and g.current_role != "BOR":
-        return redirect(url_for('dbModel.login'))
-
     data = request.get_json()
     fund_id = data['id']
     project_name = data['project_name']
@@ -1133,3 +1129,287 @@ def inkind_archive_fund():
     else:
         flash('User not found. Please try again.', 'error')
     return jsonify({'message': 'Data archived.'})
+
+# ################# FOR COORDINATOR - FUNDRAISING PROGRAMS ###################
+# @fundraising_route.route('/cCash_update_fund', methods=['POST'])
+# def cCash_update_fund():
+#     data = request.get_json()
+#     fund_id = data['id']
+#     status = data['status']
+#     project_name = data['project_name']
+#     donation_type = data['donation_type']
+#     donors = data['donors']
+
+#     # Query the database to get the fundraising record
+#     fund_update = Fundraising.query.get(fund_id)
+
+#     if donation_type == 'Cash':
+#         cash_list = []
+
+#         total_donation = 0
+#         donation_date = None  # Initialize the donation date variable
+
+#         # Iterate through the donors' data to calculate total donation and extract donation date
+#         for donor in donors:
+#             donation_amount = float(donor['donation'].replace(',', ''))
+#             total_donation += donation_amount
+#             cash_list.append(round(donation_amount, 2))
+#             # Extract the donation date from the first donor's data
+#             if not donation_date:
+#                 donation_date = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
+
+#         print("Total Donation:", total_donation)
+
+#         # Create a new record in the Cash_list table with the total donation and donation date
+#         if donation_date:
+#             new_cash_record = Cash_list(total_cash=total_donation, date=donation_date, program=fund_update.program)
+#             db.session.add(new_cash_record)
+#             db.session.commit()
+
+#             # Update Total_budget table
+#         total_budget = Total_budget.query.filter_by(program=fund_update.program, budget_type="Donation").first()
+#         if total_budget:
+#             # If a record exists, update the total cash
+#             total_budget.total += total_donation
+#         else:
+#             # If no record exists, create a new one
+#             total_budget = Total_budget(program=fund_update.program,  budget_type="Donation", total=total_donation, date=donation_date)
+#             db.session.add(total_budget)
+#             db.session.commit()
+#             # Update Total_budget table
+#         budget = Budget.query.filter_by(budget_type="Donation").first()
+#         if budget:
+#             # If a record exists, update the total cash
+#             budget.total += total_donation
+#         else:
+#             # If no record exists, create a new one
+#             budget = Budget(budget_type="Donation", total=total_donation, date=donation_date)
+#             db.session.add(budget)
+#             db.session.commit()
+        
+#     if fund_update:
+#         # Update the status for the specific record
+#         fund_update.status = status
+
+#         # Add donor data
+#         for donor in donors:
+#             date1 = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
+#             new_donor = Donor_cash(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1, project_name=project_name)
+#             db.session.add(new_donor)
+
+#         db.session.commit()
+#         return jsonify({'message': 'Status updated successfully.'})
+#     else:
+#         return jsonify({'message': 'Record not found.'}), 404
+
+# @fundraising_route.route('/cCash_archive_fund', methods=['POST'])
+# def cCash_archive_fund():
+#     data = request.get_json()
+#     fund_id = data['id']
+#     project_name = data['project_name']
+#     program = data['program']
+#     coordinator = data['coordinator']
+#     status = data['status']
+#     url = data.get('url', '')
+
+#     # Validate URL
+#     if url and not re.match(r'^https?://(?:www\.)?\w+\.\w+', url):
+#         flash('Invalid URL format. Please enter a valid URL.', 'delete_account')
+#         return jsonify({'error': 'Invalid URL format'})
+      
+#     data_to_move = Fundraising.query.filter_by(id=fund_id).first()
+#     # Iterate through the data and move it to CPFARCHIVE
+        
+#         # Create a new row in CPFARCHIVE
+#     new_row = Archive_fund(
+#         program = data_to_move.program,
+#         coordinator = data_to_move.coordinator,
+#         project_name = data_to_move.project_name,
+#         proposed_date = data_to_move.proposed_date,
+#         target_date = data_to_move.target_date,
+#         venue = data_to_move.venue,
+#         event_organizer = data_to_move.event_organizer,
+#         lead_proponent = data_to_move.lead_proponent,
+#         contact_details = data_to_move.contact_details,
+#         donation_type = data_to_move.donation_type,
+#         status = data_to_move.status,
+#         url = url,
+#         coordinator_id = data_to_move.coordinator_id
+#     )
+    
+#     # Retrieve all donor records from Donor_cash based on the fund_id
+#     donors_to_move = Donor_cash.query.filter_by(project_name=project_name, program=program).all()
+    
+#     # Iterate over each donor record and move it to Donor_cash_total
+#     for donor_to_move in donors_to_move:
+#         new_row1 = Donor_cash_total(
+#             fund_id=donor_to_move.fund_id,
+#             program=donor_to_move.program,
+#             project_name=donor_to_move.project_name,
+#             name=donor_to_move.name,
+#             donation=donor_to_move.donation,
+#             date=donor_to_move.date
+#         )
+#             # Add the new row to the session
+#         db.session.add(new_row1)
+#     # Commit the changes to move all donor records
+#     db.session.commit()
+    
+#     userlog = g.current_user
+#     action = f'ARCHIVED {project_name} project of {program}'
+#     ph_tz = pytz.timezone('Asia/Manila')
+#     ph_time = datetime.now(ph_tz)
+#     timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+#     timestamp = convert_date1(timestamp1)
+#     insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+#     if insert_logs:
+#         db.session.add(insert_logs)
+#         db.session.commit()
+
+#     db.session.add(new_row)
+#     db.session.commit()
+
+#     fund_delete = Fundraising.query.filter_by(id=fund_id).first()
+#     donor_delete = Donor_cash.query.filter_by(project_name=project_name, program=program).delete()
+#     if fund_delete:
+#         try:
+#                 # Delete the user from the database
+#             db.session.delete(fund_delete)
+#             db.session.commit()
+#         except Exception as e:
+#             db.session.rollback()
+#                 # You may want to log the exception for debugging purposes
+#     else:
+#         flash('User not found. Please try again.', 'error')
+        
+#     if donor_delete:
+#         try:
+#                 # Delete the user from the database
+#             db.session.delete(donor_delete)
+#             db.session.commit()
+#         except Exception as e:
+#             db.session.rollback()
+#                 # You may want to log the exception for debugging purposes
+#     else:
+#         flash('User not found. Please try again.', 'error')
+#     return jsonify({'message': 'Data archived.'})
+
+# ############## FOR INKIND ######################
+# @fundraising_route.route('/Cinkind_update_fund', methods=['POST'])
+# def Cinkind_update_fund():
+#     data = request.get_json()
+#     fund_id = data['id']
+#     status = data['status']
+#     project_name = data['project_name']
+#     donation_type = data['donation_type']
+#     donors = data['donors']
+
+#     # Query the database to get the fundraising record
+#     fund_update = Fundraising.query.get(fund_id)
+
+#     if fund_update:
+#         # Update the status for the specific record
+#         fund_update.status = status
+
+#         # Add donor data
+#         for donor in donors:
+#             date1 = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
+#             new_donor = Donor_inkind(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1, project_name=project_name)
+#             db.session.add(new_donor)
+
+#         db.session.commit()
+#         return jsonify({'message': 'Status updated successfully.'})
+#     else:
+#         return jsonify({'message': 'Record not found.'}), 404
+
+# @fundraising_route.route('/Cinkind_archive_fund', methods=['POST'])
+# def Cinkind_archive_fund():
+#     data = request.get_json()
+#     fund_id = data['id']
+#     project_name = data['project_name']
+#     program = data['program']
+#     coordinator = data['coordinator']
+#     status = data['status']
+#     url = data.get('url', '')
+
+#     # Validate URL
+#     if url and not re.match(r'^https?://(?:www\.)?\w+\.\w+', url):
+#         flash('Invalid URL format. Please enter a valid URL.', 'delete_account')
+#         return jsonify({'error': 'Invalid URL format'})
+      
+#     data_to_move = Fundraising.query.filter_by(id=fund_id).first()
+#     # Iterate through the data and move it to CPFARCHIVE
+        
+#         # Create a new row in CPFARCHIVE
+#     new_row = Archive_fund(
+#         program = data_to_move.program,
+#         coordinator = data_to_move.coordinator,
+#         project_name = data_to_move.project_name,
+#         proposed_date = data_to_move.proposed_date,
+#         target_date = data_to_move.target_date,
+#         venue = data_to_move.venue,
+#         event_organizer = data_to_move.event_organizer,
+#         lead_proponent = data_to_move.lead_proponent,
+#         contact_details = data_to_move.contact_details,
+#         donation_type = data_to_move.donation_type,
+#         status = data_to_move.status,
+#         url = url,
+#         coordinator_id = data_to_move.coordinator_id
+#     )
+    
+#     # Retrieve all donor records from Donor_cash based on the fund_id
+#     donors_to_move = Donor_inkind.query.filter_by(project_name=project_name, program=program).all()
+    
+#     # Iterate over each donor record and move it to Donor_cash_total
+#     for donor_to_move in donors_to_move:
+#         new_row1 = Donor_inkind_total(
+#             fund_id=donor_to_move.fund_id,
+#             program=donor_to_move.program,
+#             project_name=donor_to_move.project_name,
+#             name=donor_to_move.name,
+#             donation=donor_to_move.donation,
+#             date=donor_to_move.date
+#         )
+#             # Add the new row to the session
+#         db.session.add(new_row1)
+#     # Commit the changes to move all donor records
+#     db.session.commit()
+    
+#     userlog = g.current_user
+#     action = f'ARCHIVED {project_name} project of {program}'
+#     ph_tz = pytz.timezone('Asia/Manila')
+#     ph_time = datetime.now(ph_tz)
+#     timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+#     timestamp = convert_date1(timestamp1)
+#     insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
+#     if insert_logs:
+#         db.session.add(insert_logs)
+#         db.session.commit()
+
+#     db.session.add(new_row)
+#     db.session.commit()
+
+#     fund_delete = Fundraising.query.filter_by(id=fund_id).first()
+#     donor_delete = Donor_inkind.query.filter_by(project_name=project_name, program=program).delete()
+#     if fund_delete:
+#         try:
+#                 # Delete the user from the database
+#             db.session.delete(fund_delete)
+#             db.session.commit()
+#         except Exception as e:
+#             db.session.rollback()
+#                 # You may want to log the exception for debugging purposes
+#     else:
+#         flash('User not found. Please try again.', 'error')
+        
+#     if donor_delete:
+#         try:
+#                 # Delete the user from the database
+#             db.session.delete(donor_delete)
+#             db.session.commit()
+#         except Exception as e:
+#             db.session.rollback()
+#                 # You may want to log the exception for debugging purposes
+#     else:
+#         flash('User not found. Please try again.', 'error')
+#     return jsonify({'message': 'Data archived.'})
