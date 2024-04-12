@@ -735,6 +735,37 @@ def update_pending_fund():
 
     return render_template("cPending_fund_details.html",form=form, id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, comments=p.comments )
 
+######################## Archived fundraising for coordinator #############################
+@fundraising_route.route("/cArchived_fund")
+def cArchived_fund():
+    # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    current_year = datetime.now().year
+    archived_fund_list = Archive_fund.query.filter_by(coordinator_id=g.current_id).all()
+
+    # Render the template with the current year and the next four years
+    return render_template("cArchived_fund.html",current_year=current_year, archived_fund_list=archived_fund_list)
+
+@fundraising_route.route("/cView_archived_fund/<int:fund_id>")
+def cView_archived_fund(fund_id):
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    p = Archive_fund.query.filter_by(id=fund_id).first()
+
+    if p.donation_type == "Cash":
+        archived_fund_list = Donor_cash_total.query.filter_by(project_name=p.project_name, program=p.program).all()
+    else:
+        archived_fund_list = Donor_inkind_total.query.filter_by(project_name=p.project_name, program=p.program).all()
+    
+    return render_template("cFund_archived_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, url=p.url, archived_fund_list=archived_fund_list)
+
+
+
 ######################## fundraising programs #############################
 @fundraising_route.route('/fund_programs')
 def fund_programs():

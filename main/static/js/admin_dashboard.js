@@ -55,13 +55,16 @@ const flashes = document.querySelectorAll('.flash');
 flashes.forEach(function(flash) {
     setTimeout(function() {
         flash.style.opacity = 0;
+        flash.style.height = '0';
+        flash.style.width = '0';
+        flash.style.padding = '0';
+        flash.style.margin = '0';
+        flash.style.border = 'none';
         flash.addEventListener('transitionend', function() {
             flash.remove();
         });
-        window.location.reload();
     }, 3000);
 });
-
 
 // Tooltips (using jQuery)
 $(document).ready(function() {

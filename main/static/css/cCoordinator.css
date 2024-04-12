@@ -171,8 +171,6 @@ main .CcoordinatorCard .checkboxes::-webkit-scrollbar-track {
     /* Color of the track */
 }
 
-
-
 /* For Checkboxes */
 main .CcoordinatorCard .checkbox-group {
     display: grid;
