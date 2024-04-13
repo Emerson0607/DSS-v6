@@ -22,6 +22,7 @@ with_categories=true) %}
                 style="float: right;">
                 <span class="material-symbols-sharp" style="float: right;">add</span>
             </button>
+
         </h2>
         <div class="table-card">
             <table class="table" id="data-table">
@@ -98,20 +99,23 @@ with_categories=true) %}
                                     <input type="number" class="form-control mobile-input" name="totalWeek" required>
                                 </div>
                                 <br>
-                                <div class="form-group">
-                                    <p id="notification" style="color: red; font-style: italic;"></p>
-                                    <label for="budget">Budget:</label>
-                                    <input type="text" class="form-control" id="budget" name="budget" required>
-                                </div>
-                                <br>
-                                <!-- ACCOUNTABILITY 
-                                    <label class="accountability label-category">ACCOUNTABILITY</label><br>
-                                    <div class="form-group">
-                                        <label>Coordinator:</label>
-                                        <select class="form-select" name="user" id="userSelect" required>
+                                <div class="form-group budget_type_box">
+                                    <div class="budget_type_card ">
+                                        <select id="budget_type" class="form-control" name="budget_type" required>
+                                            <option value="" disabled selected>Budget Type</option>
+                                            <option value="Donation">Donation</option>
+                                            <option value="Budget">Budget</option>
                                         </select>
                                     </div>
-                                -->
+                                    <div class="budget_value">
+                                        <p id="notification" style="color: red; font-style: italic;"></p>
+                                        <input placeholder="Enter amount" type="text" class="form-control" id="budget"
+                                            name="budget" required>
+                                        <p class="small"> available budget: 1.10</p>
+                                    </div>
+                                </div>
+                                <br>
+
 
                                 <div class="form-group">
                                     <label>Coordinator: </label><br />
@@ -186,13 +190,13 @@ with_categories=true) %}
         <!--end add modal account-->
         <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div> <!--end jumbotron-->
-
-
-
 </div>
+
 <!--FOR BUDGET-->
 <div class="budget_card">
-    <button class="btn_budget">Budget</button>
+    <a href="{{ url_for('dbModel.budget') }} " class="btn_budget manrope">
+        Budget
+    </a>
 </div>
 
 <div class="insights">
@@ -237,6 +241,12 @@ with_categories=true) %}
     </div>
 </div>
 
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -308,6 +318,53 @@ with_categories=true) %}
     });
 </script>
 
+
+<!--FOR BUDGET-->
+<script>
+    // Event listener for form submission
+    $('#upload-form').submit(function (event) {
+        event.preventDefault();  // Prevent the form from submitting by default
+
+        // Extract program, budgetType, and budgetAmount from the form fields
+        var program = $('select[name="program"]').val();
+        var budgetType = $('select[name="budget_type"]').val();
+        var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
+
+        // Check the budget balance
+        checkBudgetBalance(program, budgetType, budgetAmount);
+    });
+
+
+    // Function to check if the current program's budget balance is sufficient
+    function checkBudgetBalance(program, budgetType, budgetAmount) {
+        // Get the current program's total budget from the server using AJAX
+        $.ajax({
+            url: "/get_current_program_budget",  // Replace with your endpoint to get the current program's budget
+            method: "POST",
+            data: {
+                program: program,
+                budgetType: budgetType
+            },
+            dataType: "json",
+            success: function (response) {
+                var currentBudget = response.currentBudget;
+
+                // Compare the current program's budget with the entered budget amount
+                if (currentBudget < budgetAmount) {
+                    alert("Insufficient balance!");  // Show alert if the balance is insufficient
+                } else {
+                    // Proceed with the form submission if the balance is sufficient
+                    $('#upload-form').off("submit").submit(); // Remove previous submit handler and submit the form
+                }
+            },
+            error: function () {
+                console.log("Failed to fetch current program's budget.");
+            }
+        });
+    }
+</script>
+
+
 <!--VOLUNTEERS-->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -348,12 +405,6 @@ with_categories=true) %}
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 </script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
 
 <script>
     $(document).ready(function () {

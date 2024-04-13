@@ -30,6 +30,12 @@ main .communityCard {
     max-height: 60%;
 }
 
+.budget_type_box {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 10rem auto;
+}
+
 main .communityCard>div {
     background: var(--color-white);
     padding: var(--card-padding);
@@ -48,19 +54,119 @@ main .budget_card {
     padding: 0 0 0 0;
     width: 100%;
     position: relative;
+    margin-bottom: 3.3rem;
+}
+
+.manrope {
+    font-family: "Manrope", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-style: normal;
 }
 
 main .budget_card .btn_budget {
     position: absolute;
-    right: 2%;
-    color: rgb(39, 46, 183);
+    right: 2rem;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+    padding: 0 8px;
+    min-width: 64px;
+    height: 36px;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
     background-color: transparent;
-    padding: 0.2rem 0.7rem 0.2rem 0.7rem;
-    font-weight: 800;
-    font-family: poppins, sans-serif;
+
+    font-size: 14px;
+
+    line-height: 36px;
+    overflow: hidden;
+    outline: none;
     cursor: pointer;
-    font-size: 1rem;
+
 }
+
+.btn_budget::-moz-focus-inner {
+    border: none;
+}
+
+/* Overlay */
+.btn_budget::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: currentColor;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+/* Ripple */
+.btn_budget::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    padding: 50%;
+    width: 32px;
+    height: 32px;
+    background-color: currentColor;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1);
+    transition: opacity 1s, transform 0.5s;
+}
+
+/* Hover, Focus */
+.btn_budget:hover::before {
+    opacity: 0.04;
+}
+
+.btn_budget:focus::before {
+    opacity: 0.12;
+}
+
+.btn_budget:hover:focus::before {
+    opacity: 0.16;
+}
+
+/* Active */
+.btn_budget:active::after {
+    opacity: 0.16;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0s;
+}
+
+/* Disabled */
+.btn_budget:disabled {
+    color: rgba(var(--pure-material-onsurface-rgb, 0, 0, 0), 0.38);
+    background-color: transparent;
+    cursor: initial;
+}
+
+.btn_budget:disabled::before {
+    opacity: 0;
+}
+
+.btn_budget:disabled::after {
+    opacity: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 main .insights {
     display: grid;
@@ -192,7 +298,7 @@ main .insights small {
 
 
 main .communityCard .table-card {
-    max-height: 35rem;
+    max-height: 20rem;
     overflow: auto;
 }
 
@@ -516,6 +622,11 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     main .insights>div {
         width: 90%;
         margin: 0 auto;
+    }
+
+
+    main .budget_card {
+        margin-bottom: 4rem;
     }
 }
 

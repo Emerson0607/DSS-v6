@@ -9,7 +9,7 @@ import secrets
 """
 flask db init
 
-flask db migrate -m "added new column coordinator_id"
+flask db migrate -m "budget_type column added"
 flask db upgrade
 
 
@@ -18,7 +18,6 @@ flask db downgrade
 """
 
 migrate = Migrate(app, db)
-
 
 class Resources(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,6 +52,7 @@ class Community(db.Model):
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
     coordinator_id = db.Column(db.Integer, nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -118,6 +118,7 @@ class Pending_project(db.Model):
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
     coordinator_id = db.Column(db.Integer, nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
 
 class Plan(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -143,6 +144,7 @@ class Plan(db.Model):
     department_A = db.Column(db.String(255), nullable=True)
     volunteer = db.Column(db.Integer, nullable=True)
     coordinator_id = db.Column(db.Integer, nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
 
 class Archive(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -168,6 +170,7 @@ class Archive(db.Model):
     volunteer = db.Column(db.Integer, nullable=True)
     url = db.Column(db.String(255), nullable=True)
     coordinator_id = db.Column(db.Integer, nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
 
 # FOR FUNDRAISING TABLE
 class Fundraising(db.Model):
@@ -269,21 +272,55 @@ class Cash_list(db.Model):
 class Total_budget(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     program = db.Column(db.String(255), nullable=True)
-    budget_type = db.Column(db.Integer, nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
     total = db.Column(db.Integer, nullable=True)
     date = db.Column(db.Date, nullable=True)
 
+class Current_total_budget(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
+    total = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+
+class Program_cost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
+    total_cost = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+
+########### ALL BUDGET (HINDI NABABAWASAN) ############
 class Budget(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    budget_type = db.Column(db.Integer, nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
     total = db.Column(db.Integer, nullable=True)
     date = db.Column(db.Date, nullable=True)
 
+########### ALL BUDGET (NABABAWASAN) ############
+class Current_Budget(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    budget_type = db.Column(db.String(255), nullable=True)
+    total = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+
+########### ALL BUDGET (HINDI NADADAGDAGAN) ############
 class Budget_cost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     program = db.Column(db.String(255), nullable=True)
-    budget_type = db.Column(db.Integer, nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
     total_cost = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
+    
+class Budget_program_cost(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=True)
+    subprogram = db.Column(db.String(255), nullable=True)
+    community = db.Column(db.String(255), nullable=True)
+    budget_type = db.Column(db.String(255), nullable=True)
+    budget = db.Column(db.Integer, nullable=True)
+    cost = db.Column(db.Integer, nullable=True)
+    balance = db.Column(db.Integer, nullable=True)
     date = db.Column(db.Date, nullable=True)
 
 # --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
@@ -447,6 +484,7 @@ def initialize_database():
     # insert_userx()
     # insert_pending()
     # delete_data()
+
     return "Program."
 
 

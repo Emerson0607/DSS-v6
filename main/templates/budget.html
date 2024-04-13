@@ -1,0 +1,306 @@
+{% extends "admin_dashboard.html" %} {% block title %} FUNDRAISING {% endblock
+%} {% block content %}
+<div class="margin-top"></div>
+{% with messages = get_flashed_messages(category_filter=['delete_account',
+'add_community', 'existing_community'], with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div class="flash flash-{{ category }}">{{ message }}</div>
+{% endfor %} {% endif %} {% endwith %}
+
+
+<div class="budget_container">
+    <div class="jumbotron">
+        <div class="for_filter">
+            <h2 style="margin-bottom: 1rem"><b>Budget</b></h2>
+            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right">
+                <span class="material-symbols-sharp" style="float: right">add</span>
+            </button>
+
+            <select id="yearDropdown">
+                {% for year in budget_years_with_placeholder %}
+                <option value="{{ year[0] }}">{{ year[1] }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        <div class="budget_card">
+            <div class="total_budget_card">
+                <div class="budget_details">
+                    <p class="small">{{fund_total}} + {{budget_total}}</p>
+                    <h1>{{total_budget_same_year}}</h1>
+                    <h3 class="budget_title">Total Budget</h3>
+
+                </div>
+            </div>
+            <div class="total_cost_card">
+                <div class="budget_details">
+                    <p class="small">Fund + Budget</p>
+                    <h1>1000</h1>
+                    <h3 class="budget_title">Total Cost</h3>
+                </div>
+            </div>
+            <div class="current_budget_card">
+                <div class="budget_details">
+                    <p class="small">{{fund_current_year_value}} + {{budget_current_total_value}}</p>
+                    <h1>{{total_current_same_year}}</h1>
+                    <h3 class="budget_title">Current Budget</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div id="mymodal" class="modal" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Budget Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="budget_top">
+                                <div class="form-group">
+                                    <label>Total</label>
+                                    <input type="text" class="form-control budget-input" id="total_budget"
+                                        name="total_budget" required />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Year:</label>
+                                    <input type="text" class="form-control" name="date" id="start_date_input"
+                                        placeholder="Select Date..." required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="programs">CESU Programs</label>
+                                <div class="program_budget">
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="literacy" required />
+                                        <label>Literacy</label>
+                                    </div>
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="socio" required />
+                                        <label>Socio-economic</label>
+                                    </div>
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="environment"
+                                            required />
+                                        <label class="small_text">Environmental Stewardship</label>
+                                    </div>
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="health" required />
+                                        <label>Health and Wellness</label>
+                                    </div>
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="cultural" required />
+                                        <label>Cultural Enhancement</label>
+                                    </div>
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="values" required />
+                                        <label>Values Formation</label>
+                                    </div>
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="disaster" required />
+                                        <label>Disaster Management</label>
+                                    </div>
+                                    <div class="program_input">
+                                        <input type="text" class="form-control budget-input" name="gender" required />
+                                        <label class="small_text">Gender and Development</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn-submit" id="btn_budget">
+                                    Create Budget
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal">
+                            <span class="material-symbols-sharp">close</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end add modal account-->
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+</div>
+<!--end jumbotron-->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function () {
+        date_picker();
+        budget_validation();
+
+
+
+        // Add a click event handler for saving data to the database
+        $("#btn_budget").click(function () {
+            var userConfirmed = confirm("Are you sure you want to proceed?");
+            if (userConfirmed) {
+                create_budget();
+            }
+        });
+
+        function create_budget() {
+            // Retrieve values from input fields
+
+            var literacy_budget = $("input[name='literacy']").val();
+            var socio_budget = $("input[name='socio']").val();
+            var environment_budget = $("input[name='environment']").val();
+            var health_budget = $("input[name='health']").val();
+            var cultural_budget = $("input[name='cultural']").val();
+            var values_budget = $("input[name='values']").val();
+            var disaster_budget = $("input[name='disaster']").val();
+            var gender_budget = $("input[name='gender']").val();
+
+            var total_budget_string = $("#total_budget").val(); // Get the value of total_budget
+            var total_budget = parseFloat(total_budget_string.replace(/,/g, '')); // Convert to float and remove commas
+
+            var date = $("#start_date_input").val().toString();
+
+
+            // AJAX request
+            $.ajax({
+                url: "/create_budget",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    date: date,
+                    total_budget: total_budget,
+                    literacy_budget: literacy_budget,
+                    socio_budget: socio_budget,
+                    environment_budget: environment_budget,
+                    health_budget: health_budget,
+                    cultural_budget: cultural_budget,
+                    values_budget: values_budget,
+                    disaster_budget: disaster_budget,
+                    gender_budget: gender_budget
+                }),
+                success: function (response) {
+                    console.log("walang error");
+                    location.reload(); // Reload the page after successful creation
+
+                },
+                error: function (error) {
+                    console.log(total_budget);
+                    console.error("Failed to create budget: " + error);
+                }
+            });
+        }
+
+
+
+    });
+</script>
+<script>
+
+    $(document).ready(function () {
+        // Trigger budget distribution when the total budget input changes
+        $('#total_budget').on('input', function () {
+            distributeBudget();
+        });
+    });
+    function distributeBudget() {
+        // Get the total budget entered by the user and remove commas
+        var totalBudget = parseFloat($('#total_budget').val().replace(/,/g, ''));
+
+        // Count the number of program inputs
+        var programCount = $('.budget-input').length;
+
+        // Calculate the budget for each program
+        var budgetPerProgram = totalBudget / (programCount - 1); // Subtract 1 for the total budget input
+
+        // Update the value of each program input with the calculated budget
+        $('.budget-input').not('#total_budget').val(budgetPerProgram.toFixed(2));
+    }
+
+</script>
+
+<script>
+    //date picker
+    var startDateInput;
+    function date_picker() {
+        flatpickr("#start_date_input", {
+            onChange: function (selectedDates, dateStr, instance) {
+                // Enable the "End date" input and set the minimum date to the selected "Start date"
+                flatpickr("#end_date_input", {
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "F j, Y",
+                    minDate: dateStr,
+                });
+            },
+        });
+
+        startDateInput = flatpickr("#start_date_input", {
+            dateFormat: "Y-m-d",
+            altInput: true,
+            altFormat: "F j, Y",
+            minDate: "today",
+            onChange: function (selectedDates, dateStr, instance) {
+                // Enable the "End date" input and set the minimum date to the selected "Start date"
+                flatpickr("#end_date_input", {
+                    dateFormat: "Y-m-d",
+                    altInput: true,
+                    altFormat: "F j, Y",
+                    minDate: dateStr,
+                });
+            },
+        });
+
+        flatpickr("#end_date_input", {
+            disable: [
+                ({ day, month, year }) =>
+                    startDateInput.selectedDates.length === 0 ||
+                    startDateInput.selectedDates[0].getTime() !==
+                    new Date(year, month, day).getTime(),
+            ],
+        });
+    }
+
+    function budget_validation() {
+        // Select all input fields with class "budget-input"
+        var budgetInputs = $(".budget-input");
+
+        budgetInputs.on("input", function () {
+            // Remove any non-digit characters from the input
+            var inputValue = $(this).val().replace(/[^\d.]/g, '');
+
+            // Prevent adding leading zeros
+            if (inputValue.length > 1 && inputValue[0] === '0') {
+                inputValue = inputValue.slice(1);
+            }
+
+            // If the input is empty or starts with a decimal point, prepend "0"
+            if (inputValue === "" || inputValue[0] === ".") {
+                inputValue = "0" + inputValue;
+            }
+
+            // Limit to one decimal point
+            var parts = inputValue.split('.');
+            if (parts.length > 1) {
+                parts = [parts[0], parts[1].slice(0, 2)]; // Limit digits after decimal to two
+                inputValue = parts.join('.');
+            }
+
+            // Format the input value with thousands separator and ".00" for decimal values
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            inputValue = parts.join('.');
+
+            // Update the input field value
+            $(this).val(inputValue);
+        });
+    }
+</script>
+
+{% endblock %}

@@ -1,10 +1,10 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department, Resources, Pending_fund
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department, Resources, Pending_fund, Fundraising, Budget, Total_budget, Current_Budget, Current_total_budget, Budget_cost, Budget_program_cost, Program_cost
 from main import db
 from flask import Response
 import secrets
 from datetime import datetime, timedelta
-from sqlalchemy import func, case
+from sqlalchemy import func, case, extract
 from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
@@ -821,6 +821,7 @@ def add_community():
         volunteer = request.form.get("volunteer")
         status = "Ongoing"
         budget = request.form.get("budget")
+        budget_type = request.form.get("budget_type")
 
         #Convert date
         start_date = convert_date(start_date1)
@@ -849,8 +850,49 @@ def add_community():
 
             new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id, budget_type=budget_type)
+            
+            budget_to_float = budget.replace(",", "")
+            budget_float = round(float(budget_to_float), 2)
+            budget_year = start_date.year
+            
+            ################ FOR BUDGET #################
+            total_budget_cost = Budget_cost.query.filter(Budget_cost.budget_type == budget_type, extract('year', Budget_cost.date) == budget_year, Budget_cost.program == program).first()
+        
+            if total_budget_cost:
+                total_budget_cost.total_cost += budget_float
+            else:
+                total_budget_cost = Budget_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                db.session.add(total_budget_cost)
+            
+            update_current_budget = Current_Budget.query.filter(Current_Budget.budget_type == budget_type, extract('year', Current_Budget.date) == budget_year).first()
+        
+            if update_current_budget:
+                update_current_budget.total -= budget_float
 
+            ################ FOR PROGRAMS BUDGET #################
+            total_program_cost = Program_cost.query.filter(Program_cost.budget_type == budget_type, extract('year', Program_cost.date) == budget_year, Program_cost.program == program).first()
+        
+            if total_program_cost:
+                total_program_cost.total_cost += budget_float
+            else:
+                total_program_cost = Program_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                db.session.add(total_program_cost)
+            
+            update_current_programs_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == budget_type, extract('year', Current_total_budget.date) == budget_year, Current_total_budget.program == program).first()
+            
+            if update_current_programs_budget:
+                update_current_programs_budget.total -= budget_float
+            
+            
+             ################ FOR PROGRAMS LIQUIDATION #################
+            existing_liquidation = Budget_program_cost.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+
+            if existing_liquidation is None:
+                add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
+                db.session.add(add_liquidation)
+                db.session.commit()
+            
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} .'
             ph_tz = pytz.timezone('Asia/Manila')
@@ -875,7 +917,38 @@ def add_community():
         return redirect(url_for('dbModel.manage_community'))
     return redirect(url_for('dbModel.manage_community'))
 
-#EDIT COMMUNITY NOT NEEDED SO COMMENT 
+
+@dbModel_route.route('/get_current_program_budget', methods=['POST'])
+def get_current_program_budget():
+    program = request.form.get('program')
+    budget_type = request.form.get('budgetType')
+
+    current_program_budget = Current_total_budget.query.filter_by(program=program, budget_type=budget_type).first()
+
+    if current_program_budget:
+        total = current_program_budget.total
+    else:
+        total = 0
+
+    return jsonify({'currentBudget': total})
+
+# @dbModel_route.route('/checkProject', methods=['POST'])
+# def checkProject():
+#     program = request.form.get('program')
+#     community = request.form.get('community')
+#     subprogram = request.form.get('subprogram')  # Corrected variable name
+
+#     existing_community = Community.query.filter_by(program=program, subprogram=subprogram, community=community).first()
+
+#     # Set the flag based on whether the project exists or not
+#     flag = existing_community is not None
+
+#     # Return the flag as part of a JSON response
+#     return jsonify({"flag": flag})
+
+
+
+#EDIT COMMUNITY NOT NEEDED SO COMMENT checkProject
 '''
 @dbModel_route.route('/edit_community', methods=['POST'])
 def edit_community():
@@ -1602,7 +1675,7 @@ def view_project(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("project_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("project_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, budget=p.budget, budget_type=p.budget_type)
 
 @dbModel_route.route("/delete_project/<int:project_id>")
 def delete_project(project_id):
@@ -2726,3 +2799,128 @@ def help():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     return render_template("help.html")
+
+####################################### BUDGET ######################################
+@dbModel_route.route("/budget")
+def budget():
+        # Check if the user is an admin
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    # Check if the user is logged in
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
+    form = Form()
+    placeholder_choice = ("", "-- Select Program --")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    form=form
+
+    coordinators = Users.query.filter_by(role='Coordinator').all()
+    current_year = datetime.now().year
+    fund_list = Fundraising.query.all()
+    
+    # Retrieve all unique years from the Budget table
+    all_years = Budget.query.with_entities(extract('year', Budget.date)).distinct()
+
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+
+
+    
+    ############################ FOR TOTAL BUDGET ##############################
+    # Retrieve all budgets with the same year as the current date
+    budgets_same_year = Budget.query.filter(extract('year', Budget.date) == current_year).all()
+    total_budget_same_year = sum(budget.total for budget in budgets_same_year)
+    budget_total = Budget.query.filter(Budget.budget_type == "Budget", extract('year', Budget.date) == current_year).first()
+    fund_total = Budget.query.filter(Budget.budget_type == "Donation", extract('year', Budget.date) == current_year).first()
+    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
+    budget_total_value = "{:.2f}".format(budget_total.total) if budget_total else "0.00"
+    fund_total_value = "{:.2f}".format(fund_total.total) if fund_total else "0.00"
+        
+    ############################ FOR CURRENT BUDGET ##############################
+    current_same_year = Current_Budget.query.filter(extract('year', Current_Budget.date) == current_year).all()
+    total_current_same_year = sum(current.total for current in current_same_year)
+    budget_current_total = Current_Budget.query.filter(Current_Budget.budget_type == "Budget", extract('year', Current_Budget.date) == current_year).first()
+    fund_current_total = Current_Budget.query.filter(Current_Budget.budget_type == "Donation", extract('year', Current_Budget.date) == current_year).first()
+    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
+    budget_current_total_value = "{:.2f}".format(budget_current_total.total) if budget_current_total else "0.00"
+    fund_current_year_value = "{:.2f}".format(fund_current_total.total) if fund_current_total else "0.00"
+    
+    # Render the template with the current year and the next four years
+    return render_template("budget.html", form=form, current_year=current_year, budget_years_with_placeholder=budget_years_with_placeholder,total_budget_same_year=total_budget_same_year, budget_total=budget_total_value,fund_total=fund_total_value,budget_current_total_value=budget_current_total_value,fund_current_year_value=fund_current_year_value, total_current_same_year=total_current_same_year)
+
+@dbModel_route.route('/create_budget', methods=['POST'])
+def create_budget():
+    data = request.get_json()
+
+    total_budget_amount = data['total_budget']
+    literacy_budget = data['literacy_budget']
+    socio_budget = data['socio_budget']
+    environment_budget = data['environment_budget']
+    health_budget = data['health_budget']
+    cultural_budget = data['cultural_budget']
+    values_budget = data['values_budget']
+    disaster_budget = data['disaster_budget']
+    gender_budget = data['gender_budget']
+    
+    date1 = str(data['date'])
+    date = convert_date(date1)
+
+    budget_year = date.year
+    
+    create_total_budget = Budget.query.filter(Budget.budget_type == "Budget", extract('year', Budget.date) == budget_year).first()
+    if create_total_budget:
+        create_total_budget.total += total_budget_amount
+    else:
+        create_total_budget = Budget(budget_type="Budget", total=total_budget_amount, date=date)
+        db.session.add(create_total_budget)
+        
+        
+    create_current_budget = Current_Budget.query.filter(Current_Budget.budget_type == "Budget", extract('year', Current_Budget.date) == budget_year).first()
+    if create_current_budget:
+        create_current_budget.total += total_budget_amount
+    else:
+        create_current_budget = Current_Budget(budget_type="Budget", total=total_budget_amount, date=date)
+        db.session.add(create_current_budget)
+    
+    # Handling each program
+    programs = {
+        "Literacy": literacy_budget,
+        "Socio-economic": socio_budget,
+        "Environmental Stewardship": environment_budget,
+        "Health and Wellness": health_budget,
+        "Cultural Enhancement": cultural_budget,
+        "Values Formation": values_budget,
+        "Disaster Management": disaster_budget,
+        "Gender and Development": gender_budget
+    }
+    
+    for program, budget in programs.items():
+        budget_float = round(float(budget), 2)  # Convert budget to float
+        
+        total_budget_program = Total_budget.query.filter(Total_budget.budget_type == "Budget", extract('year', Total_budget.date) == budget_year, Total_budget.program == program).first()
+        
+        if total_budget_program:
+            total_budget_program.total += budget_float
+        else:
+            total_budget_program = Total_budget(budget_type="Budget", total=budget_float, date=date, program=program)
+            db.session.add(total_budget_program)
+            
+        current_total_budget_program = Current_total_budget.query.filter(Current_total_budget.budget_type == "Budget", extract('year', Current_total_budget.date) == budget_year, Current_total_budget.program == program).first()
+        
+        if current_total_budget_program:
+            current_total_budget_program.total += budget_float
+        else:
+            current_total_budget_program = Current_total_budget(budget_type="Budget", total=budget_float, date=date, program=program)
+            db.session.add(current_total_budget_program)
+
+    db.session.commit()
+
+    return jsonify({'message': 'Budget created successfully'})
+
+            

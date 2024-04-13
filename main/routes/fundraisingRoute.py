@@ -1,10 +1,10 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund, Donor_cash, Donor_cash_total, Donor_inkind, Donor_inkind_total, Cash_list, Total_budget, Budget, Budget_cost
+from main.models.dbModel import Program, Pending_project, Users, Logs, Fundraising, Archive_fund, Pending_fund, Donor_cash, Donor_cash_total, Donor_inkind, Donor_inkind_total, Cash_list, Total_budget, Budget, Budget_cost, Current_Budget, Current_total_budget
 from main import db
 from flask import Response
 import secrets
 from datetime import datetime, timedelta
-from sqlalchemy import func, case
+from sqlalchemy import func, case, extract
 from mailbox import Message
 from main import Form, app, mail
 from flask_mail import Mail, Message
@@ -764,8 +764,6 @@ def cView_archived_fund(fund_id):
     
     return render_template("cFund_archived_details.html",id=p.id, project_name=p.project_name, program=p.program, venue=p.venue, proposed_date=p.proposed_date, target_date=p.target_date, coordinator=p.coordinator, event_organizer=p.event_organizer, lead_proponent=p.lead_proponent, contact_details=p.contact_details, donation_type=p.donation_type, url=p.url, archived_fund_list=archived_fund_list)
 
-
-
 ######################## fundraising programs #############################
 @fundraising_route.route('/fund_programs')
 def fund_programs():
@@ -876,7 +874,6 @@ def cGet_fund_data():
         print(str(e))
         return make_response("Internal Server Error", 500)
 
-
 ############3## FOR CASH #####################333
 @fundraising_route.route('/cash_update_fund', methods=['POST'])
 def cash_update_fund():
@@ -895,7 +892,7 @@ def cash_update_fund():
 
         total_donation = 0
         donation_date = None  # Initialize the donation date variable
-
+        
         # Iterate through the donors' data to calculate total donation and extract donation date
         for donor in donors:
             donation_amount = float(donor['donation'].replace(',', ''))
@@ -913,8 +910,11 @@ def cash_update_fund():
             db.session.add(new_cash_record)
             db.session.commit()
 
-            # Update Total_budget table
-        total_budget = Total_budget.query.filter_by(program=fund_update.program, budget_type="Donation").first()
+
+        date_year = donation_date.year
+        
+        ############################ FOR TOTAL BUDGET FOR PROGRAMS ############################
+        total_budget = Total_budget.query.filter(Total_budget.budget_type == "Donation", Total_budget.program == fund_update.program, extract('year', Total_budget.date) == date_year).first()
         if total_budget:
             # If a record exists, update the total cash
             total_budget.total += total_donation
@@ -923,8 +923,31 @@ def cash_update_fund():
             total_budget = Total_budget(program=fund_update.program,  budget_type="Donation", total=total_donation, date=donation_date)
             db.session.add(total_budget)
             db.session.commit()
-            # Update Total_budget table
-        budget = Budget.query.filter_by(budget_type="Donation").first()
+        
+        ############################ FOR CURRENT TOTAL BUDGET FOR PROGRAMS ############################
+        add_current_total_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == "Donation", Current_total_budget.program == fund_update.program, extract('year', Current_total_budget.date) == date_year).first()
+        if add_current_total_budget:
+            # If a record exists, update the total cash
+            add_current_total_budget.total += total_donation
+        else:
+            # If no record exists, create a new one
+            add_current_total_budget = Current_total_budget(program=fund_update.program,  budget_type="Donation", total=total_donation, date=donation_date)
+            db.session.add(add_current_total_budget)
+            db.session.commit()
+           
+            
+        ############################ FOR CURRENT BUDGET ############################
+        current_total = Current_Budget.query.filter(Current_Budget.budget_type == "Donation", extract('year', Current_Budget.date) == date_year).first()
+        if current_total:
+            # If a record exists, update the total cash
+            current_total.total += total_donation
+        else:
+            # If no record exists, create a new one
+            current_total = Current_Budget(budget_type="Donation", total=total_donation, date=donation_date)
+            db.session.add(current_total)
+            db.session.commit()
+            
+        budget = Budget.query.filter(Budget.budget_type == "Donation", extract('year', Budget.date) == date_year).first()
         if budget:
             # If a record exists, update the total cash
             budget.total += total_donation
@@ -933,14 +956,14 @@ def cash_update_fund():
             budget = Budget(budget_type="Donation", total=total_donation, date=donation_date)
             db.session.add(budget)
             db.session.commit()
-        
+  
     if fund_update:
         # Update the status for the specific record
         fund_update.status = status
 
         # Add donor data
         for donor in donors:
-            date1 = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
+            date1 = convert_date(donor['date'])
             new_donor = Donor_cash(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1, project_name=project_name)
             db.session.add(new_donor)
 
