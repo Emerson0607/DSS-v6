@@ -189,6 +189,13 @@ main .CcoordinatorCard .form-check .label {
     margin-top: 1rem;
 }
 
+main .CcoordinatorCard .cost-input {
+    position: absolute;
+    bottom: 1;
+    margin: 0 0 0.3rem 1rem;
+    width: 93%;
+    height: 2rem;
+}
 
 main .CcoordinatorCard .form-check input {
     width: 1.5rem;

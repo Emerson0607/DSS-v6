@@ -96,10 +96,10 @@
                         <label class="label"></label>
                     </div>
                 </div>
-
-                <input type="text" class="link-input form-control" placeholder="Enter Link" style="display: none;">
                 <input type="text" id="cost" class="cost-input form-control" name="cost"
                     placeholder="Enter total expenses" style="display: none;">
+                <input type="text" class="link-input form-control" placeholder="Enter Link" style="display: none;">
+
                 <button class="add-week-button">Add Week</button>
             </form>
         </div>
@@ -320,12 +320,12 @@
                                 var userConfirmed = confirm("Are you sure you want to proceed?");
                                 if (userConfirmed) {
                                     // Execute update_status and updatePercentage if the user confirmed
-                                    archive_project(linkInput); // Pass the URL input value to the archive_project function
+                                    archive_project(linkInput, costInput); // Pass the URL input value to the archive_project function
                                 }
                             }
                         });
 
-                        function archive_project(url) {
+                        function archive_project(url, costInput) {
                             var recordStatus = "Completed";
                             $.ajax({
                                 url: "/archive_project",
@@ -336,6 +336,7 @@
                                     program: record.program,
                                     subprogram: record.subprogram,
                                     status: recordStatus,
+                                    cost: costInput,
                                     url: url // Include the URL in the data to be sent to the server
                                 }),
                                 success: function (response) {

@@ -1,10 +1,10 @@
 from flask import Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs, Resources, Pending_fund, Archive
+from main.models.dbModel import Users, Community, Program, Subprogram, Role, Upload, Pending_project, Logs, Resources, Pending_fund, Archive, Budget_program_cost, Program_cost, Current_total_budget
 from main import db
 from main import Form
 from flask import Response
 from datetime import datetime
-from sqlalchemy import func, case
+from sqlalchemy import func, case, extract
 import pytz, re
 import base64
 from flask_wtf import FlaskForm
@@ -314,6 +314,7 @@ def cArchive_project():
     community = data['community']
     subprogram = data['subprogram']
     program = data['program']
+    cost = data['cost']
     url = data.get('url', '')
 
     # Validate URL
@@ -347,8 +348,40 @@ def cArchive_project():
         department_A = data_to_move.department_A, 
         volunteer=data_to_move.volunteer,
         coordinator_id= data_to_move.coordinator_id,
+        budget_type = data_to_move.budget_type,
         url=url  # Assign the URL value
     )
+    
+    budget = data_to_move.budget
+    start_date = data_to_move.start_date
+    budget_type = data_to_move.budget_type
+    
+    community_budget = str(budget)
+    # Check if the budget contains commas
+    if ',' in community_budget:
+        budget_to_float = community_budget.replace(",", "")  # Remove commas from the string
+    else:
+        budget_to_float = community_budget  # No commas, so the budget is already in the correct format
+    budget_float = round(float(budget_to_float), 2)
+          
+    community_cost = str(cost)
+    # Check if the budget contains commas
+    if ',' in community_cost:
+        cost_to_float = community_cost.replace(",", "")  # Remove commas from the string
+    else:
+        cost_to_float = community_cost  # No commas, so the budget is already in the correct format
+        
+    cost_float = round(float(cost_to_float), 2)              
+    budget_year = start_date.year
+    ################ FOR PROGRAMS LIQUIDATION #################
+    existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
+
+    if existing_liquidation:
+        existing_liquidation.cost = cost_float
+        existing_liquidation.balance = budget_float - cost_float 
+        db.session.commit()
+    
+    
     userlog = g.current_user
     action = f'ARCHIVED {program} project of {community}'
     ph_tz = pytz.timezone('Asia/Manila')

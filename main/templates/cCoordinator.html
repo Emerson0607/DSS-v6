@@ -97,8 +97,11 @@
                         <label class="label"></label>
                     </div>
                 </div>
-                <input type="text" class="link-input form-control" placeholder="Enter Link" style="display: none;">
+                <input type="text" id="cost" class="cost-input form-control" name="cost"
+                    placeholder="Enter total expenses" style="display: none;">
                 <button class="add-week-button">Add Week</button>
+                <input type="text" class="link-input form-control" placeholder="Enter Link" style="display: none;">
+
             </form>
         </div>
 
@@ -156,6 +159,7 @@
                             insightsDiv.find(".save-button").css("display", "none");
                             insightsDiv.find(".archive-button").css("display", "block");
                             insightsDiv.find(".link-input").css("display", "block");
+                            insightsDiv.find(".cost-input").css("display", "block");
                         }
 
                         // Update the content within the newly created insights-div
@@ -171,6 +175,31 @@
                         checkboxGroup.empty(); // Clear any existing checkboxes
                         var lastCheckedIndex = 0; // Keep track of the last checked checkbox index
 
+                        // for total expenses validation
+                        var costInput = insightsDiv.find(".cost-input");
+                        costInput.on("input", function () {
+                            var value = $(this).val();
+
+                            // Remove non-numeric characters except for the first dot
+                            value = value.replace(/[^\d.]/g, '').replace(/^(\d*\.)(.*)$/, (_, a, b) => a + b.replace(/\./g, ''));
+
+                            // Allow only one dot for decimal and only two decimal places
+                            var parts = value.split('.');
+                            if (parts.length > 2) {
+                                parts = [parts.shift(), parts.join('.')];
+                            }
+                            if (parts[1] && parts[1].length > 2) {
+                                parts[1] = parts[1].substring(0, 2);
+                            }
+                            value = parts.join('.');
+
+                            // Add commas for every thousand
+                            var number_parts = value.split('.');
+                            number_parts[0] = number_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                            value = number_parts.join('.');
+
+                            $(this).val(value);
+                        });
 
                         for (var i = 1; i <= record.totalWeek; i++) {
                             var checkboxContainer = $('<div class="form-check form-check-inline">');
@@ -274,20 +303,24 @@
                         insightsDiv.find(".archive-button").click(function () {
                             // Select the input field based on its parent container
                             var linkInput = insightsDiv.find(".link-input").val().trim();
+                            var costInput = insightsDiv.find(".cost-input").val().trim()
 
-                            if (linkInput === "") {
-                                console.log("URL is empty.");
+                            if (costInput === "" && linkInput === "") {
+                                alert("URL and project total expenses are empty.");
+                            } else if (costInput === "") {
+                                alert("Please enter a project total expenses.");
+                            } else if (linkInput === "") {
                                 alert("Please enter a URL before archiving the project.");
                             } else {
                                 var userConfirmed = confirm("Are you sure you want to proceed?");
                                 if (userConfirmed) {
                                     // Execute update_status and updatePercentage if the user confirmed
-                                    archive_project(linkInput); // Pass the URL input value to the archive_project function
+                                    archive_project(linkInput, costInput); // Pass the URL input value to the archive_project function
                                 }
                             }
                         });
 
-                        function archive_project(url) {
+                        function archive_project(url, costInput) {
                             var recordStatus = "Completed";
                             $.ajax({
                                 url: "/cArchive_project",
@@ -298,6 +331,7 @@
                                     program: record.program,
                                     subprogram: record.subprogram,
                                     status: recordStatus,
+                                    cost: costInput,
                                     url: url // Include the URL in the data to be sent to the server
                                 }),
                                 success: function (response) {

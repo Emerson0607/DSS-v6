@@ -34,8 +34,8 @@
             </div>
             <div class="total_cost_card">
                 <div class="budget_details">
-                    <p class="small">Fund + Budget</p>
-                    <h1>1000</h1>
+                    <p class="small">{{fund_cost_total_value}} + {{budget_cost_total_value}}</p>
+                    <h1>{{total_cost_same_year}}</h1>
                     <h3 class="budget_title">Total Cost</h3>
                 </div>
             </div>
@@ -127,8 +127,54 @@
     <!--end add modal account-->
     <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
 </div>
-<!--end jumbotron-->
+
+<!-- for budget programs -->
+<div class="budget_container">
+    <div class="jumbotron">
+        <div class="for_filter">
+            <h2 style="margin-bottom: 1rem"><b>Programs' Budget</b></h2>
+            <select id="yearDropdown1">
+                {% for year in budget_years_with_placeholder %}
+                <option value="{{ year[0] }}">{{ year[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="form-group">
+                <label>Program:</label>
+                {{ form.program(class="form-select", value=form.program.default) }}
+            </div>
+
+        </div>
+        <div class="budget_card">
+            <div class="total_budget_card total_budget_card_program">
+                <div class="budget_details">
+                    <p class="small">{{fund_total1}} + {{budget_total1}}</p>
+                    <h1>{{total_budget_same_year1}}</h1>
+                    <h3 class="budget_title">Total Budget</h3>
+
+                </div>
+            </div>
+            <div class="total_cost_card total_cost_card_program">
+                <div class="budget_details">
+                    <p class="small">{{fund_cost_total_value1}} + {{budget_cost_total_value1}}</p>
+                    <h1>{{total_cost_same_year1}}</h1>
+                    <h3 class="budget_title">Total Cost</h3>
+                </div>
+            </div>
+            <div class="current_budget_card current_budget_card_program">
+                <div class="budget_details">
+                    <p class="small">{{fund_current_year_value1}} + {{budget_current_total_value1}}</p>
+                    <h1>{{total_current_same_year1}}</h1>
+                    <h3 class="budget_title">Current Budget</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--end add modal account-->
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -140,8 +186,6 @@
     $(document).ready(function () {
         date_picker();
         budget_validation();
-
-
 
         // Add a click event handler for saving data to the database
         $("#btn_budget").click(function () {
@@ -197,11 +241,9 @@
                 }
             });
         }
-
-
-
     });
 </script>
+
 <script>
 
     $(document).ready(function () {
@@ -225,6 +267,77 @@
     }
 
 </script>
+
+<!-- FOR BUDGET FILTER -->
+<script>
+    $(document).ready(function () {
+        // Add change event handler for the yearDropdown
+        $('#yearDropdown').change(function () {
+            var selectedYear = $(this).val(); // Get the selected year
+
+            // Send AJAX request with the selected year
+            $.ajax({
+                url: "/filter_budget",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    date: selectedYear // Send the selected year as the date
+                }),
+                success: function (response) {
+                    // Update HTML elements with received data
+                    $('.total_budget_card h1').text(response.total_budget_same_year);
+                    $('.total_budget_card p.small').text(response.fund_total_value + " + " + response.budget_total_value);
+                    $('.total_cost_card h1').text(response.total_cost_same_year);
+                    $('.total_cost_card p.small').text(response.fund_cost_total_value + " + " + response.budget_cost_total_value);
+                    $('.current_budget_card h1').text(response.total_current_same_year);
+                    $('.current_budget_card p.small').text(response.fund_current_year_value + " + " + response.budget_current_total_value);
+                },
+                error: function (error) {
+                    console.error("Failed to filter budget: " + error);
+                }
+            });
+        });
+
+        // Other script code...
+    });
+</script>
+
+<!-- FOR PROGRAMS FILTER -->
+<script>
+    $(document).ready(function () {
+        // Add change event handler for the yearDropdown
+        $('#yearDropdown1').change(function () {
+            var selectedYear = $(this).val(); // Get the selected year
+
+            // Send AJAX request with the selected year
+            $.ajax({
+                url: "/filter_budget_program",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    date: selectedYear,
+                    program: program // Send the selected year as the date
+                }),
+                success: function (response) {
+                    // Update HTML elements with received data
+                    $('.total_budget_card_program h1').text(response.total_budget_same_year1);
+                    $('.total_budget_card_program p.small').text(response.fund_total_value1 + " + " + response.budget_total_value1);
+                    $('.total_cost_card_program h1').text(response.total_cost_same_year1);
+                    $('.total_cost_card_program p.small').text(response.fund_cost_total_value1 + " + " + response.budget_cost_total_value1);
+                    $('.current_budget_card_program h1').text(response.total_current_same_year1);
+                    $('.current_budget_card_program p.small').text(response.fund_current_year_value1 + " + " + response.budget_current_total_value1);
+                },
+                error: function (error) {
+                    console.error("Failed to filter budget: " + error);
+                }
+            });
+        });
+
+        // Other script code...
+    });
+</script>
+
+
 
 <script>
     //date picker

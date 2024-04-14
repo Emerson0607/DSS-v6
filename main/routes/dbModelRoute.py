@@ -899,8 +899,8 @@ def add_community():
                 update_current_programs_budget.total -= budget_float
             
             
-             ################ FOR PROGRAMS LIQUIDATION #################
-            existing_liquidation = Budget_program_cost.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+            ################ FOR PROGRAMS LIQUIDATION #################
+            existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
 
             if existing_liquidation is None:
                 add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
@@ -1323,7 +1323,7 @@ def approve():
             
             
              ################ FOR PROGRAMS LIQUIDATION #################
-            existing_liquidation = Budget_program_cost.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+            existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type).first()
 
             if existing_liquidation is None:
                 add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
@@ -1453,7 +1453,6 @@ def update_status():
     else:
         return jsonify({'message': 'Record not found.'}), 404
 
-
 ########################### UPDATE TOTAL WEEK ##############################333
 @dbModel_route.route('/add_week', methods=['POST'])
 def add_week():
@@ -1476,14 +1475,13 @@ def add_week():
 ############################### ARCHIVE PROJECT ###############################
 @dbModel_route.route('/archive_project', methods=['POST'])
 def archive_project():
-    if g.current_role != "Admin" and g.current_role != "BOR":
-        return redirect(url_for('dbModel.login'))
 
     data = request.get_json()
     community = data['community']
     subprogram = data['subprogram']
     program = data['program']
     status = data['status']
+    cost = data['cost']
     url = data.get('url', '')
 
     # Validate URL
@@ -1493,8 +1491,6 @@ def archive_project():
       
     data_to_move = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
     # Iterate through the data and move it to CPFARCHIVE
-        
-        # Create a new row in CPFARCHIVE
     new_row = Archive(
         community=data_to_move.community, 
         program=data_to_move.program, 
@@ -1517,8 +1513,39 @@ def archive_project():
         department_A = data_to_move.department_A, 
         volunteer=data_to_move.volunteer,
         coordinator_id= data_to_move.coordinator_id,
+        budget_type = data_to_move.budget_type,
         url=url  # Assign the URL value
     )
+    
+    budget = data_to_move.budget
+    start_date = data_to_move.start_date
+    budget_type = data_to_move.budget_type
+    
+    community_budget = str(budget)
+    # Check if the budget contains commas
+    if ',' in community_budget:
+        budget_to_float = community_budget.replace(",", "")  # Remove commas from the string
+    else:
+        budget_to_float = community_budget  # No commas, so the budget is already in the correct format
+    budget_float = round(float(budget_to_float), 2)
+          
+    community_cost = str(cost)
+    # Check if the budget contains commas
+    if ',' in community_cost:
+        cost_to_float = community_cost.replace(",", "")  # Remove commas from the string
+    else:
+        cost_to_float = community_cost  # No commas, so the budget is already in the correct format
+        
+    cost_float = round(float(cost_to_float), 2)              
+    budget_year = start_date.year
+    ################ FOR PROGRAMS LIQUIDATION #################
+    existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
+
+    if existing_liquidation:
+        existing_liquidation.cost = cost_float
+        existing_liquidation.balance = budget_float - cost_float 
+        db.session.commit()
+    
     userlog = g.current_user
     action = f'ARCHIVED {program} project of {community}'
     ph_tz = pytz.timezone('Asia/Manila')
@@ -1529,7 +1556,6 @@ def archive_project():
     if insert_logs:
         db.session.add(insert_logs)
         db.session.commit()
-
     db.session.add(new_row)
     db.session.commit()
 
@@ -1544,8 +1570,6 @@ def archive_project():
                 # You may want to log the exception for debugging purposes
     else:
         flash('User not found. Please try again.', 'error')
-   
-
     return jsonify({'message': 'Data archived.'})
 
 ############################### display kaakbay program and coordinator ###############################
@@ -2634,7 +2658,7 @@ def deploy():
             
             
              ################ FOR PROGRAMS LIQUIDATION #################
-            existing_liquidation = Budget_program_cost.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+            existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
 
             if existing_liquidation is None:
                 add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
@@ -2978,16 +3002,14 @@ def budget():
         return redirect(url_for('dbModel.login'))
     
     form = Form()
-    placeholder_choice = ("", "-- Select Program --")
+    placeholder_choice = ("Literacy", "Literacy")
     form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
     form.program.default = ""
     form.process()
     form=form
 
-    coordinators = Users.query.filter_by(role='Coordinator').all()
     current_year = datetime.now().year
-    fund_list = Fundraising.query.all()
-    
+
     # Retrieve all unique years from the Budget table
     all_years = Budget.query.with_entities(extract('year', Budget.date)).distinct()
 
@@ -3016,8 +3038,219 @@ def budget():
     budget_current_total_value = "{:.2f}".format(budget_current_total.total) if budget_current_total else "0.00"
     fund_current_year_value = "{:.2f}".format(fund_current_total.total) if fund_current_total else "0.00"
     
+    ############################ FOR BUDGET COST ##############################
+    cost_same_year = Budget_cost.query.filter(extract('year', Budget_cost.date) == current_year).all()
+    total_cost_same_year = sum(cost.total_cost for cost in cost_same_year)
+    
+    budget_cost_total = Budget_cost.query.filter(Budget_cost.budget_type == "Budget", extract('year', Budget_cost.date) == current_year).all()
+    fund_cost_total = Budget_cost.query.filter(Budget_cost.budget_type == "Donation", extract('year', Budget_cost.date) == current_year).all()
+
+    # Calculate total cost for budget and fund
+    budget_total_sum = sum(budget.total_cost for budget in budget_cost_total) if budget_cost_total else 0
+    fund_total_sum = sum(fund.total_cost for fund in fund_cost_total) if fund_cost_total else 0
+
+    # Format the totals to two decimal points
+    budget_cost_total_value = "{:.2f}".format(budget_total_sum)
+    fund_cost_total_value = "{:.2f}".format(fund_total_sum)
+    
+    
+    # FOR PROGRAMS' BUDGET:
+    
+    ############################ FOR TOTAL BUDGET ##############################
+    # Retrieve all budgets with the same year as the current date
+    budgets_same_year1 = Total_budget.query.filter(extract('year', Total_budget.date) == current_year, Total_budget.program == "Literacy").all()
+    total_budget_same_year1_sum = sum(budget.total for budget in budgets_same_year1)
+    total_budget_same_year1= "{:.2f}".format(total_budget_same_year1_sum)
+    
+    
+    budget_total1 = Total_budget.query.filter(
+    Total_budget.budget_type == "Budget",
+    extract('year', Total_budget.date) == current_year,
+    Total_budget.program == "Literacy"
+    ).first()
+
+    fund_total1 = Total_budget.query.filter(
+        Total_budget.budget_type == "Donation",
+        extract('year', Total_budget.date) == current_year,
+        Total_budget.program == "Literacy"
+    ).first()
+
+    budget_total_value1 = "{:.2f}".format(budget_total1.total) if budget_total1 else "0.00"
+    fund_total_value1 = "{:.2f}".format(fund_total1.total) if fund_total1 else "0.00"
+        
+    ############################ FOR CURRENT BUDGET PROGRAMS ##############################
+    current_same_year1 = Current_total_budget.query.filter(extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").all()
+    
+    total_current_same_year1_sum = sum(current.total for current in current_same_year1)
+    total_current_same_year1= "{:.2f}".format(total_current_same_year1_sum)
+
+    
+    budget_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Budget", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
+    fund_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Donation", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
+    
+    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
+    budget_current_total_value1 = "{:.2f}".format(budget_current_total1.total) if budget_current_total1 else "0.00"
+    fund_current_year_value1 = "{:.2f}".format(fund_current_total1.total) if fund_current_total1 else "0.00"
+    
+    
+    
+    ############################ FOR BUDGET COST ##############################
+    cost_same_year1 = Program_cost.query.filter(extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+    total_cost_same_year1_sum = sum(cost.total_cost for cost in cost_same_year1)
+    total_cost_same_year1= "{:.2f}".format(total_cost_same_year1_sum)
+    
+    budget_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Budget", extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+    fund_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Donation", extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+
+    # Calculate total cost for budget and fund
+    budget_total_cost = sum(budget.total_cost for budget in budget_cost_total1) if budget_cost_total1 else 0
+    fund_total_cost = sum(fund.total_cost for fund in fund_cost_total1) if fund_cost_total1 else 0
+
+    # Format the totals to two decimal points
+    budget_cost_total_value1 = "{:.2f}".format(budget_total_cost)
+    fund_cost_total_value1 = "{:.2f}".format(fund_total_cost)
+
+    
     # Render the template with the current year and the next four years
-    return render_template("budget.html", form=form, current_year=current_year, budget_years_with_placeholder=budget_years_with_placeholder,total_budget_same_year=total_budget_same_year, budget_total=budget_total_value,fund_total=fund_total_value,budget_current_total_value=budget_current_total_value,fund_current_year_value=fund_current_year_value, total_current_same_year=total_current_same_year)
+    return render_template("budget.html", form=form, current_year=current_year, budget_years_with_placeholder=budget_years_with_placeholder,total_budget_same_year=total_budget_same_year, budget_total=budget_total_value,fund_total=fund_total_value,budget_current_total_value=budget_current_total_value,fund_current_year_value=fund_current_year_value, total_current_same_year=total_current_same_year, total_cost_same_year=total_cost_same_year, budget_cost_total_value=budget_cost_total_value, fund_cost_total_value=fund_cost_total_value,
+                           budget_total1=budget_total_value1,
+                           fund_total1=fund_total_value1,
+                           total_budget_same_year1=total_budget_same_year1,
+                           total_current_same_year1=total_current_same_year1,
+                           budget_current_total_value1=budget_current_total_value1,
+                           fund_current_year_value1=fund_current_year_value1,
+                           total_cost_same_year1=total_cost_same_year1,
+                           budget_cost_total_value1=budget_cost_total_value1,
+                           fund_cost_total_value1=fund_cost_total_value1)
+
+
+########################### Filter budget ##############################333
+@dbModel_route.route('/filter_budget', methods=['POST'])
+def filter_budget():
+    data = request.get_json()
+    date = data['date']
+    current_year = int(date)
+
+    ############################ FOR TOTAL BUDGET ##############################
+    # Retrieve all budgets with the same year as the current date
+    budgets_same_year = Budget.query.filter(extract('year', Budget.date) == current_year).all()
+    total_budget_same_year = sum(budget.total for budget in budgets_same_year)
+    budget_total = Budget.query.filter(Budget.budget_type == "Budget", extract('year', Budget.date) == current_year).first()
+    fund_total = Budget.query.filter(Budget.budget_type == "Donation", extract('year', Budget.date) == current_year).first()
+    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
+    budget_total_value = "{:.2f}".format(budget_total.total) if budget_total else "0.00"
+    fund_total_value = "{:.2f}".format(fund_total.total) if fund_total else "0.00"
+        
+    ############################ FOR CURRENT BUDGET ##############################
+    current_same_year = Current_Budget.query.filter(extract('year', Current_Budget.date) == current_year).all()
+    total_current_same_year = sum(current.total for current in current_same_year)
+    budget_current_total = Current_Budget.query.filter(Current_Budget.budget_type == "Budget", extract('year', Current_Budget.date) == current_year).first()
+    fund_current_total = Current_Budget.query.filter(Current_Budget.budget_type == "Donation", extract('year', Current_Budget.date) == current_year).first()
+    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
+    budget_current_total_value = "{:.2f}".format(budget_current_total.total) if budget_current_total else "0.00"
+    fund_current_year_value = "{:.2f}".format(fund_current_total.total) if fund_current_total else "0.00"
+    
+    ############################ FOR BUDGET COST ##############################
+    cost_same_year = Budget_cost.query.filter(extract('year', Budget_cost.date) == current_year).all()
+    total_cost_same_year = sum(cost.total_cost for cost in cost_same_year)
+    
+    budget_cost_total = Budget_cost.query.filter(Budget_cost.budget_type == "Budget", extract('year', Budget_cost.date) == current_year).all()
+    fund_cost_total = Budget_cost.query.filter(Budget_cost.budget_type == "Donation", extract('year', Budget_cost.date) == current_year).all()
+
+    # Calculate total cost for budget and fund
+    budget_total = sum(budget.total_cost for budget in budget_cost_total) if budget_cost_total else 0
+    fund_total = sum(fund.total_cost for fund in fund_cost_total) if fund_cost_total else 0
+
+    # Format the totals to two decimal points
+    budget_cost_total_value = "{:.2f}".format(budget_total)
+    fund_cost_total_value = "{:.2f}".format(fund_total)
+
+    return jsonify({
+        'total_budget_same_year': total_budget_same_year,
+        'budget_total_value': budget_total_value,
+        'fund_total_value': fund_total_value,
+        'total_current_same_year': total_current_same_year,
+        'budget_current_total_value': budget_current_total_value,
+        'fund_current_year_value': fund_current_year_value,
+        'total_cost_same_year': total_cost_same_year,
+        'budget_cost_total_value': budget_cost_total_value,
+        'fund_cost_total_value': fund_cost_total_value,
+        'message': 'Status updated successfully.'
+    })
+
+########################### Filter budget ##############################333
+@dbModel_route.route('/filter_budget_program', methods=['POST'])
+def filter_budget_program():
+    data = request.get_json()
+    date = data['date']
+    program = data['program']
+    current_year = int(date)
+
+    ############################ FOR TOTAL BUDGET ##############################
+    # Retrieve all budgets with the same year as the current date
+    budgets_same_year1 = Total_budget.query.filter(extract('year', Total_budget.date) == current_year, Total_budget.program == "Literacy").all()
+    total_budget_same_year1_sum = sum(budget.total for budget in budgets_same_year1)
+    total_budget_same_year1= "{:.2f}".format(total_budget_same_year1_sum)
+    
+    
+    budget_total1 = Total_budget.query.filter(
+    Total_budget.budget_type == "Budget",
+    extract('year', Total_budget.date) == current_year,
+    Total_budget.program == "Literacy"
+    ).first()
+
+    fund_total1 = Total_budget.query.filter(
+        Total_budget.budget_type == "Donation",
+        extract('year', Total_budget.date) == current_year,
+        Total_budget.program == "Literacy"
+    ).first()
+
+    budget_total_value1 = "{:.2f}".format(budget_total1.total) if budget_total1 else "0.00"
+    fund_total_value1 = "{:.2f}".format(fund_total1.total) if fund_total1 else "0.00"
+        
+    ############################ FOR CURRENT BUDGET PROGRAMS ##############################
+    current_same_year1 = Current_total_budget.query.filter(extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").all()
+    
+    total_current_same_year1_sum = sum(current.total for current in current_same_year1)
+    total_current_same_year1= "{:.2f}".format(total_current_same_year1_sum)
+
+    
+    budget_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Budget", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
+    fund_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Donation", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
+    
+    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
+    budget_current_total_value1 = "{:.2f}".format(budget_current_total1.total) if budget_current_total1 else "0.00"
+    fund_current_year_value1 = "{:.2f}".format(fund_current_total1.total) if fund_current_total1 else "0.00"
+    
+    ############################ FOR BUDGET COST ##############################
+    cost_same_year1 = Program_cost.query.filter(extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+    total_cost_same_year1_sum = sum(cost.total_cost for cost in cost_same_year1)
+    total_cost_same_year1= "{:.2f}".format(total_cost_same_year1_sum)
+    
+    budget_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Budget", extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+    fund_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Donation", extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+
+    # Calculate total cost for budget and fund
+    budget_total1 = sum(budget.total_cost for budget in budget_cost_total1) if budget_cost_total1 else 0
+    fund_total1 = sum(fund.total_cost for fund in fund_cost_total1) if fund_cost_total1 else 0
+
+    # Format the totals to two decimal points
+    budget_cost_total_value1 = "{:.2f}".format(budget_total1)
+    fund_cost_total_value1 = "{:.2f}".format(fund_total1)
+
+    return jsonify({
+        'total_budget_same_year1': total_budget_same_year1,
+        'budget_total1': budget_total1,
+        'fund_total1': fund_total1,
+        'total_current_same_year1': total_current_same_year1,
+        'budget_current_total_value1': budget_current_total_value1,
+        'fund_current_year_value1': fund_current_year_value1,
+        'total_cost_same_year1': total_cost_same_year1,
+        'budget_cost_total_value1': budget_cost_total_value1,
+        'fund_cost_total_value1': fund_cost_total_value1,
+        'message': 'Status updated successfully.'
+    })
+
 
 @dbModel_route.route('/create_budget', methods=['POST'])
 def create_budget():
@@ -3088,4 +3321,4 @@ def create_budget():
 
     return jsonify({'message': 'Budget created successfully'})
 
-            
+        
