@@ -175,7 +175,7 @@ main .cCommunity>div {
 }
 
 main .cCommunity .table-card {
-    max-height: 35rem;
+    max-height: 20rem;
     overflow: auto;
 }
 

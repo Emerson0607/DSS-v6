@@ -10,7 +10,7 @@ endblock %} {% block content %}
 <div class="plan_detailsCard">
   <div class="plan_detailsBox">
     <h2 style="margin-bottom: 1rem">CESU <b>Projects Plan Details</b></h2>
-    <form action="{{ url_for('dbModel.update_plan')}}" method="POST" enctype="multipart/form-data" id="upload-form">
+    <form action="{{ url_for('dbModel.update_plan')}}" method="POST" enctype="multipart/form-data" id="upload-form1">
       <input type="text" style="display: none" class="form-control" name="id" value="{{id}}" required />
       <!-- PPA -->
       <label class="PPA label-category">PPA (Program, Project, Activity)</label>
@@ -20,7 +20,7 @@ endblock %} {% block content %}
       </div>
       <div class="form-group">
         <label>Program:</label>
-        <input type="text" class="form-control" name="program" value="{{program}}" readonly />
+        {{ form1.program(class="form-control", id="program", value=form1.program.default) }}
       </div>
       <div class="form-group">
         <label>Sub-program:</label>
@@ -41,7 +41,7 @@ endblock %} {% block content %}
         </div>
         <div class="form-group">
           <label>Total Week:</label>
-          <input type="text" class="form-control" name="totalWeek" value="{{totalWeek}}" required />
+          <input type="text" class="form-control mobile-input" name="totalWeek" value="{{totalWeek}}" required />
         </div>
       </div>
 
@@ -60,7 +60,7 @@ endblock %} {% block content %}
           </div>
         </div>
         <div class="budget_value">
-          <p id="notification" style="color: red; font-style: italic;"></p>
+          <p id="notification" style="color: red; font-style: italic; display: none;"></p>
           <input type="text" class="form-control" id="budget" name="budget" value="{{budget}}" required>
           <!-- <p class=" small"> available budget: 1.10</p> -->
         </div>
@@ -88,7 +88,7 @@ endblock %} {% block content %}
       </div>
       <div class="form-group">
         <label>Volunteer(s):</label>
-        <input type="number" class="form-control" name="volunteer" value="{{volunteer}}" required />
+        <input type="text" class="form-control" name="volunteer" value="{{volunteer}}" required />
       </div>
       <br />
 
@@ -170,10 +170,11 @@ endblock %} {% block content %}
       </form>
     </div>
 
-    <form action="{{ url_for('dbModel.deploy')}}" method="POST" enctype="multipart/form-data" id="upload-form">
+    <form action="{{ url_for('dbModel.deploy')}}" method="POST" enctype="multipart/form-data" id="upload-form2">
       <input type="text" style="display: none" class="form-control" name="community" value="{{community}}" readonly />
       <input type="text" style="display: none" class="form-control" name="program" value="{{program}}" readonly />
       <input type="text" style="display: none" class="form-control" name="subprogram" value="{{subprogram}}" readonly />
+
       <button class="btn-deploy" type="submit">Deploy</button>
     </form>
   </div>
@@ -185,7 +186,40 @@ endblock %} {% block content %}
   integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
 
-<!-- budget validation -->
+<!-- total week validation -->
+<script>
+  document.querySelectorAll(".mobile-input").forEach(function (element) {
+    element.addEventListener("input", function (event) {
+      // Remove any non-numeric characters from the input
+      this.value = this.value.replace(/\D/g, "");
+
+      // Ensure only two digits are allowed
+      if (this.value.length > 2) {
+        this.value = this.value.slice(0, 2);
+      }
+    });
+  });
+</script>
+
+<!-- for date picker -->
+
+<script>
+  flatpickr("#start_date_input", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "F j, Y",
+  });
+
+  flatpickr("#end_date_input", {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "F j, Y",
+  });
+</script>
+
+
+
+<!-- for budget validation -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var budgetInput = document.getElementById('budget');
@@ -237,25 +271,11 @@ endblock %} {% block content %}
   });
 </script>
 
+<!--FOR BUDGET DEPLOYMENT-->
+
 <script>
-  // Event listener for form submission
-  $('#upload-form').submit(function (event) {
-    event.preventDefault();  // Prevent the form from submitting by default
-
-    // Extract program, budgetType, and budgetAmount from the form fields
-    var program = $('select[name="program"]').val();
-    var budgetType = $('select[name="budget_type"]').val();
-    var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
-    var date = $("#start_date_input").val().toString();
-
-
-    // Check the budget balance
-    checkBudgetBalance(program, budgetType, budgetAmount, date);
-  });
-
-
   // Function to check if the current program's budget balance is sufficient
-  function checkBudgetBalance(program, budgetType, budgetAmount, date) {
+  function checkBudgetBalance(program, budgetType, budgetAmount, date, formId) {
     // Get the current program's total budget from the server using AJAX
     $.ajax({
       url: "/get_current_program_budget",  // Replace with your endpoint to get the current program's budget
@@ -274,7 +294,7 @@ endblock %} {% block content %}
           alert("Insufficient balance!");  // Show alert if the balance is insufficient
         } else {
           // Proceed with the form submission if the balance is sufficient
-          $('#upload-form').off("submit").submit(); // Remove previous submit handler and submit the form
+          $('#' + formId).off("submit").submit(); // Remove previous submit handler and submit the form
         }
       },
       error: function () {
@@ -282,20 +302,63 @@ endblock %} {% block content %}
       }
     });
   }
+
+  // Event listener for form submission
+  $('#upload-form1, #upload-form2').submit(function (event) {
+    event.preventDefault();  // Prevent the form from submitting by default
+
+    // Extract program, budgetType, and budgetAmount from the form fields
+    var program = $('select[name="program"]').val();
+    var budgetType = $('select[name="budget_type"]').val();
+    var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
+    var date = $("#start_date_input").val().toString();
+    var formId = $(this).attr('id'); // Get the ID of the form being submitted
+
+    // Check the budget balance
+    checkBudgetBalance(program, budgetType, budgetAmount, date, formId);
+  });
+
 </script>
 
+
+<!-- FOR VOLUNTEERS VALIDATION -->
 <script>
-  flatpickr("#start_date_input", {
-    dateFormat: "Y-m-d",
-    altInput: true,
-    altFormat: "F j, Y",
+  document.addEventListener("DOMContentLoaded", function () {
+    var volunteerInput = document.querySelector('input[name="volunteer"]');
+    var notification = document.getElementById('notification');
+
+    volunteerInput.addEventListener('input', function (e) {
+      var value = e.target.value;
+
+      // Remove non-numeric characters
+      value = value.replace(/\D/g, '');
+
+      // Remove leading zeros
+      value = value.replace(/^0+/, '');
+
+      // Limit input to six digits
+      if (value.length > 6) {
+        value = value.slice(0, 6);
+      }
+
+      // Add commas for better readability
+      value = numberWithCommas(value);
+
+      // Update the input value
+      e.target.value = value;
+    });
+
+    // Add event listener to clear notification on click outside the input field
+    document.addEventListener('click', function (event) {
+      if (event.target !== volunteerInput) {
+        notification.textContent = "";
+      }
+    });
   });
 
-  flatpickr("#end_date_input", {
-    dateFormat: "Y-m-d",
-    altInput: true,
-    altFormat: "F j, Y",
-  });
+  // Function to add commas to a number
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 </script>
-
 {% endblock %}

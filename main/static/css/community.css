@@ -158,16 +158,6 @@ main .budget_card .btn_budget {
 
 
 
-
-
-
-
-
-
-
-
-
-
 main .insights {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

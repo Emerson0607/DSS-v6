@@ -626,7 +626,12 @@ main {
 
 }
 
-
+/* for budget card */
+.budget_type_box {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 10rem auto;
+}
 
 
 

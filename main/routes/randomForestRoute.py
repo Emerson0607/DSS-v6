@@ -35,7 +35,7 @@ def get_current_user():
         pending_count_display = '9+' if pending_count > max_pending_count else pending_count
 
         #pending project count for COORDINATOR
-        declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count() 
+        declined_count = Pending_project.query.filter_by(status="Declined", coordinator_id=user.id).count()
         max_declined_count = 9
         declined_count_display = min(declined_count, max_declined_count)
         declined_count_display = '9+' if declined_count > max_declined_count else declined_count

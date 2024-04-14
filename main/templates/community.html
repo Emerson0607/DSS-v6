@@ -108,7 +108,7 @@ with_categories=true) %}
                                         </select>
                                     </div>
                                     <div class="budget_value">
-                                        <p id="notification" style="color: red; font-style: italic;"></p>
+                                        <p id="notification" style="color: red; font-style: italic; display: none;"></p>
                                         <input placeholder="Enter amount" type="text" class="form-control" id="budget"
                                             name="budget" required>
                                         <p class="small"> available budget: 1.10</p>
@@ -300,7 +300,7 @@ with_categories=true) %}
     });
 </script>
 
-<!--WEEKS-->
+<!--for total week validation-->
 <script>
     document.querySelectorAll(".mobile-input").forEach(function (element) {
         element.addEventListener("input", function (event) {
@@ -316,7 +316,7 @@ with_categories=true) %}
 </script>
 
 
-<!--FOR BUDGET-->
+<!--FOR BUDGET BALANCE-->
 <script>
     // Event listener for form submission
     $('#upload-form').submit(function (event) {

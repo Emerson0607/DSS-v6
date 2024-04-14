@@ -859,8 +859,15 @@ def add_community():
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
             cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id, budget_type=budget_type)
             
-            budget_to_float = budget.replace(",", "")
+            
+            community_budget = str(budget)
+            # Check if the budget contains commas
+            if ',' in community_budget:
+                budget_to_float = community_budget.replace(",", "")  # Remove commas from the string
+            else:
+                budget_to_float = community_budget  # No commas, so the budget is already in the correct format
             budget_float = round(float(budget_to_float), 2)
+                        
             budget_year = start_date.year
             
             ################ FOR BUDGET #################
@@ -1140,7 +1147,7 @@ def delete_pending(id):
 def view_pending(pending_id):
     p = Pending_project.query.get(pending_id)
 
-    return render_template("pending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("pending_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, budget_type=p.budget_type)
 
 @dbModel_route.route('/view_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf(program, subprogram, community, cpf_filename):
@@ -1266,9 +1273,63 @@ def approve():
                     cna=data_to_move.cna,
                     department_A = data_to_move.department_A, 
                     volunteer=data_to_move.volunteer,
-                    coordinator_id=data_to_move.coordinator_id
+                    coordinator_id=data_to_move.coordinator_id,
+                    budget_type=data_to_move.budget_type
                     
             )
+            
+            budget_type = data_to_move.budget_type
+            start_date = data_to_move.start_date
+            budget_year = start_date.year
+            
+            pending_budget = str(data_to_move.budget)
+            
+            # Check if the budget contains commas
+            if ',' in pending_budget:
+                budget_to_float = pending_budget.replace(",", "")  # Remove commas from the string
+            else:
+                budget_to_float = pending_budget  # No commas, so the budget is already in the correct format
+            budget_float = round(float(budget_to_float), 2)
+                        
+            budget_year = start_date.year
+            
+            ################ FOR BUDGET #################
+            total_budget_cost = Budget_cost.query.filter(Budget_cost.budget_type == budget_type, extract('year', Budget_cost.date) == budget_year, Budget_cost.program == program).first()
+        
+            if total_budget_cost:
+                total_budget_cost.total_cost += budget_float
+            else:
+                total_budget_cost = Budget_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                db.session.add(total_budget_cost)
+            
+            update_current_budget = Current_Budget.query.filter(Current_Budget.budget_type == budget_type, extract('year', Current_Budget.date) == budget_year).first()
+        
+            if update_current_budget:
+                update_current_budget.total -= budget_float
+
+            ################ FOR PROGRAMS BUDGET #################
+            total_program_cost = Program_cost.query.filter(Program_cost.budget_type == budget_type, extract('year', Program_cost.date) == budget_year, Program_cost.program == program).first()
+        
+            if total_program_cost:
+                total_program_cost.total_cost += budget_float
+            else:
+                total_program_cost = Program_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                db.session.add(total_program_cost)
+            
+            update_current_programs_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == budget_type, extract('year', Current_total_budget.date) == budget_year, Current_total_budget.program == program).first()
+            
+            if update_current_programs_budget:
+                update_current_programs_budget.total -= budget_float
+            
+            
+             ################ FOR PROGRAMS LIQUIDATION #################
+            existing_liquidation = Budget_program_cost.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+
+            if existing_liquidation is None:
+                add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
+                db.session.add(add_liquidation)
+                db.session.commit()
+                
 
             userlog = g.current_user
             action = f'APPROVE pending {program} project of {community}'
@@ -1895,7 +1956,7 @@ def view_archived(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("archived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, url=p.url)
+    return render_template("archived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, url=p.url, budget_type=p.budget_type, budget=p.budget)
 
 @dbModel_route.route("/delete_archived/<int:project_id>")
 def delete_archived(project_id):
@@ -2073,6 +2134,7 @@ def add_plan():
         subDepartment = request.form.get("support")
         status = "Planning"
         budget = request.form.get("budget")
+        budget_type = request.form.get("budget_type")
 
         #Convert date
         start_date = convert_date(start_date1)
@@ -2104,7 +2166,7 @@ def add_plan():
 
             new_plan = Plan(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id, budget_type=budget_type)
 
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} for planning.'
@@ -2195,13 +2257,21 @@ def view_plan(plan_id):
     form.budget_type.default = ""
     form.process()
     form=form
+    
+    form1 = Form()
+    placeholder_choice = (p.program, p.program)
+    form1.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form1.program.default = ""
+    form1.process()
+    form1=form1
+    
+    
 
     cpf_data_filename = p.cpf_filename
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("plan_details.html",id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer, form=form)
-
+    return render_template("plan_details.html",id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 @dbModel_route.route('/view_cpf_plan/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf_plan(program, subprogram, community, cpf_filename):
@@ -2308,6 +2378,7 @@ def update_plan():
         status = "Planning"
         department_A = request.form['department_A']
         volunteer = request.form['volunteer']
+        budget_type = request.form['budget_type']
         
         
         #Convert date
@@ -2345,6 +2416,7 @@ def update_plan():
             cesu_plan.status = status
             cesu_plan.department_A = department_A
             cesu_plan.volunteer = volunteer
+            cesu_plan.budget_type = budget_type
 
             userlog = g.current_user
             action = f'UPDATED planned {program} projects of {community} from CESU Planner'
@@ -2361,8 +2433,21 @@ def update_plan():
             flash('Updated successfully!', 'edit_account')
 
         p = Plan.query.get(plan_id)
+        form1 = Form()
+        placeholder_choice = (p.program, p.program)
+        form1.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form1.program.default = ""
+        form1.process()
+        form1=form1
+        
+        form = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form.budget_type.default = ""
+        form.process()
+        form=form
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer, budget_type=budget_type, form1=form1, form=form)
 
 @dbModel_route.route('/delete_cpf_plan', methods=['POST'])
 def delete_cpf_plan():
@@ -2492,8 +2577,71 @@ def deploy():
                     cna=data_to_move.cna,
                     department_A = data_to_move.department_A, 
                     volunteer=data_to_move.volunteer,
-                    coordinator_id=data_to_move.coordinator_id
+                    coordinator_id=data_to_move.coordinator_id,
+                    budget_type = data_to_move.budget_type
             )
+            plan_budget = str(data_to_move.budget)
+            if ',' in plan_budget:
+                budget_to_float = plan_budget.replace(",", "")  # Remove the comma from the string
+            else:
+                budget_to_float = plan_budget  # Use the original string if it doesn't contain a comma
+            budget_float = round(float(budget_to_float), 2)
+           
+            community1 = data_to_move.community
+            program1 = data_to_move.program
+            subprogram1 = data_to_move.subprogram
+            budget_type = data_to_move.budget_type
+            start_date = data_to_move.start_date
+            budget_year = start_date.year
+            
+            print(community1)
+            print(program1)
+            print(subprogram1)
+            print(budget_type)
+            print(start_date)
+            print(budget_year)
+            print(plan_budget)
+            print(budget_to_float)
+            print(budget_float)
+            
+            ################ FOR BUDGET #################
+            total_budget_cost = Budget_cost.query.filter(Budget_cost.budget_type == budget_type, extract('year', Budget_cost.date) == budget_year, Budget_cost.program == program).first()
+        
+            if total_budget_cost:
+                total_budget_cost.total_cost += budget_float
+            else:
+                total_budget_cost = Budget_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                db.session.add(total_budget_cost)
+            
+            update_current_budget = Current_Budget.query.filter(Current_Budget.budget_type == budget_type, extract('year', Current_Budget.date) == budget_year).first()
+        
+            if update_current_budget:
+                update_current_budget.total -= budget_float
+
+            ################ FOR PROGRAMS BUDGET #################
+            total_program_cost = Program_cost.query.filter(Program_cost.budget_type == budget_type, extract('year', Program_cost.date) == budget_year, Program_cost.program == program).first()
+        
+            if total_program_cost:
+                total_program_cost.total_cost += budget_float
+            else:
+                total_program_cost = Program_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                db.session.add(total_program_cost)
+            
+            update_current_programs_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == budget_type, extract('year', Current_total_budget.date) == budget_year, Current_total_budget.program == program).first()
+            
+            if update_current_programs_budget:
+                update_current_programs_budget.total -= budget_float
+            
+            
+             ################ FOR PROGRAMS LIQUIDATION #################
+            existing_liquidation = Budget_program_cost.query.filter_by(community=community, program = program, subprogram=subprogram).first()
+
+            if existing_liquidation is None:
+                add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
+                db.session.add(add_liquidation)
+                db.session.commit()
+            
+            
 
             userlog = g.current_user
             action = f'Deployed {program} project of {community} from CESU Planner'

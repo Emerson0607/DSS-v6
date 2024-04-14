@@ -7,9 +7,15 @@ from datetime import datetime
 from sqlalchemy import func, case
 import pytz, re
 import base64
+from flask_wtf import FlaskForm
+from wtforms import SelectField
 from werkzeug.security import generate_password_hash, check_password_hash 
 
 coordinator_route = Blueprint('coordinator', __name__)
+
+class budget_type_form(FlaskForm):
+    budget_type = SelectField('Budget Type', choices=[], id='budget_type')
+    
 
 # Function to validate email format
 def is_valid_email(email):
@@ -32,7 +38,7 @@ def get_current_user():
     if 'user_id' in session:
         # Assuming you have a User model or some way to fetch the user by ID
         user = Users.query.get(session['user_id'])
-        declined_count = Pending_project.query.filter_by(status="Declined", program=user.program).count()
+        declined_count = Pending_project.query.filter_by(status="Declined", coordinator_id=user.id).count()
         cDeclined_fund_count = Pending_fund.query.filter_by(status="Declined", coordinator_id=user.id).count()
             
         # Set a maximum value for pending_count
@@ -192,6 +198,7 @@ def cAdd_community():
         budget = request.form.get("budget")
         department_A = request.form.get("department_A")
         volunteer = request.form.get("volunteer")
+        budget_type = request.form.get("budget_type")
 
 
         #Convert date
@@ -213,7 +220,7 @@ def cAdd_community():
 
             new_community = Pending_project(community=community, program=program, subprogram=subprogram, start_date=start_date,
             end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
-            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=g.current_id)
+            cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=g.current_id, budget_type=budget_type)
             db.session.add(new_community)
             db.session.commit()
             userlog = g.current_user
@@ -478,7 +485,7 @@ def cView_project(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("cProject_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("cProject_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, budget=p.budget, budget_type=p.budget_type)
 
 @coordinator_route.route('/cView_cpf_project/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def cView_cpf_project(program, subprogram, community, cpf_filename):
@@ -572,7 +579,6 @@ def cArchived_table():
     archived_file_list = Archive.query.filter_by(coordinator_id=g.current_id, status="Completed").all()
     return render_template("cArchived_table.html", current_year=current_year, archived_file_list=archived_file_list)
 
-
 @coordinator_route.route("/cView_archived/<int:project_id>")
 def cView_archived(project_id):
     if 'user_id' not in session:
@@ -585,9 +591,7 @@ def cView_archived(project_id):
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("cArchived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, url=p.url)
-
-
+    return render_template("cArchived_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, url=p.url, budget=p.budget, budget_type=p.budget_type)
 
 ############################### COORDINATOR PENDING PROJECT FILES ###############################
 @coordinator_route.route("/cManage_pending")
@@ -639,8 +643,15 @@ def cView_pending(pending_id):
     form.program.default = ""
     form.process()
     form=form
+    
+    form1 = budget_type_form()
+    placeholder_choice = (p.budget_type, p.budget_type)
+    form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+    form1.budget_type.default = ""
+    form1.process()
+    form1=form1
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form, budget_type=p.budget_type, form1=form1)
 
 @coordinator_route.route('/cView_cpf/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def cView_cpf(program, subprogram, community, cpf_filename):
@@ -829,6 +840,7 @@ def update_pending():
         status = "For Review"
         department_A = request.form['department_A']
         volunteer = request.form['volunteer']
+        budget_type = request.form['budget_type']
         
         
         #Convert date
@@ -866,6 +878,7 @@ def update_pending():
             pending.status = status
             pending.department_A = department_A
             pending.volunteer = volunteer
+            pending.budget_type = budget_type
 
             userlog = g.current_user
             action = f'UPDATED pending {program} projects of {community}'
@@ -888,8 +901,15 @@ def update_pending():
         form.program.default = ""
         form.process()
         form=form
+        
+        form1 = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form1.budget_type.default = ""
+        form1.process()
+        form1=form1
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 ############################### COORDINATOR COMMENTS ###############################
 @coordinator_route.route('/get_comments')

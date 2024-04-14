@@ -80,7 +80,7 @@ main .coordinatorCard>div {
     transition: all 300ms ease;
     position: relative;
     cursor: pointer;
-    padding-bottom: 5rem !important;
+    padding-bottom: 6rem !important;
 }
 
 main .coordinatorCard>div:hover {
@@ -211,6 +211,14 @@ main .coordinatorCard .form-check .label {
 main .coordinatorCard .link-input {
     position: absolute;
     bottom: -3.5rem;
+    margin: 0 0 0.3rem 1rem;
+    width: 93%;
+    height: 2rem;
+}
+
+main .coordinatorCard .cost-input {
+    position: absolute;
+    bottom: 1;
     margin: 0 0 0.3rem 1rem;
     width: 93%;
     height: 2rem;
