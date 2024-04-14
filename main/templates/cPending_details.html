@@ -2,6 +2,7 @@
 {% block title %}Pending Details{% endblock %}
 {% block content %}
 
+
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['delete_account', 'add_community', 'existing_community'],
 with_categories=true) %}
@@ -30,7 +31,7 @@ with_categories=true) %}
 
             <div class="form-group">
                 <label>Program:</label>
-                {{ form.program(class="form-select form-control", value=form.program.default) }}
+                {{ form.program(class="form-select form-control first_option", value=form.program.default) }}
             </div>
 
 
@@ -62,7 +63,8 @@ with_categories=true) %}
             <div class="form-group budget_type_box">
                 <div class="budget_type_card ">
                     <div class="form-group">
-                        {{ form1.budget_type(class="form-control", id="budget_type", value=form1.budget_type.default) }}
+                        {{ form1.budget_type(class="form-control first_option", id="budget_type",
+                        value=form1.budget_type.default) }}
                     </div>
                 </div>
 

@@ -29,7 +29,6 @@
     display: grid;
     grid-template-columns: 1fr;
     max-height: 90%;
-
 }
 
 .budget_container .jumbotron .budget_card {
@@ -37,17 +36,66 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     margin-top: 0.5rem;
+}
+
+.budget_container .budget_details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 0.5rem;
+    color: rgb(239, 239, 239);
+}
+
+.budget_container .budget_details .budget_right h1 {
+    margin-top: 1rem;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.budget_container .budget_details .budget_right p {
+    font-size: 10px;
+    text-align: center;
 
 }
+
+.budget_container .budget_details span {
+    font-size: 5rem;
+}
+
+
+.budget_card .total_budget_card,
+.budget_card .total_budget_card_program {
+    background: linear-gradient(to bottom right, #99ffcc 0%, #009999 100%);
+}
+
+.budget_card .total_cost_card,
+.budget_card .total_cost_card_program {
+    background: linear-gradient(to bottom right, #cc3300 0%, #ff9999 100%);
+}
+
+.budget_card .current_budget_card,
+.budget_card .current_budget_card_program {
+    background: linear-gradient(to bottom right, #3333ff 0%, #aaaad7 100%);
+}
+
 
 .budget_card>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: 0.5rem;
     margin-top: 1rem;
-    border: 1px solid black;
+    transition: transform 0.4s ease;
+    max-width: 20rem;
+}
 
-    transition: all 300ms ease;
+
+.budget_card>div:hover {
+    cursor: pointer;
+    transform: scale(0.97);
+}
+
+.budget_card>div:active {
+    transform: scale(0.9);
 }
 
 
@@ -251,15 +299,31 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
     border-radius: 5px;
 }
 
-/* Style for select elements */
-.budget_container .form-select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
+
+.form_control_year {
+    width: 5rem;
+    padding: 7px;
+    margin-bottom: 0.3rem;
     border: 1px solid #ccc;
     border-radius: 5px;
+    cursor: pointer;
 }
 
+.form_control_program {
+    width: 8rem;
+    padding: 7px;
+    margin-bottom: 0.3rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+.program_card_box {
+    position: absolute;
+    right: 7.8rem;
+    top: 0.5rem;
+}
 
 /* Style for submit button */
 .budget_container .btn-submit {
@@ -293,8 +357,21 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 16rem;
+    left: 6rem;
     top: 0.2rem;
+}
+
+.budget_container #yearDropdown,
+.budget_container #yearDropdown1 {
+    position: absolute;
+    right: 2rem;
+    top: 0.5rem;
+}
+
+#yearDropdown2 {
+    position: absolute;
+    right: 4rem;
+    top: 2rem;
 }
 
 .budget_container .btn-add:hover {
@@ -422,8 +499,43 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
 
     .budget_container .btn-add {
 
-        left: 10rem;
+        left: 6rem;
 
     }
 
+    .budget_container .jumbotron .budget_card {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 1rem;
+        margin-top: 0.5rem;
+    }
+
+    .budget_card>div {
+        max-width: 19.4rem;
+    }
+
+
+    .budget_container #yearDropdown,
+    .budget_container #yearDropdown1 {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    #yearDropdown2 {
+        position: absolute;
+        right: 2rem;
+        top: 1.9rem;
+    }
+
+    .program_card_box {
+        position: absolute;
+        right: 0;
+        top: 2.7rem;
+
+    }
+
+    .program_card_box .form_control_program {
+        width: 5rem;
+    }
 }

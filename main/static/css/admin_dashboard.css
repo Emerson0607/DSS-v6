@@ -148,6 +148,10 @@ aside {
 
 }
 
+.first_option option:first-child {
+    display: none;
+}
+
 
 aside .top {
     display: flex;

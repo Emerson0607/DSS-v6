@@ -793,8 +793,22 @@ def CPF_delete():
             db.session.commit()
         
         p = Pending_project.query.get(cpf_id)
+        
+        form = Form()
+        placeholder_choice = (p.program, p.program)
+        form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form.program.default = ""
+        form.process()
+        form=form
+        
+        form1 = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form1.budget_type.default = ""
+        form1.process()
+        form1=form1
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 @coordinator_route.route('/CESAP_delete', methods=['POST'])
 def CESAP_delete():
@@ -821,8 +835,21 @@ def CESAP_delete():
             pending_project.cesap_filename = None
             db.session.commit()
         p = Pending_project.query.get(cesap_id)
+        form = Form()
+        placeholder_choice = (p.program, p.program)
+        form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form.program.default = ""
+        form.process()
+        form=form
+        
+        form1 = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form1.budget_type.default = ""
+        form1.process()
+        form1=form1
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 @coordinator_route.route('/CNA_delete', methods=['POST'])
 def CNA_delete():
@@ -849,8 +876,21 @@ def CNA_delete():
             pending_project.cna_filename = None
             db.session.commit()
         p = Pending_project.query.get(cna_id)
+        form = Form()
+        placeholder_choice = (p.program, p.program)
+        form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form.program.default = ""
+        form.process()
+        form=form
+        
+        form1 = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form1.budget_type.default = ""
+        form1.process()
+        form1=form1
 
-    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("cPending_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, comments=p.comments, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 @coordinator_route.route('/update_pending', methods=['POST'])
 def update_pending():

@@ -1,5 +1,20 @@
-{% extends "admin_dashboard.html" %} {% block title %} FUNDRAISING {% endblock
+{% extends "admin_dashboard.html" %} {% block title %} BUDGET {% endblock
 %} {% block content %}
+
+<style>
+    #programDropdown option:first-child {
+        display: none;
+    }
+
+    .year_card option:first-child {
+        display: none;
+    }
+
+    .negative {
+        color: rgb(168, 13, 13);
+    }
+</style>
+
 <div class="margin-top"></div>
 {% with messages = get_flashed_messages(category_filter=['delete_account',
 'add_community', 'existing_community'], with_categories=true) %} {% if messages
@@ -16,37 +31,65 @@
                 <span class="material-symbols-sharp" style="float: right">add</span>
             </button>
 
-            <select id="yearDropdown">
+            <select id="yearDropdown" class="year_card form_control_year">
                 {% for year in budget_years_with_placeholder %}
                 <option value="{{ year[0] }}">{{ year[1] }}</option>
                 {% endfor %}
             </select>
 
         </div>
+
         <div class="budget_card">
             <div class="total_budget_card">
-                <div class="budget_details">
-                    <p class="small">{{fund_total}} + {{budget_total}}</p>
-                    <h1>{{total_budget_same_year}}</h1>
-                    <h3 class="budget_title">Total Budget</h3>
-
+                <div class="budget_details ">
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">
+                            analytics
+                        </span>
+                        <h3 class="budget_title">Total Budget</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(total_budget_same_year | float) }}</h1>
+                        <p class="small">{{ '{:,.2f}'.format(fund_total | float) }} + {{ '{:,.2f}'.format(budget_total |
+                            float) }}</p>
+                    </div>
                 </div>
             </div>
             <div class="total_cost_card">
                 <div class="budget_details">
-                    <p class="small">{{fund_cost_total_value}} + {{budget_cost_total_value}}</p>
-                    <h1>{{total_cost_same_year}}</h1>
-                    <h3 class="budget_title">Total Cost</h3>
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">
+                            show_chart
+                        </span>
+                        <h3 class="budget_title">Total Cost</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(total_cost_same_year | float) }}</h1>
+                        <p class="small">{{ '{:,.2f}'.format(fund_cost_total_value | float) }} + {{
+                            '{:,.2f}'.format(budget_cost_total_value | float) }}</p>
+                    </div>
                 </div>
             </div>
             <div class="current_budget_card">
                 <div class="budget_details">
-                    <p class="small">{{fund_current_year_value}} + {{budget_current_total_value}}</p>
-                    <h1>{{total_current_same_year}}</h1>
-                    <h3 class="budget_title">Current Budget</h3>
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">
+                            query_stats
+                        </span>
+                        <h3 class="budget_title">Current Budget</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1 class="{% if total_current_same_year | int < 0 %}negative{% endif %}">
+                            {{ '{:,.2f}'.format(total_current_same_year | float) }}
+                        </h1>
+                        <p class="small">{{ '{:,.2f}'.format(fund_current_year_value | float) }} + {{
+                            '{:,.2f}'.format(budget_current_total_value | float) }}</p>
+                    </div>
                 </div>
             </div>
         </div>
+
+
         <!-- Modal -->
         <div id="mymodal" class="modal" role="dialog">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -133,54 +176,133 @@
     <div class="jumbotron">
         <div class="for_filter">
             <h2 style="margin-bottom: 1rem"><b>Programs' Budget</b></h2>
-            <select id="yearDropdown1">
+            <select id="yearDropdown1" class="year_card form_control_year">
                 {% for year in budget_years_with_placeholder %}
                 <option value="{{ year[0] }}">{{ year[1] }}</option>
                 {% endfor %}
             </select>
 
-            <div class="form-group">
-                <label>Program:</label>
-                {{ form.program(class="form-select", value=form.program.default) }}
+            <div class="form-group program_card_box">
+                {{ form.program(class="form-select form_control_program", id="programDropdown",
+                value=form.program.default) }}
             </div>
 
         </div>
         <div class="budget_card">
-            <div class="total_budget_card total_budget_card_program">
+            <div class="total_budget_card_program">
                 <div class="budget_details">
-                    <p class="small">{{fund_total1}} + {{budget_total1}}</p>
-                    <h1>{{total_budget_same_year1}}</h1>
-                    <h3 class="budget_title">Total Budget</h3>
-
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">analytics</span>
+                        <h3 class="budget_title">Total Budget</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(total_budget_same_year1 | float) }}</h1>
+                        <p class="small">{{ '{:,.2f}'.format(fund_total1 | float) }} + {{ '{:,.2f}'.format(budget_total1
+                            | float) }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="total_cost_card total_cost_card_program">
+            <div class="total_cost_card_program">
                 <div class="budget_details">
-                    <p class="small">{{fund_cost_total_value1}} + {{budget_cost_total_value1}}</p>
-                    <h1>{{total_cost_same_year1}}</h1>
-                    <h3 class="budget_title">Total Cost</h3>
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">show_chart</span>
+                        <h3 class="budget_title">Total Cost</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(total_cost_same_year1 | float) }}</h1>
+                        <p class="small">{{ '{:,.2f}'.format(fund_cost_total_value1 | float) }} + {{
+                            '{:,.2f}'.format(budget_cost_total_value1 | float) }}</p>
+                    </div>
                 </div>
             </div>
-            <div class="current_budget_card current_budget_card_program">
+            <div class="current_budget_card_program">
                 <div class="budget_details">
-                    <p class="small">{{fund_current_year_value1}} + {{budget_current_total_value1}}</p>
-                    <h1>{{total_current_same_year1}}</h1>
-                    <h3 class="budget_title">Current Budget</h3>
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">query_stats</span>
+                        <h3 class="budget_title">Current Budget</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1 class="{% if total_current_same_year1 | int < 0 %}negative{% endif %}">
+                            {{ '{:,.2f}'.format(total_current_same_year1 | float) }}
+                        </h1>
+                        <p class="small">{{ '{:,.2f}'.format(fund_current_year_value1 | float) }} + {{
+                            '{:,.2f}'.format(budget_current_total_value1 | float) }}</p>
+                    </div>
                 </div>
             </div>
         </div>
+
 
     </div>
     <!--end add modal account-->
     <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
 </div>
 
+<!-- for liquidation -->
+<div class="communityCard">
+    <div class="jumbotron">
+        <h2 style="margin-bottom: 1rem;">Project <b>Overview</b></h2>
+        <select id="yearDropdown2" class="year_card form_control_year">
+            {% for year in budget_years_with_placeholder %}
+            <option value="{{ year[0] }}">{{ year[1] }}</option>
+            {% endfor %}
+        </select>
+        <div class="table-card">
+            <table class="table" id="data-table">
+                <thead> <!-- Table header -->
+                    <tr>
+                        <th>ID</th>
+                        <th>Community</th>
+                        <th>Program</th>
+                        <th>Sub-Program</th>
+                        <th>Budget Type</th>
+                        <th>Budget</th>
+                        <th>Cost</th>
+                        <th>Balance</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody> <!-- Table body -->
+                    {% for row in project_closure %}
+                    <tr>
+                        <td>{{ row.id }}</td>
+                        <td>{{ row.community }}</td>
+                        <td>{{ row.program }}</td>
+                        <td>{{ row.subprogram }}</td>
+                        <td>{{ row.budget_type }}</td>
+                        <td>{{ row.budget}}</td>
+                        <td>{{ row.cost}}</td>
+                        <td class="balance-cell">{{ row.balance}}</td>
+                        <td>{{ row.date.strftime('%Y-%m-%d') }}</td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!--end add modal account-->
+        <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+    </div> <!--end jumbotron-->
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
+
+<!-- for budget negative values -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var balanceCells = document.querySelectorAll('.balance-cell');
+        balanceCells.forEach(function (cell) {
+            var balanceValue = parseFloat(cell.textContent);
+            if (balanceValue < 0) {
+                cell.style.color = 'red';
+            }
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function () {
@@ -284,14 +406,16 @@
                     date: selectedYear // Send the selected year as the date
                 }),
                 success: function (response) {
-                    // Update HTML elements with received data
-                    $('.total_budget_card h1').text(response.total_budget_same_year);
-                    $('.total_budget_card p.small').text(response.fund_total_value + " + " + response.budget_total_value);
-                    $('.total_cost_card h1').text(response.total_cost_same_year);
-                    $('.total_cost_card p.small').text(response.fund_cost_total_value + " + " + response.budget_cost_total_value);
-                    $('.current_budget_card h1').text(response.total_current_same_year);
-                    $('.current_budget_card p.small').text(response.fund_current_year_value + " + " + response.budget_current_total_value);
+                    // Update HTML elements with received data, formatting numbers with commas and retaining decimal points
+                    $('.total_budget_card h1').text(parseFloat(response.total_budget_same_year).toLocaleString());
+                    $('.total_budget_card p.small').text(parseFloat(response.fund_total_value).toLocaleString() + " + " + parseFloat(response.budget_total_value).toLocaleString());
+                    $('.total_cost_card h1').text(parseFloat(response.total_cost_same_year).toLocaleString());
+                    $('.total_cost_card p.small').text(parseFloat(response.fund_cost_total_value).toLocaleString() + " + " + parseFloat(response.budget_cost_total_value).toLocaleString());
+                    $('.current_budget_card h1').text(parseFloat(response.total_current_same_year).toLocaleString());
+                    $('.current_budget_card p.small').text(parseFloat(response.fund_current_year_value).toLocaleString() + " + " + parseFloat(response.budget_current_total_value).toLocaleString());
                 },
+
+
                 error: function (error) {
                     console.error("Failed to filter budget: " + error);
                 }
@@ -306,27 +430,88 @@
 <script>
     $(document).ready(function () {
         // Add change event handler for the yearDropdown
-        $('#yearDropdown1').change(function () {
-            var selectedYear = $(this).val(); // Get the selected year
-
-            // Send AJAX request with the selected year
+        $('#yearDropdown1, #programDropdown').change(function () {
+            var selectedYear = $('#yearDropdown1').val(); // Get the selected year
+            var selectedProgram = $('#programDropdown').val(); // Get the selected program
+            // Check if both year and program are selected
+            if (!selectedProgram || !selectedYear) {
+                alert("Please select both year and program.");
+                return; // Exit the function if either year or program is not selected
+            }
+            // Send AJAX request with the selected year and program
             $.ajax({
                 url: "/filter_budget_program",
                 method: "POST",
                 contentType: "application/json",
                 data: JSON.stringify({
                     date: selectedYear,
-                    program: program // Send the selected year as the date
+                    program: selectedProgram // Send the selected program
                 }),
                 success: function (response) {
-                    // Update HTML elements with received data
-                    $('.total_budget_card_program h1').text(response.total_budget_same_year1);
-                    $('.total_budget_card_program p.small').text(response.fund_total_value1 + " + " + response.budget_total_value1);
-                    $('.total_cost_card_program h1').text(response.total_cost_same_year1);
-                    $('.total_cost_card_program p.small').text(response.fund_cost_total_value1 + " + " + response.budget_cost_total_value1);
-                    $('.current_budget_card_program h1').text(response.total_current_same_year1);
-                    $('.current_budget_card_program p.small').text(response.fund_current_year_value1 + " + " + response.budget_current_total_value1);
+                    // Update HTML elements with received data, formatting numbers with commas
+                    $('.total_budget_card_program h1').text(parseFloat(response.total_budget_same_year1).toLocaleString());
+                    $('.total_budget_card_program p.small').text(parseFloat(response.fund_total_value1).toLocaleString() + " + " + parseFloat(response.budget_total_value1).toLocaleString());
+                    $('.total_cost_card_program h1').text(parseFloat(response.total_cost_same_year1).toLocaleString());
+                    $('.total_cost_card_program p.small').text(parseFloat(response.fund_cost_total_value1).toLocaleString() + " + " + parseFloat(response.budget_cost_total_value1).toLocaleString());
+                    $('.current_budget_card_program h1').text(parseFloat(response.total_current_same_year1).toLocaleString());
+                    $('.current_budget_card_program p.small').text(parseFloat(response.fund_current_year_value1).toLocaleString() + " + " + parseFloat(response.budget_current_total_value1).toLocaleString());
                 },
+
+
+
+                error: function (error) {
+                    console.error("Failed to filter budget: " + error);
+                }
+            });
+        });
+
+        // Other script code...
+    });
+
+</script>
+
+<!-- FOR PROJECTS FILTER -->
+<script>
+    $(document).ready(function () {
+        // Add change event handler for the yearDropdown
+        $('#yearDropdown2').change(function () {
+            var selectedYear = $(this).val(); // Get the selected year
+
+            // Send AJAX request with the selected year
+            $.ajax({
+                url: "/filter_projects",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    date: selectedYear // Send the selected year as the date
+                }),
+                success: function (response) {
+                    // Fade out the table body
+                    $('#data-table tbody').fadeOut('fast', function () {
+                        // Clear existing table rows
+                        $(this).empty();
+
+                        // Populate the table with data from the response
+                        response.forEach(function (row) {
+                            var newRow = '<tr>' +
+                                '<td>' + row.id + '</td>' +
+                                '<td>' + row.community + '</td>' +
+                                '<td>' + row.program + '</td>' +
+                                '<td>' + row.subprogram + '</td>' +
+                                '<td>' + row.budget_type + '</td>' +
+                                '<td>' + row.budget + '</td>' +
+                                '<td>' + row.cost + '</td>' +
+                                '<td class="balance-cell">' + row.balance + '</td>' +
+                                '<td>' + new Date(row.date).toISOString().split('T')[0] + '</td>' +
+                                '</tr>';
+                            $('#data-table tbody').append(newRow);
+                        });
+
+                        // Fade in the updated table body
+                        $(this).fadeIn('fast');
+                    });
+                },
+
                 error: function (error) {
                     console.error("Failed to filter budget: " + error);
                 }
@@ -336,8 +521,6 @@
         // Other script code...
     });
 </script>
-
-
 
 <script>
     //date picker

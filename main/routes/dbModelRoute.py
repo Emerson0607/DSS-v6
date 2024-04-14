@@ -2500,8 +2500,21 @@ def delete_cpf_plan():
             db.session.commit()
         
         p = Plan.query.get(cpf_id)
+        form1 = Form()
+        placeholder_choice = (p.program, p.program)
+        form1.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form1.program.default = ""
+        form1.process()
+        form1=form1
+        
+        form = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form.budget_type.default = ""
+        form.process()
+        form=form
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 @dbModel_route.route('/delete_cesap_plan', methods=['POST'])
 def delete_cesap_plan():
@@ -2529,8 +2542,21 @@ def delete_cesap_plan():
             cesu_plan.cesap_filename = None
             db.session.commit()
         p = Plan.query.get(cesap_id)
+        form1 = Form()
+        placeholder_choice = (p.program, p.program)
+        form1.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form1.program.default = ""
+        form1.process()
+        form1=form1
+        
+        form = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form.budget_type.default = ""
+        form.process()
+        form=form
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 @dbModel_route.route('/delete_cna_plan', methods=['POST'])
 def delete_cna_plan():
@@ -2558,8 +2584,21 @@ def delete_cna_plan():
             cesu_plan.cna_filename = None
             db.session.commit()
         p = Plan.query.get(cna_id)
+        form1 = Form()
+        placeholder_choice = (p.program, p.program)
+        form1.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+        form1.program.default = ""
+        form1.process()
+        form1=form1
+        
+        form = budget_type_form()
+        placeholder_choice = (p.budget_type, p.budget_type)
+        form.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form.budget_type.default = ""
+        form.process()
+        form=form
 
-    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("plan_details.html", id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=p.cpf_filename, cesap_filename=p.cesap_filename, cna_filename=p.cna_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer, form=form, form1=form1)
 
 @dbModel_route.route("/deploy", methods=["POST"])
 def deploy():
@@ -2976,7 +3015,6 @@ def delete_resources(id):
     flash('Delete successfully!', 'delete_account')
     return redirect(url_for('dbModel.resources'))
 
-
 ###################################### HELPPP ME ##############################
 @dbModel_route.route("/help")
 def help():
@@ -3017,8 +3055,6 @@ def budget():
     placeholder_choice = (current_year, current_year)
     budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
 
-
-    
     ############################ FOR TOTAL BUDGET ##############################
     # Retrieve all budgets with the same year as the current date
     budgets_same_year = Budget.query.filter(extract('year', Budget.date) == current_year).all()
@@ -3111,6 +3147,16 @@ def budget():
     fund_cost_total_value1 = "{:.2f}".format(fund_total_cost)
 
     
+    # Assuming current_year is defined elsewhere
+    project_closure = Budget_program_cost.query.filter(func.extract('year', Budget_program_cost.date) == current_year).all()
+
+    # Preprocess the data to replace None with 0
+    for row in project_closure:
+        row.budget = row.budget or 0
+        row.cost = row.cost or 0
+        row.balance = row.balance or 0
+
+    
     # Render the template with the current year and the next four years
     return render_template("budget.html", form=form, current_year=current_year, budget_years_with_placeholder=budget_years_with_placeholder,total_budget_same_year=total_budget_same_year, budget_total=budget_total_value,fund_total=fund_total_value,budget_current_total_value=budget_current_total_value,fund_current_year_value=fund_current_year_value, total_current_same_year=total_current_same_year, total_cost_same_year=total_cost_same_year, budget_cost_total_value=budget_cost_total_value, fund_cost_total_value=fund_cost_total_value,
                            budget_total1=budget_total_value1,
@@ -3121,8 +3167,7 @@ def budget():
                            fund_current_year_value1=fund_current_year_value1,
                            total_cost_same_year1=total_cost_same_year1,
                            budget_cost_total_value1=budget_cost_total_value1,
-                           fund_cost_total_value1=fund_cost_total_value1)
-
+                           fund_cost_total_value1=fund_cost_total_value1, project_closure=project_closure)
 
 ########################### Filter budget ##############################333
 @dbModel_route.route('/filter_budget', methods=['POST'])
@@ -3178,7 +3223,7 @@ def filter_budget():
         'message': 'Status updated successfully.'
     })
 
-########################### Filter budget ##############################333
+########################### Filter budget ##############################333 
 @dbModel_route.route('/filter_budget_program', methods=['POST'])
 def filter_budget_program():
     data = request.get_json()
@@ -3188,7 +3233,7 @@ def filter_budget_program():
 
     ############################ FOR TOTAL BUDGET ##############################
     # Retrieve all budgets with the same year as the current date
-    budgets_same_year1 = Total_budget.query.filter(extract('year', Total_budget.date) == current_year, Total_budget.program == "Literacy").all()
+    budgets_same_year1 = Total_budget.query.filter(extract('year', Total_budget.date) == current_year, Total_budget.program == program).all()
     total_budget_same_year1_sum = sum(budget.total for budget in budgets_same_year1)
     total_budget_same_year1= "{:.2f}".format(total_budget_same_year1_sum)
     
@@ -3196,39 +3241,39 @@ def filter_budget_program():
     budget_total1 = Total_budget.query.filter(
     Total_budget.budget_type == "Budget",
     extract('year', Total_budget.date) == current_year,
-    Total_budget.program == "Literacy"
+    Total_budget.program == program
     ).first()
 
     fund_total1 = Total_budget.query.filter(
         Total_budget.budget_type == "Donation",
         extract('year', Total_budget.date) == current_year,
-        Total_budget.program == "Literacy"
+        Total_budget.program == program
     ).first()
 
     budget_total_value1 = "{:.2f}".format(budget_total1.total) if budget_total1 else "0.00"
     fund_total_value1 = "{:.2f}".format(fund_total1.total) if fund_total1 else "0.00"
         
     ############################ FOR CURRENT BUDGET PROGRAMS ##############################
-    current_same_year1 = Current_total_budget.query.filter(extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").all()
+    current_same_year1 = Current_total_budget.query.filter(extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == program).all()
     
     total_current_same_year1_sum = sum(current.total for current in current_same_year1)
     total_current_same_year1= "{:.2f}".format(total_current_same_year1_sum)
 
     
-    budget_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Budget", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
-    fund_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Donation", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
+    budget_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Budget", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == program).first()
+    fund_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Donation", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == program).first()
     
     # Set budget_total and fund_total to 0 if they are None and format to two decimal points
     budget_current_total_value1 = "{:.2f}".format(budget_current_total1.total) if budget_current_total1 else "0.00"
     fund_current_year_value1 = "{:.2f}".format(fund_current_total1.total) if fund_current_total1 else "0.00"
     
     ############################ FOR BUDGET COST ##############################
-    cost_same_year1 = Program_cost.query.filter(extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+    cost_same_year1 = Program_cost.query.filter(extract('year', Program_cost.date) == current_year, Program_cost.program == program).all()
     total_cost_same_year1_sum = sum(cost.total_cost for cost in cost_same_year1)
     total_cost_same_year1= "{:.2f}".format(total_cost_same_year1_sum)
     
-    budget_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Budget", extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
-    fund_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Donation", extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
+    budget_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Budget", extract('year', Program_cost.date) == current_year, Program_cost.program == program).all()
+    fund_cost_total1 = Program_cost.query.filter(Program_cost.budget_type == "Donation", extract('year', Program_cost.date) == current_year, Program_cost.program == program).all()
 
     # Calculate total cost for budget and fund
     budget_total1 = sum(budget.total_cost for budget in budget_cost_total1) if budget_cost_total1 else 0
@@ -3240,8 +3285,8 @@ def filter_budget_program():
 
     return jsonify({
         'total_budget_same_year1': total_budget_same_year1,
-        'budget_total1': budget_total1,
-        'fund_total1': fund_total1,
+        'budget_total_value1': budget_total_value1,
+        'fund_total_value1': fund_total_value1,
         'total_current_same_year1': total_current_same_year1,
         'budget_current_total_value1': budget_current_total_value1,
         'fund_current_year_value1': fund_current_year_value1,
@@ -3251,6 +3296,34 @@ def filter_budget_program():
         'message': 'Status updated successfully.'
     })
 
+########################### Filter budget ##############################333 
+@dbModel_route.route('/filter_projects', methods=['POST'])
+def filter_projects():
+    data = request.get_json()
+    date = data['date']
+    current_year = int(date)
+
+    # Query database for projects
+    project_closure = Budget_program_cost.query.filter(func.extract('year', Budget_program_cost.date) == current_year).all()
+
+    # Format data into a list of dictionaries
+    formatted_data = []
+    for row in project_closure:
+        formatted_row = {
+            'id': row.id,
+            'community': row.community,
+            'program': row.program,
+            'subprogram': row.subprogram,
+            'budget_type': row.budget_type,
+            'budget': row.budget or 0,  # Replace None with 0
+            'cost': row.cost or 0,  # Replace None with 0
+            'balance': row.balance or 0,  # Replace None with 0
+            'date': row.date
+        }
+        formatted_data.append(formatted_row)
+
+    # Return formatted data as JSON response
+    return jsonify(formatted_data)
 
 @dbModel_route.route('/create_budget', methods=['POST'])
 def create_budget():

@@ -20,7 +20,7 @@ endblock %} {% block content %}
       </div>
       <div class="form-group">
         <label>Program:</label>
-        {{ form1.program(class="form-control", id="program", value=form1.program.default) }}
+        {{ form1.program(class="form-control first_option", id="program", value=form1.program.default) }}
       </div>
       <div class="form-group">
         <label>Sub-program:</label>
@@ -56,7 +56,7 @@ endblock %} {% block content %}
           </select> -->
 
           <div class="form-group">
-            {{ form.budget_type(class="form-control", id="budget_type", value=form.budget_type.default) }}
+            {{ form.budget_type(class="form-control first_option", id="budget_type", value=form.budget_type.default) }}
           </div>
         </div>
         <div class="budget_value">
