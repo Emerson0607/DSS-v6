@@ -124,15 +124,26 @@ with_categories=true) %}
                                 </div>
                                 <div class="form-group">
                                     <label>Total Week:</label>
-                                    <input type="number" class="form-control mobile-input" name="totalWeek" required>
+                                    <input type="text" class="form-control mobile-input" name="totalWeek" required>
                                 </div>
                                 <br>
-                                <div class="form-group">
-                                    <p id="notification" style="color: red; font-style: italic;"></p>
-                                    <label for="budget">Budget:</label>
-                                    <input type="text" class="form-control" id="budget" name="budget" required>
+                                <div class="form-group budget_type_box">
+                                    <div class="budget_type_card ">
+                                        <select id="budget_type" class="form-control" name="budget_type" required>
+                                            <option value="" disabled selected>Budget Type</option>
+                                            <option value="Donation">Donation</option>
+                                            <option value="Budget">Budget</option>
+                                        </select>
+                                    </div>
+                                    <div class="budget_value">
+                                        <p id="notification" style="color: red; font-style: italic;"></p>
+                                        <input placeholder="Enter amount" type="text" class="form-control" id="budget"
+                                            name="budget" required>
+                                        <!-- <p class="small"> available budget: 1.10</p> -->
+                                    </div>
                                 </div>
                                 <br>
+
                                 <!-- ACCOUNTABILITY 
                                     <label class="accountability label-category">ACCOUNTABILITY</label><br>
                                     <div class="form-group">
@@ -212,6 +223,12 @@ with_categories=true) %}
         <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div> <!--end jumbotron-->
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 
 
 <!--BUDGET-->
@@ -305,11 +322,19 @@ with_categories=true) %}
     }
 </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-    crossorigin="anonymous"></script>
+<script>
+    document.querySelectorAll(".mobile-input").forEach(function (element) {
+        element.addEventListener("input", function (event) {
+            // Remove any non-numeric characters from the input
+            this.value = this.value.replace(/\D/g, "");
+
+            // Ensure only two digits are allowed
+            if (this.value.length > 2) {
+                this.value = this.value.slice(0, 2);
+            }
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function () {
@@ -317,6 +342,8 @@ with_categories=true) %}
         date_picker();
     });
 </script>
+
+
 
 <script>
     // Remove any non-letter characters from the input

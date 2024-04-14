@@ -10,6 +10,8 @@ from main import Form, app, mail
 from flask_mail import Mail, Message
 import pytz, re
 import base64
+from flask_wtf import FlaskForm
+from wtforms import SelectField
 # LINE BELOW IS FOR PASS ENCRYPTION (UNCOMMENT IF NEEDED)
 from werkzeug.security import generate_password_hash, check_password_hash 
 
@@ -19,6 +21,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
 
+
+
+class budget_type_form(FlaskForm):
+    budget_type = SelectField('Budget Type', choices=[], id='budget_type')
+    
 # Function to validate email format
 def is_valid_email(email):
     # Regular expression pattern for validating email format
@@ -922,9 +929,13 @@ def add_community():
 def get_current_program_budget():
     program = request.form.get('program')
     budget_type = request.form.get('budgetType')
+    date1 = request.form.get('date')
+    
+    date = convert_date(date1)
+    date_year = date.year
 
-    current_program_budget = Current_total_budget.query.filter_by(program=program, budget_type=budget_type).first()
-
+    current_program_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == budget_type, extract('year', Current_total_budget.date) == date_year, Current_total_budget.program == program).first()
+    
     if current_program_budget:
         total = current_program_budget.total
     else:
@@ -2178,12 +2189,18 @@ def view_plan(plan_id):
         return redirect(url_for('dbModel.login'))
 
     p = Plan.query.get(plan_id)
+    form = budget_type_form()
+    placeholder_choice = (p.budget_type, p.budget_type)
+    form.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+    form.budget_type.default = ""
+    form.process()
+    form=form
 
     cpf_data_filename = p.cpf_filename
     cesap_data_filename = p.cesap_filename
     cna_data_filename = p.cna_filename
 
-    return render_template("plan_details.html",id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer)
+    return render_template("plan_details.html",id=p.id, community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, budget=p.budget, department_A=p.department_A, volunteer=p.volunteer, form=form)
 
 
 @dbModel_route.route('/view_cpf_plan/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])

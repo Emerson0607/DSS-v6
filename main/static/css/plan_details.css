@@ -40,6 +40,15 @@ main .plan_detailsCard {
 
 }
 
+
+.plan_detailsCard .form-control {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc !important;
+    border-radius: 5px;
+}
+
 main .plan_detailsCard>div {
     background: var(--color-white);
     padding: var(--card-padding);

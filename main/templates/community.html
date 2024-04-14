@@ -96,7 +96,7 @@ with_categories=true) %}
                                 </div>
                                 <div class="form-group">
                                     <label>Total Week:</label>
-                                    <input type="number" class="form-control mobile-input" name="totalWeek" required>
+                                    <input type="text" class="form-control mobile-input" name="totalWeek" required>
                                 </div>
                                 <br>
                                 <div class="form-group budget_type_box">
@@ -248,6 +248,7 @@ with_categories=true) %}
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
+<!-- for budget validation -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var budgetInput = document.getElementById('budget');
@@ -257,18 +258,13 @@ with_categories=true) %}
             var value = e.target.value;
 
             // Remove non-numeric characters except comma and period
-            value = value.replace(/[^0-9,.]/g, '');
+            value = value.replace(/[^0-9.]/g, '');
 
             // Check if the input starts with zero
-            if (value.charAt(0) === '0') {
+            if (value.charAt(0) === '0' && value.length > 1) {
                 // If the input starts with zero, and its length is greater than 1,
                 // remove the leading zero
-                if (value.length > 1) {
-                    value = value.slice(1);
-                } else {
-                    // If the input is just zero, set the value to empty
-                    value = '';
-                }
+                value = value.slice(1);
             }
 
             // Display notification if there are invalid characters
@@ -278,16 +274,17 @@ with_categories=true) %}
                 notification.textContent = "";
             }
 
-            // Remove existing commas
-            value = value.replace(/,/g, '');
+            // Check for more than one period
+            var periodIndex = value.indexOf('.');
+            if (periodIndex !== -1) {
+                // If there's more than one period, keep only the first one
+                var remainingChars = value.slice(periodIndex + 1).replace(/\./g, '');
+                value = value.slice(0, periodIndex + 1) + remainingChars.slice(0, 2);
+            }
 
-            // Split the value into integer and decimal parts
+            // Add commas for thousands
             var parts = value.split('.');
-
-            // Format integer part with commas
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-            // Join the parts back together
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             value = parts.join('.');
 
             // Update the input value
@@ -329,21 +326,24 @@ with_categories=true) %}
         var program = $('select[name="program"]').val();
         var budgetType = $('select[name="budget_type"]').val();
         var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
+        var date = $("#start_date_input").val().toString();
+
 
         // Check the budget balance
-        checkBudgetBalance(program, budgetType, budgetAmount);
+        checkBudgetBalance(program, budgetType, budgetAmount, date);
     });
 
 
     // Function to check if the current program's budget balance is sufficient
-    function checkBudgetBalance(program, budgetType, budgetAmount) {
+    function checkBudgetBalance(program, budgetType, budgetAmount, date) {
         // Get the current program's total budget from the server using AJAX
         $.ajax({
             url: "/get_current_program_budget",  // Replace with your endpoint to get the current program's budget
             method: "POST",
             data: {
                 program: program,
-                budgetType: budgetType
+                budgetType: budgetType,
+                date: date
             },
             dataType: "json",
             success: function (response) {
