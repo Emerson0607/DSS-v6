@@ -111,7 +111,6 @@ def upload():
 
     return redirect(url_for('file.files'))
 
-
 @file_route.route('/view/<int:file_id>')
 def view(file_id):
     if g.current_role != "Admin" and g.current_role != "BOR":
@@ -175,12 +174,15 @@ def delete_file(id):
 # -------------------------   DL FILES for COORDINATOR
 @file_route.route('/cFiles')
 def cFiles():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
+    
     upload_data = Upload.query.all()
     return render_template("cDlfiles.html", upload_data=upload_data)
-
 
 @file_route.route('/cView/<int:file_id>')
 def cView(file_id):

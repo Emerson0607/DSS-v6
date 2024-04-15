@@ -410,7 +410,9 @@ def cFund():
     form.process()
     form=form
 
-    # Check if the user is logged in
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -424,6 +426,9 @@ def cFund():
 
 @fundraising_route.route("/cAdd_fund", methods=["POST"])
 def cAdd_fund():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -472,6 +477,9 @@ def cAdd_fund():
 
 @fundraising_route.route("/cView_fund/<int:fund_id>")
 def cView_fund(fund_id):
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -487,11 +495,12 @@ def cView_fund(fund_id):
 
 @fundraising_route.route("/cView_pending_fund/<int:fund_id>")
 def cView_pending_fund(fund_id):
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-    
-    
     
     p = Pending_fund.query.get(fund_id)
 
@@ -506,9 +515,10 @@ def cView_pending_fund(fund_id):
 
 @fundraising_route.route('/cDelete_fund/<int:id>', methods=['GET'])
 def cDelete_fund(id):
-    if g.current_role != "Admin" and g.current_role != "BOR":
-        return redirect(url_for('dbModel.login'))
 
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -566,6 +576,9 @@ def cDelete_fund(id):
 @fundraising_route.route('/cDelete_pending_fund/<int:id>', methods=['GET'])
 def cDelete_pending_fund(id):
 
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -673,6 +686,9 @@ def delete_archived_fund(id):
 
 @fundraising_route.route('/update_pending_fund', methods=['POST'])
 def update_pending_fund():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -739,6 +755,9 @@ def update_pending_fund():
 @fundraising_route.route("/cArchived_fund")
 def cArchived_fund():
     # Check if the user is logged in
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -751,6 +770,9 @@ def cArchived_fund():
 
 @fundraising_route.route("/cView_archived_fund/<int:fund_id>")
 def cView_archived_fund(fund_id):
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -777,6 +799,9 @@ def fund_programs():
 
 @fundraising_route.route('/cFund_programs')
 def cFund_programs():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))

@@ -29,6 +29,9 @@ def convert_date1(datetime_str):
 @coordinator_route.route("/coordinator_dashboard")
 def coordinator_dashboard():
      # Check if the user is logged in
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+     
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -72,6 +75,12 @@ def inject_current_user():
 
 @coordinator_route.route("/cClear_session")
 def cClear_session():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
     session.clear()
     userlog = g.current_user
     action = f'Logged out.'
@@ -87,6 +96,9 @@ def cClear_session():
 
 @coordinator_route.route('/cCoordinator')
 def cCoordinator():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+     
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -160,6 +172,9 @@ def cCommunity_data_list():
 
 @coordinator_route.route("/cManage_community")
 def cManage_community():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -179,6 +194,9 @@ def convert_date(date_str):
 
 @coordinator_route.route("/cAdd_community", methods=["POST"])
 def cAdd_community():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -244,7 +262,6 @@ def cAdd_community():
 
 
 ############# UPDATE WEEK BASED FROM Subprogram ##############
-
 @coordinator_route.route('/cUpdate_week', methods=['POST'])
 def cUpdate_week():
     data = request.get_json()
@@ -411,7 +428,6 @@ def cArchive_project():
 
     return jsonify({'message': 'Data archived.'})
 
-
 #display kaakbay program and coordinator
 def cGet_ongoing_count(session, program_name):
     result = db.session.query(
@@ -438,6 +454,9 @@ def cGet_completed_count(session, program_name):
 ############# changepassword ##############
 @coordinator_route.route("/cChange_password")
 def cChange_password():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -445,9 +464,11 @@ def cChange_password():
     return render_template("cChange_password.html")
 
 ############# changepassword ##############
-
 @coordinator_route.route("/cNew_password", methods=["POST"])
 def cNew_password():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -491,11 +512,13 @@ def cNew_password():
 
     return redirect(url_for('coordinator.cChange_password'))
 
-
 ############################### COORDINATOR CURRENT PROJECT FILES ###############################
 
 @coordinator_route.route("/cProject_file_list")
 def cProject_file_list():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -508,6 +531,9 @@ def cProject_file_list():
 
 @coordinator_route.route("/cView_project/<int:project_id>")
 def cView_project(project_id):
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -604,6 +630,9 @@ def cView_cesap_project(program, subprogram, community, cesap_filename):
 ############################### COORDINATOR ARCHIVED FILES ###############################
 @coordinator_route.route("/cArchived_table")
 def cArchived_table():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -614,6 +643,9 @@ def cArchived_table():
 
 @coordinator_route.route("/cView_archived/<int:project_id>")
 def cView_archived(project_id):
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -629,6 +661,9 @@ def cView_archived(project_id):
 ############################### COORDINATOR PENDING PROJECT FILES ###############################
 @coordinator_route.route("/cManage_pending")
 def cManage_pending():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -638,6 +673,9 @@ def cManage_pending():
 
 @coordinator_route.route('/cDelete_pending/<int:id>', methods=['GET'])
 def cDelete_pending(id):
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -669,6 +707,13 @@ def cDelete_pending(id):
 
 @coordinator_route.route('/cView_pending/<int:pending_id>', methods=['GET'])
 def cView_pending(pending_id):
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
     p = Pending_project.query.get(pending_id)
     form = Form()
     placeholder_choice = (p.program, p.program)
@@ -894,6 +939,9 @@ def CNA_delete():
 
 @coordinator_route.route('/update_pending', methods=['POST'])
 def update_pending():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1007,6 +1055,8 @@ def get_comments():
 @coordinator_route.route("/cEdit_profile")
 def cEdit_profile():
   
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
     
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
@@ -1019,7 +1069,9 @@ def cEdit_profile():
 @coordinator_route.route('/cUpdate_profile', methods=['POST'])
 def cUpdate_profile():
    
-
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1086,6 +1138,13 @@ def cUpdate_profile():
 
 @coordinator_route.route('/cDelete_picture', methods=['POST'])
 def cDelete_picture():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+    
     if request.method == 'POST':
         profile_id = request.form.get('edit-id')
         users_picture = Users.query.filter_by(id=profile_id).first()
@@ -1114,6 +1173,9 @@ def cDelete_picture():
 @coordinator_route.route('/cUpdate_picture', methods=['POST'])
 def cUpdate_picture():
 
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1153,6 +1215,9 @@ def cUpdate_picture():
 ################## RESOURCES ################3333
 @coordinator_route.route("/cResources")
 def cResources():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1173,6 +1238,9 @@ def cResources():
 @coordinator_route.route("/cAdd_resources", methods=["POST"])
 def cAdd_resources():
 
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1220,6 +1288,9 @@ def cAdd_resources():
 @coordinator_route.route('/cDelete_resources/<int:id>', methods=['GET'])
 def cDelete_resources(id):
 
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -1253,12 +1324,13 @@ def cDelete_resources(id):
     flash('Delete successfully!', 'delete_account')
     return redirect(url_for('coordinator.cResources'))
 
-
 ###################################### HELPPP ME ##############################
 @coordinator_route.route("/chelp")
 def chelp():
     
-     # Check if the user is logged in
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))

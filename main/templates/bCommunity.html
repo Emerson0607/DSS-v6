@@ -14,6 +14,12 @@ with_categories=true) %}
 {% endfor %}
 {% endif %}
 {% endwith %}
+<!--FOR BUDGET-->
+<div class="budget_card">
+    <a href="{{ url_for('bor.bBudget') }} " class="btn_budget manrope">
+        Budget
+    </a>
+</div>
 
 <div class="communityCard">
     <div class="jumbotron">
@@ -56,12 +62,7 @@ with_categories=true) %}
     </div> <!--end jumbotron-->
 </div>
 
-<!--FOR BUDGET-->
-<div class="budget_card">
-    <a href="{{ url_for('bor.bBudget') }} " class="btn_budget manrope">
-        Budget
-    </a>
-</div>
+
 
 <div class="insights">
     <div class="insights-div">
