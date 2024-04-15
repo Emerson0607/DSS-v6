@@ -304,33 +304,63 @@
     });
 </script>
 
+<!-- for creating budget -->
 <script>
     $(document).ready(function () {
         date_picker();
         budget_validation();
 
         // Add a click event handler for saving data to the database
-        $("#btn_budget").click(function () {
+        $("#btn_budget").click(function (event) {
+            // Get the values of the total and date fields
+            var totalBudgetValue = $("#total_budget").val().trim();
+            var dateValue = $("#start_date_input").val().trim();
+
+            // Check if either total budget or date is empty
+            if (totalBudgetValue === '' || dateValue === '') {
+                // Alert the user and prevent default action
+                alert("Please fill in both Total Budget and Date fields.");
+                event.preventDefault(); // Prevents the default action (form submission or button click)
+                return;
+            }
+
+            // Confirm with the user before proceeding
             var userConfirmed = confirm("Are you sure you want to proceed?");
             if (userConfirmed) {
+                // Pass the data to create_budget function
                 create_budget();
+            } else {
+                // Prevent the default action if the user cancels the confirmation
+                event.preventDefault(); // Prevents the default action (form submission or button click)
             }
         });
 
+
+
+
         function create_budget() {
             // Retrieve values from input fields
-
-            var literacy_budget = $("input[name='literacy']").val();
-            var socio_budget = $("input[name='socio']").val();
-            var environment_budget = $("input[name='environment']").val();
-            var health_budget = $("input[name='health']").val();
-            var cultural_budget = $("input[name='cultural']").val();
-            var values_budget = $("input[name='values']").val();
-            var disaster_budget = $("input[name='disaster']").val();
-            var gender_budget = $("input[name='gender']").val();
-
             var total_budget_string = $("#total_budget").val(); // Get the value of total_budget
+            var literacy_budget_string = $("input[name='literacy']").val();
+            var socio_budget_string = $("input[name='socio']").val();
+            var environment_budget_string = $("input[name='environment']").val();
+            var health_budget_string = $("input[name='health']").val();
+            var cultural_budget_string = $("input[name='cultural']").val();
+            var values_budget_string = $("input[name='values']").val();
+            var disaster_budget_string = $("input[name='disaster']").val();
+            var gender_budget_string = $("input[name='gender']").val();
+
+
             var total_budget = parseFloat(total_budget_string.replace(/,/g, '')); // Convert to float and remove commas
+            var literacy_budget = parseFloat(literacy_budget_string.replace(/,/g, ''));
+            var socio_budget = parseFloat(socio_budget_string.replace(/,/g, ''));
+            var environment_budget = parseFloat(environment_budget_string.replace(/,/g, ''));
+            var health_budget = parseFloat(health_budget_string.replace(/,/g, ''));
+            var cultural_budget = parseFloat(cultural_budget_string.replace(/,/g, ''));
+            var values_budget = parseFloat(values_budget_string.replace(/,/g, ''));
+            var disaster_budget = parseFloat(disaster_budget_string.replace(/,/g, ''));
+            var gender_budget = parseFloat(gender_budget_string.replace(/,/g, ''));
+
 
             var date = $("#start_date_input").val().toString();
 
@@ -415,7 +445,6 @@
                     $('.current_budget_card p.small').text(parseFloat(response.fund_current_year_value).toLocaleString() + " + " + parseFloat(response.budget_current_total_value).toLocaleString());
                 },
 
-
                 error: function (error) {
                     console.error("Failed to filter budget: " + error);
                 }
@@ -424,6 +453,7 @@
 
         // Other script code...
     });
+
 </script>
 
 <!-- FOR PROGRAMS FILTER -->

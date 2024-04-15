@@ -467,6 +467,26 @@ def insert_userx():
     )
     db.session.add(user_insert)
     db.session.commit()
+    
+    username = "BOR"
+    firstname = "LU"
+    lastname = "BOR"
+    email = "BOR@gmail.com"
+    program = "BOR"
+    password = "@123ABCabc"
+    role = "BOR"
+
+    user_insert = Users(
+        username=username,
+        firstname=firstname,
+        lastname=lastname,
+        program=program,
+        email=email,
+        password=password,
+        role=role,
+    )
+    db.session.add(user_insert)
+    db.session.commit()
 
 
 def delete_data():

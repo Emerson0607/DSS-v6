@@ -29,6 +29,8 @@
     display: grid;
     grid-template-columns: 1fr;
     max-height: 90%;
+
+
 }
 
 .budget_container .jumbotron .budget_card {
@@ -86,6 +88,7 @@
     margin-top: 1rem;
     transition: transform 0.4s ease;
     max-width: 20rem;
+    height: 12rem;
 }
 
 
@@ -512,6 +515,7 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
 
     .budget_card>div {
         max-width: 19.4rem;
+
     }
 
 

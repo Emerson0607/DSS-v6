@@ -3182,18 +3182,18 @@ def filter_budget():
     total_budget_same_year = sum(budget.total for budget in budgets_same_year)
     budget_total = Budget.query.filter(Budget.budget_type == "Budget", extract('year', Budget.date) == current_year).first()
     fund_total = Budget.query.filter(Budget.budget_type == "Donation", extract('year', Budget.date) == current_year).first()
-    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
-    budget_total_value = "{:.2f}".format(budget_total.total) if budget_total else "0.00"
-    fund_total_value = "{:.2f}".format(fund_total.total) if fund_total else "0.00"
+    # Set budget_total and fund_total to 0 if they are None
+    budget_total_value = budget_total.total if budget_total else 0
+    fund_total_value = fund_total.total if fund_total else 0
         
     ############################ FOR CURRENT BUDGET ##############################
     current_same_year = Current_Budget.query.filter(extract('year', Current_Budget.date) == current_year).all()
     total_current_same_year = sum(current.total for current in current_same_year)
     budget_current_total = Current_Budget.query.filter(Current_Budget.budget_type == "Budget", extract('year', Current_Budget.date) == current_year).first()
     fund_current_total = Current_Budget.query.filter(Current_Budget.budget_type == "Donation", extract('year', Current_Budget.date) == current_year).first()
-    # Set budget_total and fund_total to 0 if they are None and format to two decimal points
-    budget_current_total_value = "{:.2f}".format(budget_current_total.total) if budget_current_total else "0.00"
-    fund_current_year_value = "{:.2f}".format(fund_current_total.total) if fund_current_total else "0.00"
+    # Set budget_total and fund_total to 0 if they are None
+    budget_current_total_value = budget_current_total.total if budget_current_total else 0
+    fund_current_year_value = fund_current_total.total if fund_current_total else 0
     
     ############################ FOR BUDGET COST ##############################
     cost_same_year = Budget_cost.query.filter(extract('year', Budget_cost.date) == current_year).all()
@@ -3203,12 +3203,8 @@ def filter_budget():
     fund_cost_total = Budget_cost.query.filter(Budget_cost.budget_type == "Donation", extract('year', Budget_cost.date) == current_year).all()
 
     # Calculate total cost for budget and fund
-    budget_total = sum(budget.total_cost for budget in budget_cost_total) if budget_cost_total else 0
-    fund_total = sum(fund.total_cost for fund in fund_cost_total) if fund_cost_total else 0
-
-    # Format the totals to two decimal points
-    budget_cost_total_value = "{:.2f}".format(budget_total)
-    fund_cost_total_value = "{:.2f}".format(fund_total)
+    budget_total_cost = sum(budget.total_cost for budget in budget_cost_total) if budget_cost_total else 0
+    fund_total_cost = sum(fund.total_cost for fund in fund_cost_total) if fund_cost_total else 0
 
     return jsonify({
         'total_budget_same_year': total_budget_same_year,
@@ -3218,8 +3214,8 @@ def filter_budget():
         'budget_current_total_value': budget_current_total_value,
         'fund_current_year_value': fund_current_year_value,
         'total_cost_same_year': total_cost_same_year,
-        'budget_cost_total_value': budget_cost_total_value,
-        'fund_cost_total_value': fund_cost_total_value,
+        'budget_cost_total_value': budget_total_cost,
+        'fund_cost_total_value': fund_total_cost,
         'message': 'Status updated successfully.'
     })
 
@@ -3372,7 +3368,7 @@ def create_budget():
     }
     
     for program, budget in programs.items():
-        budget_float = round(float(budget), 2)  # Convert budget to float
+        budget_float = budget # Convert budget to float
         
         total_budget_program = Total_budget.query.filter(Total_budget.budget_type == "Budget", extract('year', Total_budget.date) == budget_year, Total_budget.program == program).first()
         
