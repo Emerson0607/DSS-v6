@@ -12,7 +12,7 @@
         <div class="no-data">
             <h1>No Data Found</h1>
             <p>Sorry, but there is no data available at the moment. Go back to the
-                <a href="{{url_for('dbModel.kaakbay_program')}}"> Community Project</a>page.
+                <a href="{{url_for('dbModel.kaakbay_program')}}"> Community Project </a>page.
             </p>
         </div>
 
@@ -132,8 +132,9 @@
             success: function (data) {
                 if (data.message === 'No data found for the program.') {
                     console.log('No data found.');
-                    $(".notfound1").css("display", "block");
                     $(".kaakbay-subprogram-title").css("display", "none");
+                    $(".notfound1").css("display", "block");
+
 
                     return;
                 } else {

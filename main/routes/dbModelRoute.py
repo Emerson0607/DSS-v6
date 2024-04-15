@@ -21,8 +21,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
 
-
-
 class budget_type_form(FlaskForm):
     budget_type = SelectField('Budget Type', choices=[], id='budget_type')
     
@@ -212,6 +210,10 @@ def inject_current_user():
 @dbModel_route.route("/login", methods=["GET", "POST"])
 def login():
     if 'user_id' in session:
+        
+        if g.current_user == "BOR":
+            return redirect(url_for('bor.bor_dashboard'))
+        
         if g.current_role != "Admin" and g.current_role != "BOR":
             return redirect(url_for('coordinator.coordinator_dashboard')) 
         else:
@@ -234,6 +236,10 @@ def login():
             db.session.commit()
 
             session['user_id'] = user.id
+            
+            if user.username == "BOR":
+                return redirect(url_for('bor.bor_dashboard'))
+            
             if user.role == 'Admin' or user.role == 'BOR':
                 flash(f'Login successful!', 'success')
                 return redirect(url_for('dbModel.dashboard'))
@@ -297,7 +303,7 @@ def manage_account():
         filtered_data = Users.query.all()
     else:
         # Retrieve all users where the role is not 'BOR'
-        filtered_data = Users.query.filter(Users.role != 'BOR').all()
+        filtered_data = Users.query.filter(Users.username != 'BOR').all()
 
     # Prepare a dictionary to store profile pictures as base64 encoded strings
     profile_pictures_base64 = {}
@@ -548,7 +554,6 @@ def delete_account(id):
         except Exception as e:
             db.session.rollback()
     return redirect(url_for('dbModel.manage_account'))
-
 
 ########################### FOR DEPARTMENT ##################################
 
@@ -802,7 +807,6 @@ def get_department(coordinator_select):
         # Return an empty list if no users are found
         return jsonify({'users': []})
 
-
 ############################  CRUD FOR MANAGE COMMUNITY  ############################
 @dbModel_route.route("/add_community", methods=["POST"])
 def add_community():
@@ -931,7 +935,6 @@ def add_community():
         return redirect(url_for('dbModel.manage_community'))
     return redirect(url_for('dbModel.manage_community'))
 
-
 @dbModel_route.route('/get_current_program_budget', methods=['POST'])
 def get_current_program_budget():
     program = request.form.get('program')
@@ -963,8 +966,6 @@ def get_current_program_budget():
 
 #     # Return the flag as part of a JSON response
 #     return jsonify({"flag": flag})
-
-
 
 #EDIT COMMUNITY NOT NEEDED SO COMMENT checkProject
 '''

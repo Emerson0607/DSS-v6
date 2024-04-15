@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CESU | {% block title %}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <link rel="stylesheet" href="/static/css/admin_dashboard.css">
+    <link rel="stylesheet" href="/static/css/programCSVresult.css">
+    <link rel="stylesheet" href="/static/css/community.css">
+    <link rel="stylesheet" href="/static/css/manage_account.css">
+    <link rel="stylesheet" href="/static/css/coordinator.css">
+    <link rel="stylesheet" href="/static/css/program.css">
+    <link rel="stylesheet" href="/static/css/dlfiles.css">
+    <link rel="stylesheet" href="/static/css/kaakbay_program.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="/static/css/change_password.css">
+    <link rel="stylesheet" href="/static/css/flash.css">
+    <link rel="stylesheet" href="/static/css/pending.css">
+    <link rel="stylesheet" href="/static/css/pending_details.css">
+    <link rel="stylesheet" href="/static/css/project_files.css">
+    <link rel="stylesheet" href="/static/css/project_table.css">
+    <link rel="stylesheet" href="/static/css/project_details.css">
+    <link rel="stylesheet" href="/static/css/archived_details.css">
+    <link rel="stylesheet" href="/static/css/archived_files.css">
+    <link rel="stylesheet" href="/static/css/archived_table.css">
+    <link rel="stylesheet" href="/static/css/cesu_plans.css">
+    <link rel="stylesheet" href="/static/css/Logfile.css">
+    <link rel="stylesheet" href="/static/css/plan_details.css">
+    <link rel="stylesheet" href="/static/css/fund.css">
+    <link rel="stylesheet" href="/static/css/edit_profile.css">
+    <link rel="stylesheet" href="/static/css/resources.css">
+    <link rel="stylesheet" href="/static/css/fund_details.css">
+    <link rel="stylesheet" href="/static/css/archived_fund.css">
+    <link rel="stylesheet" href="/static/css/fund_archived_details.css">
+    <link rel="stylesheet" href="/static/css/pending_fund_details.css">
+    <link rel="stylesheet" href="/static/css/fund_programs.css">
+    <link rel="stylesheet" href="/static/css/help.css">
+
+    <link rel="stylesheet" href="/static/css/budget.css">
+
+    <link rel="stylesheet" href="/static/css/tooltip.css">
+    <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
+        type="image/x-icon">
+
+    <style>
+        @media screen and (max-width: 400px) {
+
+
+            .invert-blue {
+                content: url("/static/images/user-invert-blue.png");
+                /* Change the image source for mobile  <link rel="icon" href="/main/static/images/cesu-icon.ico" type="image/x-icon">*/
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container1 ">
+        <aside class="sticky-top">
+            <div class="top">
+                <div class="logo">
+                    <img src="/static/images/mobile.png" alt="CESU-LOGO">
+                    <span class="cesu" id="dashboardLink">CE
+                        <span class="su blue-link">SU</span>
+                    </span>
+                </div>
+                <span class="cesu-mobile" id="dashboardLink2">CE
+                    <span class="su-mobile blue-link">SU</span>
+                </span>
+                <div class="close" id="close-btn">
+                    <span class="material-symbols-sharp">close</span>
+                </div>
+            </div>
+            <div class="sidebar">
+
+                <a href="{{ url_for('bor.bManage_community') }} " class="sidebar-link blue-link">
+                    <span class="material-symbols-sharp">groups</span>
+                    <h3>Community</h3>
+                </a>
+            </div>
+        </aside>
+        <main>
+            {% block content %}{% endblock %}
+
+            <div class="space" style="margin-top: 5rem;"></div>
+        </main>
+        <div class="right">
+            <div class="top top-blue">
+                <button id="menu-btn">
+                    <span class="material-symbols-sharp">menu</span>
+                </button>
+
+                <div class="theme-toggler">
+                    <span class="material-symbols-sharp active">light_mode</span>
+                    <span class="material-symbols-sharp">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="profile-info">
+                        <p>Hi, <b style="text-transform: uppercase;">{{current_firstname}}
+                                <span>{{current_lastname}}</span></b></p>
+                        <small class="text-muted">BOR</small>
+                    </div>
+                    <div class="profile-photo" id="profile-photo" onclick="toggleDropdown()">
+                        {% if profile_picture_base64 %}
+                        <img src="data:image/jpeg;base64,{{ profile_picture_base64 }}" alt="Profile Picture">
+                        {% else %}
+                        <img class="invert-blue" src="/static/images/user-blue.png" alt="CESU-LOGO">
+                        {% endif %}
+
+                        <div class="dropdown-content" id="dropdown-content" style="height: 3rem;">
+                            <div class="logout-hover "><a class="logout-button logout-button-blue"
+                                    href="{{ url_for('dbModel.clear_session') }}" id="logout-button"
+                                    onclick="clearAndSetFirstLinkActive();">Logout</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--End of top-->
+            <div class="recent-updates">
+
+                <div class="updates">
+
+                    <div id="date-container">
+                        <!-- The current date and day will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/static/js/admin_dashboard.js"></script>
+
+    <script>
+        function toggleDropdownFile() {
+            var dropdownContent = document.getElementById("dropdown-content-files");
+            var fundraisingContent = document.getElementById("fundraising-content-files");
+
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+                fundraisingContent.style.display = "none"; // Close fundraising dropdown
+            }
+        }
+        function toggleFundraising() {
+            var dropdownContent = document.getElementById("fundraising-content-files");
+            var filesDropdownContent = document.getElementById("dropdown-content-files");
+
+            if (dropdownContent.style.display === "block") {
+                dropdownContent.style.display = "none";
+            } else {
+                dropdownContent.style.display = "block";
+                filesDropdownContent.style.display = "none"; // Close files dropdown
+            }
+        }
+    </script>
+
+
+
+    <script>
+        var pendingCount = '{{pending_count}}'; // Assuming pending_count is a variable in your template
+
+        // Get the element by ID
+        var pendingBadge = document.getElementById('pending-badge');
+
+        // Set the display property based on the value of pendingCount
+        pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
+    </script>
+
+    <!-- ON CLICK CESU-->
+    <script>
+        document.getElementById("dashboardLink").addEventListener("click", function () {
+            window.location.href = "{{ url_for('bor.bManage_community') }}";
+        });
+        document.getElementById("dashboardLink2").addEventListener("click", function () {
+            window.location.href = "{{ url_for('bor.bManage_community') }}";
+        });
+    </script>
+
+    <script>
+        var pendingCount = '{{declined_fund_count}}'; // Assuming pending_count is a variable in your template
+        // Get the element by ID
+        var pendingBadge = document.getElementById('fund_badge');
+
+        // Set the display property based on the value of pendingCount fund_badge
+        pendingBadge.style.display = pendingCount >= 1 ? 'block' : 'none';
+    </script>
+</body>
+
+</html>

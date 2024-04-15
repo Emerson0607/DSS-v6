@@ -1,4 +1,4 @@
-{% extends "admin_dashboard.html" %} {% block title %} BUDGET {% endblock
+{% extends "bor_dashboard.html" %} {% block title %} BUDGET {% endblock
 %} {% block content %}
 
 <style>
@@ -22,13 +22,11 @@
 <div class="flash flash-{{ category }}">{{ message }}</div>
 {% endfor %} {% endif %} {% endwith %}
 
+
 <div class="budget_container">
     <div class="jumbotron">
         <div class="for_filter">
             <h2 style="margin-bottom: 1rem"><b>Budget</b></h2>
-            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right">
-                <span class="material-symbols-sharp" style="float: right">add</span>
-            </button>
 
             <select id="yearDropdown" class="year_card form_control_year">
                 {% for year in budget_years_with_placeholder %}
@@ -393,21 +391,14 @@
     });
 </script>
 
-
-<!-- Distributing budget -->
 <script>
+
     $(document).ready(function () {
         // Trigger budget distribution when the total budget input changes
         $('#total_budget').on('input', function () {
             distributeBudget();
         });
-
-        // Attach event listener to all program inputs
-        $('.budget-input').on('input', function () {
-            updateTotalBudget();
-        });
     });
-
     function distributeBudget() {
         // Get the total budget entered by the user and remove commas
         var totalBudget = parseFloat($('#total_budget').val().replace(/,/g, ''));
@@ -420,21 +411,6 @@
 
         // Update the value of each program input with the calculated budget
         $('.budget-input').not('#total_budget').val(budgetPerProgram.toFixed(2));
-
-        // Update the total budget display
-        updateTotalBudget();
-    }
-
-    function updateTotalBudget() {
-        // Calculate the sum of all program inputs
-        var totalProgramBudget = 0;
-        $('.budget-input').not('#total_budget').each(function () {
-            var programBudget = parseFloat($(this).val().replace(/,/g, ''));
-            totalProgramBudget += isNaN(programBudget) ? 0 : programBudget;
-        });
-
-        // Update the total budget input with the sum of all program inputs
-        $('#total_budget').val(totalProgramBudget.toFixed(2));
     }
 
 </script>

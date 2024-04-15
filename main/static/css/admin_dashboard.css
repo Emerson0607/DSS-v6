@@ -321,6 +321,8 @@ aside .sidebar .blue-link:hover {
 .sidebar .fund_container_box .fund_container .declined_fund_count {
     color: white;
 
+
+
     border: .2rem solid white;
     padding: 0 .5rem;
     border-radius: 50%;
@@ -331,13 +333,23 @@ aside .sidebar .blue-link:hover {
     /* Apply transition for smooth effect */
 }
 
+
+
 .sidebar .fund_container_box .fund_container .declined_fund_count:hover {
     transform: scale(1.2);
 }
 
+
 .admin_fund_badge {
     background-color: rgb(110, 49, 231);
 }
+
+.declined_fund_count_green {
+    background-color: #49a14f;
+
+}
+
+
 
 /*============ MAIN ====================*/
 main {
