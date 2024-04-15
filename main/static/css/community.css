@@ -50,7 +50,7 @@ main .communityCard>div:hover {
 }
 
 main .budget_card {
-    margin: 1rem 0 2.6rem 0;
+    margin: 0.3rem 0 1rem 0;
     padding: 0 0 0 0;
     width: 100%;
     position: relative;
@@ -64,6 +64,7 @@ main .budget_card {
     font-style: normal;
 }
 
+
 main .budget_card .btn_budget {
     position: absolute;
     right: 2rem;
@@ -76,8 +77,9 @@ main .budget_card .btn_budget {
     text-align: center;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    color: rgb(var(--pure-material-primary-rgb, 33, 150, 243));
+    color: rgb(21, 136, 21);
     background-color: transparent;
+    border: 1px solid rgb(128, 176, 142);
 
     font-size: 14px;
 
@@ -87,6 +89,8 @@ main .budget_card .btn_budget {
     cursor: pointer;
 
 }
+
+
 
 .btn_budget::-moz-focus-inner {
     border: none;
@@ -575,7 +579,7 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
 @media screen and (max-width: 400px) {
     .communityCard {
         margin: 0 auto;
-        padding-top: 2rem;
+        padding-top: 0.5rem;
 
     }
 
