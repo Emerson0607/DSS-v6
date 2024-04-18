@@ -146,7 +146,7 @@ def send_mail(otp, recipient_email):
     This OTP is valid for a single use and will expire shortly. 
     Do not share it with anyone for security reasons. 
 
-    If you did not request this OTP or experience any issues, please contact our support team immediately. 
+    If you did not request this OTP or experience any issues, please message us at Facebook Page: Laguna University- Community Extension Services Unit. 
 
     Thank you for trusting us with your security.
 
@@ -160,7 +160,7 @@ def send_mail(otp, recipient_email):
             <p>Your One-Time Password (OTP): <strong>{otp}</strong></p>
             <p>This OTP is valid for a single use and will expire shortly. 
             Do not share it with anyone for security reasons.</p>
-            <p>If you did not request this OTP or experience any issues, please contact our support team immediately.</p>
+            <p>If you did not request this OTP or experience any issues, please message us at Facebook Page: Laguna University- Community Extension Services Unit.</p>
             <p>Thank you for trusting us with your security.</p>
             <h1 style="margin-top: 1rem;"></h1>
             <p><em>Best regards, LU-CESU MIS Team</em></p>
@@ -431,6 +431,7 @@ def edit_account():
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'password_space')
             return redirect(url_for('dbModel.manage_account'))
+        
         if ' ' in new_username:
             flash('Password cannot contain spaces.', 'username_space')
             return redirect(url_for('dbModel.manage_account'))
@@ -443,8 +444,6 @@ def edit_account():
             flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
             return redirect(url_for('dbModel.manage_account'))
 
-        
-            
         user = Users.query.get(user_id)
 
         if user:
@@ -480,6 +479,7 @@ def edit_account():
             if len(new_mobile_number) < 11:
                 flash('Mobile number must be at least 11 digits long.', 'existing_username')
                 return redirect(url_for('dbModel.manage_account'))
+            
             elif existing_mobile_number and existing_mobile_number.id != user.id:
                 flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'existing_username')
                 return redirect(url_for('dbModel.manage_account'))
@@ -498,14 +498,6 @@ def edit_account():
                 db.session.add(insert_logs)
                 db.session.commit()
 
-            """
-            if new_profile_picture.filename != '':
-                # Read the binary data from the uploaded file
-                profile_picture_data = new_profile_picture.read()
-
-                # Update the user's profile picture field with the binary data
-                user.profile_picture = profile_picture_data
-            """
             user.username = new_username
             user.email = new_email
             user.firstname = new_firstname
