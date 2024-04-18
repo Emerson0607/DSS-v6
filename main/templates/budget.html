@@ -6,6 +6,10 @@
         display: none;
     }
 
+    #programDropdown3 option:first-child {
+        display: none;
+    }
+
     .year_card option:first-child {
         display: none;
     }
@@ -235,6 +239,66 @@
     <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
 </div>
 
+<!-- for unused budget -->
+<div class="budget_container">
+    <div class="jumbotron">
+        <div class="for_filter">
+            <h2 style="margin-bottom: 1rem"><b>Unused Budget</b></h2>
+            <select id="yearDropdown3" class="year_card form_control_year">
+                {% for year in budget_years_with_placeholder %}
+                <option value="{{ year[0] }}">{{ year[1] }}</option>
+                {% endfor %}
+            </select>
+            <div class="form-group program_card_box">
+                {{ form1.program(class="form-select form_control_program", id="programDropdown3",
+                value=form1.program.default) }}
+            </div>
+
+        </div>
+        <div class="budget_card">
+            <div class="unused_budget_card_program">
+                <div class="budget_details">
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">analytics</span>
+                        <h3 class="budget_title">Total Unused</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(total_unused_budget | float) }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="unused_cost_card_program">
+                <div class="budget_details">
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">show_chart</span>
+                        <h3 class="budget_title">Total Cost</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(cost_unused_budget | float) }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="unused_current_card_program">
+                <div class="budget_details">
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">query_stats</span>
+                        <h3 class="budget_title">Current Unused</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1 class="{% if total_current_same_year1 | int < 0 %}negative{% endif %}">
+                            {{ '{:,.2f}'.format(current_unused_budget | float) }}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--end add modal account-->
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+</div>
+
 <!-- for liquidation -->
 <div class="communityCard">
     <div class="jumbotron">
@@ -414,7 +478,6 @@
     });
 </script>
 
-
 <!-- Distributing budget -->
 <!-- <script>
     $(document).ready(function () {
@@ -459,7 +522,6 @@
     }
 
 </script> -->
-
 
 <!-- Distributing budget 1.0 -->
 <script>
@@ -529,7 +591,6 @@
         return Math.round(value * 100) / 100;
     }
 </script>
-
 
 <!-- FOR BUDGET FILTER -->
 <script>
@@ -661,6 +722,48 @@
 
         // Other script code...
     });
+</script>
+
+<!-- FOR UNUSED FILTER -->
+<script>
+    $(document).ready(function () {
+        // Add change event handler for the yearDropdown
+        $('#yearDropdown3, #programDropdown3').change(function () {
+            var selectedYear = $('#yearDropdown3').val(); // Get the selected year
+            var selectedProgram = $('#programDropdown3').val(); // Get the selected program
+            // Check if both year and program are selected
+            if (!selectedProgram || !selectedYear) {
+                alert("Please select both year and program.");
+                return; // Exit the function if either year or program is not selected
+            }
+            // Send AJAX request with the selected year and program
+            $.ajax({
+                url: "/filter_unused",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    date: selectedYear,
+                    program: selectedProgram // Send the selected program
+                }),
+                success: function (response) {
+                    // Update HTML elements with received data, formatting numbers with commas
+                    $('.unused_budget_card_program h1').text(parseFloat(response.total_budget_same_year1).toLocaleString());
+
+                    $('.unused_cost_card_program h1').text(parseFloat(response.total_cost_same_year1).toLocaleString());
+
+                    $('.unused_current_card_program h1').text(parseFloat(response.total_current_same_year1).toLocaleString());
+
+                },
+
+                error: function (error) {
+                    console.error("Failed to filter budget: " + error);
+                }
+            });
+        });
+
+        // Other script code...
+    });
+
 </script>
 
 <script>

@@ -65,17 +65,20 @@
 
 
 .budget_card .total_budget_card,
-.budget_card .total_budget_card_program {
+.budget_card .total_budget_card_program,
+.budget_card .unused_budget_card_program {
     background: linear-gradient(to bottom right, #99ffcc 0%, #009999 100%);
 }
 
 .budget_card .total_cost_card,
-.budget_card .total_cost_card_program {
+.budget_card .total_cost_card_program,
+.budget_card .unused_cost_card_program {
     background: linear-gradient(to bottom right, #cc3300 0%, #ff9999 100%);
 }
 
 .budget_card .current_budget_card,
-.budget_card .current_budget_card_program {
+.budget_card .current_budget_card_program,
+.budget_card .unused_current_card_program {
     background: linear-gradient(to bottom right, #3333ff 0%, #aaaad7 100%);
 }
 
@@ -364,7 +367,8 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
 }
 
 .budget_container #yearDropdown,
-.budget_container #yearDropdown1 {
+.budget_container #yearDropdown1,
+.budget_container #yearDropdown3 {
     position: absolute;
     right: 2rem;
     top: 0.5rem;

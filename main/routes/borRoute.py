@@ -77,7 +77,7 @@ def bor_dashboard():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Community.query.filter_by(status="Ongoing").all()
+    all_data = Community.query.all()
     program8 = Program.query.all()
     department = Department.query.all()
     user1 = Users.query.all()

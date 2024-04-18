@@ -322,6 +322,15 @@ class Budget_program_cost(db.Model):
     cost = db.Column(db.Integer, nullable=True)
     balance = db.Column(db.Integer, nullable=True)
     date = db.Column(db.Date, nullable=True)
+    
+class Unused_budget(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    program = db.Column(db.String(255), nullable=True)
+    total = db.Column(db.Integer, nullable=True)
+    cost = db.Column(db.Integer, nullable=True)
+    balance = db.Column(db.Integer, nullable=True)
+    current = db.Column(db.Integer, nullable=True)
+    date = db.Column(db.Date, nullable=True)
 
 # --------------------- TODO: MULTI-IMAGES UPLOAD ----------------------
 
