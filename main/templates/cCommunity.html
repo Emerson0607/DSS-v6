@@ -32,7 +32,9 @@
                     <th>Sub-Program</th>
                     <th>Week</th>
                     <th>Total Week</th>
+                    <th>Budget</th>
                     <th>Coordinator</th>
+
                 </tr>
                 {% for row in community %}
                 <tr>
@@ -42,7 +44,16 @@
                     <td>{{ row.subprogram }}</td>
                     <td>{{ row.week }}</td>
                     <td>{{ row.totalWeek }}</td>
+                    <td>
+                        {% if row.budget is number %}
+                        {% set formatted_budget = "%0.2f" % row.budget %}
+                        {{ formatted_budget }}
+                        {% else %}
+                        {{ row.budget }}
+                        {% endif %}
+                    </td>
                     <td>{{ row.user }}</td>
+
                 </tr>
                 {% endfor %}
             </table>

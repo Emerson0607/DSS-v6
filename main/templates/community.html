@@ -39,8 +39,9 @@ with_categories=true) %}
                     <th>Date Deployed</th>
                     <th>Week</th>
                     <th>Total Week</th>
-                    <th>Coordinator</th>
                     <th>Budget</th>
+                    <th>Coordinator</th>
+
                     <th>Action</th>
                 </tr>
                 {% for row in community %}
@@ -52,8 +53,16 @@ with_categories=true) %}
                     <td>{{ row.start_date }}</td>
                     <td>{{ row.week }}</td>
                     <td>{{ row.totalWeek }}</td>
+                    <td>
+                        {% if row.budget is number %}
+                        {% set formatted_budget = "%0.2f" % row.budget %}
+                        {{ formatted_budget }}
+                        {% else %}
+                        {{ row.budget }}
+                        {% endif %}
+                    </td>
                     <td>{{ row.user }}</td>
-                    <td>{{ row.budget }}</td>
+
                     <td>
                         <a href="{{ url_for('dbModel.delete_community', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
                             class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
@@ -415,6 +424,7 @@ with_categories=true) %}
 
     });
 </script>
+
 <script>
     // Remove any non-letter characters from the input
     document.querySelectorAll(".letters-with-space-input").forEach(function (element) {

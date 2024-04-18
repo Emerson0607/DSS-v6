@@ -4,59 +4,56 @@
 
 <div class="program-row">
     <!--Top 1-->
+
     <div class="top-card1">
-        <h2 class="prediction" data-program="{{ top1.program }}">
-            {{ top1.program }} <small class="text-muted">({{ top1.quantity }} rows)</small>
+        <h2 class="prediction">
+            {{top1_program}} <small class="text-muted">({{top1_occurrences}} rows)</small>
         </h2>
-        <div data-program="{{ top1_2.program }}" class="subprogram-recommend">
-            <h4>{{ top1_2.program }}</h4>
+        <div class="subprogram-recommend">
+            <h4>{{top1_subprogram}}</h4>
         </div>
         <div class="subprogram-list">
             <span class="material-symbols-sharp drop-down1">
                 expand_circle_down
             </span> <small class="other1">Other Kaakbay programs</small>
             <div class="other-list1">
-                {% for sub_program in top1.sub_programs %}
-                <li>{{ sub_program }}</li>
-                {% endfor %}
+                <li>other projects</li>
             </div>
         </div>
     </div>
+
     <!--Top 2-->
     <div class="top-card2">
-        <h2 class="prediction" data-program="{{ top2.program }}">
-            {{ top2.program }} <small class="text-muted">({{ top2.quantity }} rows)</small>
+        <h2 class="prediction">
+            {{top2_program}} <small class="text-muted">({{top2_occurrences}} rows)</small>
         </h2>
-        <div data-program="{{ top2_2.program }}" class="subprogram-recommend">
-            <h4>{{ top2_2.program }}</h4>
+        <div class="subprogram-recommend">
+            <h4>{{top2_subprogram}}</h4>
         </div>
         <div class="subprogram-list">
             <span class="material-symbols-sharp drop-down2">
                 expand_circle_down
             </span> <small class="other2">Other Kaakbay programs</small>
             <div class="other-list2">
-                {% for sub_program in top2.sub_programs %}
-                <li>{{ sub_program }}</li>
-                {% endfor %}
+                <li>other projects</li>
             </div>
         </div>
     </div>
     <!--Top 3-->
     <div class="top-card3">
-        <h2 class="prediction" data-program="{{ top3.program }}">
-            {{ top3.program }} <small class="text-muted">({{ top3.quantity }} rows)</small>
+        <h2 class="prediction">
+            {{top3_program}} <small class="text-muted">({{top3_occurrences}} rows)</small>
         </h2>
-        <div data-program="{{ top1_2.program }}" class="subprogram-recommend">
-            <h4>{{ top3_2.program }}</h4>
+
+        <div class="subprogram-recommend">
+            <h4>{{top3_subprogram}}</h4>
         </div>
         <div class="subprogram-list">
             <span class="material-symbols-sharp drop-down3">
                 expand_circle_down
             </span> <small class="other3">Other Kaakbay programs</small>
             <div class="other-list3">
-                {% for sub_program in top3.sub_programs %}
-                <li>{{ sub_program }}</li>
-                {% endfor %}
+                <li>other projects</li>
             </div>
         </div>
     </div>

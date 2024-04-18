@@ -265,9 +265,30 @@
                         <td>{{ row.program }}</td>
                         <td>{{ row.subprogram }}</td>
                         <td>{{ row.budget_type }}</td>
-                        <td>{{ row.budget}}</td>
-                        <td>{{ row.cost}}</td>
-                        <td class="balance-cell">{{ row.balance}}</td>
+                        <td>
+                            {% if row.budget is number %}
+                            {% set formatted_budget = "%0.2f" % row.budget %}
+                            {{ formatted_budget }}
+                            {% else %}
+                            {{ row.budget }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if row.cost is number %}
+                            {% set formatted_cost = "%0.2f" % row.cost %}
+                            {{ formatted_cost }}
+                            {% else %}
+                            {{ row.cost }}
+                            {% endif %}
+                        </td>
+                        <td class="balance-cell">
+                            {% if row.balance is number %}
+                            {% set formatted_balance = "%0.2f" % row.balance %}
+                            {{ formatted_balance}}
+                            {% else %}
+                            {{ row.balance }}
+                            {% endif %}
+                        </td>
                         <td>{{ row.date.strftime('%Y-%m-%d') }}</td>
 
                     </tr>
@@ -279,6 +300,8 @@
         <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div> <!--end jumbotron-->
 </div>
+
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -297,6 +320,8 @@
             }
         });
     });
+
+
 </script>
 
 <!-- for creating budget -->

@@ -74,7 +74,7 @@
                             <h4 class="modal-title">Change Password Request</h4>
                         </div>
                         <div class="modal-body">
-                            <form method="post" action="/send_recovery_mail">
+                            <form method="post" id="recoveryForm" action="/send_recovery_mail">
                                 <div class="form-group recover-input">
                                     <label for="email">Enter your email:</label>
                                     <input type="email" class="form-control" name="email" id="email"
@@ -159,6 +159,39 @@
         });
 
     </script>
+
+    <!-- validation for email -->
+    <script>
+        $(document).ready(function () {
+            // Event listener for form submission
+            $('#recoveryForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+                var email = $('#email').val();
+                checkEmailExists(email);
+            });
+
+            // Function to check if the email exists
+            function checkEmailExists(email) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/check_email_exists',
+                    data: { email: email },
+                    success: function (response) {
+                        if (response.exists) {
+                            // If email exists, submit the form
+                            $('#recoveryForm').unbind('submit').submit();
+                        } else {
+                            alert('Email does not exist!');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error checking email existence.');
+                    }
+                });
+            }
+        });
+    </script>
+
 
 
     <!--RETAIN INPUTS-->

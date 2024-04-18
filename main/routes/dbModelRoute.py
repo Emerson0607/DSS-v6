@@ -776,7 +776,7 @@ def manage_community():
     program8 = Program.query.all()
     department = Department.query.all()
     user1 = Users.query.all()
-    coordinators = Users.query.filter_by(role='Coordinator').all()
+    coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
     return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1, department=department, coordinators=coordinators)
 
 ############################ ASSIGNED PROGRAM FOR COORDINATOR ############################
@@ -854,13 +854,22 @@ def add_community():
 
         existing_community = Community.query.filter_by(user= user, community=community, program = program, subprogram=subprogram).first()
 
+        community_budget1 = str(budget)
+            # Check if the budget contains commas
+        if ',' in community_budget1:
+            budget_to_float1 = community_budget1.replace(",", "")  # Remove commas from the string
+        else:
+            budget_to_float1 = community_budget1  # No commas, so the budget is already in the correct format
+        budget_float1 = round(float(budget_to_float1), 2)
+
+
         if existing_community is None:
             cpf_data = cpf_file.read()
             cesap_data = cesap_file.read()
             cna_data = cna_file.read()
 
             new_community = Community(community=community, program=program, subprogram=subprogram, start_date=start_date,
-            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
+            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget_float1, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
             cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id, budget_type=budget_type)
             
             
@@ -2133,7 +2142,7 @@ def cesu_plans():
     current_year = datetime.now().year
      # Fetch all user records from the database
     all_data = Plan.query.filter_by(status="Planning").all()
-    coordinators = Users.query.filter_by(role='Coordinator').all()
+    coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
     
     return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form, coordinators=coordinators)
 
@@ -2181,6 +2190,16 @@ def add_plan():
             Users.firstname.startswith(coordinator_first_name),
             Users.lastname.startswith(coordinator_last_name)
         ).first()
+        
+        
+        community_budget1 = str(budget)
+            # Check if the budget contains commas
+        if ',' in community_budget1:
+            budget_to_float1 = community_budget1.replace(",", "")  # Remove commas from the string
+        else:
+            budget_to_float1 = community_budget1  # No commas, so the budget is already in the correct format
+        budget_float1 = round(float(budget_to_float1), 2)
+        
 
         existing_plan= Plan.query.filter_by(user= user, status= status, community=community, program = program, subprogram=subprogram).first()
 
@@ -2190,7 +2209,7 @@ def add_plan():
             cna_data = cna_file.read()
 
             new_plan = Plan(community=community, program=program, subprogram=subprogram, start_date=start_date,
-            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
+            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget_float1, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
             cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=coordinator_name.id, budget_type=budget_type)
 
             userlog = g.current_user
@@ -2405,6 +2424,13 @@ def update_plan():
         volunteer = request.form['volunteer']
         budget_type = request.form['budget_type']
         
+        community_budget1 = str(budget)
+            # Check if the budget contains commas
+        if ',' in community_budget1:
+            budget_to_float1 = community_budget1.replace(",", "")  # Remove commas from the string
+        else:
+            budget_to_float1 = community_budget1  # No commas, so the budget is already in the correct format
+        budget_float1 = round(float(budget_to_float1), 2)
         
         #Convert date
         start_date = convert_date(start_date1)
@@ -2434,7 +2460,7 @@ def update_plan():
             cesu_plan.start_date = start_date
             cesu_plan.end_date = end_date
             cesu_plan.totalWeek = totalWeek
-            cesu_plan.budget = budget
+            cesu_plan.budget = budget_float1
             cesu_plan.user = user
             cesu_plan.department = lead
             cesu_plan.subDepartment = support
@@ -2915,7 +2941,7 @@ def resources():
     all_data = Resources.query.all()
     program8 = Program.query.all()
     user1 = Users.query.all()
-    coordinators = Users.query.filter_by(role='Coordinator').all()
+    coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
     return render_template("resources.html", current_year=current_year, community = all_data, form=form, program8=program8, user1 = user1, coordinators=coordinators)
 
 @dbModel_route.route("/add_resources", methods=["POST"])
@@ -3391,4 +3417,14 @@ def create_budget():
 
     return jsonify({'message': 'Budget created successfully'})
 
-        
+
+@dbModel_route.route('/check_email_exists', methods=['POST'])
+def check_email_exists():
+    email = request.form.get('email')
+
+    user = Users.query.filter_by(email=email).first()
+    if user:
+        # If the user (email) exists, return success response
+        return jsonify({'exists': True})
+    else:
+        return jsonify({'exists': False}) 

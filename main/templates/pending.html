@@ -25,6 +25,7 @@
                         <th>Sub-Program</th>
                         <th>Week</th>
                         <th>Total Week</th>
+                        <th>Budget</th>
                         <th>Coordinator</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -43,6 +44,13 @@
                                 row.week }}</a></td>
                         <td><a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit">{{
                                 row.totalWeek }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit"> {% if
+                                row.budget is number %}
+                                {% set formatted_budget = "%0.2f" % row.budget %}
+                                {{ formatted_budget }}
+                                {% else %}
+                                {{ row.budget }}
+                                {% endif %}</a></td>
                         <td><a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit">{{
                                 row.user }}</a></td>
                         <td>

@@ -5,6 +5,17 @@ import joblib, base64, re
 from main.models.dbModel import Users, Subprogram, Pending_project, Pending_fund
 from main import db
 
+# for random forest training
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+from sklearn.model_selection import train_test_split
+import pandas as pd
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+
+
 randomForest_Route = Blueprint('randomForest', __name__)
 
 model_path_cesu = 'trained_modelCESU7.pkl'
@@ -81,6 +92,9 @@ def program():
 
 @randomForest_Route.route("/cProgram", methods=["GET", "POST"])
 def cProgram():
+    if g.current_role != "Coordinator":
+        return redirect(url_for('dbModel.login'))
+    
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -118,11 +132,13 @@ def programWithCSV():
             }
 
             if not columns_with_strings.empty:
+                # Encoding dictionaries
                 encoding_dict_kasarian = {'Lalake': 0, 'Babae': 1}
                 encoding_dict_edad = {'17-below': 0, '18-24': 1, '25-34': 2, '35-44': 3, '45-54': 4, '55-64': 5, '65-Above': 6}
                 encoding_dict_antas = {'Hindi nakapagtapos ng Elementarya':0, 'Elementarya':1, 'Hindi nakapagtapos ng Sekundarya':2, 'Sekundarya':3, 'Kolehiyo':4, 'Hindi nakapagtapos ng Kolehiyo':5, 'Masters Degree':6, 'Doctorate Degree':7, 'Hindi nakapag-aral':8}
                 encoding_dict_uri = {'May Trabaho': 1, 'Walang Trabaho': 0}
 
+                # Endcoding dictionaries
                 endcoding_dict_Pangedukasyon = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Pangkultura = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Pangkabuhayan = {'Oo':1, 'Hindi': 0}
@@ -134,6 +150,7 @@ def programWithCSV():
                 endcoding_dict_Dental = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Teknolohiya = {'Oo':1, 'Hindi': 0}
 
+                # Applying encoding to dataframe columns
                 df['Kasarian'] = df['Kasarian'].map(encoding_dict_kasarian)
                 df['Edad'] = df['Edad'].map(encoding_dict_edad)
                 df['Antas na tinapos'] = df['Antas na tinapos'].map(encoding_dict_antas)
@@ -148,20 +165,17 @@ def programWithCSV():
                 df['Ayudang Pagkain (Food Assistance)'] = df['Ayudang Pagkain (Food Assistance)'].map(endcoding_dict_Pagkain)
                 df['Pagrerecycle'] = df['Pagrerecycle'].map(endcoding_dict_Pagrerecycle)
                 df['Pagsasanay Ukol sa Teknolohiya'] = df['Pagsasanay Ukol sa Teknolohiya'].map(endcoding_dict_Teknolohiya)
-                
 
             if "Program" in df.columns:
                 target_variable = "Program"
                 X = df.drop(target_variable, axis=1)
                 predictions = model.predict(X)
                 df["Program"] = predictions
-
             else:
                 predictions = model.predict(df)
                 df["Program"] = predictions
 
             #FOR SUBPROGRAM PREDICTION
-
             encoding_dict_program = {'Literacy': 0, 'Socio-economic': 1, 'Environmental Stewardship': 2, 'Health and Wellness': 3, 'Cultural Enhancement': 4, 'Values Formation': 5, 'Disaster Management': 6, 'Gender and Development': 7}  # Define your categories and values
             df['Program'] = df['Program'].map(encoding_dict_program)
 
@@ -174,38 +188,43 @@ def programWithCSV():
                 predictions2 = model2.predict(df)
                 df["Sub Program"] = predictions2
 
-            result_csv_filename = "result.csv"  # Specify the filename you want
-            df.to_csv(result_csv_filename, index=False)
+            last_two_columns = df.iloc[:, -2:]
 
-            df = pd.read_csv(result_csv_filename)
-            columns_with_strings = df.select_dtypes(include=['object']).columns
-            prediction_counts2 = Counter(predictions2)
-            top_3_predictions2 = prediction_counts2.most_common(3)
+            # Initialize a Counter to count pairs of values
+            pair_counter = Counter()
+            
+            # Iterate through each row
+            for index, row in last_two_columns.iterrows():
+                # Concatenate the values from the last two columns
+                pair = tuple(row)
+                # Count the occurrence of the pair
+                pair_counter[pair] += 1
 
-            top_programs_with_subprograms2 = []
-            for prediction2, count in top_3_predictions2:
-                top_programs_with_subprograms2.append({
-                    "program": prediction2,
-                    "quantity": count
-                   
-            })
-            #END of subprogram prediction
+            # Find the most common pairs
+            most_common_pairs = pair_counter.most_common()
 
+            # Pass the most common pairs to the template or print them
+            print("Top most common pairs in the last two columns:")
+            for pair, count in most_common_pairs:
+                print(f"{pair}: {count} occurrences")
+            top_program_subprogram = []
 
-            prediction_counts = Counter(predictions)
-
-            # Find the top 3 most frequent predictions
-            top_3_predictions = prediction_counts.most_common(3)
-
-             # Pass the top programs and their sub-programs to the template
-            top_programs_with_subprograms = []
-            for prediction, count in top_3_predictions:
-                top_programs_with_subprograms.append({
-                    "program": prediction,
-                    "quantity": count,
-                    "sub_programs": [sub_program.subprogram for sub_program in sub_programs_dict.get(prediction, [])]
-            })
+            # Iterate through the top 3 most common pairs
+            for idx, (pair, count) in enumerate(most_common_pairs[:3], start=1):
+                program_value = pair[0]
+                subprogram_value = pair[1]
                 
+                # Append the program, subprogram, and quantity to the list
+                top_program_subprogram.append({
+                    f"program": program_value,
+                    f"subprogram": subprogram_value,
+                    f"quantity": count
+                })
+
+            # Print or use the top 3 pairs
+            for pair_info in top_program_subprogram:
+                print(pair_info)
+
             kasarian_counts = df['Kasarian'].value_counts().to_dict()  
             edad_counts = df['Edad'].value_counts().to_dict()  
             antas_counts = df['Antas na tinapos'].value_counts().to_dict()  
@@ -256,14 +275,32 @@ def programWithCSV():
             else:
                 program_ces = "Gender Development" 
 
-            return render_template("resultCSV.html",
-            top1=top_programs_with_subprograms[0] if top_programs_with_subprograms else {},
-            top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) > 1 else {},
-            top3=top_programs_with_subprograms[2] if len(top_programs_with_subprograms) > 2 else {},
-            top1_2=top_programs_with_subprograms2[0] if top_programs_with_subprograms2 else {},
-            top2_2=top_programs_with_subprograms2[1] if len(top_programs_with_subprograms2) > 1 else {},
-            top3_2=top_programs_with_subprograms2[2] if len(top_programs_with_subprograms2) > 2 else {},
-            kasarian_counts=kasarian_counts,
+            # Define a dictionary to map encoded program values to program names
+            program_mapping = {
+                0: 'Literacy',
+                1: 'Socio-economic',
+                2: 'Environmental Stewardship',
+                3: 'Health and Wellness',
+                4: 'Cultural Enhancement',
+                5: 'Values Formation',
+                6: 'Disaster Management',
+                7: 'Gender and Development'
+            }
+                        
+            # Accessing the top 3 pairs and their counts
+            top1_program = program_mapping.get(top_program_subprogram[0]["program"], "Unknown")
+            top1_subprogram = top_program_subprogram[0]["subprogram"]
+            top1_occurrences = top_program_subprogram[0]["quantity"]
+
+            top2_program = program_mapping.get(top_program_subprogram[1]["program"], "Unknown")
+            top2_subprogram = top_program_subprogram[1]["subprogram"]
+            top2_occurrences = top_program_subprogram[1]["quantity"]
+
+            top3_program = program_mapping.get(top_program_subprogram[2]["program"], "Unknown")
+            top3_subprogram = top_program_subprogram[2]["subprogram"]
+            top3_occurrences = top_program_subprogram[2]["quantity"]
+
+            return render_template("resultCSV.html",kasarian_counts=kasarian_counts,
             edad_counts=edad_counts,
             antas_counts=antas_counts,
             uri_counts=uri_counts,
@@ -279,21 +316,32 @@ def programWithCSV():
             Teknolohiya_counts=Teknolohiya_counts,
             max_category=max_category,
             highest_count=highest_count,
-            program_ces=program_ces)
+            program_ces=program_ces,
+            top1_program=top1_program,
+            top1_subprogram=top1_subprogram,
+            top1_occurrences=top1_occurrences,
+            top2_program=top2_program,
+            top2_subprogram=top2_subprogram,
+            top2_occurrences=top2_occurrences,
+            top3_program=top3_program,
+            top3_subprogram=top3_subprogram,
+            top3_occurrences=top3_occurrences
+            )
 
         
     return render_template("program.html")
 
 #for coordinator side
-
 @randomForest_Route.route("/cProgramWithCSV", methods=["GET", "POST"])
 def cProgramWithCSV():
+
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
 
     if request.method == "POST":
         csv_file = request.files["csv_file"]
+      
         if csv_file:
             df = pd.read_csv(csv_file)
             df = df.iloc[:, 3:]
@@ -309,14 +357,15 @@ def cProgramWithCSV():
                 "Disaster Management": db.session.query(Subprogram).filter(Subprogram.program == "Disaster Management").all(),
                 "Gender and Development": db.session.query(Subprogram).filter(Subprogram.program == "Gender and Development").all()
             }
-            db.session.close()
 
             if not columns_with_strings.empty:
+                # Encoding dictionaries
                 encoding_dict_kasarian = {'Lalake': 0, 'Babae': 1}
                 encoding_dict_edad = {'17-below': 0, '18-24': 1, '25-34': 2, '35-44': 3, '45-54': 4, '55-64': 5, '65-Above': 6}
                 encoding_dict_antas = {'Hindi nakapagtapos ng Elementarya':0, 'Elementarya':1, 'Hindi nakapagtapos ng Sekundarya':2, 'Sekundarya':3, 'Kolehiyo':4, 'Hindi nakapagtapos ng Kolehiyo':5, 'Masters Degree':6, 'Doctorate Degree':7, 'Hindi nakapag-aral':8}
                 encoding_dict_uri = {'May Trabaho': 1, 'Walang Trabaho': 0}
 
+                # Endcoding dictionaries
                 endcoding_dict_Pangedukasyon = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Pangkultura = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Pangkabuhayan = {'Oo':1, 'Hindi': 0}
@@ -328,6 +377,7 @@ def cProgramWithCSV():
                 endcoding_dict_Dental = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Teknolohiya = {'Oo':1, 'Hindi': 0}
 
+                # Applying encoding to dataframe columns
                 df['Kasarian'] = df['Kasarian'].map(encoding_dict_kasarian)
                 df['Edad'] = df['Edad'].map(encoding_dict_edad)
                 df['Antas na tinapos'] = df['Antas na tinapos'].map(encoding_dict_antas)
@@ -342,20 +392,17 @@ def cProgramWithCSV():
                 df['Ayudang Pagkain (Food Assistance)'] = df['Ayudang Pagkain (Food Assistance)'].map(endcoding_dict_Pagkain)
                 df['Pagrerecycle'] = df['Pagrerecycle'].map(endcoding_dict_Pagrerecycle)
                 df['Pagsasanay Ukol sa Teknolohiya'] = df['Pagsasanay Ukol sa Teknolohiya'].map(endcoding_dict_Teknolohiya)
-                
 
             if "Program" in df.columns:
                 target_variable = "Program"
                 X = df.drop(target_variable, axis=1)
                 predictions = model.predict(X)
                 df["Program"] = predictions
-
             else:
                 predictions = model.predict(df)
                 df["Program"] = predictions
 
             #FOR SUBPROGRAM PREDICTION
-
             encoding_dict_program = {'Literacy': 0, 'Socio-economic': 1, 'Environmental Stewardship': 2, 'Health and Wellness': 3, 'Cultural Enhancement': 4, 'Values Formation': 5, 'Disaster Management': 6, 'Gender and Development': 7}  # Define your categories and values
             df['Program'] = df['Program'].map(encoding_dict_program)
 
@@ -368,38 +415,43 @@ def cProgramWithCSV():
                 predictions2 = model2.predict(df)
                 df["Sub Program"] = predictions2
 
-            result_csv_filename = "result.csv"  # Specify the filename you want
-            df.to_csv(result_csv_filename, index=False)
+            last_two_columns = df.iloc[:, -2:]
 
-            df = pd.read_csv(result_csv_filename)
-            columns_with_strings = df.select_dtypes(include=['object']).columns
-            prediction_counts2 = Counter(predictions2)
-            top_3_predictions2 = prediction_counts2.most_common(3)
+            # Initialize a Counter to count pairs of values
+            pair_counter = Counter()
+            
+            # Iterate through each row
+            for index, row in last_two_columns.iterrows():
+                # Concatenate the values from the last two columns
+                pair = tuple(row)
+                # Count the occurrence of the pair
+                pair_counter[pair] += 1
 
-            top_programs_with_subprograms2 = []
-            for prediction2, count in top_3_predictions2:
-                top_programs_with_subprograms2.append({
-                    "program": prediction2,
-                    "quantity": count
-                   
-            })
-            #END of subprogram prediction
+            # Find the most common pairs
+            most_common_pairs = pair_counter.most_common()
 
+            # Pass the most common pairs to the template or print them
+            print("Top most common pairs in the last two columns:")
+            for pair, count in most_common_pairs:
+                print(f"{pair}: {count} occurrences")
+            top_program_subprogram = []
 
-            prediction_counts = Counter(predictions)
-
-            # Find the top 3 most frequent predictions
-            top_3_predictions = prediction_counts.most_common(3)
-
-             # Pass the top programs and their sub-programs to the template
-            top_programs_with_subprograms = []
-            for prediction, count in top_3_predictions:
-                top_programs_with_subprograms.append({
-                    "program": prediction,
-                    "quantity": count,
-                    "sub_programs": [sub_program.subprogram for sub_program in sub_programs_dict.get(prediction, [])]
-            })
+            # Iterate through the top 3 most common pairs
+            for idx, (pair, count) in enumerate(most_common_pairs[:3], start=1):
+                program_value = pair[0]
+                subprogram_value = pair[1]
                 
+                # Append the program, subprogram, and quantity to the list
+                top_program_subprogram.append({
+                    f"program": program_value,
+                    f"subprogram": subprogram_value,
+                    f"quantity": count
+                })
+
+            # Print or use the top 3 pairs
+            for pair_info in top_program_subprogram:
+                print(pair_info)
+
             kasarian_counts = df['Kasarian'].value_counts().to_dict()  
             edad_counts = df['Edad'].value_counts().to_dict()  
             antas_counts = df['Antas na tinapos'].value_counts().to_dict()  
@@ -448,16 +500,34 @@ def cProgramWithCSV():
             elif max_category == "Pagkain":
                 program_ces = "Disaster Management"   
             else:
-                program_ces = "Gender Development"  
+                program_ces = "Gender Development" 
 
-            return render_template("cResultCSV.html",
-            top1=top_programs_with_subprograms[0] if top_programs_with_subprograms else {},
-            top2=top_programs_with_subprograms[1] if len(top_programs_with_subprograms) > 1 else {},
-            top3=top_programs_with_subprograms[2] if len(top_programs_with_subprograms) > 2 else {},
-            top1_2=top_programs_with_subprograms2[0] if top_programs_with_subprograms2 else {},
-            top2_2=top_programs_with_subprograms2[1] if len(top_programs_with_subprograms2) > 1 else {},
-            top3_2=top_programs_with_subprograms2[2] if len(top_programs_with_subprograms2) > 2 else {},
-            kasarian_counts=kasarian_counts,
+            # Define a dictionary to map encoded program values to program names
+            program_mapping = {
+                0: 'Literacy',
+                1: 'Socio-economic',
+                2: 'Environmental Stewardship',
+                3: 'Health and Wellness',
+                4: 'Cultural Enhancement',
+                5: 'Values Formation',
+                6: 'Disaster Management',
+                7: 'Gender and Development'
+            }
+                        
+            # Accessing the top 3 pairs and their counts
+            top1_program = program_mapping.get(top_program_subprogram[0]["program"], "Unknown")
+            top1_subprogram = top_program_subprogram[0]["subprogram"]
+            top1_occurrences = top_program_subprogram[0]["quantity"]
+
+            top2_program = program_mapping.get(top_program_subprogram[1]["program"], "Unknown")
+            top2_subprogram = top_program_subprogram[1]["subprogram"]
+            top2_occurrences = top_program_subprogram[1]["quantity"]
+
+            top3_program = program_mapping.get(top_program_subprogram[2]["program"], "Unknown")
+            top3_subprogram = top_program_subprogram[2]["subprogram"]
+            top3_occurrences = top_program_subprogram[2]["quantity"]
+
+            return render_template("cResultCSV.html",kasarian_counts=kasarian_counts,
             edad_counts=edad_counts,
             antas_counts=antas_counts,
             uri_counts=uri_counts,
@@ -473,7 +543,87 @@ def cProgramWithCSV():
             Teknolohiya_counts=Teknolohiya_counts,
             max_category=max_category,
             highest_count=highest_count,
-            program_ces=program_ces)
+            program_ces=program_ces,
+            top1_program=top1_program,
+            top1_subprogram=top1_subprogram,
+            top1_occurrences=top1_occurrences,
+            top2_program=top2_program,
+            top2_subprogram=top2_subprogram,
+            top2_occurrences=top2_occurrences,
+            top3_program=top3_program,
+            top3_subprogram=top3_subprogram,
+            top3_occurrences=top3_occurrences
+            )
+
         
     return render_template("cProgram.html")
 
+# for training
+def cTraining():
+    
+    data = pd.read_csv('for_training.csv') #from users upload
+    
+    # Define custom encoding dictionaries for each categorical column
+    encoding_dict_kasarian = {'Lalake': 0, 'Babae': 1}
+    encoding_dict_edad= {'17-below': 0, '18-24': 1, '25-34': 2, '35-44': 3, '45-54': 4, '55-64': 5, '65-Above': 6 }
+    encoding_dict_antas = {'Hindi nakapagtapos ng Elementarya':0, 'Elementarya':1, 'Hindi nakapagtapos ng Sekundarya':2, 'Sekundarya':3, 'Kolehiyo':4, 'Hindi nakapagtapos ng Kolehiyo':5, 'Masters Degree':6, 'Doctorate Degree':7, 'Hindi nakapag-aral':8}  # Define your categories and values
+    encoding_dict_uri = {'May Trabaho': 1, 'Walang Trabaho': 0}  # Define your categories and values
+    #encoding_dict_program = {'Literacy': 0, 'Socio-economic': 1, 'Environmental Stewardship': 2, 'Health and Wellness': 3, 'Cultural Enhancement': 4, 'Values Formation': 5, 'Disaster Management': 6, 'Gender and Development': 7}  # Define your categories and values
+
+    # Apply custom encoding to the categorical columns
+    data['Kasarian'] = data['Kasarian'].map(encoding_dict_kasarian)
+    data['Edad'] = data['Edad'].map(encoding_dict_edad)
+    data['Antas na tinapos'] = data['Antas na tinapos'].map(encoding_dict_antas)
+    data['Uri ng trabaho'] = data['Uri ng trabaho'].map(encoding_dict_uri)
+    #data['Program'] = data['Program'].map(encoding_dict_program)
+
+    # Split the data into training and testing sets
+    X = data.drop(['Program'], axis=1)  # Features
+    y = data['Program']  # Target variable
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    
+    
+    data = pd.read_csv('for_training.csv') #from users upload
+    # Handle missing values for numerical columns
+    num_imputer = SimpleImputer(strategy='mean')
+    data_numeric = data.select_dtypes(include=['float64', 'int64'])
+    data[data_numeric.columns] = num_imputer.fit_transform(data_numeric)
+
+    # Handle missing values for categorical columns
+    cat_imputer = SimpleImputer(strategy='most_frequent')
+    data_categorical = data.select_dtypes(include=['object'])
+    data[data_categorical.columns] = cat_imputer.fit_transform(data_categorical)
+
+    # Define custom encoding dictionaries for each categorical column
+    encoding_dict_kasarian = {'Lalake': 0, 'Babae': 1}
+    encoding_dict_edad = {'17-below': 0, '18-24': 1, '25-34': 2, '35-44': 3, '45-54': 4, '55-64': 5, '65-Above': 6}
+    encoding_dict_antas = {'Hindi nakapagtapos ng Elementarya': 0, 'Elementarya': 1, 'Hindi nakapagtapos ng Sekundarya': 2,
+                        'Sekundarya': 3, 'Kolehiyo': 4, 'Hindi nakapagtapos ng Kolehiyo': 5, 'Masters Degree': 6,
+                        'Doctorate Degree': 7, 'Hindi nakapag-aral': 8}
+    encoding_dict_uri = {'May Trabaho': 1, 'Walang Trabaho': 0}
+
+    # Apply custom encoding to the categorical columns
+    data['Kasarian'] = data['Kasarian'].map(encoding_dict_kasarian)
+    data['Edad'] = data['Edad'].map(encoding_dict_edad)
+    data['Antas na tinapos'] = data['Antas na tinapos'].map(encoding_dict_antas)
+    data['Uri ng trabaho'] = data['Uri ng trabaho'].map(encoding_dict_uri)
+
+    # Split the data into training and testing sets
+    X = data.drop(['Program'], axis=1)  # Features
+    y = data['Program']  # Target variable
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+    
+    rfc = RandomForestClassifier(n_estimators=100, random_state=42)
+
+    rfc.fit(X_train, y_train)
+
+    y_pred = rfc.predict(X_test)
+
+    # Check accuracy score
+    accuracy = accuracy_score(y_test, y_pred)
+    print('Model accuracy score with 100 decision-trees: {0:0.4f}'.format(accuracy))
+    joblib.dump(rfc, 'retrained_model.pkl')
+
+    return render_template("cProgram.html")

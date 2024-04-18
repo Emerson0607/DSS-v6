@@ -474,7 +474,7 @@ def insert_userx():
     email = "BOR@gmail.com"
     program = "BOR"
     password = "@123ABCabc"
-    role = "BOR"
+    role = "Coordinator"
 
     user_insert = Users(
         username=username,

@@ -44,6 +44,7 @@ with_categories=true) %}
                         <th>Start Date</th>
                         <th>End Date</th>
                         <th>Total Week</th>
+                        <th>Budget</th>
                         <th>Coordinator</th>
 
                         <th>Action</th>
@@ -71,9 +72,19 @@ with_categories=true) %}
                         <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{
                                 row.totalWeek
                                 }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{% if
+                                row.budget is number %}
+                                {% set formatted_budget = "%0.2f" % row.budget %}
+                                {{ formatted_budget }}
+                                {% else %}
+                                {{ row.budget }}
+                                {% endif %}</a>
+                        </td>
                         <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.user
                                 }}</a>
                         </td>
+
+
 
                         <td>
                             <a href="{{ url_for('dbModel.delete_plan', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
@@ -232,6 +243,7 @@ with_categories=true) %}
 
 
 <!--BUDGET-->
+<!-- for budget validation -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var budgetInput = document.getElementById('budget');
@@ -241,7 +253,14 @@ with_categories=true) %}
             var value = e.target.value;
 
             // Remove non-numeric characters except comma and period
-            value = value.replace(/[^0-9,.]/g, '');
+            value = value.replace(/[^0-9.]/g, '');
+
+            // Check if the input starts with zero
+            if (value.charAt(0) === '0' && value.length > 1) {
+                // If the input starts with zero, and its length is greater than 1,
+                // remove the leading zero
+                value = value.slice(1);
+            }
 
             // Display notification if there are invalid characters
             if (value !== e.target.value) {
@@ -250,16 +269,17 @@ with_categories=true) %}
                 notification.textContent = "";
             }
 
-            // Remove existing commas
-            value = value.replace(/,/g, '');
+            // Check for more than one period
+            var periodIndex = value.indexOf('.');
+            if (periodIndex !== -1) {
+                // If there's more than one period, keep only the first one
+                var remainingChars = value.slice(periodIndex + 1).replace(/\./g, '');
+                value = value.slice(0, periodIndex + 1) + remainingChars.slice(0, 2);
+            }
 
-            // Split the value into integer and decimal parts
+            // Add commas for thousands
             var parts = value.split('.');
-
-            // Format integer part with commas
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-            // Join the parts back together
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             value = parts.join('.');
 
             // Update the input value

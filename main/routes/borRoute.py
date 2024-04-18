@@ -241,3 +241,20 @@ def bBudget():
                            budget_cost_total_value1=budget_cost_total_value1,
                            fund_cost_total_value1=fund_cost_total_value1, project_closure=project_closure)
 
+@bor_route.route("/bResources")
+def bResources():
+    if g.current_user != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    # Dynamically generate the years
+    current_year = datetime.now().year
+     # Fetch all user records from the database
+    all_data = Resources.query.all()
+    program8 = Program.query.all()
+    user1 = Users.query.all()
+    coordinators = Users.query.filter_by(role='Coordinator').all()
+    return render_template("bResources.html", current_year=current_year, community = all_data, program8=program8, user1 = user1, coordinators=coordinators)

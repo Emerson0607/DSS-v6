@@ -228,6 +228,13 @@ def cAdd_community():
         cesap_file = request.files['CESAP']
         cna_file = request.files['CNA']
       
+        community_budget1 = str(budget)
+            # Check if the budget contains commas
+        if ',' in community_budget1:
+            budget_to_float1 = community_budget1.replace(",", "")  # Remove commas from the string
+        else:
+            budget_to_float1 = community_budget1  # No commas, so the budget is already in the correct format
+        budget_float1 = round(float(budget_to_float1), 2)
 
         existing_community = Pending_project.query.filter_by(community=community, program = program, subprogram=subprogram).first()
 
@@ -237,7 +244,7 @@ def cAdd_community():
             cna_data = cna_file.read()
 
             new_community = Pending_project(community=community, program=program, subprogram=subprogram, start_date=start_date,
-            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
+            end_date=end_date, week=week, totalWeek=totalWeek, user=user, department=department, subDepartment=subDepartment, status=status, budget = budget_float1, cpf_filename=cpf_file.filename, cpf=cpf_data, cesap_filename=cesap_file.filename, cesap=cesap_data,
             cna_filename = cna_file.filename, cna=cna_data, department_A=department_A, volunteer=volunteer, coordinator_id=g.current_id, budget_type=budget_type)
             db.session.add(new_community)
             db.session.commit()
@@ -259,7 +266,6 @@ def cAdd_community():
         return redirect(url_for('coordinator.cManage_community'))
        
     return redirect(url_for('coordinator.cManage_community'))
-
 
 ############# UPDATE WEEK BASED FROM Subprogram ##############
 @coordinator_route.route('/cUpdate_week', methods=['POST'])
@@ -970,6 +976,14 @@ def update_pending():
 
         pending = Pending_project.query.get(pending_id)
 
+        community_budget1 = str(budget)
+            # Check if the budget contains commas
+        if ',' in community_budget1:
+            budget_to_float1 = community_budget1.replace(",", "")  # Remove commas from the string
+        else:
+            budget_to_float1 = community_budget1  # No commas, so the budget is already in the correct format
+        budget_float1 = round(float(budget_to_float1), 2)
+
         if pending:
             if not pending.cpf:
                 cpf_file = request.files['CPF']
@@ -992,7 +1006,7 @@ def update_pending():
             pending.start_date = start_date
             pending.end_date = end_date
             pending.totalWeek = totalWeek
-            pending.budget = budget
+            pending.budget = budget_float1
             pending.user = user
             pending.department = lead
             pending.subDepartment = support
@@ -1016,6 +1030,7 @@ def update_pending():
             flash('Pending updated successfully!', 'edit_account')
 
         p = Pending_project.query.get(pending_id)
+        
         form = Form()
         placeholder_choice = (p.program, p.program)
         form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]

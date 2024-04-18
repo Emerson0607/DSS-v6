@@ -87,7 +87,7 @@ def fund():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     
-    coordinators = Users.query.filter_by(role='Coordinator').all()
+    coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
     # Dynamically generate the years fund_list = Fundraising.query.filter_by(coordinator_id=g.current_id).all()
     current_year = datetime.now().year
     fund_list = Fundraising.query.all()
@@ -926,7 +926,7 @@ def cash_update_fund():
             # Extract the donation date from the first donor's data
             if not donation_date:
                 donation_date = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
-
+        
         print("Total Donation:", total_donation)
 
         # Create a new record in the Cash_list table with the total donation and donation date
