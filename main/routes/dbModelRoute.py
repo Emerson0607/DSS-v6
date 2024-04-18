@@ -1434,7 +1434,6 @@ def update_week():
     db.session.commit()
     return jsonify({'message': 'Week column updated for the specified subprogram.'})
 
-
 ############################### UPDATE STATUS BASED FROM Subprogram ###############################
 @dbModel_route.route('/update_status', methods=['POST'])
 def update_status():
@@ -2794,7 +2793,7 @@ def update_profile():
          
         # Check if the email format is valid and ends with '@gmail.com'
         if not is_valid_email(new_email):
-            flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
+            flash('Invalid email format. Only Gmail accounts are allowed.', 'wrong_old')
             return redirect(url_for('dbModel.edit_profile'))
 
         user = Users.query.get(user_id)
@@ -2805,20 +2804,20 @@ def update_profile():
             if user.username != new_username:
                 existing_username = Users.query.filter_by(username=new_username).first()
                 if existing_username:
-                    flash(f'Username "{new_username}" already exists. Please choose a different username.', 'existing_username')
+                    flash(f'Username "{new_username}" already exists. Please choose a different username.', 'wrong_old')
                     return redirect(url_for('dbModel.edit_profile'))
             if user.email != new_email:
                 existing_email = Users.query.filter_by(email=new_email).first()
                 if existing_email:
-                    flash(f'Email "{new_email}" already exists. Please choose a different email.', 'existing_username')
+                    flash(f'Email "{new_email}" already exists. Please choose a different email.', 'wrong_old')
                     return redirect(url_for('dbModel.edit_profile'))
             
             existing_mobile_number = Users.query.filter_by(mobile_number=new_mobile_number).first()
             if len(new_mobile_number) < 11:
-                flash('Mobile number must be at least 11 digits long.', 'existing_username')
+                flash('Mobile number must be at least 11 digits long.', 'wrong_old')
                 return redirect(url_for('dbModel.edit_profile'))
             elif existing_mobile_number and existing_mobile_number.id != user.id:
-                flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'existing_username')
+                flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'wrong_old')
                 return redirect(url_for('dbModel.edit_profile'))
 
             userlog = g.current_user
@@ -2839,7 +2838,7 @@ def update_profile():
             user.mobile_number= new_mobile_number
 
             db.session.commit()
-            flash('Account updated successfully!', 'edit_account')
+            flash('Account updated successfully!', 'new_password')
 
         return redirect(url_for('dbModel.edit_profile'))
 
@@ -2865,6 +2864,7 @@ def delete_picture():
             users_picture.profile_picture = None
             
             db.session.commit()
+            flash('Profile picture deleted!', 'new_password')
         
         p = Users.query.get(profile_id)
 
@@ -2907,7 +2907,7 @@ def update_picture():
                 user.profile_picture = profile_picture_data
 
             db.session.commit()
-            flash('Account updated successfully!', 'edit_account')
+            flash('Profile picture updated!', 'new_password')
 
         return redirect(url_for('dbModel.edit_profile'))
 

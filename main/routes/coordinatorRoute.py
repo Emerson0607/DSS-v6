@@ -1102,7 +1102,7 @@ def cUpdate_profile():
         
         # Check if the email format is valid and ends with '@gmail.com'
         if not is_valid_email(new_email):
-            flash('Invalid email format. Only Gmail accounts are allowed.', 'delete_pending')
+            flash('Invalid email format. Only Gmail accounts are allowed.', 'not_match')
             return redirect(url_for('coordinator.cEdit_profile'))
 
         user = Users.query.get(user_id)
@@ -1113,20 +1113,20 @@ def cUpdate_profile():
             if user.username != new_username:
                 existing_username = Users.query.filter_by(username=new_username).first()
                 if existing_username:
-                    flash(f'Username "{new_username}" already exists. Please choose a different username.', 'delete_pending')
+                    flash(f'Username "{new_username}" already exists. Please choose a different username.', 'not_match')
                     return redirect(url_for('coordinator.cEdit_profile'))
             if user.email != new_email:
                 existing_email = Users.query.filter_by(email=new_email).first()
                 if existing_email:
-                    flash(f'Email "{new_email}" already exists. Please choose a different email.', 'delete_pending')
+                    flash(f'Email "{new_email}" already exists. Please choose a different email.', 'not_match')
                     return redirect(url_for('coordinator.cEdit_profile'))
             
             existing_mobile_number = Users.query.filter_by(mobile_number=new_mobile_number).first()
             if len(new_mobile_number) < 11:
-                flash('Mobile number must be at least 11 digits long.', 'delete_pending')
+                flash('Mobile number must be at least 11 digits long.', 'not_match')
                 return redirect(url_for('coordinator.cEdit_profile'))
             elif existing_mobile_number and existing_mobile_number.id != user.id:
-                flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'delete_pending')
+                flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'not_match')
                 return redirect(url_for('coordinator.cEdit_profile'))
 
             userlog = g.current_user
@@ -1180,6 +1180,7 @@ def cDelete_picture():
             users_picture.profile_picture = None
             
             db.session.commit()
+            flash('Profile picture deleted!', 'new_password')
         
         p = Users.query.get(profile_id)
 
@@ -1223,7 +1224,7 @@ def cUpdate_picture():
                 user.profile_picture = profile_picture_data
 
             db.session.commit()
-            flash('Account updated successfully!', 'edit_account')
+            flash('Profile picture updated!', 'new_password')
 
         return redirect(url_for('coordinator.cEdit_profile'))
 
