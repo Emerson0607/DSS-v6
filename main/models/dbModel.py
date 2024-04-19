@@ -509,7 +509,7 @@ def delete_data():
 @app.route("/db")
 def initialize_database():
     # multiple_insert()
-    # insert_community()
+    # # insert_community()
     # insert_userx()
     # insert_pending()
     # delete_data()

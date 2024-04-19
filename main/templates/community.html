@@ -119,6 +119,7 @@ with_categories=true) %}
                                             <option value="" disabled selected>Budget Type</option>
                                             <option value="Donation">Donation</option>
                                             <option value="Budget">Budget</option>
+                                            <option value="Unused">Unused</option>
                                         </select>
                                     </div>
                                     <div class="budget_value">
@@ -205,8 +206,6 @@ with_categories=true) %}
         <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div> <!--end jumbotron-->
 </div>
-
-
 
 <div class="insights">
     <div class="insights-div">
@@ -324,7 +323,6 @@ with_categories=true) %}
     });
 </script>
 
-
 <!--FOR BUDGET BALANCE-->
 <script>
     // Event listener for form submission
@@ -336,8 +334,6 @@ with_categories=true) %}
         var budgetType = $('select[name="budget_type"]').val();
         var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
         var date = $("#start_date_input").val().toString();
-
-
         // Check the budget balance
         checkBudgetBalance(program, budgetType, budgetAmount, date);
     });
@@ -372,7 +368,6 @@ with_categories=true) %}
         });
     }
 </script>
-
 
 <!--VOLUNTEERS-->
 <script>
@@ -415,16 +410,16 @@ with_categories=true) %}
     }
 </script>
 
+<!-- getter function -->
 <script>
     $(document).ready(function () {
         loadInitialInsights();
         coordinator_name();
-
         date_picker();
-
     });
 </script>
 
+<!-- name validation -->
 <script>
     // Remove any non-letter characters from the input
     document.querySelectorAll(".letters-with-space-input").forEach(function (element) {
@@ -436,7 +431,7 @@ with_categories=true) %}
         });
     });
 </script>
-
+<!-- community data list -->
 <script>
     function loadInitialInsights() {
         $.ajax({

@@ -434,19 +434,20 @@ def edit_account():
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'password_space')
             return redirect(url_for('dbModel.manage_account'))
-        
         if ' ' in new_username:
             flash('Password cannot contain spaces.', 'username_space')
             return redirect(url_for('dbModel.manage_account'))
         
-        # Hash the password
-        hashed_password = generate_password_hash(new_password)
+        # # Hash the password
+        # hashed_password = generate_password_hash(new_password)
         
         # Check if the email format is valid and ends with '@gmail.com'
         if not is_valid_email(new_email):
             flash('Invalid email format. Only Gmail accounts are allowed.', 'password_space')
             return redirect(url_for('dbModel.manage_account'))
 
+        
+            
         user = Users.query.get(user_id)
 
         if user:
@@ -482,12 +483,20 @@ def edit_account():
             if len(new_mobile_number) < 11:
                 flash('Mobile number must be at least 11 digits long.', 'existing_username')
                 return redirect(url_for('dbModel.manage_account'))
-            
             elif existing_mobile_number and existing_mobile_number.id != user.id:
                 flash(f'Mobile Number: "{new_mobile_number}" already exists.', 'existing_username')
                 return redirect(url_for('dbModel.manage_account'))
 
             # Rest of your code for updating the user's account...
+
+            print("New:", new_password)
+            print("Old:", user.password)
+
+            # Check if the password has changed
+            if user.password == new_password:
+                hashed_password = user.password
+            else:
+                hashed_password = generate_password_hash(new_password)
 
 
             userlog = g.current_user
@@ -501,6 +510,14 @@ def edit_account():
                 db.session.add(insert_logs)
                 db.session.commit()
 
+            """
+            if new_profile_picture.filename != '':
+                # Read the binary data from the uploaded file
+                profile_picture_data = new_profile_picture.read()
+
+                # Update the user's profile picture field with the binary data
+                user.profile_picture = profile_picture_data
+            """
             user.username = new_username
             user.email = new_email
             user.firstname = new_firstname
@@ -878,43 +895,60 @@ def add_community():
                         
             budget_year = start_date.year
             
-            ################ FOR BUDGET #################
-            total_budget_cost = Budget_cost.query.filter(Budget_cost.budget_type == budget_type, extract('year', Budget_cost.date) == budget_year, Budget_cost.program == program).first()
-        
-            if total_budget_cost:
-                total_budget_cost.total_cost += budget_float
-            else:
-                total_budget_cost = Budget_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
-                db.session.add(total_budget_cost)
             
-            update_current_budget = Current_Budget.query.filter(Current_Budget.budget_type == budget_type, extract('year', Current_Budget.date) == budget_year).first()
-        
-            if update_current_budget:
-                update_current_budget.total -= budget_float
+            # Check if budget_type is 'Unused'
+            if budget_type == 'Unused':
+                unused_budget = Unused_budget.query.filter(extract('year', Unused_budget.date) == budget_year, Unused_budget.program == program).first()
+                if unused_budget:
+                    unused_budget.current -= budget_float1
+                    unused_budget.cost += budget_float1
+                
+                ################ FOR PROGRAMS LIQUIDATION #################
+                existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
 
-            ################ FOR PROGRAMS BUDGET #################
-            total_program_cost = Program_cost.query.filter(Program_cost.budget_type == budget_type, extract('year', Program_cost.date) == budget_year, Program_cost.program == program).first()
-        
-            if total_program_cost:
-                total_program_cost.total_cost += budget_float
+                if existing_liquidation is None:
+                    add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
+                    db.session.add(add_liquidation)
+                    db.session.commit()
+                    
             else:
-                total_program_cost = Program_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
-                db.session.add(total_program_cost)
+                ################ FOR BUDGET #################
+                total_budget_cost = Budget_cost.query.filter(Budget_cost.budget_type == budget_type, extract('year', Budget_cost.date) == budget_year, Budget_cost.program == program).first()
             
-            update_current_programs_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == budget_type, extract('year', Current_total_budget.date) == budget_year, Current_total_budget.program == program).first()
+                if total_budget_cost:
+                    total_budget_cost.total_cost += budget_float
+                else:
+                    total_budget_cost = Budget_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                    db.session.add(total_budget_cost)
+                
+                update_current_budget = Current_Budget.query.filter(Current_Budget.budget_type == budget_type, extract('year', Current_Budget.date) == budget_year).first()
             
-            if update_current_programs_budget:
-                update_current_programs_budget.total -= budget_float
-            
-            
-            ################ FOR PROGRAMS LIQUIDATION #################
-            existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
+                if update_current_budget:
+                    update_current_budget.total -= budget_float
 
-            if existing_liquidation is None:
-                add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
-                db.session.add(add_liquidation)
-                db.session.commit()
+                ################ FOR PROGRAMS BUDGET #################
+                total_program_cost = Program_cost.query.filter(Program_cost.budget_type == budget_type, extract('year', Program_cost.date) == budget_year, Program_cost.program == program).first()
             
+                if total_program_cost:
+                    total_program_cost.total_cost += budget_float
+                else:
+                    total_program_cost = Program_cost(budget_type=budget_type, total_cost=budget_float, date=start_date, program=program)
+                    db.session.add(total_program_cost)
+                
+                update_current_programs_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == budget_type, extract('year', Current_total_budget.date) == budget_year, Current_total_budget.program == program).first()
+                
+                if update_current_programs_budget:
+                    update_current_programs_budget.total -= budget_float
+                
+                
+                ################ FOR PROGRAMS LIQUIDATION #################
+                existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
+
+                if existing_liquidation is None:
+                    add_liquidation = Budget_program_cost(community=community, program=program, subprogram=subprogram, budget = budget_float, budget_type=budget_type, date=start_date)
+                    db.session.add(add_liquidation)
+                    db.session.commit()
+                
             userlog = g.current_user
             action = f'ADDED new {program} project to {community} .'
             ph_tz = pytz.timezone('Asia/Manila')
@@ -926,6 +960,7 @@ def add_community():
                 db.session.add(insert_logs)
                 db.session.commit()
 
+                
             db.session.add(new_community)
             db.session.commit()
             flash('New community project added!', 'add_community')
@@ -933,7 +968,6 @@ def add_community():
             new_subprogram = Subprogram(program=program, subprogram=subprogram)
             db.session.add(new_subprogram)
             db.session.commit()
-            
         else:
             flash(f"Sorry, '{subprogram}' is already taken in {{community}}.", 'existing_community')
         return redirect(url_for('dbModel.manage_community'))
@@ -948,76 +982,20 @@ def get_current_program_budget():
     date = convert_date(date1)
     date_year = date.year
 
-    current_program_budget = Current_total_budget.query.filter(Current_total_budget.budget_type == budget_type, extract('year', Current_total_budget.date) == date_year, Current_total_budget.program == program).first()
-    
-    if current_program_budget:
-        total = current_program_budget.total
+    if budget_type == 'Unused':
+        unused_budget = Unused_budget.query.filter(extract('year', Unused_budget.date) == date_year, Unused_budget.program == program).first()
+        if unused_budget:
+            total = unused_budget.current
+        else:
+            total = 0   
     else:
-        total = 0
+        budget = Current_total_budget.query.filter(extract('year', Current_total_budget.date) == date_year, Current_total_budget.program == program, Current_total_budget.budget_type== budget_type).first()
+        if budget:
+            total = budget.total
+        else:
+            total = 0
 
     return jsonify({'currentBudget': total})
-
-# @dbModel_route.route('/checkProject', methods=['POST'])
-# def checkProject():
-#     program = request.form.get('program')
-#     community = request.form.get('community')
-#     subprogram = request.form.get('subprogram')  # Corrected variable name
-
-#     existing_community = Community.query.filter_by(program=program, subprogram=subprogram, community=community).first()
-
-#     # Set the flag based on whether the project exists or not
-#     flag = existing_community is not None
-
-#     # Return the flag as part of a JSON response
-#     return jsonify({"flag": flag})
-
-#EDIT COMMUNITY NOT NEEDED SO COMMENT checkProject
-'''
-@dbModel_route.route('/edit_community', methods=['POST'])
-def edit_community():
-    if 'user_id' not in session:
-        flash('Please log in first.', 'error')
-        return redirect(url_for('dbModel.login'))
-    
-    if request.method == 'POST':
-        user_id = request.form.get('id')  # Get the user ID from the form
-        new_community = request.form['new_community']
-        new_program = request.form['new_program']
-        new_subprogram = request.form['new_subprogram']
-        new_week= request.form['new_week']
-        new_totalWeek = request.form['new_totalWeek']
-        new_user = request.form['new_user']
-        
-        userlog = g.current_user
-        action = f'UPDATE {community}'
-        ph_tz = pytz.timezone('Asia/Manila')
-        ph_time = datetime.now(ph_tz)
-        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
-        timestamp = convert_date1(timestamp1)
-        insert_logs = Logs(userlog = userlog, timestamp = timestamp, action = action)
-        if insert_logs:
-            db.session.add(insert_logs)
-            db.session.commit()     
-        # Query the user by ID
-        user = Community.query.get(user_id)
-        
-        if user:
-            # Update the user's information
-            user.community = new_community
-            user.program = new_program
-            user.subprogram = new_subprogram
-            user.week = new_week
-            user.totalWeek = new_totalWeek
-            user.user = new_user
-
-            # Commit the changes to the database
-            db.session.commit()
-            flash('Account updated successfully!', 'success')
-        else:
-            flash('User not found. Please try again.', 'error')
-
-        return redirect(url_for('dbModel.manage_community'))
-'''
 
 @dbModel_route.route('/delete_community/<int:id>', methods=['GET'])
 def delete_community(id):
@@ -1542,12 +1520,19 @@ def archive_project():
         
     cost_float = round(float(cost_to_float), 2)              
     budget_year = start_date.year
+    
     ################ FOR PROGRAMS LIQUIDATION #################
     existing_liquidation = Budget_program_cost.query.filter(Budget_program_cost.community==community, Budget_program_cost.program == program, Budget_program_cost.subprogram==subprogram, extract('year', Current_total_budget.date) == budget_year,Budget_program_cost.budget_type==budget_type ).first()
 
     if existing_liquidation:
         existing_liquidation.cost = cost_float
         existing_liquidation.balance = budget_float - cost_float 
+        
+        unused_balance = budget_float - cost_float 
+        existing_unused = Unused_budget.query.filter(Unused_budget.program == program, extract('year', Unused_budget.date) == budget_year).first()
+        if existing_unused:
+            existing_unused.current += unused_balance
+            existing_unused.total += unused_balance
         db.session.commit()
     
     userlog = g.current_user
@@ -3186,49 +3171,6 @@ def budget():
     # total_unused_literacy_sum = sum(budget.balance for budget in total_unused_literacy1)
     # total_unused_literacy= "{:.2f}".format(total_unused_literacy_sum)
     
-    def update_unused_budget(program_name, current_year):
-        total_unused_programs = Budget_program_cost.query.filter(
-            extract('year', Budget_program_cost.date) == current_year,
-            Budget_program_cost.balance > 0,
-            Budget_program_cost.program == program_name
-        ).all()
-        
-        for budget in total_unused_programs:
-            total_unused_program_sum = sum(budget.balance for budget in total_unused_programs)
-            total_unused_program_formatted = "{:.2f}".format(total_unused_program_sum)
-            
-            add_unused_program = Unused_budget.query.filter(
-                extract('year', Unused_budget.date) == current_year,
-                Unused_budget.program == program_name
-            ).first()
-            
-            if add_unused_program:
-                add_unused_program.total = total_unused_program_formatted
-                add_unused_program.current = total_unused_program_formatted
-            else:
-                new_unused_program = Unused_budget(
-                    program=program_name,
-                    total=total_unused_program_formatted,
-                    date=budget.date,
-                    current=total_unused_program_formatted
-                )
-                db.session.add(new_unused_program)
-            
-        db.session.commit()
-
-    programs = [
-        "Literacy",
-        "Socio-economic",
-        "Environmental Stewardship",
-        "Health and Wellness",
-        "Cultural Enhancement",
-        "Values Formation",
-        "Disaster Management",
-        "Gender and Development"
-    ]
-
-    for program in programs:
-        update_unused_budget(program, current_year)
     # Calculate total_unused_budget
     total_unused_budget1 = Unused_budget.query.filter(extract('year', Unused_budget.date) == current_year).all()
     total_unused_budget_sum = sum(budget.total for budget in total_unused_budget1)

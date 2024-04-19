@@ -107,7 +107,8 @@
                                     <div class="form-group pass-toggle-container">
                                         <label>Password:</label>
                                         <input type="password" class="form-control pass-input passedit"
-                                            name="new_password" value="********" id="pass" minlength="8" required>
+                                            name="new_password" value="{{row.password}}" id="pass" minlength="8"
+                                            required>
                                         <i class="toggle-password material-symbols-sharp"
                                             id="toggle-edit-password">visibility</i>
                                     </div>
@@ -381,8 +382,6 @@
     </div><!--end jumbotronnnn-->
 </div>
 
-
-
 <!--FOR PREVIEW IMAGE-->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -415,8 +414,6 @@
 
 
 </script>
-
-
 
 <!--FOR MOBILE NUMBER-->
 <script>
@@ -481,9 +478,8 @@
     });
 </script>
 
+<!-- name validation -->
 <script>
-
-
     // Remove any non-letter characters from the input
     document.querySelectorAll(".letters-with-space-input").forEach(function (element) {
         element.addEventListener("input", function (event) {
@@ -503,7 +499,7 @@
     });
 </script>
 
-
+<!-- password -->
 <script>
     var passwordPlaceholders = document.querySelectorAll('.password-placeholder');
     passwordPlaceholders.forEach(function (placeholder) {
