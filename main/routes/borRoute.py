@@ -1,5 +1,5 @@
 from flask import g, Blueprint, url_for, redirect, request, session, flash, render_template, jsonify, make_response, g, redirect
-from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department, Resources, Pending_fund, Fundraising, Budget, Total_budget, Current_Budget, Current_total_budget, Budget_cost, Budget_program_cost, Program_cost
+from main.models.dbModel import Community, Program, Subprogram, Role, Upload, Pending_project, Users, Archive, Logs, Plan, Department, Resources, Pending_fund, Fundraising, Budget, Total_budget, Current_Budget, Current_total_budget, Budget_cost, Budget_program_cost, Program_cost, Unused_budget
 from main import db
 from flask import Response
 import secrets
@@ -17,6 +17,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 bor_route = Blueprint('bor', __name__)
 token_store = {}
+
+class program1(FlaskForm):
+    # Other form fields...
+    program1 = SelectField('Program1', choices=[], id='program1')
 
 # Function to validate email format
 def is_valid_email(email):
@@ -101,6 +105,7 @@ def bManage_community():
 ####################################### BUDGET ######################################
 @bor_route.route("/bBudget")
 def bBudget():
+        # Check if the user is an admin
     if g.current_user != "BOR":
         return redirect(url_for('dbModel.login'))
 
@@ -115,6 +120,13 @@ def bBudget():
     form.program.default = ""
     form.process()
     form=form
+    
+    form1 = Form()
+    placeholder_choice = ("All", "All")
+    form1.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form1.program.default = ""
+    form1.process()
+    form1=form1
 
     current_year = datetime.now().year
 
@@ -190,15 +202,12 @@ def bBudget():
     total_current_same_year1_sum = sum(current.total for current in current_same_year1)
     total_current_same_year1= "{:.2f}".format(total_current_same_year1_sum)
 
-    
     budget_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Budget", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
     fund_current_total1 = Current_total_budget.query.filter(Current_total_budget.budget_type == "Donation", extract('year', Current_total_budget.date) == current_year, Current_total_budget.program == "Literacy").first()
     
     # Set budget_total and fund_total to 0 if they are None and format to two decimal points
     budget_current_total_value1 = "{:.2f}".format(budget_current_total1.total) if budget_current_total1 else "0.00"
     fund_current_year_value1 = "{:.2f}".format(fund_current_total1.total) if fund_current_total1 else "0.00"
-    
-    
     
     ############################ FOR BUDGET COST ##############################
     cost_same_year1 = Program_cost.query.filter(extract('year', Program_cost.date) == current_year, Program_cost.program == "Literacy").all()
@@ -226,7 +235,31 @@ def bBudget():
         row.cost = row.cost or 0
         row.balance = row.balance or 0
 
+    # FOR UNUSED BUDGET (USE TO UPDATE UNUSED BUDGET)
+    # total_unused_literacy1 = Budget_program_cost.query.filter(extract('year', Budget_program_cost.date) == current_year, Budget_program_cost.balance > 0, Budget_program_cost.program == "Literacy").all()
+    # total_unused_literacy_sum = sum(budget.balance for budget in total_unused_literacy1)
+    # total_unused_literacy= "{:.2f}".format(total_unused_literacy_sum)
     
+    # Calculate total_unused_budget
+    total_unused_budget1 = Unused_budget.query.filter(extract('year', Unused_budget.date) == current_year).all()
+    total_unused_budget_sum = sum(budget.total for budget in total_unused_budget1)
+    total_unused_budget = total_unused_budget_sum  # No need to format yet
+
+    # Calculate current_unused_budget
+    current_unused_budget1 = Unused_budget.query.filter(extract('year', Unused_budget.date) == current_year).all()
+    current_unused_budget_sum = sum(budget.current for budget in current_unused_budget1)
+    current_unused_budget = current_unused_budget_sum  # No need to format yet
+
+    # Calculate cost_unused_budget
+    cost_unused_budget1 = Unused_budget.query.filter(extract('year', Unused_budget.date) == current_year).all()
+    cost_unused_budget_sum = sum(budget.cost for budget in cost_unused_budget1 if budget.cost is not None)
+    cost_unused_budget = cost_unused_budget_sum  # No need to format yet
+
+    # Ensure total_unused_budget, current_unused_budget, and cost_unused_budget are floats
+    total_unused_budget = float(total_unused_budget)
+    current_unused_budget = float(current_unused_budget)
+    cost_unused_budget = float(cost_unused_budget)
+
     # Render the template with the current year and the next four years
     return render_template("bBudget.html", form=form, current_year=current_year, budget_years_with_placeholder=budget_years_with_placeholder,total_budget_same_year=total_budget_same_year, budget_total=budget_total_value,fund_total=fund_total_value,budget_current_total_value=budget_current_total_value,fund_current_year_value=fund_current_year_value, total_current_same_year=total_current_same_year, total_cost_same_year=total_cost_same_year, budget_cost_total_value=budget_cost_total_value, fund_cost_total_value=fund_cost_total_value,
                            budget_total1=budget_total_value1,
@@ -237,7 +270,9 @@ def bBudget():
                            fund_current_year_value1=fund_current_year_value1,
                            total_cost_same_year1=total_cost_same_year1,
                            budget_cost_total_value1=budget_cost_total_value1,
-                           fund_cost_total_value1=fund_cost_total_value1, project_closure=project_closure)
+                           fund_cost_total_value1=fund_cost_total_value1, project_closure=project_closure,
+                           total_unused_budget=total_unused_budget, current_unused_budget=current_unused_budget,
+                           cost_unused_budget=cost_unused_budget, form1=form1)
 
 @bor_route.route("/bResources")
 def bResources():

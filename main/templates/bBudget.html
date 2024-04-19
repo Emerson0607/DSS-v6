@@ -6,6 +6,10 @@
         display: none;
     }
 
+    #programDropdown3 option:first-child {
+        display: none;
+    }
+
     .year_card option:first-child {
         display: none;
     }
@@ -22,11 +26,9 @@
 <div class="flash flash-{{ category }}">{{ message }}</div>
 {% endfor %} {% endif %} {% endwith %}
 
-
 <div class="budget_container">
     <div class="jumbotron">
         <div class="for_filter">
-            <h2 style="margin-bottom: 1rem"><b>Budget</b></h2>
 
             <select id="yearDropdown" class="year_card form_control_year">
                 {% for year in budget_years_with_placeholder %}
@@ -36,7 +38,7 @@
 
         </div>
 
-        <div class="budget_card">
+        <div class="budget_card" style="margin-top: 3rem;">
             <div class="total_budget_card">
                 <div class="budget_details ">
                     <div class="budget_left">
@@ -85,82 +87,7 @@
                 </div>
             </div>
         </div>
-        <!-- Modal -->
-        <div id="mymodal" class="modal" role="dialog">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Budget Details</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="budget_top">
-                                <div class="form-group">
-                                    <label>Total</label>
-                                    <input type="text" class="form-control budget-input" id="total_budget"
-                                        name="total_budget" required />
-                                </div>
 
-                                <div class="form-group">
-                                    <label>Year:</label>
-                                    <input type="text" class="form-control" name="date" id="start_date_input"
-                                        placeholder="Select Date..." required />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="programs">CESU Programs</label>
-                                <div class="program_budget">
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="literacy" required />
-                                        <label>Literacy</label>
-                                    </div>
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="socio" required />
-                                        <label>Socio-economic</label>
-                                    </div>
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="environment"
-                                            required />
-                                        <label class="small_text">Environmental Stewardship</label>
-                                    </div>
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="health" required />
-                                        <label>Health and Wellness</label>
-                                    </div>
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="cultural" required />
-                                        <label>Cultural Enhancement</label>
-                                    </div>
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="values" required />
-                                        <label>Values Formation</label>
-                                    </div>
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="disaster" required />
-                                        <label>Disaster Management</label>
-                                    </div>
-                                    <div class="program_input">
-                                        <input type="text" class="form-control budget-input" name="gender" required />
-                                        <label class="small_text">Gender and Development</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <button class="btn-submit" id="btn_budget">
-                                    Create Budget
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal">
-                            <span class="material-symbols-sharp">close</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <!--end add modal account-->
     <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
@@ -233,6 +160,66 @@
     <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
 </div>
 
+<!-- for unused budget -->
+<div class="budget_container">
+    <div class="jumbotron">
+        <div class="for_filter">
+            <h2 style="margin-bottom: 1rem"><b>Unused Budget</b></h2>
+            <select id="yearDropdown3" class="year_card form_control_year">
+                {% for year in budget_years_with_placeholder %}
+                <option value="{{ year[0] }}">{{ year[1] }}</option>
+                {% endfor %}
+            </select>
+            <div class="form-group program_card_box">
+                {{ form1.program(class="form-select form_control_program", id="programDropdown3",
+                value=form1.program.default) }}
+            </div>
+
+        </div>
+        <div class="budget_card">
+            <div class="unused_budget_card_program">
+                <div class="budget_details">
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">analytics</span>
+                        <h3 class="budget_title">Total Unused</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(total_unused_budget | float) }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="unused_cost_card_program">
+                <div class="budget_details">
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">show_chart</span>
+                        <h3 class="budget_title">Total Cost</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1>{{ '{:,.2f}'.format(cost_unused_budget | float) }}</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="unused_current_card_program">
+                <div class="budget_details">
+                    <div class="budget_left">
+                        <span class="material-symbols-sharp">query_stats</span>
+                        <h3 class="budget_title">Current Unused</h3>
+                    </div>
+                    <div class="budget_right">
+                        <h1 class="{% if total_current_same_year1 | int < 0 %}negative{% endif %}">
+                            {{ '{:,.2f}'.format(current_unused_budget | float) }}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--end add modal account-->
+    <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+</div>
+
 <!-- for liquidation -->
 <div class="communityCard">
     <div class="jumbotron">
@@ -251,9 +238,9 @@
                         <th>Program</th>
                         <th>Sub-Program</th>
                         <th>Budget Type</th>
-                        <th>Budget</th>
-                        <th>Cost</th>
-                        <th>Balance</th>
+                        <th>Allocated Budget</th>
+                        <th>Budget Expenses</th>
+                        <th>Unused Budget</th>
                         <th>Date</th>
                     </tr>
                 </thead>
@@ -301,8 +288,6 @@
     </div> <!--end jumbotron-->
 </div>
 
-
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
@@ -320,8 +305,6 @@
             }
         });
     });
-
-
 </script>
 
 <!-- for creating budget -->
@@ -416,28 +399,118 @@
     });
 </script>
 
-<script>
+<!-- Distributing budget -->
+<!-- <script>
+        $(document).ready(function () {
+            // Trigger budget distribution when the total budget input changes
+            $('#total_budget').on('input', function () {
+                distributeBudget();
+            });
+    
+            // Attach event listener to all program inputs
+            $('.budget-input').on('input', function () {
+                updateTotalBudget();
+            });
+        });
+    
+        function distributeBudget() {
+            // Get the total budget entered by the user and remove commas
+            var totalBudget = parseFloat($('#total_budget').val().replace(/,/g, ''));
+    
+            // Count the number of program inputs
+            var programCount = $('.budget-input').length;
+    
+            // Calculate the budget for each program
+            var budgetPerProgram = totalBudget / (programCount - 1); // Subtract 1 for the total budget input
+    
+            // Update the value of each program input with the calculated budget
+            $('.budget-input').not('#total_budget').val(budgetPerProgram.toFixed(2));
+    
+            // Update the total budget display
+            updateTotalBudget();
+        }
+    
+        function updateTotalBudget() {
+            // Calculate the sum of all program inputs
+            var totalProgramBudget = 0;
+            $('.budget-input').not('#total_budget').each(function () {
+                var programBudget = parseFloat($(this).val().replace(/,/g, ''));
+                totalProgramBudget += isNaN(programBudget) ? 0 : programBudget;
+            });
+    
+            // Update the total budget input with the sum of all program inputs
+            $('#total_budget').val(totalProgramBudget.toFixed(2));
+        }
+    
+    </script> -->
 
+<!-- Distributing budget 1.0 -->
+<script>
     $(document).ready(function () {
         // Trigger budget distribution when the total budget input changes
         $('#total_budget').on('input', function () {
             distributeBudget();
         });
+
+        // Trigger budget recalculation when any program input value changes
+        $('.budget-input').on('input', function () {
+            recalculateTotalBudget();
+        });
     });
+
     function distributeBudget() {
         // Get the total budget entered by the user and remove commas
         var totalBudget = parseFloat($('#total_budget').val().replace(/,/g, ''));
 
-        // Count the number of program inputs
-        var programCount = $('.budget-input').length;
+        // If totalBudget is not a number or is less than 0, set it to 0
+        if (isNaN(totalBudget) || totalBudget < 0) {
+            totalBudget = 0;
+        }
 
-        // Calculate the budget for each program
-        var budgetPerProgram = totalBudget / (programCount - 1); // Subtract 1 for the total budget input
+        // Count the number of program inputs excluding the total budget input
+        var programInputs = $('.budget-input').not('#total_budget');
+        var programCount = programInputs.length;
 
-        // Update the value of each program input with the calculated budget
-        $('.budget-input').not('#total_budget').val(budgetPerProgram.toFixed(2));
+        // If there are no programs, return
+        if (programCount === 0) {
+            return;
+        }
+
+        // Calculate the base budget for each program
+        var baseBudgetPerProgram = Math.floor(totalBudget / programCount);
+
+        // Calculate the remaining budget after distributing the base budget
+        var remainingBudget = totalBudget - (baseBudgetPerProgram * programCount);
+
+        // Update the value of each program input with the base budget
+        programInputs.val(baseBudgetPerProgram);
+
+        // Distribute the remaining budget to some program inputs
+        programInputs.slice(0, remainingBudget).each(function () {
+            var currentValue = parseFloat($(this).val());
+            $(this).val(currentValue + 1);
+        });
     }
 
+    function recalculateTotalBudget() {
+        // Get the values of all program inputs
+        var programValues = $('.budget-input').not('#total_budget').map(function () {
+            return parseFloat($(this).val().replace(/,/g, ''));
+        }).get();
+
+        // Sum the program values to get the total budget
+        var calculatedTotalBudget = programValues.reduce(function (a, b) {
+            return a + (isNaN(b) ? 0 : b);
+        }, 0);
+
+        // Update the total budget input value
+        $('#total_budget').val(roundToTwoDecimalPlaces(calculatedTotalBudget));
+    }
+
+    // Custom rounding function
+    function roundToTwoDecimalPlaces(value) {
+        return Math.round(value * 100) / 100;
+    }
 </script>
 
 <!-- FOR BUDGET FILTER -->
@@ -570,6 +643,48 @@
 
         // Other script code...
     });
+</script>
+
+<!-- FOR UNUSED FILTER -->
+<script>
+    $(document).ready(function () {
+        // Add change event handler for the yearDropdown
+        $('#yearDropdown3, #programDropdown3').change(function () {
+            var selectedYear = $('#yearDropdown3').val(); // Get the selected year
+            var selectedProgram = $('#programDropdown3').val(); // Get the selected program
+            // Check if both year and program are selected
+            if (!selectedProgram || !selectedYear) {
+                alert("Please select both year and program.");
+                return; // Exit the function if either year or program is not selected
+            }
+            // Send AJAX request with the selected year and program
+            $.ajax({
+                url: "/filter_unused",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    date: selectedYear,
+                    program: selectedProgram // Send the selected program
+                }),
+                success: function (response) {
+                    // Update HTML elements with received data, formatting numbers with commas
+                    $('.unused_budget_card_program h1').text(parseFloat(response.total_budget_same_year1).toLocaleString());
+
+                    $('.unused_cost_card_program h1').text(parseFloat(response.total_cost_same_year1).toLocaleString());
+
+                    $('.unused_current_card_program h1').text(parseFloat(response.total_current_same_year1).toLocaleString());
+
+                },
+
+                error: function (error) {
+                    console.error("Failed to filter budget: " + error);
+                }
+            });
+        });
+
+        // Other script code...
+    });
+
 </script>
 
 <script>
