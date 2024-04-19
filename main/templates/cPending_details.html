@@ -55,7 +55,8 @@ with_categories=true) %}
                 </div>
                 <div class="form-group">
                     <label>Total Week:</label>
-                    <input type="number" class="form-control" name="totalWeek" value="{{totalWeek}}" required>
+                    <input type="text" class="form-control mobile-input" name="totalWeek" value="{{totalWeek}}"
+                        required>
                 </div>
             </div>
 
@@ -275,6 +276,21 @@ with_categories=true) %}
     });
 </script>
 
+<!-- total week validation -->
+<script>
+    document.querySelectorAll(".mobile-input").forEach(function (element) {
+        element.addEventListener("input", function (event) {
+            // Remove any non-numeric characters from the input
+            this.value = this.value.replace(/\D/g, "");
+
+            // Ensure only two digits are allowed
+            if (this.value.length > 2) {
+                this.value = this.value.slice(0, 2);
+            }
+        });
+    });
+</script>
+
 
 <!--VOLUNTEERS-->
 <script>
@@ -318,7 +334,7 @@ with_categories=true) %}
 </script>
 
 <!--FOR BUDGET BALANCE-->
-<script>
+<!-- <script>
     // Event listener for form submission
     $('#upload-form').submit(function (event) {
         event.preventDefault();  // Prevent the form from submitting by default
@@ -363,7 +379,7 @@ with_categories=true) %}
             }
         });
     }
-</script>
+</script> -->
 
 <script>
     flatpickr("#start_date_input", {

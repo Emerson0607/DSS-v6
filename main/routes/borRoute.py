@@ -24,13 +24,11 @@ def is_valid_email(email):
     pattern = r'^[\w\.-]+@gmail\.com$'
     return re.match(pattern, email) is not None
 
-
 def convert_date(date_str):
     return datetime.strptime(date_str, '%Y-%m-%d').date()
 
 def convert_date1(datetime_str):
     return datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
-
 
 #################### CURRENT USER ##################
 def get_current_user():
@@ -93,7 +91,7 @@ def bManage_community():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Community.query.filter_by(status="Ongoing").all()
+    all_data = Community.query.all()
     program8 = Program.query.all()
     department = Department.query.all()
     user1 = Users.query.all()

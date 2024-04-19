@@ -41,6 +41,7 @@ with_categories=true) %}
                     <th>Total Week</th>
                     <th>Budget</th>
                     <th>Coordinator</th>
+                    <th>Status</th>
 
                     <th>Action</th>
                 </tr>
@@ -62,6 +63,7 @@ with_categories=true) %}
                         {% endif %}
                     </td>
                     <td>{{ row.user }}</td>
+                    <td class="status-element" data-status="{{ row.status }}">{{ row.status }}</td>
 
                     <td>
                         <a href="{{ url_for('dbModel.delete_community', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
@@ -256,6 +258,22 @@ with_categories=true) %}
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
+<!-- for ongoing and completed color -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var statusElements = document.querySelectorAll('.status-element');
+        statusElements.forEach(function (statusElement) {
+            var status = statusElement.getAttribute('data-status');
+            if (status.trim() === 'Ongoing') {
+                statusElement.style.color = 'blue';  // Change the color as needed
+
+            } else {
+                statusElement.style.color = '#00e600';
+            }
+        });
+    });
+</script>
+
 <!-- for budget validation -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -431,6 +449,7 @@ with_categories=true) %}
         });
     });
 </script>
+
 <!-- community data list -->
 <script>
     function loadInitialInsights() {

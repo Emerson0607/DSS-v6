@@ -16,7 +16,7 @@ with_categories=true) %}
 <div class="pending_detailsCard">
     <div class="pending_detailsBox">
         <h2 style="margin-bottom: 1rem;">Pending <b>Project Details</b></h2>
-        <form action="{{ url_for('dbModel.approve')}}" method="POST" enctype="multipart/form-data" id="upload-form">
+        <form action="{{ url_for('dbModel.approve')}}" method="POST" enctype="multipart/form-data" id="upload-form1">
             <!-- PPA -->
             <label class="PPA label-category">PPA (Program, Project, Activity)</label>
             <div class="form-group">
@@ -151,6 +151,51 @@ with_categories=true) %}
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
+<!--FOR BUDGET BALANCE-->
+<script>
+    // Event listener for form submission
+    $('#upload-form1').submit(function (event) {
+        event.preventDefault();  // Prevent the form from submitting by default
+
+        // Extract program, budgetType, and budgetAmount from the form fields
+        var program = $('input[name="program"]').val();
+        var budgetType = $('input[name="budget_type"]').val();
+        var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
+        var date = $("#start_date_input").val().toString();
+        // Check the budget balance
+        checkBudgetBalance(program, budgetType, budgetAmount, date);
+    });
+
+
+    // Function to check if the current program's budget balance is sufficient
+    function checkBudgetBalance(program, budgetType, budgetAmount, date) {
+        // Get the current program's total budget from the server using AJAX
+        $.ajax({
+            url: "/get_current_program_budget",  // Replace with your endpoint to get the current program's budget
+            method: "POST",
+            data: {
+                program: program,
+                budgetType: budgetType,
+                date: date
+            },
+            dataType: "json",
+            success: function (response) {
+                var currentBudget = response.currentBudget;
+
+                // Compare the current program's budget with the entered budget amount
+                if (currentBudget < budgetAmount) {
+                    alert("Insufficient balance!");  // Show alert if the balance is insufficient
+                } else {
+                    // Proceed with the form submission if the balance is sufficient
+                    $('#upload-form1').off("submit").submit(); // Remove previous submit handler and submit the form
+                }
+            },
+            error: function () {
+                console.log("Failed to fetch current program's budget.");
+            }
+        });
+    }
+</script>
 
 <script>
     flatpickr("#start_date_input", {

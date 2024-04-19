@@ -34,7 +34,7 @@
                     <th>Total Week</th>
                     <th>Budget</th>
                     <th>Coordinator</th>
-
+                    <th>Status</th>
                 </tr>
                 {% for row in community %}
                 <tr>
@@ -53,7 +53,7 @@
                         {% endif %}
                     </td>
                     <td>{{ row.user }}</td>
-
+                    <td class="status-element" data-status="{{ row.status }}">{{ row.status }}</td>
                 </tr>
                 {% endfor %}
             </table>
@@ -231,6 +231,22 @@
 
 
 
+<!-- for ongoing and completed color -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var statusElements = document.querySelectorAll('.status-element');
+        statusElements.forEach(function (statusElement) {
+            var status = statusElement.getAttribute('data-status');
+            if (status.trim() === 'Ongoing') {
+                statusElement.style.color = 'blue';  // Change the color as needed
+
+            } else {
+                statusElement.style.color = '#00e600';
+            }
+        });
+    });
+</script>
+
 <!--VOLUNTEERS-->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -272,9 +288,8 @@
     }
 </script>
 
-
 <!--FOR BUDGET BALANCE-->
-<script>
+<!-- <script>
     // Event listener for form submission
     $('#upload-form').submit(function (event) {
         event.preventDefault();  // Prevent the form from submitting by default
@@ -319,7 +334,7 @@
             }
         });
     }
-</script>
+</script> -->
 
 <!-- for budget validation -->
 <script>
@@ -434,7 +449,6 @@
 </script>
 
 <!-- for community monitoring -->
-
 <script>
     function loadInitialInsights() {
         $.ajax({

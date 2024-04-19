@@ -730,7 +730,7 @@ def cView_pending(pending_id):
     
     form1 = budget_type_form()
     placeholder_choice = (p.budget_type, p.budget_type)
-    form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+    form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget"), ("Unused", "Unused")]
     form1.budget_type.default = ""
     form1.process()
     form1=form1
@@ -1040,7 +1040,7 @@ def update_pending():
         
         form1 = budget_type_form()
         placeholder_choice = (p.budget_type, p.budget_type)
-        form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget")]
+        form1.budget_type.choices = [(placeholder_choice[1], placeholder_choice[1]), ("Donation", "Donation"), ("Budget", "Budget"), ("Unused", "Unused")]
         form1.budget_type.default = ""
         form1.process()
         form1=form1

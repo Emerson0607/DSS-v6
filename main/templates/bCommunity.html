@@ -37,6 +37,7 @@ with_categories=true) %}
                     <th>Total Week</th>
                     <th>Coordinator</th>
                     <th>Budget</th>
+                    <th>Status</th>
 
                 </tr>
                 {% for row in community %}
@@ -49,7 +50,16 @@ with_categories=true) %}
                     <td>{{ row.week }}</td>
                     <td>{{ row.totalWeek }}</td>
                     <td>{{ row.user }}</td>
-                    <td>{{ row.budget }}</td>
+                    <td>
+                        {% if row.budget is number %}
+                        {% set formatted_budget = "%0.2f" % row.budget %}
+                        {{ formatted_budget }}
+                        {% else %}
+                        {{ row.budget }}
+                        {% endif %}
+                    </td>
+
+                    <td class="status-element" data-status="{{ row.status }}">{{ row.status }}</td>
 
                 </tr>
                 {% endfor %}
@@ -111,182 +121,26 @@ with_categories=true) %}
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
-<!-- for budget validation -->
+
+<!-- for ongoing and completed color -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var budgetInput = document.getElementById('budget');
-        var notification = document.getElementById('notification');
+    document.addEventListener('DOMContentLoaded', function () {
+        var statusElements = document.querySelectorAll('.status-element');
+        statusElements.forEach(function (statusElement) {
+            var status = statusElement.getAttribute('data-status');
+            if (status.trim() === 'Ongoing') {
+                statusElement.style.color = 'blue';  // Change the color as needed
 
-        budgetInput.addEventListener('input', function (e) {
-            var value = e.target.value;
-
-            // Remove non-numeric characters except comma and period
-            value = value.replace(/[^0-9.]/g, '');
-
-            // Check if the input starts with zero
-            if (value.charAt(0) === '0' && value.length > 1) {
-                // If the input starts with zero, and its length is greater than 1,
-                // remove the leading zero
-                value = value.slice(1);
-            }
-
-            // Display notification if there are invalid characters
-            if (value !== e.target.value) {
-                notification.textContent = "INVALID INPUT! Only use numbers, commas, and periods.";
             } else {
-                notification.textContent = "";
-            }
-
-            // Check for more than one period
-            var periodIndex = value.indexOf('.');
-            if (periodIndex !== -1) {
-                // If there's more than one period, keep only the first one
-                var remainingChars = value.slice(periodIndex + 1).replace(/\./g, '');
-                value = value.slice(0, periodIndex + 1) + remainingChars.slice(0, 2);
-            }
-
-            // Add commas for thousands
-            var parts = value.split('.');
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            value = parts.join('.');
-
-            // Update the input value
-            e.target.value = value;
-        });
-
-        // Add event listener to clear notification on click outside the input field
-        document.addEventListener('click', function (event) {
-            if (event.target !== budgetInput) {
-                notification.textContent = "";
+                statusElement.style.color = '#00e600';
             }
         });
     });
-</script>
-
-<!--for total week validation-->
-<script>
-    document.querySelectorAll(".mobile-input").forEach(function (element) {
-        element.addEventListener("input", function (event) {
-            // Remove any non-numeric characters from the input
-            this.value = this.value.replace(/\D/g, "");
-
-            // Ensure only two digits are allowed
-            if (this.value.length > 2) {
-                this.value = this.value.slice(0, 2);
-            }
-        });
-    });
-</script>
-
-
-<!--FOR BUDGET BALANCE-->
-<script>
-    // Event listener for form submission
-    $('#upload-form').submit(function (event) {
-        event.preventDefault();  // Prevent the form from submitting by default
-
-        // Extract program, budgetType, and budgetAmount from the form fields
-        var program = $('select[name="program"]').val();
-        var budgetType = $('select[name="budget_type"]').val();
-        var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
-        var date = $("#start_date_input").val().toString();
-
-
-        // Check the budget balance
-        checkBudgetBalance(program, budgetType, budgetAmount, date);
-    });
-
-
-    // Function to check if the current program's budget balance is sufficient
-    function checkBudgetBalance(program, budgetType, budgetAmount, date) {
-        // Get the current program's total budget from the server using AJAX
-        $.ajax({
-            url: "/get_current_program_budget",  // Replace with your endpoint to get the current program's budget
-            method: "POST",
-            data: {
-                program: program,
-                budgetType: budgetType,
-                date: date
-            },
-            dataType: "json",
-            success: function (response) {
-                var currentBudget = response.currentBudget;
-
-                // Compare the current program's budget with the entered budget amount
-                if (currentBudget < budgetAmount) {
-                    alert("Insufficient balance!");  // Show alert if the balance is insufficient
-                } else {
-                    // Proceed with the form submission if the balance is sufficient
-                    $('#upload-form').off("submit").submit(); // Remove previous submit handler and submit the form
-                }
-            },
-            error: function () {
-                console.log("Failed to fetch current program's budget.");
-            }
-        });
-    }
-</script>
-
-
-<!--VOLUNTEERS-->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var volunteerInput = document.querySelector('input[name="volunteer"]');
-        var notification = document.getElementById('notification');
-
-        volunteerInput.addEventListener('input', function (e) {
-            var value = e.target.value;
-
-            // Remove non-numeric characters
-            value = value.replace(/\D/g, '');
-
-            // Remove leading zeros
-            value = value.replace(/^0+/, '');
-
-            // Limit input to six digits
-            if (value.length > 6) {
-                value = value.slice(0, 6);
-            }
-
-            // Add commas for better readability
-            value = numberWithCommas(value);
-
-            // Update the input value
-            e.target.value = value;
-        });
-
-        // Add event listener to clear notification on click outside the input field
-        document.addEventListener('click', function (event) {
-            if (event.target !== volunteerInput) {
-                notification.textContent = "";
-            }
-        });
-    });
-
-    // Function to add commas to a number
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
 </script>
 
 <script>
     $(document).ready(function () {
         loadInitialInsights();
-        coordinator_name();
-
-        date_picker();
-
-    });
-</script>
-<script>
-    // Remove any non-letter characters from the input
-    document.querySelectorAll(".letters-with-space-input").forEach(function (element) {
-        element.addEventListener("input", function (event) {
-            // Remove any non-letter and non-space characters from the input
-
-            this.value = this.value.replace(/[^A-Za-z\s]|(?<=\s)\s+|\s+(?=\s)/g, "");
-
-        });
     });
 </script>
 
