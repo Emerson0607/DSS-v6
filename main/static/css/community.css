@@ -65,6 +65,7 @@ main .budget_card {
 }
 
 
+
 main .budget_card .btn_budget {
     position: absolute;
     right: 2rem;
@@ -332,6 +333,7 @@ main .communityCard table td {
     height: 2.8rem;
     border-bottom: 1px solid lightgray;
     color: var(--color-dark);
+    text-align: left;
 }
 
 main .communityCard table tr:last-child td {
@@ -484,28 +486,8 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
 .communityCard .btn-add .green-add:hover {
     background-color: #348138;
     cursor: pointer;
-
 }
 
-.communityCard .btn-edit {
-    background-color: #49a14f;
-    /* Set the background color to yellow */
-    color: #fff;
-    /* Change the text color */
-    padding: 5px 10px;
-    /* Add some padding for better appearance */
-    border: none;
-    /* Remove the default button border */
-    text-decoration: none;
-    /* Remove the default link underline */
-    border-radius: 5px;
-}
-
-/* Add a hover effect for the "Edit" button */
-.communityCard .btn-edit:hover {
-    background-color: #348138;
-    /* Change the background color on hover */
-}
 
 .communityCard .btn-delete1 {
     background-color: #ff5555;
@@ -555,7 +537,29 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     /* Adjust as needed */
 }
 
+/* for filter */
+.communityCard .program_card_box {
+    position: absolute;
+    right: 8rem;
+    width: 10rem;
+    top: 1.8rem;
 
+
+}
+
+.communityCard .form_control_program {
+    height: 2.4rem !important;
+    padding: 0rem 0 0rem 0.3rem !important;
+
+}
+
+.communityCard .year_card {
+    position: absolute;
+    right: 2.1rem;
+    width: 5rem;
+    height: 2.4rem !important;
+    padding: 0 0 0 0.3rem;
+}
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
@@ -580,9 +584,7 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     .communityCard {
         margin: 0 auto;
         padding-top: 0.5rem;
-
     }
-
 
     .communityCard .jumbotron {
         width: 90%;

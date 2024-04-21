@@ -368,26 +368,6 @@ main .cCommunity .modal-body::-webkit-scrollbar-track {
 
 }
 
-.cCommunity .btn-edit {
-    background-color: #49a14f;
-    /* Set the background color to yellow */
-    color: #fff;
-    /* Change the text color */
-    padding: 5px 10px;
-    /* Add some padding for better appearance */
-    border: none;
-    /* Remove the default button border */
-    text-decoration: none;
-    /* Remove the default link underline */
-    border-radius: 5px;
-}
-
-/* Add a hover effect for the "Edit" button */
-.cCommunity .btn-edit:hover {
-    background-color: #348138;
-    /* Change the background color on hover */
-}
-
 .cCommunity .btn-delete1 {
     background-color: #ff5555;
     /* Red background color */
@@ -441,6 +421,34 @@ main .cCommunity .modal-body::-webkit-scrollbar-track {
     display: none;
 }
 
+
+
+
+
+/* for filter */
+.cCommunity .program_card_box {
+    position: absolute;
+    right: 8.3rem;
+    width: 10rem;
+    top: 1.8rem;
+
+
+}
+
+.cCommunity .form_control_program {
+    height: 2.4rem !important;
+    padding: 0rem 0 0rem 0.3rem !important;
+
+}
+
+.cCommunity .year_card {
+    position: absolute;
+    right: 2.7rem;
+    top: 1.8rem;
+    width: 5rem;
+    height: 2.4rem !important;
+    padding: 0 0 0 0.3rem;
+}
 
 
 /*smaller laptop*/

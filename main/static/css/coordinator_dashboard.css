@@ -82,3 +82,11 @@
     right: 0.5rem;
 
 }
+
+/* for filtering */
+#programDropdown option:first-child,
+#program option:first-child,
+.coordinator_selected option:first-child,
+.year_card option:first-child {
+    display: none;
+}

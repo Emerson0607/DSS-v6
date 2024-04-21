@@ -179,14 +179,25 @@ def cManage_community():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
      # Fetch all user records from the database
-    all_data = Community.query.filter_by(coordinator_id=g.current_id).all()
+    
+    
     form = Form()
-    placeholder_choice = ("", "-- Select Program --")
+    placeholder_choice = ("", "Select Program")
     form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
     form.program.default = ""
     form.process()
-    form=form
-    return render_template("cCommunity.html", community = all_data, form=form)
+    
+    # Retrieve all unique years from the Budget table
+    all_data = Community.query.filter_by(coordinator_id=g.current_id).all()
+    all_years = Community.query.with_entities(extract('year', Community.start_date), Community.coordinator_id==g.current_id).distinct()
+
+    current_year = datetime.now().year
+    
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+    
+    return render_template("cCommunity.html", community = all_data, form=form, budget_years_with_placeholder=budget_years_with_placeholder)
 
 # Function to convert date strings to Python date objects
 def convert_date(date_str):
@@ -469,7 +480,6 @@ def cChange_password():
    
     return render_template("cChange_password.html")
 
-############# changepassword ##############
 @coordinator_route.route("/cNew_password", methods=["POST"])
 def cNew_password():
     if g.current_role != "Coordinator":
@@ -519,7 +529,7 @@ def cNew_password():
     return redirect(url_for('coordinator.cChange_password'))
 
 ############################### COORDINATOR CURRENT PROJECT FILES ###############################
-
+"""
 @coordinator_route.route("/cProject_file_list")
 def cProject_file_list():
     if g.current_role != "Coordinator":
@@ -534,6 +544,7 @@ def cProject_file_list():
     current_year = datetime.now().year
     
     return render_template("cProject_table.html", current_year=current_year, project_file_list=project_file_list, data=g.current_program)
+"""
 
 @coordinator_route.route("/cView_project/<int:project_id>")
 def cView_project(project_id):
@@ -644,8 +655,24 @@ def cArchived_table():
         return redirect(url_for('dbModel.login'))
     # Dynamically generate the years
     current_year = datetime.now().year
-    archived_file_list = Archive.query.filter_by(coordinator_id=g.current_id, status="Completed").all()
-    return render_template("cArchived_table.html", current_year=current_year, archived_file_list=archived_file_list)
+    archived_file_list = Archive.query.filter_by(coordinator_id=g.current_id).all()
+    
+    form = Form()
+    placeholder_choice = ("", "Select Program")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    
+    all_years = Archive.query.with_entities(extract('year', Archive.start_date), Archive.coordinator_id == g.current_id).distinct()
+
+    current_year = datetime.now().year
+
+    budget_years = sorted(set([year[0] for year in all_years]))  # Use a set to ensure uniqueness
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+
+    
+    return render_template("cArchived_table.html", current_year=current_year, archived_file_list=archived_file_list, form=form, budget_years_with_placeholder=budget_years_with_placeholder)
 
 @coordinator_route.route("/cView_archived/<int:project_id>")
 def cView_archived(project_id):

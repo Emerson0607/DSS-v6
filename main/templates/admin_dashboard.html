@@ -29,11 +29,11 @@
     <link rel="stylesheet" href="/static/css/flash.css">
     <link rel="stylesheet" href="/static/css/pending.css">
     <link rel="stylesheet" href="/static/css/pending_details.css">
-    <link rel="stylesheet" href="/static/css/project_files.css">
-    <link rel="stylesheet" href="/static/css/project_table.css">
+    <!-- <link rel="stylesheet" href="/static/css/project_files.css">
+    <link rel="stylesheet" href="/static/css/project_table.css"> -->
     <link rel="stylesheet" href="/static/css/project_details.css">
     <link rel="stylesheet" href="/static/css/archived_details.css">
-    <link rel="stylesheet" href="/static/css/archived_files.css">
+    <!-- <link rel="stylesheet" href="/static/css/archived_files.css"> -->
     <link rel="stylesheet" href="/static/css/archived_table.css">
     <link rel="stylesheet" href="/static/css/cesu_plans.css">
     <link rel="stylesheet" href="/static/css/Logfile.css">
@@ -161,9 +161,9 @@
                     <div class="dropdown-content-files" id="dropdown-content-files">
                         <a class="blue-link" href="{{ url_for('file.files') }}">CESU files</a>
 
-                        <a class="blue-link" href="{{ url_for('dbModel.archived_files') }}">Archived files</a>
+                        <a class="blue-link" href="{{ url_for('dbModel.archived_file_list') }}">Archived files</a>
                         <a class="blue-link" href="{{ url_for('dbModel.resources') }}">Resources</a>
-                        <a class="blue-link" href="{{ url_for('dbModel.project_files') }}">Community projects file</a>
+                        <!-- <a class="blue-link" href="{{ ('dbModel.project_files') }}">Community projects file</a> -->
                     </div>
                 </div>
 

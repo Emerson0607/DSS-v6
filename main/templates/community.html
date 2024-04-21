@@ -28,49 +28,80 @@ with_categories=true) %}
                 <span class="material-symbols-sharp" style="float: right;">add</span>
             </button>
 
+            <select id="yearDropdown1" class="year_card form-control form_control_year">
+                {% for year in budget_years_with_placeholder %}
+                <option value="{{ year[0] }}">{{ year[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="form-group program_card_box">
+                {{ form.program(class="form-control form_control_program", id="programDropdown",
+                value=form.program.default) }}
+            </div>
+
         </h2>
         <div class="table-card">
             <table class="table" id="data-table">
-                <tr>
-                    <th>ID</th>
-                    <th>Community</th>
-                    <th>Program</th>
-                    <th>Sub-Program</th>
-                    <th>Date Deployed</th>
-                    <th>Week</th>
-                    <th>Total Week</th>
-                    <th>Budget</th>
-                    <th>Coordinator</th>
-                    <th>Status</th>
+                <thead> <!-- Table header -->
+                    <tr>
+                        <th>ID</th>
+                        <th>Community</th>
+                        <th>Program</th>
+                        <th>Sub-Program</th>
+                        <th>Date Deployed</th>
+                        <th>Week</th>
+                        <th>Total Week</th>
+                        <th>Budget</th>
+                        <th>Coordinator</th>
+                        <th>Status</th>
 
-                    <th>Action</th>
-                </tr>
-                {% for row in community %}
-                <tr>
-                    <td>{{ row.id }}</td>
-                    <td>{{ row.community }}</td>
-                    <td>{{ row.program }}</td>
-                    <td>{{ row.subprogram }}</td>
-                    <td>{{ row.start_date }}</td>
-                    <td>{{ row.week }}</td>
-                    <td>{{ row.totalWeek }}</td>
-                    <td>
-                        {% if row.budget is number %}
-                        {% set formatted_budget = "%0.2f" % row.budget %}
-                        {{ formatted_budget }}
-                        {% else %}
-                        {{ row.budget }}
-                        {% endif %}
-                    </td>
-                    <td>{{ row.user }}</td>
-                    <td class="status-element" data-status="{{ row.status }}">{{ row.status }}</td>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in community %}
 
-                    <td>
-                        <a href="{{ url_for('dbModel.delete_community', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
-                            class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
-                    </td>
-                </tr>
-                {% endfor %}
+                    <tr>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.id
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.community }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.program }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.subprogram }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.start_date}}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.week}}</a></td>
+
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.totalWeek }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.budget
+                                }}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">
+                                {% if
+                                row.budget is number %}
+                                {% set formatted_budget = "%0.2f" % row.budget %}
+                                {{ formatted_budget }}
+                                {% else %}
+                                {{ row.budget }}
+                                {% endif %}</a></td>
+                        <td>
+                            <a href="{{ url_for('dbModel.view_project', project_id=row.id)}}"
+                                class="btn-edit status-element" data-status="{{ row.status }}">
+                                {{ row.status }}
+                            </a>
+                        </td>
+
+                        <td>
+                            <a href="{{ url_for('dbModel.delete_community', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
+                                class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
 
             <!-- Modal -->
@@ -91,7 +122,8 @@ with_categories=true) %}
                                 </div>
                                 <div class="form-group">
                                     <label>Program:</label>
-                                    {{ form.program(class="form-select", value=form.program.default) }}
+
+                                    {{ form.program(class="form-control", value=form.program.default) }}
                                 </div>
                                 <div class="form-group">
                                     <label>Sub-program:</label>
@@ -128,17 +160,15 @@ with_categories=true) %}
                                         <p id="notification" style="color: red; font-style: italic; display: none;"></p>
                                         <input placeholder="Enter amount" type="text" class="form-control" id="budget"
                                             name="budget" required>
-
                                     </div>
                                 </div>
                                 <br>
-
-
                                 <div class="form-group">
                                     <label>Coordinator: </label><br />
-                                    <select class="form-select" name="user" id="coordinator_selected">
-                                        <option value="" selected disabled>
-                                            -- Select Coordinator --
+                                    <select class="form-control" name="user" id="coordinator_selected">
+                                        <option style="display: none; color: rgb(92, 92, 92);" value="" selected
+                                            disabled>
+                                            Select Coordinator
                                         </option>
                                         {% for coordinator in coordinators %}
                                         <option value="{{ coordinator.firstname }} {{ coordinator.lastname }}">
@@ -150,7 +180,7 @@ with_categories=true) %}
 
                                 <div class="form-group">
                                     <label>Department:</label>
-                                    <select class="form-select" name="department_A" id="departmentSelect" required>
+                                    <select class="form-control" name="department_A" id="departmentSelect" required>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -251,12 +281,42 @@ with_categories=true) %}
     </div>
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
+
+<!-- for community projects filter -->
+<script>
+    // Event listener for program dropdown change
+    $('#programDropdown, #yearDropdown1').change(function () {
+        filterCommunityProjects();
+    });
+
+    // Function to filter community projects based on selected program and year
+    function filterCommunityProjects() {
+        var selectedProgram = $('#programDropdown').val();
+        var selectedYear = $('#yearDropdown1').val();
+
+        // Hide all table rows
+        $('#data-table tbody tr').hide();
+
+        // Show rows matching the selected program and year
+        $('#data-table tbody tr').each(function () {
+            var row = $(this);
+            var program = row.find('td:eq(2)').text(); // Index of program column in the table
+            var startDate = row.find('td:eq(4)').text(); // Index of start date column in the table
+            var yearFromTable = (new Date(startDate)).getFullYear(); // Extract year from the start date
+
+            // Check if both program and year match the selected values
+            if (program === selectedProgram && yearFromTable.toString() === selectedYear) {
+                row.show();
+            }
+        });
+    }
+
+</script>
 
 <!-- for ongoing and completed color -->
 <script>
@@ -348,7 +408,7 @@ with_categories=true) %}
         event.preventDefault();  // Prevent the form from submitting by default
 
         // Extract program, budgetType, and budgetAmount from the form fields
-        var program = $('select[name="program"]').val();
+        var program = $('#program').val();
         var budgetType = $('select[name="budget_type"]').val();
         var budgetAmount = parseFloat($('input[name="budget"]').val().replace(/,/g, ''));
         var date = $("#start_date_input").val().toString();
@@ -607,9 +667,6 @@ with_categories=true) %}
             });
         });
     }
-
-
-
 
     //date picker
     var startDateInput;

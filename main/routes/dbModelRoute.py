@@ -775,11 +775,6 @@ def manage_community():
     if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
-    form = Form()
-    placeholder_choice = ("", "-- Select Program --")
-    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
-    form.program.default = ""
-    form.process()
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
@@ -788,8 +783,56 @@ def manage_community():
     program8 = Program.query.all()
     department = Department.query.all()
     user1 = Users.query.all()
+    
+    form = Form()
+    placeholder_choice = ("", "Select Program")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    
+    # Retrieve all unique years from the Budget table
+    all_years = Community.query.with_entities(extract('year', Community.start_date)).distinct()
+
+    current_year = datetime.now().year
+    
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+    
     coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
-    return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1, department=department, coordinators=coordinators)
+    return render_template("community.html", community = all_data, form=form, program8=program8, user1 = user1, department=department, coordinators=coordinators, budget_years_with_placeholder=budget_years_with_placeholder)
+
+# @dbModel_route.route('/filter_community_projects', methods=['POST'])
+# def filter_community_projects():
+#     data = request.get_json()
+#     date = data['date']
+#     current_year = int(date)
+#     program =  data['program']
+
+#     # Query database for projects
+#     filtered_community = Community.query.filter(func.extract('year', Community.start_date) == current_year,Community.program == program ).all()
+
+#     # Format data into a list of dictionaries
+#     formatted_data = []
+#     for row in filtered_community:
+#         formatted_row = {
+#             'id': row.id,
+#             'community': row.community,
+#             'program': row.program,
+#             'subprogram': row.subprogram,
+#             'start_date': row.start_date,
+#             'week': row.week or 0,  # Replace None with 0
+#             'totalWeek': row.totalWeek or 0,  # Replace None with 0
+#             'budget': row.budget or 0,  # Replace None with 0
+#             'coordinator': row.user,
+#             'status': row.status
+            
+#         }
+#         formatted_data.append(formatted_row)
+
+#     # Return formatted data as JSON response
+#     return jsonify(formatted_data)
+
 
 ############################ ASSIGNED PROGRAM FOR COORDINATOR ############################
 @dbModel_route.route("/subprogram1/<get_program>")
@@ -981,6 +1024,11 @@ def get_current_program_budget():
     
     date = convert_date(date1)
     date_year = date.year
+    
+    print("program", program)
+    print("budget_type", budget_type)
+    print("date", date)
+    
 
     if budget_type == 'Unused':
         unused_budget = Unused_budget.query.filter(extract('year', Unused_budget.date) == date_year, Unused_budget.program == program).first()
@@ -988,13 +1036,15 @@ def get_current_program_budget():
             total = unused_budget.current
         else:
             total = 0   
+        print("current unused:", total)
     else:
         budget = Current_total_budget.query.filter(extract('year', Current_total_budget.date) == date_year, Current_total_budget.program == program, Current_total_budget.budget_type== budget_type).first()
         if budget:
             total = budget.total
         else:
             total = 0
-    print("current:", total)
+        print("current budget:", total)
+    
 
     return jsonify({'currentBudget': total})
 
@@ -1748,6 +1798,8 @@ def new_password():
     return redirect(url_for('dbModel.change_password'))
 
 ############################### CURRENT PROJECT FILES ###############################
+# remove project files table 
+"""
 @dbModel_route.route("/project_files")
 def project_files():
     if g.current_role != "Admin" and g.current_role != "BOR":
@@ -1774,23 +1826,6 @@ def project_file_list(data):
 
     return render_template("project_table.html", current_year=current_year, project_file_list=project_file_list, data=data)
 
-@dbModel_route.route("/view_project/<int:project_id>")
-def view_project(project_id):
-    if g.current_role != "Admin" and g.current_role != "BOR":
-        return redirect(url_for('dbModel.login'))
-
-    if 'user_id' not in session:
-        flash('Please log in first.', 'error')
-        return redirect(url_for('dbModel.login'))
-
-    p = Community.query.get(project_id)
-
-    cpf_data_filename = p.cpf_filename
-    cesap_data_filename = p.cesap_filename
-    cna_data_filename = p.cna_filename
-
-    return render_template("project_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, budget=p.budget, budget_type=p.budget_type)
-
 @dbModel_route.route("/delete_project/<int:project_id>")
 def delete_project(project_id):
     if g.current_role != "Admin" and g.current_role != "BOR":
@@ -1809,9 +1844,6 @@ def delete_project(project_id):
     if p:
         try:
             data_to_move = Community.query.filter_by(community=community, program = program, subprogram=subprogram).first()
-            # Iterate through the data and move it to CPFARCHIVE
-                
-                # Create a new row in CPFARCHIVE
             new_row = Archive(
                 community=data_to_move.community, 
                 program=data_to_move.program, 
@@ -1875,6 +1907,25 @@ def delete_project(project_id):
     project_file_list = Community.query.filter_by(program=data).all()
     current_year = datetime.now().year
     return render_template("project_table.html",current_year=current_year, project_file_list=project_file_list, data=data)
+
+"""
+
+@dbModel_route.route("/view_project/<int:project_id>")
+def view_project(project_id):
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    p = Community.query.get(project_id)
+
+    cpf_data_filename = p.cpf_filename
+    cesap_data_filename = p.cesap_filename
+    cna_data_filename = p.cna_filename
+
+    return render_template("project_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, budget=p.budget, budget_type=p.budget_type)
 
 @dbModel_route.route('/view_cpf_project/<program>/<subprogram>/<community>/<cpf_filename>', methods=['GET'])
 def view_cpf_project(program, subprogram, community, cpf_filename):
@@ -1959,29 +2010,42 @@ def view_cesap_project(program, subprogram, community, cesap_filename):
 
 ############################### ARCHIVED FILES ###############################
 
-@dbModel_route.route("/archived_files")
-def archived_files():
-    if g.current_role != "Admin" and g.current_role != "BOR":
-        return redirect(url_for('dbModel.login'))
+# @dbModel_route.route("/archived_files")
+# def archived_files():
+#     if g.current_role != "Admin" and g.current_role != "BOR":
+#         return redirect(url_for('dbModel.login'))
         
-    if 'user_id' not in session:
-        flash('Please log in first.', 'error')
-        return redirect(url_for('dbModel.login'))
-    return render_template("archived_files.html")
+#     if 'user_id' not in session:
+#         flash('Please log in first.', 'error')
+#         return redirect(url_for('dbModel.login'))
+#     return render_template("archived_files.html")
 
-@dbModel_route.route("/archived_file_list/<data>")
-def archived_file_list(data):
+@dbModel_route.route("/archived_file_list")
+def archived_file_list():
     if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
-    # Dynamically generate the years
+ 
+    form = Form()
+    placeholder_choice = ("", "Select Program")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    
+    # Retrieve all unique years from the Budget table
+    all_years = Archive.query.with_entities(extract('year', Archive.start_date)).distinct()
+
     current_year = datetime.now().year
     
-    archived_file_list = Archive.query.filter_by(program=data).all()
-    return render_template("archived_table.html", current_year=current_year, archived_file_list=archived_file_list, data=data)
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+    
+    archived_file_list = Archive.query.all()
+    return render_template("archived_table.html", current_year=current_year, archived_file_list=archived_file_list, budget_years_with_placeholder=budget_years_with_placeholder, form=form)
 
 @dbModel_route.route("/view_archived/<int:project_id>")
 def view_archived(project_id):
@@ -2137,22 +2201,29 @@ def cesu_plans():
     if g.current_role != "Admin" and g.current_role != "BOR":
         return redirect(url_for('dbModel.login'))
 
-    form = Form()
-    placeholder_choice = ("", "-- Select Program --")
-    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
-    form.program.default = ""
-    form.process()
     if 'user_id' not in session:
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     
-    # Dynamically generate the years
+    form = Form()
+    placeholder_choice = ("", "Select Program")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    
+    # Retrieve all unique years from the Budget table
+    all_years = Plan.query.with_entities(extract('year', Plan.start_date)).distinct()
+
     current_year = datetime.now().year
-     # Fetch all user records from the database
+    
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+    
     all_data = Plan.query.filter_by(status="Planning").all()
     coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
     
-    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form, coordinators=coordinators)
+    return render_template("cesu_plans.html", current_year=current_year, community = all_data, form=form, coordinators=coordinators, budget_years_with_placeholder=budget_years_with_placeholder)
 
 @dbModel_route.route("/add_plan", methods=["POST"])
 def add_plan():

@@ -1,4 +1,4 @@
-{% extends "admin_dashboard.html" %}
+{% extends "coordinator_dashboard.html" %}
 {% block title %}Projects{% endblock %}
 {% block content %}
 <div class="margin-top"></div>
@@ -12,7 +12,7 @@
 {% endif %}
 {% endwith %}
 
-<div class="projectFilesCard">
+<div class="Cproject_table_files">
     <div class="jumbotron">
         <div class="for_filter">
             <div class="year-filter1 ">
@@ -24,7 +24,7 @@
                 </select>
                 <button class="show-all-button" onclick="showAllData()">Show All</button>
             </div>
-            <h2 style="margin-bottom: 1rem;">{{data}} <b>Projects</b></h2>
+            <h2 style="margin-bottom: 1rem;">CESU <b>Projects</b></h2>
         </div>
         <div class="table-card">
             <table class="table table-striped" id="logs_table">
@@ -37,41 +37,43 @@
                         <th>Date Deployed</th>
                         <th>Week</th>
                         <th>Total Week</th>
+                        <th>Budget</th>
                         <th>Coordinator</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 {% for row in project_file_list %}
                 <tbody>
                     <tr>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.id
-                                }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.id }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.community }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.program }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.subprogram }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                                row.start_date}}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                                row.week}}</a></td>
-
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.start_date }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.week }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.totalWeek }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                                row.user
-                                }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">
+                                {% if row.budget is number %}
+                                {% set formatted_budget = "%0.2f" % row.budget %}
+                                {{ formatted_budget }}
+                                {% else %}
+                                {{ row.budget }}
+                                {% endif %}
+                            </a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.user }}</a></td>
                         <td>
-                            <a href="{{ url_for('dbModel.view_project', project_id=row.id)}}"
+                            <a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}"
                                 class="btn-edit status-element" data-status="{{ row.status }}">
                                 {{ row.status }}
                             </a>
-                        </td>
-                        <td>
-                            <a href="{{ url_for('dbModel.delete_project', project_id=row.id, data=data, community=row.community, program=row.program, subprogram=row.subprogram )}}"
-                                class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
                         </td>
                     </tr>
                 </tbody>
@@ -88,7 +90,7 @@
         statusElements.forEach(function (statusElement) {
             var status = statusElement.getAttribute('data-status');
             if (status.trim() === 'Ongoing') {
-                statusElement.style.color = 'blue';  // Change the color as needed
+                statusElement.style.color = '#e600e6';  // Change the color as needed
 
             } else {
                 statusElement.style.color = '#00e600';
@@ -103,11 +105,11 @@
     crossorigin="anonymous"></script>
 
 
+
 <script>
     function filterByYear() {
         var selectedYear = $("#year").val();
         var recordsFound = false;
-
 
         // You can use AJAX to fetch data for the selected year and update the table accordingly
         // For simplicity, let's assume the data is already present and just hide/show rows
@@ -132,9 +134,9 @@
     function showAllData() {
         // Show all rows
         $("#logs_table tbody tr").show();
+
         // Hide the "No records found" message
         $("#noRecordsMessage").hide();
     }
 </script>
-
 {% endblock %}

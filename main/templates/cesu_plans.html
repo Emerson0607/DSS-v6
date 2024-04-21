@@ -15,26 +15,24 @@ with_categories=true) %}
 
 <div class="cesu_plans_Card">
     <div class="jumbotron">
-        <div class="for_filter">
-            <div class="year-filter1 ">
-                <label for="year">Select Year:</label>
-                <select id="year" onchange="filterByYear()">
-                    {% for year in range(current_year, current_year + 5) %}
-                    <option value="{{ year }}">{{ year }}</option>
-                    {% endfor %}
-                </select>
-                <button class="show-all-button" onclick="showAllData()">Show All</button>
-            </div>
-            <h2 style="margin-bottom: 1rem;">CESU <b>Planner</b></h2>
+        <h2 style="margin-bottom: 1rem;">CESU <b>Planner</b></h2>
+        <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right;">
+            <span class="material-symbols-sharp" style="float: right;">add</span>
+        </button>
 
-            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal"
-                style="float: right;">
-                <span class="material-symbols-sharp" style="float: right;">add</span>
-            </button>
+        <select id="yearDropdown1" class="year_card form-control form_control_year">
+            {% for year in budget_years_with_placeholder %}
+            <option value="{{ year[0] }}">{{ year[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <div class="form-group program_card_box">
+            {{ form.program(class="form-control form_control_program", id="programDropdown",
+            value=form.program.default) }}
         </div>
 
         <div class="table-card">
-            <table class="table table-striped" id="logs_table">
+            <table class="table table-striped" id="data-table">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -83,9 +81,6 @@ with_categories=true) %}
                         <td><a href="{{ url_for('dbModel.view_plan', plan_id=row.id)}}" class="btn-edit">{{ row.user
                                 }}</a>
                         </td>
-
-
-
                         <td>
                             <a href="{{ url_for('dbModel.delete_plan', id=row.id,community=row.community, program=row.program, subprogram=row.subprogram) }}"
                                 class="btn-delete1" onclick="return confirm('Are you sure to delete?')">Delete</a>
@@ -114,7 +109,7 @@ with_categories=true) %}
                                 </div>
                                 <div class="form-group">
                                     <label>Program:</label>
-                                    {{ form.program(class="form-select", value=form.program.default) }}
+                                    {{ form.program(class="form-control", value=form.program.default) }}
                                 </div>
                                 <div class="form-group">
                                     <label>Sub-program:</label>
@@ -166,9 +161,9 @@ with_categories=true) %}
                                 -->
                                 <div class="form-group">
                                     <label>Coordinator: </label><br />
-                                    <select class="form-select" name="user" id="coordinator_selected">
+                                    <select class="form-control" name="user" id="coordinator_selected">
                                         <option value="" selected disabled>
-                                            -- Select Coordinator --
+                                            Select Coordinator
                                         </option>
                                         {% for coordinator in coordinators %}
                                         <option value="{{ coordinator.firstname }} {{ coordinator.lastname }}">
@@ -180,7 +175,7 @@ with_categories=true) %}
 
                                 <div class="form-group">
                                     <label>Department:</label>
-                                    <select class="form-select" name="department_A" id="departmentSelect" required>
+                                    <select class="form-control" name="department_A" id="departmentSelect" required>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -243,7 +238,37 @@ with_categories=true) %}
     crossorigin="anonymous"></script>
 
 
-<!--BUDGET-->
+<!-- for community projects filter -->
+<script>
+    // Event listener for program dropdown change
+    $('#programDropdown, #yearDropdown1').change(function () {
+        filterCommunityProjects();
+    });
+
+    // Function to filter community projects based on selected program and year
+    function filterCommunityProjects() {
+        var selectedProgram = $('#programDropdown').val();
+        var selectedYear = $('#yearDropdown1').val();
+
+        // Hide all table rows
+        $('#data-table tbody tr').hide();
+
+        // Show rows matching the selected program and year
+        $('#data-table tbody tr').each(function () {
+            var row = $(this);
+            var program = row.find('td:eq(2)').text(); // Index of program column in the table
+            var startDate = row.find('td:eq(4)').text(); // Index of start date column in the table
+            var yearFromTable = (new Date(startDate)).getFullYear(); // Extract year from the start date
+
+            // Check if both program and year match the selected values
+            if (program === selectedProgram && yearFromTable.toString() === selectedYear) {
+                row.show();
+            }
+        });
+    }
+
+</script>
+
 <!-- for budget validation -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -296,11 +321,9 @@ with_categories=true) %}
     });
 </script>
 
-
 <!--WEEKS-->
 <script>
 </script>
-
 
 <!--VOLUNTEERS-->
 <script>
@@ -343,6 +366,7 @@ with_categories=true) %}
     }
 </script>
 
+<!-- mobile validation -->
 <script>
     document.querySelectorAll(".mobile-input").forEach(function (element) {
         element.addEventListener("input", function (event) {
@@ -357,6 +381,7 @@ with_categories=true) %}
     });
 </script>
 
+<!-- caller function -->
 <script>
     $(document).ready(function () {
         coordinator_name();
@@ -364,8 +389,7 @@ with_categories=true) %}
     });
 </script>
 
-
-
+<!-- name validation -->
 <script>
     // Remove any non-letter characters from the input
     document.querySelectorAll(".letters-with-space-input").forEach(function (element) {
@@ -378,6 +402,7 @@ with_categories=true) %}
     });
 </script>
 
+<!-- coordinator and date picker -->
 <script>
 
     function coordinator_name() {
@@ -463,37 +488,4 @@ with_categories=true) %}
     }
 </script>
 
-<script>
-    function filterByYear() {
-        var selectedYear = $("#year").val();
-        var recordsFound = false;
-
-        // You can use AJAX to fetch data for the selected year and update the table accordingly
-        // For simplicity, let's assume the data is already present and just hide/show rows
-        $("#logs_table tbody tr").each(function () {
-            var rowYear = $(this).find("td:eq(4)").text().split('-')[0]; // Assuming the year is in the second column
-            if (rowYear === selectedYear || selectedYear === "All") {
-                $(this).show();
-                recordsFound = true;
-            } else {
-                $(this).hide();
-            }
-        });
-
-        // Display or hide the "No records found" message
-        if (recordsFound) {
-            $("#noRecordsMessage").hide();
-        } else {
-            $("#noRecordsMessage").show();
-        }
-    }
-
-    function showAllData() {
-        // Show all rows
-        $("#logs_table tbody tr").show();
-
-        // Hide the "No records found" message
-        $("#noRecordsMessage").hide();
-    }
-</script>
 {% endblock %}

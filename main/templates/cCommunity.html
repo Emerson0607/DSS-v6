@@ -22,40 +22,70 @@
                 style="float: right;">
                 <span class="material-symbols-sharp green-add" style="float: right;">add</span>
             </button>
+            <select id="yearDropdown1" class="year_card form-control form_control_year">
+                {% for year in budget_years_with_placeholder %}
+                <option value="{{ year[0] }}">{{ year[1] }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="form-group program_card_box">
+                {{ form.program(class="form-control form_control_program", id="programDropdown",
+                value=form.program.default) }}
+            </div>
+
         </h2>
         <div class="table-card">
             <table class="table" id="data-table">
-                <tr>
-                    <th>ID</th>
-                    <th>Community</th>
-                    <th>Program</th>
-                    <th>Sub-Program</th>
-                    <th>Week</th>
-                    <th>Total Week</th>
-                    <th>Budget</th>
-                    <th>Coordinator</th>
-                    <th>Status</th>
-                </tr>
-                {% for row in community %}
-                <tr>
-                    <td>{{ row.id }}</td>
-                    <td>{{ row.community }}</td>
-                    <td>{{ row.program }}</td>
-                    <td>{{ row.subprogram }}</td>
-                    <td>{{ row.week }}</td>
-                    <td>{{ row.totalWeek }}</td>
-                    <td>
-                        {% if row.budget is number %}
-                        {% set formatted_budget = "%0.2f" % row.budget %}
-                        {{ formatted_budget }}
-                        {% else %}
-                        {{ row.budget }}
-                        {% endif %}
-                    </td>
-                    <td>{{ row.user }}</td>
-                    <td class="status-element" data-status="{{ row.status }}">{{ row.status }}</td>
-                </tr>
-                {% endfor %}
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Community</th>
+                        <th>Program</th>
+                        <th>Sub-Program</th>
+                        <th>Date Deployed</th>
+                        <th>Week</th>
+                        <th>Total Week</th>
+                        <th>Budget</th>
+                        <th>Coordinator</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in community %}
+                    <tr>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.id }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.community }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.program }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.subprogram }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.start_date }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.week }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.totalWeek }}</a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">
+                                {% if row.budget is number %}
+                                {% set formatted_budget = "%0.2f" % row.budget %}
+                                {{ formatted_budget }}
+                                {% else %}
+                                {{ row.budget }}
+                                {% endif %}
+                            </a></td>
+                        <td><a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.user }}</a></td>
+                        <td>
+                            <a href="{{ url_for('coordinator.cView_project', project_id=row.id)}}"
+                                class="btn-edit status-element" data-status="{{ row.status }}">
+                                {{ row.status }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div> <!-- end table-card -->
 
@@ -229,6 +259,36 @@
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
+<!-- for community projects filter -->
+<script>
+    // Event listener for program dropdown change
+    $('#programDropdown, #yearDropdown1').change(function () {
+        filterCommunityProjects();
+    });
+
+    // Function to filter community projects based on selected program and year
+    function filterCommunityProjects() {
+        var selectedProgram = $('#programDropdown').val();
+        var selectedYear = $('#yearDropdown1').val();
+
+        // Hide all table rows
+        $('#data-table tbody tr').hide();
+
+        // Show rows matching the selected program and year
+        $('#data-table tbody tr').each(function () {
+            var row = $(this);
+            var program = row.find('td:eq(2)').text(); // Index of program column in the table
+            var startDate = row.find('td:eq(4)').text(); // Index of start date column in the table
+            var yearFromTable = (new Date(startDate)).getFullYear(); // Extract year from the start date
+
+            // Check if both program and year match the selected values
+            if (program === selectedProgram && yearFromTable.toString() === selectedYear) {
+                row.show();
+            }
+        });
+    }
+
+</script>
 
 
 <!-- for ongoing and completed color -->

@@ -84,7 +84,21 @@ def bor_dashboard():
     department = Department.query.all()
     user1 = Users.query.all()
     coordinators = Users.query.filter_by(role='Coordinator').all()
-    return render_template("bCommunity.html", community = all_data, program8=program8, user1 = user1, department=department, coordinators=coordinators)
+    form = Form()
+    placeholder_choice = ("", "Select Program")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    
+    # Retrieve all unique years from the Budget table
+    all_years = Community.query.with_entities(extract('year', Community.start_date)).distinct()
+
+    current_year = datetime.now().year
+    
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+    return render_template("bCommunity.html", community = all_data, program8=program8, user1 = user1, department=department, coordinators=coordinators, form=form, budget_years_with_placeholder=budget_years_with_placeholder)
 
 @bor_route.route("/bManage_community")
 def bManage_community():
@@ -100,7 +114,23 @@ def bManage_community():
     department = Department.query.all()
     user1 = Users.query.all()
     coordinators = Users.query.filter_by(role='Coordinator').all()
-    return render_template("bCommunity.html", community = all_data, program8=program8, user1 = user1, department=department, coordinators=coordinators)
+    
+    form = Form()
+    placeholder_choice = ("", "Select Program")
+    form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
+    form.program.default = ""
+    form.process()
+    
+    # Retrieve all unique years from the Budget table
+    all_years = Community.query.with_entities(extract('year', Community.start_date)).distinct()
+
+    current_year = datetime.now().year
+    
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder = [placeholder_choice] + [(year, year) for year in budget_years]
+    
+    return render_template("bCommunity.html", community = all_data, program8=program8, user1 = user1, department=department, coordinators=coordinators, form=form, budget_years_with_placeholder=budget_years_with_placeholder)
 
 ####################################### BUDGET ######################################
 @bor_route.route("/bBudget")

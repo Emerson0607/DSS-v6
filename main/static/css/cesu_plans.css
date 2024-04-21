@@ -241,8 +241,8 @@ main .cesu_plans_Card .modal-body::-webkit-scrollbar-track {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 11rem;
-    top: 0.2rem;
+    left: 12rem;
+    top: 2rem;
 }
 
 .cesu_plans_Card .btn-add:hover {
@@ -300,86 +300,35 @@ main .cesu_plans_Card .modal-body::-webkit-scrollbar-track {
     margin-bottom: 1rem;
 }
 
-/* Year Filter */
-main .cesu_plans_Card .for_filter .year-filter {
+/* for filter */
+.cesu_plans_Card .program_card_box {
     position: absolute;
-    right: 1rem;
+    right: 8.3rem;
+    width: 10rem;
+    top: 1.8rem;
+
+
 }
 
-
-.for_filter {
-    position: relative;
+.cesu_plans_Card .form_control_program {
+    height: 2.4rem !important;
+    padding: 0rem 0 0rem 0.3rem !important;
 
 }
 
-.cesu_plans_Card .jumbotron .year-filter1 {
+.cesu_plans_Card .year_card {
     position: absolute;
+    right: 2.7rem;
+    top: 1.8rem;
+    width: 5rem;
+    height: 2.4rem !important;
+    padding: 0 0 0 0.3rem;
 }
-
-.project-year-table {
-    width: 100%;
-    height: 6rem;
-    position: relative;
-    right: 30rem;
-}
-
-.cesu_plans_Card .year-filter1 label {
-    font-weight: bold;
-    margin-right: 10px;
-    font-size: 12px;
-}
-
-.cesu_plans_Card .year-filter1 select {
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #ffffff;
-
-}
-
-.cesu_plans_Card .year-filter1 select:hover {
-    border-color: #555;
-    cursor: pointer;
-}
-
-
-
-/* Show all btn */
-.cesu_plans_Card .year-filter1 .show-all-button {
-    font-size: 12px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.cesu_plans_Card .year-filter1 .show-all-button:hover {
-    border-color: #555;
-}
-
-
-
-/* Show all btn */
-.cesu_plans_Card .jumbotron .year-filter1 .show-all-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.cesu_plans_Card .jumbotron .year-filter1 .show-all-button:hover {
-    border-color: #555;
-}
-
 
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
-    .communityCard .cesu_plans_Card .modal-content {
+    .cesu_plans_Card .modal-content {
         position: relative;
     }
 
