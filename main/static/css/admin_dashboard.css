@@ -559,7 +559,7 @@ main {
     position: absolute;
     background-color: #f9f9f9;
     width: 13rem;
-    height: 10.5rem;
+    height: 8rem;
     top: 2;
     right: 0;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -994,12 +994,25 @@ main {
 
     .sidebar .dropdown-files .dropdown-content-files {
         position: absolute;
-        left: 3rem;
+        left: 1rem;
+        padding-left: 1rem;
+    }
+
+    .sidebar .fundraising-content-files {
+
+
+        padding-left: 1rem !important;
     }
 
     .sidebar .dropdown-files .sidebar-link .arrow_drop_down {
         position: absolute;
-        right: 2rem;
+        right: 0.5rem;
+
+    }
+
+    .sidebar .fundraising-files .sidebar-link .arrow_drop_down {
+        position: absolute;
+        right: 0.5rem;
 
     }
 
@@ -1029,9 +1042,40 @@ main {
     }
 
     .dropdown-content {
-
         height: 8rem;
+    }
+
+
+    /* for side bard */
+
+    aside .sidebar a:hover:before {
+        content: "" !important;
+        width: 6px !important;
+        height: 100% !important;
+        background: var(--color-lightgreen);
 
     }
+
+    aside .sidebar {
+        margin-left: 1.3rem !important;
+    }
+
+    aside .sidebar a {
+        padding-left: 0rem !important;
+        margin-left: 1rem !important;
+
+    }
+
+
+    aside .sidebar a:hover {
+        background: var(--color-light);
+        color: var(--color-darkgreen);
+        margin-left: 0.5rem !important;
+        transform: scale(1.1);
+        padding-left: 0rem !important;
+        padding-right: 1rem !important;
+
+    }
+
 
 }

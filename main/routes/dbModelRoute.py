@@ -136,42 +136,89 @@ def reset_password():
             return render_template('reset_password.html', email=email)
     return render_template('reset_password.html')
 
+#################### NEW USER'S PASSWORD ##########################
+@dbModel_route.route('/new_user', methods=['GET', 'POST'])
+def new_user():
+    if request.method == "POST":
+        user_id = request.form.get("user_id")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
+
+        # Check if the email exists in the database
+        user = Users.query.filter_by(id=user_id).first()
+
+        if ' ' in new_password:
+            flash('Password cannot contain spaces.', 'newpassword_space')
+            return render_template('reset_password.html', user_id=user_id)
+
+        if user:
+            if new_password == confirm_password:
+                        # Hash the new password
+                        hashed_password = generate_password_hash(new_password)
+                        user.password = hashed_password
+                        user.status = 1
+
+                        # Commit changes to the database
+                        db.session.commit()
+
+                        # Log the password reset action
+                        userlog = user.username
+                        action = "Successfully create new account."
+                        ph_tz = pytz.timezone('Asia/Manila')
+                        ph_time = datetime.now(ph_tz)
+                        timestamp1 = ph_time.strftime('%Y-%m-%d %H:%M:%S')
+                        timestamp = convert_date1(timestamp1)
+                        insert_logs = Logs(userlog=userlog, timestamp=timestamp, action=action)
+                        db.session.add(insert_logs)
+                        db.session.commit()
+
+                        flash('Registered successfully. You can now log in.')
+                        return redirect(url_for('dbModel.login'))
+            else:
+                        flash('New password and confirmation do not match.', 'not_match')
+                        return render_template('reset_password.html', user_id=user_id)
+    return render_template('new_user.html')
+
 @dbModel_route.route("/send_mail")
 def send_mail(otp, recipient_email):
-    sender_name = "LU-CESU"
-    mail_message = Message(
-            'Account Recovery', 
-            sender =   (sender_name, 'lucesu50@gmail.com'), 
-            recipients = [recipient_email])
-    mail_message.body = f"""
-    Your One-Time Password (OTP): {otp}
+    try:
+        sender_name = "LU-CESU"
+        mail_message = Message(
+                'Account Recovery', 
+                sender=(sender_name, 'lucesu50@gmail.com'), 
+                recipients=[recipient_email])
+        mail_message.body = f"""
+        Your One-Time Password (OTP): {otp}
 
-    This OTP is valid for a single use and will expire shortly. 
-    Do not share it with anyone for security reasons. 
+        This OTP is valid for a single use and will expire shortly. 
+        Do not share it with anyone for security reasons. 
 
-    If you did not request this OTP or experience any issues, please message us at Facebook Page: Laguna University- Community Extension Services Unit. 
+        If you did not request this OTP or experience any issues, please message us at Facebook Page: Laguna University- Community Extension Services Unit. 
 
-    Thank you for trusting us with your security.
+        Thank you for trusting us with your security.
 
-    Best regards,
-    LU-CESU MIS Team
-    """
-    mail_message.html = f"""
-    <html>
-        <body>
-            <p>Hi {recipient_email},</p>
-            <p>Your One-Time Password (OTP): <strong>{otp}</strong></p>
-            <p>This OTP is valid for a single use and will expire shortly. 
-            Do not share it with anyone for security reasons.</p>
-            <p>If you did not request this OTP or experience any issues, please message us at Facebook Page: Laguna University- Community Extension Services Unit.</p>
-            <p>Thank you for trusting us with your security.</p>
-            <h1 style="margin-top: 1rem;"></h1>
-            <p><em>Best regards, LU-CESU MIS Team</em></p>
-        </body>
-    </html>
-    """
-    mail.send(mail_message)
-    return "Mail has sent"
+        Best regards,
+        LU-CESU MIS Team
+        """
+        mail_message.html = f"""
+        <html>
+            <body>
+                <p>Hi {recipient_email},</p>
+                <p>Your One-Time Password (OTP): <strong>{otp}</strong></p>
+                <p>This OTP is valid for a single use and will expire shortly. 
+                Do not share it with anyone for security reasons.</p>
+                <p>If you did not request this OTP or experience any issues, please message us at Facebook Page: <a href="https://www.facebook.com/LUCommunityExtensionServicesUnit/">Laguna University- Community Extension Services Unit</a>.</p>
+                <p>Thank you for trusting us with your security.</p>
+                <h1 style="margin-top: 1rem;"></h1>
+                <p><em>Best regards, LU-CESU MIS Team</em></p>
+            </body>
+        </html>
+        """
+        mail.send(mail_message)
+        return "Mail has sent"
+    except Exception as e:
+        flash("Error occurred while sending email. Please try again later.", "error")
+        return str(e)  # Return error message if needed
 
 #################### CURRENT USER ##################
 def get_current_user():
@@ -226,7 +273,10 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
         user = Users.query.filter_by(username=username).first()
-
+        
+        if user.status == 0:
+            return render_template("new_user.html", user_id = user.id)
+            
         if user and check_password_hash(user.password, password):
             userlog = username
             action = f'{user.firstname} {user.lastname} Logged in.'
@@ -389,7 +439,7 @@ def add_account():
                         flash('Mobile number already exists.', 'existing_username')
                         return redirect(url_for('dbModel.manage_account'))
                     else:
-                        new_user = Users(username=username, firstname=firstname, lastname=lastname,password=hashed_password, email=email, role = role, department_A=department_A, mobile_number=mobile_number)
+                        new_user = Users(username=username, firstname=firstname, lastname=lastname,password=hashed_password, email=email, role = role, department_A=department_A, mobile_number=mobile_number, status=0)
                         try: 
                             userlog = g.current_user
                             action = f'ADDED new user account named {new_user.firstname} {new_user.lastname}'
@@ -832,7 +882,6 @@ def manage_community():
 
 #     # Return formatted data as JSON response
 #     return jsonify(formatted_data)
-
 
 ############################ ASSIGNED PROGRAM FOR COORDINATOR ############################
 @dbModel_route.route("/subprogram1/<get_program>")

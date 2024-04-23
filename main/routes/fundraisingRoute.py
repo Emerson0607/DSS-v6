@@ -87,14 +87,24 @@ def fund():
         flash('Please log in first.', 'error')
         return redirect(url_for('dbModel.login'))
     
-    coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
-    # Dynamically generate the years fund_list = Fundraising.query.filter_by(coordinator_id=g.current_id).all()
     current_year = datetime.now().year
+    coordinators = Users.query.filter(Users.role == 'Coordinator', Users.username != 'BOR').all()
     fund_list = Fundraising.query.all()
     pending_fund_list = Pending_fund.query.filter_by(status="For Review").all()
+    
+    
+    all_years = Fundraising.query.with_entities(extract('year', Fundraising.target_date)).distinct()
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder1 = [placeholder_choice] + [(year, year) for year in budget_years]
+    
+    all_years2 = Pending_fund.query.with_entities(extract('year', Pending_fund.target_date)).distinct()
+    budget_years2 = sorted([year[0] for year in all_years2])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder2 = [placeholder_choice] + [(year, year) for year in budget_years2]
 
     # Render the template with the current year and the next four years
-    return render_template("fund.html", form=form, current_year=current_year, fund_list=fund_list, coordinators=coordinators, pending_fund_list=pending_fund_list)
+    return render_template("fund.html", form=form, current_year=current_year, fund_list=fund_list, coordinators=coordinators, pending_fund_list=pending_fund_list,budget_years_with_placeholder1=budget_years_with_placeholder1, budget_years_with_placeholder2=budget_years_with_placeholder2)
 
 @fundraising_route.route("/add_fund", methods=["POST"])
 def add_fund():
@@ -420,9 +430,20 @@ def cFund():
     current_year = datetime.now().year
     fund_list = Fundraising.query.filter(Fundraising.coordinator_id==g.current_id).all()
     pending_fund_list = Pending_fund.query.filter(Pending_fund.coordinator_id==g.current_id).all()
+    
+    
+    all_years = Fundraising.query.with_entities(extract('year', Fundraising.target_date)).distinct()
+    budget_years = sorted([year[0] for year in all_years])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder1 = [placeholder_choice] + [(year, year) for year in budget_years]
+    
+    all_years2 = Pending_fund.query.with_entities(extract('year', Pending_fund.target_date)).distinct()
+    budget_years2 = sorted([year[0] for year in all_years2])
+    placeholder_choice = (current_year, current_year)
+    budget_years_with_placeholder2 = [placeholder_choice] + [(year, year) for year in budget_years2]
 
     # Render the template with the current year and the next four years
-    return render_template("cFund.html", form=form, current_year=current_year, fund_list=fund_list, pending_fund_list=pending_fund_list)
+    return render_template("cFund.html", form=form, current_year=current_year, fund_list=fund_list, pending_fund_list=pending_fund_list, budget_years_with_placeholder1=budget_years_with_placeholder1,budget_years_with_placeholder2=budget_years_with_placeholder2)
 
 @fundraising_route.route("/cAdd_fund", methods=["POST"])
 def cAdd_fund():

@@ -12,7 +12,6 @@ flask db init
 flask db migrate -m "budget_type column added"
 flask db upgrade
 
-
 flask db downgrade
 
 """
@@ -68,6 +67,7 @@ class Users(db.Model):
     lastname = db.Column(db.String(100), nullable=True)
     mobile_number = db.Column(db.String(100), nullable=True)
     profile_picture = db.Column(db.LargeBinary, nullable=True)
+    status = db.Column(db.Integer, nullable=True)
 
 class Department(db.Model):
     id = db.Column(db.Integer, primary_key=True)

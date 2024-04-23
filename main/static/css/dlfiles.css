@@ -49,6 +49,19 @@ main .file-container {
 
 }
 
+
+/* for adjust button delete in table */
+
+.file-container .btn_delete_right {
+    position: absolute;
+    right: 4.5rem;
+}
+
+
+.file-container .btn_delete_container>a {
+    margin-left: 10rem;
+}
+
 /* For Scroll Bar */
 main .file-container::-webkit-scrollbar {
     width: 10px;
@@ -192,9 +205,10 @@ main .file-container:hover {
     /* Rounded corners */
     cursor: pointer;
     text-decoration: none;
-
-
 }
+
+
+
 
 .table .btn-delete:hover {
     background-color: #ff3333;
@@ -325,5 +339,18 @@ main .file-container:hover {
 
     .file_title {
         margin-top: 2rem;
+    }
+
+
+
+    /* for btn delete position */
+    .file-container .btn_delete_right {
+        position: absolute;
+        right: 2.2rem;
+    }
+
+
+    .file-container .btn_delete_container>a {
+        margin-left: 7rem;
     }
 }

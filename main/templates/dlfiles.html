@@ -27,14 +27,14 @@
         <thead>
             <tr>
                 <th>File Name</th>
-                <th>Actions</th>
+                <th class="btn_delete_right">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for file in upload_data %}
             <tr>
                 <td class="file-td"><a href="/view/{{ file.id }}">{{ file.filename }}</a></td>
-                <td>
+                <td class="btn_delete_container">
                     <a href="{{ url_for('file.delete_file', id=file.id) }}" class="btn-delete"
                         onclick="return confirm('Are you sure to delete?')">Delete</a>
                 </td>
