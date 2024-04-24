@@ -77,9 +77,7 @@ with_categories=true) %}
 
                         <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.totalWeek }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
-                                row.budget
-                                }}</a></td>
+
                         <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">
                                 {% if
                                 row.budget is number %}
@@ -88,6 +86,9 @@ with_categories=true) %}
                                 {% else %}
                                 {{ row.budget }}
                                 {% endif %}</a></td>
+                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.user
+                                }}</a></td>
                         <td>
                             <a href="{{ url_for('dbModel.view_project', project_id=row.id)}}"
                                 class="btn-edit status-element" data-status="{{ row.status }}">

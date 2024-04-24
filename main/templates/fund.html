@@ -199,13 +199,13 @@
     <h2 style="margin-bottom: 1rem">Pending <b>Projects</b></h2>
 
     <!-- for filter button -->
-    <select id="yearDropdown2" class="year_card form-control form_control_year">
+    <select id="yearDropdown2" class="year_card2 form-control form_control_year">
       {% for year in budget_years_with_placeholder2 %}
       <option value="{{ year[0] }}">{{ year[1] }}</option>
       {% endfor %}
     </select>
 
-    <div class="form-group program_card_box">
+    <div class="form-group program_card_box2">
       {{ form.program(class="form-control form_control_program", id="programDropdown2",
       value=form.program.default) }}
     </div>

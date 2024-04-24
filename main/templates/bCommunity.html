@@ -59,25 +59,26 @@ with_categories=true) %}
                     {% for row in community %}
 
                     <tr>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{ row.id
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
+                                row.id
                                 }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.community }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.program }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.subprogram }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.start_date}}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.week}}</a></td>
 
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.totalWeek }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">{{
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">{{
                                 row.budget
                                 }}</a></td>
-                        <td><a href="{{ url_for('dbModel.view_project', project_id=row.id)}}" class="btn-edit">
+                        <td><a href="{{ url_for('bor.bView_project', project_id=row.id)}}" class="btn-edit">
                                 {% if
                                 row.budget is number %}
                                 {% set formatted_budget = "%0.2f" % row.budget %}
@@ -86,7 +87,7 @@ with_categories=true) %}
                                 {{ row.budget }}
                                 {% endif %}</a></td>
                         <td>
-                            <a href="{{ url_for('dbModel.view_project', project_id=row.id)}}"
+                            <a href="{{ url_for('bor.bView_project', project_id=row.id)}}"
                                 class="btn-edit status-element" data-status="{{ row.status }}">
                                 {{ row.status }}
                             </a>

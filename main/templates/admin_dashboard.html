@@ -56,8 +56,6 @@
 
     <style>
         @media screen and (max-width: 400px) {
-
-
             .invert-blue {
                 content: url("/static/images/user-invert-blue.png");
                 /* Change the image source for mobile  <link rel="icon" href="/main/static/images/cesu-icon.ico" type="image/x-icon">*/
@@ -114,16 +112,31 @@
                     <h3>Pending Projects</h3>
                     <span class="pending-badge" id="pending-badge">{{pending_count}}</span>
                 </a>
-                <a href="{{ url_for('dbModel.manage_account') }}" class="sidebar-link blue-link">
+
+                <!-- <a href="{{ url_for('dbModel.manage_account') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">manage_accounts</span>
                     <h3>Users Account</h3>
-                </a>
+                </a> -->
+
+                <!--for users  dropdown -->
+                <div class="users-files users_container_box" onclick="toggleUser()">
+                    <a href="#" class="sidebar-link blue-link users_container">
+                        <span class="material-symbols-sharp">manage_accounts</span>
+                        <h3>Users Account</h3>
+                        <span class="material-symbols-sharp arrow_drop_down">
+                            arrow_drop_down
+                        </span>
+                    </a>
+                    <div class="users-content-files" id="users-content-files">
+                        <a class="blue-link" href="{{ url_for('dbModel.manage_account') }}">Manage Account</a>
+                        <a class="blue-link" href="{{ url_for('dbModel.manage_department') }}">Manage Department</a>
+                    </div>
+                </div>
 
                 <a href="{{ url_for('randomForest.program') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">neurology</span>
                     <h3>Program Recommendation</h3>
                 </a>
-
 
                 <!--FUNDRAISING -->
                 <div class="fundraising-files fund_container_box" onclick="toggleFundraising()">
@@ -142,7 +155,6 @@
                         <a class="blue-link" href="{{ url_for('fundraising.archived_fund') }}">Archived</a>
                     </div>
                 </div>
-
 
                 <a href="{{ url_for('dbModel.logs_activity') }}" class="sidebar-link blue-link">
                     <span class="material-symbols-sharp">manage_search</span>
@@ -240,29 +252,52 @@
 
     <script src="/static/js/admin_dashboard.js"></script>
 
+    <!-- for toggle dropdown -->
     <script>
         function toggleDropdownFile() {
             var dropdownContent = document.getElementById("dropdown-content-files");
             var fundraisingContent = document.getElementById("fundraising-content-files");
+            var usersContent = document.getElementById("users-content-files");
 
             if (dropdownContent.style.display === "block") {
                 dropdownContent.style.display = "none";
             } else {
                 dropdownContent.style.display = "block";
-                fundraisingContent.style.display = "none"; // Close fundraising dropdown
+                fundraisingContent.style.display = "none";
+                usersContent.style.display = "none"; // Close fundraising dropdown
             }
         }
-        function toggleFundraising() {
+
+        function toggleUser() {
+            var usersContent = document.getElementById("users-content-files");
             var dropdownContent = document.getElementById("fundraising-content-files");
             var filesDropdownContent = document.getElementById("dropdown-content-files");
 
+            if (usersContent.style.display === "block") {
+                usersContent.style.display = "none";
+            } else {
+                usersContent.style.display = "block";
+                filesDropdownContent.style.display = "none";
+                dropdownContent.style.display = "none";
+            }
+        }
+
+        function toggleFundraising() {
+            var dropdownContent = document.getElementById("fundraising-content-files");
+            var filesDropdownContent = document.getElementById("dropdown-content-files");
+            var usersContent = document.getElementById("users-content-files");
+
             if (dropdownContent.style.display === "block") {
                 dropdownContent.style.display = "none";
             } else {
                 dropdownContent.style.display = "block";
-                filesDropdownContent.style.display = "none"; // Close files dropdown
+                filesDropdownContent.style.display = "none";
+                usersContent.style.display = "none";// Close files dropdown
             }
         }
+
+
+
     </script>
 
 

@@ -1,0 +1,162 @@
+{% extends "admin_dashboard.html" %}
+{% block title %}Manage Department{% endblock %}
+{% block content %}
+
+<style>
+    /* Hide specific table rows by class */
+    .th {
+        display: none;
+    }
+</style>
+
+<div class="margin-top"></div>
+{% with messages = get_flashed_messages(category_filter=['existing_username', 'existing_program', 'edit_account',
+'delete_account', 'add_account', 'password_space', 'username_space'], with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="flash flash-{{ category }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<!--MANAGE DEPARTMENT-->
+
+<div class="manageDepartment">
+    <div class="jumbotron">
+        <h2 style="margin-bottom: 1rem;">Manage <b>Department</b>
+            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal_d"
+                style="float: right;"><span class="material-symbols-sharp" style="float: right;">add</span></button>
+        </h2>
+        <div class="jumbo">
+            <table class="table">
+                <tr>
+                    <th>ID</th>
+                    <th>Acronym</th>
+                    <th>Department</th>
+                    <th style="width: 9rem;">Action</th>
+
+                </tr>
+                {% for row in department %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.department_A }}</td>
+                    <td>{{ row.department_F}}</td>
+                    <td style="width: 9rem;">
+                        <a href="{{ url_for('dbModel.edit_department', id=row.id) }}" class="btn-edit delete_update_box"
+                            data-bs-toggle="modal" data-bs-target="#modaledit_d{{row.id}}"><span
+                                class="material-symbols-sharp update_department_btn">
+                                edit
+                            </span></a>
+                        <a href="{{ url_for('dbModel.delete_department', id=row.id)}}"
+                            class="btn-delete1 delete_update_box"
+                            onclick="return confirm('Are you sure to delete?')"><span
+                                class="material-symbols-sharp delete_department_btn">
+                                delete
+                            </span></a>
+                    </td>
+                </tr>
+
+                <!-- Modal for Edit -->
+                <div id="modaledit_d{{row.id}}" class="modal">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Update Account</h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <form action="{{ url_for('dbModel.edit_department') }}" method="POST">
+                                    <div class="form-group">
+                                        <label>Acronym:</label>
+                                        <input type="text" class="form-control acronym" name="new_department_A"
+                                            value="{{row.department_A}}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Department:</label>
+                                        <input type="text" class="form-control department" name="new_department_F"
+                                            value="{{row.department_F}}" required>
+                                    </div>
+
+
+                                    <input type="hidden" name="id" id="edit-id" value="{{row.id}}">
+                                    <div class="form-group">
+                                        <button class="btn-submit" type="submit">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn-close btn-secondary" data-bs-dismiss="modal"><span
+                                        class="material-symbols-sharp">close</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--end edit modal-->
+                {% endfor %}
+            </table>
+        </div>
+
+        <!--Modal for adding -->
+        <div id="mymodal_d" class="modal">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Department information</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url_for('dbModel.add_department') }}" method="POST">
+                            <div class="form-group">
+                                <label for="acronym">Acronym:</label>
+                                <input type="text" class="form-control acronym" name="department_A" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="department">Department:</label>
+                                <input type="text" class="form-control department" name="department_F" required>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn-submit btn-primary" type="submit">Add department</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"><span
+                                class="material-symbols-sharp">close</span></button>
+                    </div>
+                </div>
+            </div>
+        </div> <!--end add modal-->
+        <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
+    </div><!--end jumbotronnnn-->
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+
+<!--FOR UPPERCASE CHARACTER-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Function to convert input value to uppercase
+        function convertToUpperCase(e) {
+            e.target.value = e.target.value.toUpperCase();
+        }
+
+        // Attach event listeners to the input fields
+        document.querySelectorAll('.acronym, .department').forEach(function (input) {
+            input.addEventListener('input', convertToUpperCase);
+        });
+
+        // Attach event listeners to the input fields
+        document.querySelectorAll('.acronym, .department').forEach(function (input) {
+            input.addEventListener('input', convertToUpperCase);
+        });
+    });
+
+</script>
+
+
+{% endblock %}

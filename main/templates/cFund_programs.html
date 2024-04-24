@@ -363,6 +363,12 @@
 
                                 donorTableBody.append(row);
                             });
+                            // Calculate total donation if donation type is "Cash"
+                            if (record.donation_type === 'Cash') {
+                                var totalDonation = record.donors.reduce((total, donor) => total + parseFloat(donor.donation), 0);
+                                insightsDiv.find("#total-donation").remove(); // Remove existing total donation element if any
+                                insightsDiv.find(".jumbotron").append("<h3 id='total-donation'>Total Donation: " + totalDonation.toFixed(2) + "</h3>");
+                            }
                         }
 
                         // Hide donor_cash_card or donor_inkind_card based on donation_type

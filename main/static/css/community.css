@@ -321,10 +321,6 @@ main .communityCard .table-card::-webkit-scrollbar-track {
     /* Color of the track */
 }
 
-
-
-
-
 .communityCard table {
     width: 100%;
 }
@@ -333,7 +329,7 @@ main .communityCard table td {
     height: 2.8rem;
     border-bottom: 1px solid lightgray;
     color: var(--color-dark);
-    text-align: left;
+    text-align: center;
 }
 
 main .communityCard table tr:last-child td {

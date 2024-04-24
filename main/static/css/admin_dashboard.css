@@ -595,7 +595,6 @@ main {
 }
 
 /*DROP DOWN FOR FUNDRAISING*/
-
 .fundraising-files {
     position: relative;
     display: inline-block;
@@ -642,6 +641,56 @@ main {
 
 }
 
+
+/* for user dropdown */
+
+.users-files {
+    position: relative;
+    display: inline-block;
+
+}
+
+.sidebar .users-files .users-content-files {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 13rem;
+    height: 5.5rem;
+    top: 2;
+    right: 0;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    padding: 0;
+}
+
+.sidebar .users-files .users-content-files a {
+    width: 100%;
+    height: 2rem;
+    margin: .5rem 0;
+    padding-left: 1rem;
+
+}
+
+.sidebar .users-files .users-content-files a:hover {
+    background: var(--color-light);
+    transform: scale(1.0) !important;
+    margin-left: 0 !important;
+}
+
+.sidebar .users-files .users-content-files a:hover:before {
+    content: "" !important;
+    width: 6px !important;
+    height: 100% !important;
+    margin-left: -1rem;
+}
+
+.sidebar .users-files .sidebar-link .arrow_drop_down {
+    position: absolute;
+    right: 0.5rem;
+
+}
+
+
 /* for budget card */
 .budget_type_box {
     display: grid;
@@ -653,7 +702,10 @@ main {
 #programDropdown option:first-child,
 #program option:first-child,
 .coordinator_selected option:first-child,
-.year_card option:first-child {
+.year_card option:first-child,
+#programDropdown1 option:first-child,
+#programDropdown2 option:first-child,
+.year_card2 option:first-child {
     display: none;
 }
 
@@ -999,8 +1051,10 @@ main {
     }
 
     .sidebar .fundraising-content-files {
+        padding-left: 1rem !important;
+    }
 
-
+    .sidebar .users-content-files {
         padding-left: 1rem !important;
     }
 

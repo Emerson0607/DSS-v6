@@ -276,7 +276,7 @@ main .archived_fund_card>div:hover {
 }
 
 /* Year Filter */
-main .archived_fund_card .for_filter .year-filter {
+main .archived_fund_card .for_filter .year-filter1 {
     position: absolute;
     right: 1rem;
 }

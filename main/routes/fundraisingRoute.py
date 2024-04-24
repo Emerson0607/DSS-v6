@@ -72,7 +72,7 @@ def inject_current_user():
 @fundraising_route.route("/fund")
 def fund():
     form = Form()
-    placeholder_choice = ("", "-- Select Program --")
+    placeholder_choice = ("", "Select Program")
     form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
     form.program.default = ""
     form.process()
@@ -414,7 +414,7 @@ def decline_fund():
 @fundraising_route.route("/cFund")
 def cFund():
     form = Form()
-    placeholder_choice = ("", "-- Select Program --")
+    placeholder_choice = ("", "Select Program")
     form.program.choices = [placeholder_choice[1]] + [program.program for program in Program.query.all()]
     form.program.default = ""
     form.process()

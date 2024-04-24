@@ -167,7 +167,8 @@ hr.rounded {
 
 .fund_program_card .jumbotron {
     max-height: 20rem;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+
 }
 
 main .jumbotron {
@@ -735,6 +736,16 @@ main .fund_program_card .link-input {
     width: 65%;
     height: 2rem;
 }
+
+/* for table total donation cash */
+#total-donation {
+    font-size: 1rem !important;
+    color: #484848;
+    position: absolute;
+    bottom: -3rem;
+    font-weight: 100 !important;
+}
+
 
 @media screen and (max-width: 400px) {
     main .fund_program_card>div {

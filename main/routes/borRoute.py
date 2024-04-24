@@ -132,6 +132,25 @@ def bManage_community():
     
     return render_template("bCommunity.html", community = all_data, program8=program8, user1 = user1, department=department, coordinators=coordinators, form=form, budget_years_with_placeholder=budget_years_with_placeholder)
 
+
+@bor_route.route("/bView_project/<int:project_id>")
+def bView_project(project_id):
+    if g.current_user != "BOR":
+        return redirect(url_for('dbModel.login'))
+    
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+    p = Community.query.get(project_id)
+
+    cpf_data_filename = p.cpf_filename
+    cesap_data_filename = p.cesap_filename
+    cna_data_filename = p.cna_filename
+
+    return render_template("bProject_details.html", community=p.community, program=p.program, subprogram = p.subprogram, totalWeek = p.totalWeek, user=p.user, start_date = p.start_date, end_date = p.end_date, department=p.department, subDepartment = p.subDepartment, cpf_filename=cpf_data_filename, cesap_filename=cesap_data_filename, cna_filename=cna_data_filename, department_A=p.department_A, volunteer=p.volunteer, budget=p.budget, budget_type=p.budget_type)
+
+
 ####################################### BUDGET ######################################
 @bor_route.route("/bBudget")
 def bBudget():

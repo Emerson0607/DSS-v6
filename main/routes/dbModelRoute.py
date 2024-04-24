@@ -64,13 +64,14 @@ def send_recovery_mail():
             # Generate and store OTP in the database
             otp = secrets.token_hex(3)  # 6 characters in hex format
             user.otp = otp
-            user.otp_timestamp = datetime.utcnow() + timedelta(minutes=5)  # Set expiration time to 5 minutes
+            expiration_time = datetime.utcnow() + timedelta(minutes=5)  # Set expiration time to 5 minutes
+            user.otp_timestamp = expiration_time
             db.session.commit()
 
             # Send OTP via email
             send_mail(otp, email)
-
-            return render_template('reset_password.html', email=email)
+           
+            return render_template('reset_password.html', email=email, expiration_time=expiration_time)
         else:
             return "Email not found."
 
@@ -93,7 +94,7 @@ def reset_password():
 
         if user:
             if user.otp == otp_entered:
-                expiration_time = user.otp_timestamp + timedelta(minutes=5)
+                expiration_time = user.otp_timestamp
 
                 if datetime.utcnow() < expiration_time:
 
@@ -619,6 +620,20 @@ def delete_account(id):
 
 ########################### FOR DEPARTMENT ##################################
 
+@dbModel_route.route("/manage_department")
+def manage_department():
+    if g.current_role != "Admin" and g.current_role != "BOR":
+        return redirect(url_for('dbModel.login'))
+
+    if 'user_id' not in session:
+        flash('Please log in first.', 'error')
+        return redirect(url_for('dbModel.login'))
+
+
+    department = Department.query.all()
+
+    return render_template("manage_department.html", department=department)
+
 @dbModel_route.route("/add_department", methods=["POST"])
 def add_department():
     if g.current_role != "Admin" and g.current_role != "BOR":
@@ -661,7 +676,7 @@ def add_department():
             db.session.add(new_department)
             db.session.commit()
             flash('Department added successfully!', 'add_account')
-    return redirect(url_for('dbModel.manage_account'))
+    return redirect(url_for('dbModel.manage_department'))
 
 @dbModel_route.route('/edit_department', methods=['POST'])
 def edit_department():
@@ -687,7 +702,7 @@ def edit_department():
                 existing_department = Department.query.filter_by(department_F=new_department_F).first()
                 if existing_department:
                     flash(f'Department "{new_department_F}" already exists!', 'existing_username')
-                    return redirect(url_for('dbModel.manage_account'))
+                    return redirect(url_for('dbModel.manage_department'))
 
             userlog = g.current_user
             action = f'UPDATED department {new_department_F}.'
@@ -706,7 +721,7 @@ def edit_department():
             db.session.commit()
             flash('Department updated successfully!', 'edit_account')
 
-        return redirect(url_for('dbModel.manage_account'))
+        return redirect(url_for('dbModel.manage_department'))
 
 @dbModel_route.route('/delete_department/<int:id>', methods=['GET'])
 def delete_department(id):
@@ -743,7 +758,7 @@ def delete_department(id):
             flash('Account deleted successfully!', 'delete_account')
         except Exception as e:
             db.session.rollback()
-    return redirect(url_for('dbModel.manage_account'))
+    return redirect(url_for('dbModel.manage_department'))
 
 ############################  FOR COORDINATOR ROUTE  ############################
 @dbModel_route.route('/coordinator/<data>')

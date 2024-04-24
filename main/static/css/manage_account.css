@@ -284,7 +284,7 @@ main .manageUser .modal-body::-webkit-scrollbar-track {
 
 .manageUser .jumbo {
     overflow: auto;
-    max-height: 20rem;
+    max-height: 40rem;
 }
 
 
@@ -331,25 +331,16 @@ main .manageUser .jumbo::-webkit-scrollbar-track {
 
 /*FOR DEPARTMENT TABLE*/
 
-
-main .manageDepartment {
-    display: grid;
-    grid-template-columns: 1fr;
-    width: 50%;
-    gap: 1.6rem;
-    max-height: 300px;
-    margin-top: 2rem;
-
-}
-
 main .manageDepartment>div {
     background: var(--color-white);
     padding: var(--card-padding);
     border-radius: var(--card-border-radius);
-    margin-top: 1rem;
+
     box-shadow: var(--box-shadow);
     transition: all 300ms ease;
     position: relative;
+    margin: 1rem auto 0 auto;
+
 }
 
 main .manageDepartment>div:hover {
@@ -372,7 +363,7 @@ main .manageDepartment table tr:last-child td {
 }
 
 main .manageDepartment .jumbotron {
-    width: 100%;
+    width: 70%;
     max-width: 40rem;
 
 }
@@ -594,7 +585,7 @@ main .manageDepartment .jumbotron {
 
 .manageDepartment .jumbo {
     overflow: auto;
-    max-height: 11rem;
+    max-height: 40rem;
     width: 100%;
 }
 
@@ -688,7 +679,7 @@ main .manageDepartment .jumbo::-webkit-scrollbar-track {
     }
 
     .manageUser .jumbo {
-        max-height: 18rem;
+        max-height: 25rem;
     }
 
 
@@ -710,7 +701,7 @@ main .manageDepartment .jumbo::-webkit-scrollbar-track {
     main .manageDepartment .jumbo {
         overflow: auto;
         width: 20rem;
-        max-height: 30rem;
+        max-height: 25rem;
 
     }
 

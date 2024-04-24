@@ -282,7 +282,7 @@ main .resources_Card table tr:last-child td {
 }
 
 /* Year Filter */
-main .resources_Card .for_filter .year-filter {
+main .resources_Card .for_filter .year-filter1 {
     position: absolute;
     right: 1rem;
 }

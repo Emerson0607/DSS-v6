@@ -45,6 +45,9 @@
     /* Align content to the start */
     height: 6rem;
     margin-top: 1rem;
+
+    width: 70%;
+    margin: 1rem auto 0 auto;
 }
 
 .change_profile_title .editprof {
@@ -78,6 +81,9 @@
     /* Top left corner radius */
     border-bottom-right-radius: var(--border-radius-2);
     /* Top right corner radius */
+
+    width: 70%;
+    margin: 0 auto 0 auto;
 }
 
 .edit_profile_container .form1 {

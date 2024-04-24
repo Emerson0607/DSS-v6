@@ -44,7 +44,8 @@
     justify-content: flex-start;
     /* Align content to the start */
     height: 6rem;
-    margin-top: 1rem;
+    width: 70%;
+    margin: 1rem auto 0 auto;
 }
 
 .change_profile_title .editprof {
@@ -78,6 +79,9 @@
     /* Top left corner radius */
     border-bottom-right-radius: var(--border-radius-2);
     /* Top right corner radius */
+
+    width: 70%;
+    margin: 0 auto 0 auto;
 }
 
 .edit_profile_container .form1 {
@@ -187,10 +191,12 @@
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #555;
+    border: 1px solid #929292 !important;
     border-radius: 5px;
     background-color: white;
 }
+
+
 
 .edit_profile_container .fullname_box {
     display: grid;
@@ -267,7 +273,7 @@
     .change_profile_title {
         width: 90%;
         margin: 0 auto;
-        margin-top: 2rem;
+        margin-top: 1rem;
     }
 
     .edit_profile_container .current_picture {

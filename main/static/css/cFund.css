@@ -243,8 +243,8 @@ main .cFundraising_card .modal-body::-webkit-scrollbar-track {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 16rem;
-    top: 0.2rem;
+    left: 17.3rem;
+    top: 2rem;
 }
 
 .cFundraising_card .btn-add:hover {
@@ -302,82 +302,45 @@ main .cFundraising_card .modal-body::-webkit-scrollbar-track {
     margin-bottom: 1rem;
 }
 
-/* Year Filter */
-.cFundraising_card .jumbotron .for_filter .year-filter1 {
+/* for filter */
+.cFundraising_card .program_card_box {
     position: absolute;
-    right: 1rem;
+    right: 8.5rem;
+    width: 10rem;
+    top: 1.8rem;
 }
 
-
-.cFundraising_card .jumbotron .for_filter {
-    position: relative;
+.cFundraising_card .form_control_program {
+    height: 2.4rem !important;
+    padding: 0rem 0 0rem 0.3rem !important;
 
 }
 
-.cFundraising_card .jumbotron .year-filter1 {
+.cFundraising_card .year_card {
     position: absolute;
-}
-
-.project-year-table {
-    width: 100%;
-    height: 6rem;
-    position: relative;
-    right: 30rem;
-}
-
-.cFundraising_card .jumbotron .year-filter1 label {
-    font-weight: bold;
-    margin-right: 10px;
-    font-size: 12px;
-}
-
-.cFundraising_card .jumbotron .year-filter1 select {
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #ffffff;
-
-}
-
-.cFundraising_card .jumbotron .year-filter1 select:hover {
-    border-color: #555;
-    cursor: pointer;
+    right: 3.1rem;
+    width: 5rem;
+    height: 2.4rem !important;
+    padding: 0 0 0 0.3rem;
+    top: 1.8rem;
 }
 
 
-
-/* Show all btn */
-.cFundraising_card .jumbotron .year-filter1 .show-all-button {
-    font-size: 12px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.cFundraising_card .program_card_box2 {
+    position: absolute;
+    right: 8.8rem !important;
+    width: 10rem;
+    top: 1.8rem;
 }
 
-.cFundraising_card .jumbotron .year-filter1 .show-all-button:hover {
-    border-color: #555;
+.cFundraising_card .year_card2 {
+    position: absolute;
+    right: 3.3rem !important;
+    width: 5rem;
+    height: 2.4rem !important;
+    padding: 0 0 0 0.3rem;
+    top: 1.8rem !important;
 }
-
-
-
-/* Show all btn */
-.cFundraising_card .jumbotron .year-filter1 .show-all-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.cFundraising_card .jumbotron .year-filter1 .show-all-button:hover {
-    border-color: #555;
-}
-
-
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {

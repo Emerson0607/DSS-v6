@@ -240,8 +240,8 @@ main .fundraising_card .modal-body::-webkit-scrollbar-track {
     border: none;
     border-radius: 7px;
     position: absolute;
-    left: 16rem;
-    top: 0.2rem;
+    left: 17.5rem;
+    top: 2rem;
 }
 
 .fundraising_card .btn-add:hover {
@@ -299,79 +299,44 @@ main .fundraising_card .modal-body::-webkit-scrollbar-track {
     margin-bottom: 1rem;
 }
 
-/* Year Filter */
-main .fundraising_card .for_filter .year-filter {
+/* for filter */
+.fundraising_card .program_card_box {
     position: absolute;
-    right: 1rem;
+    right: 8.5rem;
+    width: 10rem;
+    top: 1.8rem;
 }
 
-
-.for_filter {
-    position: relative;
+.fundraising_card .form_control_program {
+    height: 2.4rem !important;
+    padding: 0rem 0 0rem 0.3rem !important;
 
 }
 
-.fundraising_card .jumbotron .year-filter1 {
+.fundraising_card .year_card {
     position: absolute;
-}
-
-.project-year-table {
-    width: 100%;
-    height: 6rem;
-    position: relative;
-    right: 30rem;
-}
-
-.fundraising_card .year-filter1 label {
-    font-weight: bold;
-    margin-right: 10px;
-    font-size: 12px;
-}
-
-.fundraising_card .year-filter1 select {
-    font-size: 14px;
-    padding: 8px 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #ffffff;
-
-}
-
-.fundraising_card .year-filter1 select:hover {
-    border-color: #555;
-    cursor: pointer;
+    right: 3.1rem;
+    width: 5rem;
+    height: 2.4rem !important;
+    padding: 0 0 0 0.3rem;
+    top: 1.8rem;
 }
 
 
-
-/* Show all btn */
-.fundraising_card .year-filter1 .show-all-button {
-    font-size: 12px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    border-radius: 4px;
+.fundraising_card .program_card_box2 {
+    position: absolute;
+    right: 8.8rem !important;
+    width: 10rem;
+    top: 1.8rem;
 }
 
-.fundraising_card .year-filter1 .show-all-button:hover {
-    border-color: #555;
-}
-
-
-
-/* Show all btn */
-.fundraising_card .jumbotron .year-filter1 .show-all-button {
-    padding: 8px 12px;
-    font-size: 14px;
-    background-color: #ffffff;
-    color: rgb(0, 0, 0);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.fundraising_card .jumbotron .year-filter1 .show-all-button:hover {
-    border-color: #555;
+.fundraising_card .year_card2 {
+    position: absolute;
+    right: 3.3rem !important;
+    width: 5rem;
+    height: 2.4rem !important;
+    padding: 0 0 0 0.3rem;
+    top: 1.8rem !important;
 }
 
 
