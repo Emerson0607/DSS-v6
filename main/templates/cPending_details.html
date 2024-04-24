@@ -104,13 +104,17 @@ with_categories=true) %}
             <label class="file label-category">CESU FILE</label><br>
             <div class="fileces">
 
-                <div class="form-group file-box" id="tooltip">
+                <div class="form-group file-box file_name1" id="tooltip">
                     <p for="CPF">Community Profiling Form</p>
                     {% if cpf_filename %}
                     <span id="tooltipText">download</span>
-                    <a class="cpf_relative"
-                        href="{{ url_for('coordinator.cView_cpf', program=program, subprogram=subprogram, community=community, cpf_filename = cpf_filename) }}">{{
-                        cpf_filename }}</a>
+                    <a class="cpf_relative "
+                        href="{{ url_for('coordinator.cView_cpf', program=program, subprogram=subprogram, community=community, cpf_filename = cpf_filename) }}">
+                        {% if cpf_filename|length > 37 %}
+                        {{ cpf_filename[:37] }}...
+                        {% else %}
+                        {{ cpf_filename }}
+                        {% endif %}</a>
                     {% else %}
                     <div class="form-group file-box">
                         <input class="CPF" type="file" name="CPF" id="CPF" accept=".pdf, .docx" required>
@@ -118,13 +122,17 @@ with_categories=true) %}
                     {% endif %}
                 </div>
 
-                <div class="form-group file-box" id="tooltip2">
+                <div class="form-group file-box file_name1" id="tooltip2">
                     <p for="CESAP">CES Activity Proposal</p>
                     {% if cesap_filename %}
                     <span id="tooltipText2">download</span>
-                    <a class="cesap_relative"
-                        href="{{ url_for('coordinator.cView_cesap', program=program, subprogram=subprogram, community=community, cesap_filename = cesap_filename) }}">{{
-                        cesap_filename }}</a>
+                    <a class="cesap_relative "
+                        href="{{ url_for('coordinator.cView_cesap', program=program, subprogram=subprogram, community=community, cesap_filename = cesap_filename) }}">
+                        {% if cesap_filename|length > 37 %}
+                        {{ cesap_filename[:37] }}...
+                        {% else %}
+                        {{ cesap_filename }}
+                        {% endif %}</a>
                     {% else %}
                     <div class="form-group file-box">
                         <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx" required>
@@ -134,14 +142,18 @@ with_categories=true) %}
                 </div>
 
 
-                <div class="form-group file-box" id="tooltip3">
+                <div class="form-group file-box file_name1" id="tooltip3">
                     <p for="CNA">Community Needs Assessment</p>
 
                     {% if cna_filename %}
                     <span id="tooltipText3">download</span>
                     <a class="cna_relative"
-                        href="{{ url_for('coordinator.cView_cna', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">{{
-                        cna_filename }}</a>
+                        href="{{ url_for('coordinator.cView_cna', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">{%
+                        if cna_filename|length > 37 %}
+                        {{ cna_filename[:37] }}...
+                        {% else %}
+                        {{ cna_filename }}
+                        {% endif %}</a>
                     <!-- Your other code related to cna_filename -->
                     {% else %}
                     <div class="form-group file-box">
@@ -290,7 +302,6 @@ with_categories=true) %}
         });
     });
 </script>
-
 
 <!--VOLUNTEERS-->
 <script>

@@ -100,8 +100,12 @@ endblock %} {% block content %}
           {% if cpf_filename %}
           <span id="tooltipText">download</span>
           <a
-            href="{{ url_for('dbModel.view_cpf_plan', program=program, subprogram=subprogram, community=community, cpf_filename=cpf_filename) }}">{{
-            cpf_filename }}</a>
+            href="{{ url_for('dbModel.view_cpf_plan', program=program, subprogram=subprogram, community=community, cpf_filename=cpf_filename) }}">
+            {%if cpf_filename|length > 37 %}
+            {{ cpf_filename[:37] }}...
+            {% else %}
+            {{ cpf_filename }}
+            {% endif %}</a>
           {% else %}
           <div class="form-group file-box">
             <input class="CPF" type="file" name="CPF" id="CPF" accept=".pdf, .docx" required />
@@ -114,8 +118,12 @@ endblock %} {% block content %}
           {% if cesap_filename %}
           <span id="tooltipText2">download</span>
           <a
-            href="{{ url_for('dbModel.view_cesap_plan', program=program, subprogram=subprogram, community=community, cesap_filename=cesap_filename) }}">{{
-            cesap_filename }}</a>
+            href="{{ url_for('dbModel.view_cesap_plan', program=program, subprogram=subprogram, community=community, cesap_filename=cesap_filename) }}">
+            {%if cesap_filename|length > 37 %}
+            {{ cesap_filename[:37] }}...
+            {% else %}
+            {{ cesap_filename }}
+            {% endif %}</a>
           {% else %}
           <div class="form-group file-box">
             <input class="CESAP" type="file" name="CESAP" id="CESAP" accept=".pdf, .docx" required />
@@ -128,8 +136,12 @@ endblock %} {% block content %}
           {% if cna_filename %}
           <span id="tooltipText3">download</span>
           <a
-            href="{{ url_for('dbModel.view_cna_plan', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">{{
-            cna_filename }}</a>
+            href="{{ url_for('dbModel.view_cna_plan', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">
+            {%if cna_filename|length > 37 %}
+            {{ cna_filename[:37] }}...
+            {% else %}
+            {{ cna_filename }}
+            {% endif %}</a>
           {% else %}
           <div class="form-group file-box">
             <input class="CNA" type="file" name="CNA" id="CNA" accept=".csv" required />

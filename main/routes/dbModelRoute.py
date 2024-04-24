@@ -17,7 +17,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 # Get the timezone for the Philippines
 
-
 dbModel_route = Blueprint('dbModel', __name__)
 token_store = {}
 

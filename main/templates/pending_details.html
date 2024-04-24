@@ -93,8 +93,13 @@ with_categories=true) %}
                     <span id="tooltipText">download</span>
                     {% if cpf_filename %}
                     <a
-                        href="{{ url_for('dbModel.view_cpf', program=program, subprogram=subprogram, community=community, cpf_filename = cpf_filename) }}">{{
-                        cpf_filename }}</a>
+                        href="{{ url_for('dbModel.view_cpf', program=program, subprogram=subprogram, community=community, cpf_filename = cpf_filename) }}">
+                        {% if cpf_filename|length > 37 %}
+                        {{ cpf_filename[:37] }}...
+                        {% else %}
+                        {{ cpf_filename }}
+                        {% endif %}
+                    </a>
                     {% else %}
                     <p>No CPF file available.</p>
                     {% endif %}
@@ -105,8 +110,12 @@ with_categories=true) %}
                     <span id="tooltipText2">download</span>
                     {% if cesap_filename %}
                     <a
-                        href="{{ url_for('dbModel.view_cesap', program=program, subprogram=subprogram, community=community, cesap_filename = cesap_filename) }}">{{
-                        cesap_filename }}</a>
+                        href="{{ url_for('dbModel.view_cesap', program=program, subprogram=subprogram, community=community, cesap_filename = cesap_filename) }}">
+                        {%if cesap_filename|length > 37 %}
+                        {{ cesap_filename[:37] }}...
+                        {% else %}
+                        {{ cesap_filename }}
+                        {% endif %}</a>
                     {% else %}
                     <p>No CESAP file available.</p>
                     {% endif %}
@@ -118,8 +127,13 @@ with_categories=true) %}
                     <span id="tooltipText3">download</span>
                     {% if cna_filename %}
                     <a
-                        href="{{ url_for('dbModel.view_cna', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">{{
-                        cna_filename }}</a>
+                        href="{{ url_for('dbModel.view_cna', program=program, subprogram=subprogram, community=community, cna_filename=cna_filename) }}">
+                        {%if cna_filename|length > 37 %}
+                        {{ cna_filename[:37] }}...
+                        {% else %}
+                        {{ cna_filename }}
+                        {% endif %}
+                    </a>
                     <!-- Your other code related to cna_filename -->
                     {% else %}
                     <p>No CNA file available.</p>

@@ -1,8 +1,6 @@
 {% extends "coordinator_dashboard.html" %}
 {% block title %}Fundraising Programs{% endblock %}
 {% block content %}
-
-
 <div class="notfound1">
     <div class="notfound">
         <div class="no-data">
@@ -27,7 +25,6 @@
 {% endif %}
 {% endwith %}
 <div class="kaakbay-subprogram-title">
-
     <h1 class="fund_title">Fundraising Programs</h1>
     <svg class="kaakbay-design-title" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
         <path fill="#2f9e36" fill-opacity="1"
@@ -214,6 +211,7 @@
                             }
                         });
 
+
                         insightsDiv.find(".donor_qty button").click(function () {
                             var qty = parseInt($(this).siblings("input").val());
                             if (!isNaN(qty) && qty > 0) {
@@ -224,7 +222,7 @@
 
                                     // Label for Name
                                     var nameLabel = $("<label>").addClass("form-label").text("Name");
-                                    var nameInput = $("<input>").attr("type", "text").addClass("form-control name-input");
+                                    var nameInput = $("<input>").attr("type", "text").addClass("form-control name-input").attr("required", true);
 
                                     nameInput.on("input", function () {
                                         // Remove any non-alphabetic characters and multiple spaces from the input
@@ -233,11 +231,34 @@
                                         $(this).val(inputValue);
                                     });
 
+
                                     // Donation input and its wrapper
                                     var donationWrapper = $("<div>").addClass("donation-wrapper custom-class");
                                     var donationLabel = $("<label>").addClass("form-label").text("Donation");
-                                    var donationInput = $("<input>").attr("type", "text").addClass("form-control donation-input");
+                                    var donationInput = $("<input>").attr("type", "text").addClass("form-control donation-input").attr("required", true);
                                     donationWrapper.append(donationLabel).append(donationInput);
+
+
+                                    // Check if the donation type is "Inkind"
+                                    if (record.donation_type === "In-Kind") {
+                                        // Add input field for quantity
+                                        var quantityWrapper = $("<div>").addClass("quantity-wrapper custom-class");
+                                        var quantityLabel = $("<label>").addClass("form-label").text("Qty");
+                                        var quantityInput = $("<input>").attr("type", "text").addClass("form-control quantity-input").attr("required", true);
+                                        quantityWrapper.append(quantityLabel).append(quantityInput);
+
+                                        // Add input event listener for quantity input
+                                        quantityInput.on('input', function () {
+                                            // Remove any non-numeric characters from the input
+                                            var inputValue = this.value.replace(/\D/g, "");
+                                            // Limit input to 2 digits
+                                            if (inputValue.length > 6) {
+                                                inputValue = inputValue.slice(0, 6);
+                                            }
+                                            // Update the input field value
+                                            this.value = inputValue;
+                                        });
+                                    }
 
                                     if (record.donation_type === "Cash") {
                                         donationInput.on("input", function () {
@@ -273,12 +294,13 @@
                                     // Date input and its wrapper
                                     var dateWrapper = $("<div>").addClass("date-wrapper custom-class");
                                     var dateLabel = $("<label>").addClass("form-label").text("Date");
-                                    var dateInput = $("<input>").attr("type", "date").addClass("form-control date-input");
+                                    var dateInput = $("<input>").attr("type", "date").addClass("form-control date-input").attr("required", true);
                                     // Set minimum date to current date
                                     var currentDate = new Date().toISOString().split('T')[0];
                                     dateInput.attr("min", currentDate);
 
                                     dateWrapper.append(dateLabel).append(dateInput);
+
 
                                     // Create the span element
                                     var spanElement = $("<span>").addClass("material-symbols-sharp").text("close_small");
@@ -288,7 +310,7 @@
 
 
                                     // Append labels and input fields to the input group
-                                    donationDateWrapper.append(donationWrapper).append(dateWrapper); // Append donation and date wrapper
+                                    donationDateWrapper.append(donationWrapper).append(quantityWrapper).append(dateWrapper); // Append donation and date wrapper
                                     inputField.append(nameLabel).append(nameInput);
                                     inputField.append(donationDateWrapper); // Append donation and date wrapper to input field
                                     inputField.append(button); // Append delete button to the input group
@@ -296,6 +318,7 @@
                                     // Append input group to the donor list
                                     // Append input group to the donor list and then smoothly show it
                                     inputField.hide().appendTo(insightsDiv.find(".donor_list")).slideDown();
+
 
                                 }
 
@@ -348,13 +371,33 @@
                         // Populate the donor table only if record.project_name and record.program match the respective fund names
                         if (record.project_name === fund_project_name && record.program === fund_program) {
                             var donorTableBody = insightsDiv.find("#donor-table tbody");
+                            var donorTableHead = insightsDiv.find("#donor-table thead");
+                            donorTableHead.empty();
                             // Clear the existing content of the donor table before populating it with new data
                             donorTableBody.empty();
+
+                            // Append the table headers
+                            var headRow = $("<tr>");
+                            headRow.append($("<th>").text("Program"));
+                            headRow.append($("<th>").text("Donor Name"));
+                            headRow.append($("<th>").text("Donation"));
+                            if (record.donation_type === "In-Kind") {
+                                headRow.append($("<th>").text("Quantity"));
+                            }
+                            headRow.append($("<th>").text("Date"));
+                            donorTableHead.append(headRow);
+
+
                             record.donors.forEach(function (donor) {
                                 var row = $("<tr>");
-                                row.append($("<td>").text(record.program)); // Assuming record.program is the same for all donors
+                                row.append($("<td>").text(record.program));
                                 row.append($("<td>").text(donor.name));
                                 row.append($("<td>").text(donor.donation));
+
+                                if (record.donation_type == "In-Kind") {
+                                    row.append($("<td>").text(donor.quantity));
+                                }
+
                                 // Format the date string to MM/DD/YYYY format
                                 var date = new Date(donor.date);
                                 var formattedDate = (date.getMonth() + 1) + '-' + date.getDate() + '-' + date.getFullYear();
@@ -363,6 +406,7 @@
 
                                 donorTableBody.append(row);
                             });
+
                             // Calculate total donation if donation type is "Cash"
                             if (record.donation_type === 'Cash') {
                                 var totalDonation = record.donors.reduce((total, donor) => total + parseFloat(donor.donation), 0);
@@ -370,6 +414,8 @@
                                 insightsDiv.find(".jumbotron").append("<h3 id='total-donation'>Total Donation: " + totalDonation.toFixed(2) + "</h3>");
                             }
                         }
+
+
 
                         // Hide donor_cash_card or donor_inkind_card based on donation_type
                         if (record.donation_type === 'Cash') {
@@ -553,19 +599,22 @@
                                 var name = $(this).find(".name-input").val().trim();
                                 var donation = $(this).find(".donation-input").val().trim();
                                 var date = $(this).find(".date-input").val().trim();
+                                var quantity = $(this).find(".quantity-input").val().trim();
+
 
                                 // Check if any required field is empty
-                                if (name === "" || donation === "" || date === "") {
+                                if (name === "" || donation === "" || date === "" || quantity === "") {
+
                                     // Set the flag to false if any required field is empty
                                     allFieldsFilled = false;
-                                    // Optionally, you can highlight the empty fields or display an error message
-                                    // Example: $(this).addClass("error"); or alert("Please fill in all required fields.");
+
                                 } else {
                                     // Construct an object representing donor data and add it to the array
                                     donorData.push({
                                         name: name,
                                         donation: donation,
-                                        date: date
+                                        date: date,
+                                        quantity: quantity
                                     });
                                 }
                             });

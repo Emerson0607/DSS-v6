@@ -128,8 +128,8 @@ main .cPending_detailsCard>div:hover {
     color: #ff7782;
     cursor: pointer;
     position: absolute;
-    right: 47rem;
-    bottom: 13.5rem;
+    right: 47.5rem;
+    bottom: 12.7rem;
 }
 
 .cPending_detailsCard .cesap_delete {
@@ -137,8 +137,8 @@ main .cPending_detailsCard>div:hover {
     color: #ff7782;
     cursor: pointer;
     position: absolute;
-    right: 25rem;
-    bottom: 13.5rem;
+    right: 26rem;
+    bottom: 12.7rem;
 }
 
 .cPending_detailsCard .cna_delete {
@@ -146,8 +146,14 @@ main .cPending_detailsCard>div:hover {
     background-color: #fff;
     cursor: pointer;
     position: absolute;
-    right: 7rem;
-    bottom: 13.5rem;
+    right: 5rem;
+    bottom: 12.7rem;
+}
+
+
+.file_name1 {
+    max-width: 18rem !important;
+
 }
 
 /* ------------------- MOBILE -------------------- */
@@ -184,17 +190,17 @@ main .cPending_detailsCard>div:hover {
 
     .cPending_detailsCard .cpf_delete {
 
-        right: 1rem;
-        bottom: 21rem;
+        right: 2rem;
+        bottom: 19rem;
     }
 
     .cPending_detailsCard .cesap_delete {
-        right: 1rem;
-        bottom: 16rem;
+        right: 2rem;
+        bottom: 15rem;
     }
 
     .cPending_detailsCard .cna_delete {
-        right: 1rem;
-        bottom: 11rem;
+        right: 2rem;
+        bottom: 10.8rem;
     }
 }

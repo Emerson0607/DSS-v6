@@ -9,7 +9,7 @@ import secrets
 """
 flask db init
 
-flask db migrate -m "budget_type column added"
+flask db migrate -m "inkind new column donation quantity"
 flask db upgrade
 
 flask db downgrade
@@ -244,8 +244,9 @@ class Donor_inkind(db.Model):
     program = db.Column(db.String(255), nullable=True)
     project_name = db.Column(db.String(255), nullable=True)
     name = db.Column(db.String(255), nullable=True)
-    donation = db.Column(db.Integer, nullable=True)
+    donation = db.Column(db.String(255), nullable=True)
     date = db.Column(db.Date, nullable=True)
+    quantity = db.Column(db.Integer, nullable=True)
 
 class Donor_inkind_total(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -337,6 +338,18 @@ class Unused_budget(db.Model):
 # Create the database tables
 with app.app_context():
     db.create_all()
+    
+from sqlalchemy import text
+
+# def drop_alembic_table():
+#     # Drop the Alembic table if it exists
+#     with app.app_context():
+#         with db.engine.connect() as connection:
+#             stmt = text("DROP TABLE IF EXISTS alembic_version")
+#             connection.execute(stmt)
+
+# # Call the function to drop the Alembic table
+# drop_alembic_table()
 
 ###################### QUERIES #########################
 def multiple_insert():

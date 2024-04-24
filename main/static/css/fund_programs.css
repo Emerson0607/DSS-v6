@@ -103,7 +103,7 @@ main .fund_program_card .donor_qty input {
 .donation-date-wrapper {
     width: 100%;
     display: grid;
-    grid-template-columns: auto 10rem;
+    grid-template-columns: auto auto auto;
     gap: 1rem;
     margin-bottom: 2.5rem;
     border-bottom: 3px solid #bbb;
@@ -824,4 +824,16 @@ main .fund_program_card .link-input {
     .fund_program_card .donor_qty {
         margin-bottom: 2rem;
     }
+
+    .donation-date-wrapper {
+        grid-template-columns: auto auto auto;
+        gap: 0.2rem;
+        margin-bottom: 2.5rem;
+        border-bottom: 3px solid #bbb;
+
+    }
+
+
+
+
 }

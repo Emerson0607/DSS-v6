@@ -841,7 +841,7 @@ def get_fund_data():
             
             # Fetch donor data associated with each fundraising project for in-kind donations
             inkind_donors = Donor_inkind.query.filter_by(project_name=record.project_name, program=record.program).all()
-            inkind_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in inkind_donors]
+            inkind_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date, 'quantity': donor.quantity} for donor in inkind_donors]
             
             # Combine donor data for cash and in-kind donations
             all_donors = cash_donor_list_with_fund_id + inkind_donor_list_with_fund_id
@@ -887,7 +887,7 @@ def cGet_fund_data():
             
             # Fetch donor data associated with each fundraising project for in-kind donations
             inkind_donors = Donor_inkind.query.filter_by(project_name=record.project_name, program=record.program).all()
-            inkind_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date} for donor in inkind_donors]
+            inkind_donor_list_with_fund_id = [{'fund_id': donor.fund_id, 'project_name': donor.project_name, 'program': donor.program, 'name': donor.name, 'donation': donor.donation, 'date': donor.date, 'quantity': donor.quantity} for donor in inkind_donors]
             
             # Combine donor data for cash and in-kind donations
             all_donors = cash_donor_list_with_fund_id + inkind_donor_list_with_fund_id
@@ -1130,7 +1130,7 @@ def inkind_update_fund():
         # Add donor data
         for donor in donors:
             date1 = convert_date(donor['date'])  # Assuming convert_date function is defined elsewhere
-            new_donor = Donor_inkind(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1, project_name=project_name)
+            new_donor = Donor_inkind(fund_id=fund_id, program=fund_update.program, name=donor['name'], donation=donor['donation'], date=date1, project_name=project_name, quantity=donor['quantity'])
             db.session.add(new_donor)
 
         db.session.commit()
