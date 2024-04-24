@@ -480,6 +480,12 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
 
     }
 
+    .budget_container #yearDropdown3 {
+        position: absolute !important;
+        right: 0 !important;
+        top: 0 !important;
+    }
+
     .budget_container .jumbotron {
         width: 90%;
         margin: 0 auto;
@@ -513,7 +519,7 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
         gap: 1rem;
-        margin-top: 0.5rem;
+        margin-top: 0;
     }
 
     .budget_card>div {

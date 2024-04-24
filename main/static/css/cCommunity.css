@@ -23,14 +23,11 @@
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
-
-
 main .Cinsights {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1.6rem;
     margin-top: 2rem;
-
 }
 
 .Cinsights .community-subprogram-title {
@@ -38,11 +35,9 @@ main .Cinsights {
     grid-template-columns: 4rem auto;
 }
 
-
 .Cinsights .community-subprogram-title {
     position: relative;
 }
-
 
 .Cinsights .community-status {
     position: absolute;
@@ -493,7 +488,7 @@ main .cCommunity .modal-body::-webkit-scrollbar-track {
     }
 
     .cCommunity .btn-add {
-        left: 75%;
+        left: 47%;
 
     }
 
@@ -510,7 +505,38 @@ main .cCommunity .modal-body::-webkit-scrollbar-track {
     .cCommunity .table-card {
         width: 19rem;
         overflow: auto;
+        margin-top: 1rem;
     }
+
+    .cCommunity #yearDropdown1 {
+        font-size: 0.8rem !important;
+        width: 7.4rem;
+        height: 2rem !important;
+        position: absolute !important;
+        right: 2.1rem;
+        top: 4.1rem !important;
+
+    }
+
+
+    .cCommunity #programDropdown {
+        font-size: 0.8rem !important;
+        width: 7.3rem;
+        height: 2rem !important;
+
+
+    }
+
+    .cCommunity .program_card_box {
+        position: absolute;
+        right: -0.5rem;
+
+    }
+
+    .cCommunity .manage_community_title {
+        width: 10rem !important;
+    }
+
 
     .cCommunity .table-card th {
         padding-right: 1rem;

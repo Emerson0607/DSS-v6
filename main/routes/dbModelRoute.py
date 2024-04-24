@@ -66,11 +66,11 @@ def send_recovery_mail():
             expiration_time = datetime.utcnow() + timedelta(minutes=5)  # Set expiration time to 5 minutes
             user.otp_timestamp = expiration_time
             db.session.commit()
-
+             
             # Send OTP via email
             send_mail(otp, email)
            
-            return render_template('reset_password.html', email=email, expiration_time=expiration_time)
+            return render_template('reset_password.html', email=email)
         else:
             return "Email not found."
 

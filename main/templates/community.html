@@ -22,24 +22,23 @@ with_categories=true) %}
 </div>
 <div class="communityCard">
     <div class="jumbotron">
-        <h2 style="margin-bottom: 1rem;">Manage <b>Community</b>
-            <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal"
-                style="float: right;">
-                <span class="material-symbols-sharp" style="float: right;">add</span>
-            </button>
+        <h2 class="manage_community_title" style="margin-bottom: 1rem;">Manage <b>Community</b> </h2>
+        <button type="button" class="btn-add" data-bs-toggle="modal" data-bs-target="#mymodal" style="float: right;">
+            <span class="material-symbols-sharp" style="float: right;">add</span>
+        </button>
 
-            <select id="yearDropdown1" class="year_card form-control form_control_year">
-                {% for year in budget_years_with_placeholder %}
-                <option value="{{ year[0] }}">{{ year[1] }}</option>
-                {% endfor %}
-            </select>
+        <select id="yearDropdown1" class="year_card form-control form_control_year">
+            {% for year in budget_years_with_placeholder %}
+            <option value="{{ year[0] }}">{{ year[1] }}</option>
+            {% endfor %}
+        </select>
 
-            <div class="form-group program_card_box">
-                {{ form.program(class="form-control form_control_program", id="programDropdown",
-                value=form.program.default) }}
-            </div>
+        <div class="form-group program_card_box">
+            {{ form.program(class="form-control form_control_program", id="programDropdown",
+            value=form.program.default) }}
+        </div>
 
-        </h2>
+
         <div class="table-card">
             <table class="table" id="data-table">
                 <thead> <!-- Table header -->

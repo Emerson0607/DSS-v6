@@ -582,6 +582,9 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
         padding-top: 0.5rem;
     }
 
+
+
+
     .communityCard .jumbotron {
         width: 90%;
         margin: 0 auto;
@@ -620,6 +623,43 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     main .budget_card {
         margin-bottom: 4rem;
     }
+
+    .communityCard .jumbotron .manage_community_title {
+        width: 10rem !important;
+
+    }
+
+    .communityCard #yearDropdown1 {
+        font-size: 0.8rem !important;
+        width: 7.4rem;
+        height: 2rem !important;
+        position: absolute !important;
+        right: 2.1rem;
+        top: 4.1rem !important;
+
+    }
+
+
+    .communityCard #programDropdown {
+        font-size: 0.8rem !important;
+        width: 7.3rem;
+        height: 2rem !important;
+
+
+    }
+
+    .communityCard .program_card_box {
+        position: absolute;
+        right: -0.5rem;
+
+    }
+
+    .communityCard .btn-add {
+        top: 2.3rem;
+        left: 11rem;
+    }
+
+
 }
 
 .insights .insights-div:first-child {

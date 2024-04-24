@@ -447,8 +447,58 @@ main .fundraising_card .modal-body::-webkit-scrollbar-track {
 
 
     .fundraising_card .btn-add {
+        left: 11rem;
+        top: 2.2rem;
 
-        left: 10rem;
+    }
+
+
+    .fundraising_card .fund_title {
+        max-width: 10rem !important;
+    }
+
+    .fundraising_card #yearDropdown1 {
+        font-size: 0.8rem !important;
+        width: 7.4rem;
+        height: 2rem !important;
+        position: absolute !important;
+        right: 2.1rem;
+        top: 4.1rem !important;
+
+    }
+
+    .fundraising_card #programDropdown1 {
+        font-size: 0.8rem !important;
+        width: 7.3rem;
+        height: 2rem !important;
+
+
+    }
+
+    .fundraising_card .program_card_box {
+        position: absolute;
+        right: -0.5rem;
+
+    }
+
+    .fundraising_card #yearDropdown2 {
+        font-size: 0.8rem !important;
+        width: 7.4rem;
+        height: 2rem !important;
+        position: absolute !important;
+        right: 1.8rem !important;
+        top: 4.1rem !important;
+
+    }
+
+    .fundraising_card #programDropdown2 {
+        font-size: 0.8rem !important;
+        width: 7.4rem;
+        height: 2rem !important;
+        position: absolute;
+        right: -7rem;
+        top: 0rem !important;
+
 
     }
 
