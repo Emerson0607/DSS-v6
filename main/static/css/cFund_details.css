@@ -23,6 +23,16 @@
   --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
+
+.fund_details_card .form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #acacac !important;
+  border-radius: 5px;
+}
+
+
 main .fund_details_card .time-frame,
 .fileces {
   display: grid;
