@@ -464,7 +464,10 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     border-radius: 7px;
     position: absolute;
     left: 17.5rem;
+    top: 2rem;
 }
+
+
 
 .communityCard .btn-add:hover {
     background-color: #303396;
@@ -555,6 +558,7 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     width: 5rem;
     height: 2.4rem !important;
     padding: 0 0 0 0.3rem;
+    top: 1.7rem;
 }
 
 /*smaller laptop*/

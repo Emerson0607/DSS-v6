@@ -27,6 +27,14 @@
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
+/* use to remove blue background in mobile css */
+* {
+    -webkit-tap-highlight-color: transparent;
+    /* For older versions of iOS */
+    outline: none;
+    /* Disable outline */
+}
+
 * {
     margin: 0;
     padding: 0;
