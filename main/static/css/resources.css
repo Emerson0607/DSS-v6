@@ -108,7 +108,7 @@ main .resources_Card>div:hover {
 
 main .resources_Card table td {
     height: 2.8rem;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid lightgray !important;
     color: var(--color-dark);
 }
 
