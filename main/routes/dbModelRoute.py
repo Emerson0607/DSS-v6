@@ -149,7 +149,7 @@ def new_user():
 
         if ' ' in new_password:
             flash('Password cannot contain spaces.', 'newpassword_space')
-            return render_template('reset_password.html', user_id=user_id)
+            return render_template('new_user.html', user_id=user_id)
 
         if user:
             if new_password == confirm_password:
@@ -176,7 +176,7 @@ def new_user():
                         return redirect(url_for('dbModel.login'))
             else:
                         flash('New password and confirmation do not match.', 'not_match')
-                        return render_template('reset_password.html', user_id=user_id)
+                        return render_template('new_user.html', user_id=user_id)
     return render_template('new_user.html')
 
 @dbModel_route.route("/send_mail")
