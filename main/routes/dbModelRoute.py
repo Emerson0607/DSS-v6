@@ -274,8 +274,8 @@ def login():
         password = request.form.get("password")
         user = Users.query.filter_by(username=username).first()
         
-        if user.status == 0:
-            return render_template("new_user.html", user_id = user.id)
+        if user is not None and (user.status == 0):
+            return render_template("new_user.html", user_id=user.id)
             
         if user and check_password_hash(user.password, password):
             userlog = username
