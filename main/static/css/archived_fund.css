@@ -351,6 +351,56 @@ main .archived_fund_card .for_filter .year-filter1 {
 }
 
 
+/* design for table */
+main .archived_fund_card .table-card table {
+    border-collapse: collapse;
+}
+
+main .archived_fund_card .table-card table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .archived_fund_card .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .archived_fund_card .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .archived_fund_card .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+
+
+/* design for table  for coordinator*/
+main .archived_fund_card1 .table-card table {
+    border-collapse: collapse;
+}
+
+main .archived_fund_card1 .table-card table thead tr {
+    background-color: rgb(218, 255, 218) !important;
+}
+
+main .archived_fund_card1 .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .archived_fund_card1 .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .archived_fund_card1 .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
@@ -455,5 +505,14 @@ main .archived_fund_card .for_filter .year-filter1 {
         border-radius: 4px;
         cursor: pointer;
     }
+
+    main .archived_fund_card .table-card table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .archived_fund_card .table-card table thead tr th {
+        padding: 0.2rem 1rem !important;
+    }
+
 
 }

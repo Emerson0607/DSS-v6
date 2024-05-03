@@ -446,9 +446,45 @@ main .cCommunity .modal-body::-webkit-scrollbar-track {
 }
 
 
+.cCommunity .year_card:hover {
+    border: 1px solid rgb(60, 187, 77) !important;
+    cursor: pointer;
+}
+
+.cCommunity .form_control_program:hover {
+    border: 1px solid rgb(60, 187, 77) !important;
+    cursor: pointer;
+}
+
+
+/* design for table */
+main .cCommunity .table-card table {
+    border-collapse: collapse;
+}
+
+main .cCommunity .table-card table thead tr {
+    background-color: rgb(218, 255, 218) !important;
+}
+
+main .cCommunity .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .cCommunity .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .cCommunity .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
-    .cCommunity .cCommunity .modal-content {
+    .cCommunity .modal-content {
         position: relative;
     }
 
@@ -556,6 +592,16 @@ main .cCommunity .modal-body::-webkit-scrollbar-track {
     main .Cinsights>div {
         width: 90%;
         margin: 0 auto;
+    }
+
+
+    main .cCommunity .table-card table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .cCommunity .table-card table thead tr th {
+
+        padding: 0.2rem 1rem !important;
     }
 }
 

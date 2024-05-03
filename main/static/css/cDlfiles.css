@@ -148,13 +148,11 @@ main .cfile-container:hover {
     width: 100%;
 }
 
-.cfile-container table tr td:nth-child(2) {
-    text-align: center;
-}
+
 
 .cfile-container table th:first-child {
     text-align: left;
-    padding-left: .3rem;
+    padding-left: 1rem;
 }
 
 .cfile-container td {
@@ -181,6 +179,31 @@ main .cfile-container:hover {
 
 .cfile-container .file-td {
     width: 49rem;
+}
+
+/* design for table */
+main .cfile-container table {
+    border-collapse: collapse !important;
+}
+
+main .cfile-container table thead tr {
+    background-color: rgb(218, 255, 218) !important;
+}
+
+main .cfile-container th {
+    border: none !important;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+}
+
+main .cfile-container th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .cfile-container th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
 }
 
 @media screen and (max-width: 1200px) {

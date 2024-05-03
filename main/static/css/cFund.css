@@ -342,6 +342,49 @@ main .cFundraising_card .modal-body::-webkit-scrollbar-track {
     top: 1.8rem !important;
 }
 
+
+.cFundraising_card .year_card:hover,
+.year_card2 {
+    border: 1px solid rgb(60, 187, 77) !important;
+    cursor: pointer;
+}
+
+.cFundraising_card .form_control_program:hover {
+    border: 1px solid rgb(60, 187, 77) !important;
+    cursor: pointer;
+}
+
+
+
+
+/* design for table */
+main .cFundraising_card .table-card table {
+    border-collapse: collapse;
+}
+
+main .cFundraising_card .table-card table thead tr {
+    background-color: rgb(218, 255, 218) !important;
+}
+
+main .cFundraising_card .table-card table thead tr th {
+
+    padding: 0.8rem 1rem !important;
+}
+
+main .cFundraising_card .table-card tbody tr td {
+    padding: 0 0.3rem !important;
+}
+
+main .cFundraising_card .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .cFundraising_card .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
     .communityCard .cFundraising_card .modal-content {
@@ -448,6 +491,15 @@ main .cFundraising_card .modal-body::-webkit-scrollbar-track {
 
         left: 11rem;
 
+    }
+
+    main .cFundraising_card .table-card table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .cFundraising_card .table-card table thead tr th {
+
+        padding: 0.2rem 1rem !important;
     }
 
 }

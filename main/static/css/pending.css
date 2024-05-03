@@ -129,6 +129,31 @@ main .pendingCard table tr:last-child td {
 
 }
 
+
+/* design for table */
+main .pendingCard .table-card table {
+    border-collapse: collapse;
+}
+
+main .pendingCard .table-card table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .pendingCard .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .pendingCard .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .pendingCard .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px) {
     .pendingCard {
@@ -149,6 +174,15 @@ main .pendingCard table tr:last-child td {
     .pendingCard .table-card {
         max-width: 20rem;
         overflow: auto;
+    }
+
+    main .pendingCard .table-card table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .pendingCard .table-card table thead tr th {
+
+        padding: 0.2rem 1rem !important;
     }
 
 

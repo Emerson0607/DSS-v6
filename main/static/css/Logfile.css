@@ -175,6 +175,37 @@ main .logs-container table td {
 }
 
 
+
+/* design for table */
+main .logs-container .table-card table {
+    border-collapse: collapse;
+}
+
+main .logs-container .table-card table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .logs-container .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .logs-container .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .logs-container .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+/* Apply styles to the last four columns */
+.logs-container table td:nth-last-child(-n+4),
+.logs-container table th:nth-last-child(-n+4) {
+    text-align: center;
+}
+
 @media screen and (max-width: 760px) {
     .margin-top {
         height: 4rem;

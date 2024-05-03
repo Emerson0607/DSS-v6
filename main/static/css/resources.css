@@ -104,8 +104,6 @@ main .resources_Card>div:hover {
     width: 100%;
 }
 
-
-
 main .resources_Card table td {
     height: 2.8rem;
     border-bottom: 1px solid lightgray !important;
@@ -273,7 +271,7 @@ main .resources_Card table tr:last-child td {
 
 .resources_Card table td,
 .resources_Card table th {
-    text-align: left;
+    text-align: center;
 
 }
 
@@ -354,6 +352,32 @@ main .resources_Card .for_filter .year-filter1 {
 
 .resources_Card .jumbotron .year-filter1 .show-all-button:hover {
     border-color: #555;
+}
+
+
+
+/* design for table */
+main .resources_Card .table-card table {
+    border-collapse: collapse;
+}
+
+main .resources_Card .table-card table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .resources_Card .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .resources_Card .table-card table thead tr th:nth-child(2) {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .resources_Card .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
 }
 
 

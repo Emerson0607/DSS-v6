@@ -18,18 +18,20 @@
             <h2 style="margin-bottom: 1rem;">Pending <b>Projects</b></h2>
             <div class="table-card">
                 <table class="table" id="data-table">
-                    <tr>
-                        <th>ID</th>
-                        <th>Community</th>
-                        <th>Program</th>
-                        <th>Sub-Program</th>
-                        <th>Week</th>
-                        <th>Total Week</th>
-                        <th>Budget</th>
-                        <th>Coordinator</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Community</th>
+                            <th>Program</th>
+                            <th>Sub-Program</th>
+                            <th>Week</th>
+                            <th>Total Week</th>
+                            <th>Budget</th>
+                            <th>Coordinator</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
                     {% for row in pending_project_data %}
                     <tr>
                         <td><a href="{{ url_for('dbModel.view_pending', pending_id=row.id)}}" class="btn-edit">{{ row.id

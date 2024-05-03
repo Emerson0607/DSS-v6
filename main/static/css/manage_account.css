@@ -264,9 +264,16 @@ main .manageUser .modal-body::-webkit-scrollbar-track {
     text-align: left;
 }
 
-.manageUser table td:last-child,
-.manageUser table th:last-child {
+/* Apply styles to the last four columns */
+.manageUser table td:nth-last-child(-n+4),
+.manageUser table th:nth-last-child(-n+4) {
     text-align: center;
+}
+
+/* Apply styles to the last four columns */
+.manageDepartment table td:nth-last-child(-n+4),
+.manageDepartment table th {
+    text-align: center !important;
 }
 
 
@@ -614,6 +621,57 @@ main .manageDepartment .jumbo::-webkit-scrollbar-track {
 }
 
 
+/* design for table */
+main .manageUser .jumbo table {
+    border-collapse: collapse;
+}
+
+main .manageUser .jumbo table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .manageUser .jumbo table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .manageUser .jumbo table thead tr th:nth-child(2) {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .manageUser .jumbo table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+
+
+/* design for table */
+main .manageDepartment .jumbo table {
+    border-collapse: collapse;
+}
+
+main .manageDepartment .jumbo table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .manageDepartment .jumbo table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .manageDepartment .jumbo table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .manageDepartment .jumbo table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+
 /*FOR DEPARTMENT TABLE -- END*/
 
 @media screen and (max-width: 400px) {
@@ -727,6 +785,16 @@ main .manageDepartment .jumbo::-webkit-scrollbar-track {
         border-radius: 7px;
         width: 50%;
         position: relative;
+    }
+
+
+    main .manageUser .jumbo table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .manageUser .jumbo table thead tr th {
+
+        padding: 0.2rem 1rem !important;
     }
 
 

@@ -336,6 +336,34 @@ main .communityCard table tr:last-child td {
     border: none;
 }
 
+
+
+/* design for table */
+main .communityCard .table-card table {
+    border-collapse: collapse;
+}
+
+main .communityCard .table-card table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .communityCard .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .communityCard .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .communityCard .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+
+
 /*------------------ MANAGE ACCOUNT TABLE MODAL ------------------*/
 .communityCard .modal {
     display: none;
@@ -542,14 +570,11 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     right: 8rem;
     width: 10rem;
     top: 1.8rem;
-
-
 }
 
 .communityCard .form_control_program {
     height: 2.4rem !important;
     padding: 0rem 0 0rem 0.3rem !important;
-
 }
 
 .communityCard .year_card {
@@ -559,6 +584,14 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     height: 2.4rem !important;
     padding: 0 0 0 0.3rem;
     top: 1.7rem;
+}
+
+.communityCard .year_card:hover {
+    border: 1px solid rgb(170, 176, 205) !important;
+}
+
+.communityCard .form_control_program:hover {
+    border: 1px solid rgb(170, 176, 205) !important;
 }
 
 /*smaller laptop*/
@@ -661,6 +694,16 @@ main .communityCard .modal-body::-webkit-scrollbar-track {
     .communityCard .btn-add {
         top: 2.3rem;
         left: 11rem;
+    }
+
+
+    main .communityCard .table-card table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .communityCard .table-card table thead tr th {
+
+        padding: 0.2rem 1rem !important;
     }
 
 

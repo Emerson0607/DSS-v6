@@ -151,6 +151,8 @@ main .file-container:hover {
     background-color: #007bff;
 }
 
+
+
 .file-container table td {
     height: 2.8rem;
     text-align: left;
@@ -166,7 +168,7 @@ main .file-container:hover {
 
 .file-container table th:first-child {
     text-align: left;
-    padding-left: .3rem;
+    padding-left: 1rem;
 }
 
 /* file upload button */
@@ -273,6 +275,32 @@ main .file-container:hover {
 
 .file-container .file-td {
     width: 49rem;
+}
+
+
+/* design for table */
+main .file-container table {
+    border-collapse: collapse !important;
+}
+
+main .file-container table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .file-container th {
+    border: none !important;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+}
+
+main .file-container th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .file-container th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
 }
 
 @media screen and (max-width: 1200px) {

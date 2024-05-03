@@ -387,7 +387,29 @@ main .resources_Card1 .for_filter .year-filter1 {
     border-color: #555;
 }
 
+/* design for table */
+main .resources_Card1 .table-card table {
+    border-collapse: collapse;
+}
 
+main .resources_Card1 .table-card table thead tr {
+    background-color: rgb(218, 255, 218) !important;
+}
+
+main .resources_Card1 .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .resources_Card1 .table-card table thead tr th:nth-child(2) {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .resources_Card1 .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
 
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {

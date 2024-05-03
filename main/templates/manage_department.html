@@ -31,13 +31,15 @@
         </h2>
         <div class="jumbo">
             <table class="table">
-                <tr>
-                    <th>ID</th>
-                    <th>Acronym</th>
-                    <th>Department</th>
-                    <th style="width: 9rem;">Action</th>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Acronym</th>
+                        <th>Department</th>
+                        <th style="width: 9rem;">Action</th>
 
-                </tr>
+                    </tr>
+                </thead>
                 {% for row in department %}
                 <tr>
                     <td>{{ row.id }}</td>

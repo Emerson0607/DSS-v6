@@ -126,6 +126,31 @@ main .cpendingCard table tr:last-child td {
 
 }
 
+
+/* design for table */
+main .cpendingCard .table-card table {
+    border-collapse: collapse;
+}
+
+main .cpendingCard .table-card table thead tr {
+    background-color: rgb(218, 255, 218) !important;
+}
+
+main .cpendingCard .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 1rem !important;
+}
+
+main .cpendingCard .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .cpendingCard .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
 /* ------------------- MOBILE -------------------- */
 @media screen and (max-width: 400px) {
     .cpendingCard {
@@ -146,6 +171,15 @@ main .cpendingCard table tr:last-child td {
     .cpendingCard .table-card {
         max-width: 20rem;
         overflow: auto;
+    }
+
+    main .cpendingCard .table-card table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .cpendingCard .table-card table thead tr th {
+
+        padding: 0.2rem 1rem !important;
     }
 
 

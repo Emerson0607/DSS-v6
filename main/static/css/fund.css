@@ -339,6 +339,49 @@ main .fundraising_card .modal-body::-webkit-scrollbar-track {
     top: 1.8rem !important;
 }
 
+.fundraising_card .year_card:hover,
+.year_card2 {
+    border: 1px solid rgb(170, 176, 205) !important;
+    cursor: pointer;
+}
+
+.fundraising_card .form_control_program:hover {
+    border: 1px solid rgb(170, 176, 205) !important;
+    cursor: pointer;
+}
+
+
+
+/* design for table */
+main .fundraising_card .table-card table {
+    border-collapse: collapse;
+}
+
+main .fundraising_card .table-card table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .fundraising_card .table-card table thead tr th {
+
+    padding: 0.8rem 1rem !important;
+}
+
+main .fundraising_card .table-card tbody tr td {
+    padding: 0 0.3rem !important;
+}
+
+main .fundraising_card .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem;
+    border-bottom-left-radius: 0.3rem;
+}
+
+main .fundraising_card .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+}
+
+
+
 
 
 /*smaller laptop*/
@@ -501,5 +544,16 @@ main .fundraising_card .modal-body::-webkit-scrollbar-track {
 
 
     }
+
+
+    main .fundraising_card .table-card table thead tr th {
+        padding: 0.2rem !important;
+    }
+
+    main .fundraising_card .table-card table thead tr th {
+
+        padding: 0.2rem 1rem !important;
+    }
+
 
 }
