@@ -59,8 +59,45 @@
 
 }
 
-.budget_container .budget_details span {
-    font-size: 5rem;
+.budget_title {
+    position: absolute;
+    bottom: 3rem;
+}
+
+
+/* icon span size */
+.budget_details .budget_left span {
+    font-size: 3.7rem;
+    margin-left: 0.6rem;
+    margin-top: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+/* white background of span */
+.radius_icon {
+    width: 5rem !important;
+    height: 5rem !important;
+    border-radius: 50% !important;
+    background-color: white !important;
+}
+
+
+.budget_card .total_budget_card .budget_details .budget_left span,
+.budget_card .total_budget_card_program .budget_details .budget_left span,
+.budget_card .unused_budget_card_program .budget_details .budget_left span {
+    color: #1bcbae;
+}
+
+.budget_card .total_cost_card .budget_details .budget_left span,
+.budget_card .total_cost_card_program .budget_details .budget_left span,
+.budget_card .unused_cost_card_program .budget_details .budget_left span {
+    color: rgb(225, 75, 20);
+}
+
+.budget_card .current_budget_card .budget_details .budget_left span,
+.budget_card .current_budget_card_program .budget_details .budget_left span,
+.budget_card .unused_current_card_program .budget_details .budget_left span {
+    color: rgb(45, 45, 198);
 }
 
 
@@ -380,6 +417,19 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
     top: 2rem;
 }
 
+
+
+
+.budget_container .year_card:hover {
+    border: 1px solid rgb(170, 176, 205) !important;
+}
+
+.budget_container .form_control_program:hover {
+    border: 1px solid rgb(170, 176, 205) !important;
+}
+
+
+
 .budget_container .btn-add:hover {
     background-color: #303396;
     cursor: pointer;
@@ -551,4 +601,12 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
     .program_card_box .form_control_program {
         width: 5rem;
     }
+
+    .budget_title {
+        position: relative;
+        margin-top: 4rem;
+        width: 5.7rem;
+
+    }
+
 }

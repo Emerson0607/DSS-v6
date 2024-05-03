@@ -46,14 +46,17 @@
             <div class="total_budget_card">
                 <div class="budget_details ">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">
-                            analytics
-                        </span>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">
+                                analytics
+                            </span>
+                        </div>
                         <h3 class="budget_title">Total Budget</h3>
                     </div>
                     <div class="budget_right">
                         <h1>{{ '{:,.2f}'.format(total_budget_same_year | float) }}</h1>
-                        <p class="small">{{ '{:,.2f}'.format(fund_total | float) }} + {{ '{:,.2f}'.format(budget_total |
+                        <p class="small">{{ '{:,.2f}'.format(fund_total | float) }} + {{
+                            '{:,.2f}'.format(budget_total |
                             float) }}</p>
                     </div>
                 </div>
@@ -61,9 +64,11 @@
             <div class="total_cost_card">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">
-                            show_chart
-                        </span>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">
+                                show_chart
+                            </span>
+                        </div>
                         <h3 class="budget_title">Total Cost</h3>
                     </div>
                     <div class="budget_right">
@@ -76,9 +81,11 @@
             <div class="current_budget_card">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">
-                            query_stats
-                        </span>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">
+                                query_stats
+                            </span>
+                        </div>
                         <h3 class="budget_title">Current Budget</h3>
                     </div>
                     <div class="budget_right">
@@ -173,7 +180,7 @@
 </div>
 
 <!-- for budget programs -->
-<div class="budget_container">
+<div class="budget_container budget_container2">
     <div class="jumbotron">
         <div class="for_filter">
             <h2 style="margin-bottom: 1rem"><b>Programs' Budget</b></h2>
@@ -189,16 +196,19 @@
             </div>
 
         </div>
-        <div class="budget_card">
+        <div class="budget_card budget_card2">
             <div class="total_budget_card_program">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">analytics</span>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">analytics</span>
+                        </div>
                         <h3 class="budget_title">Total Budget</h3>
                     </div>
                     <div class="budget_right">
                         <h1>{{ '{:,.2f}'.format(total_budget_same_year1 | float) }}</h1>
-                        <p class="small">{{ '{:,.2f}'.format(fund_total1 | float) }} + {{ '{:,.2f}'.format(budget_total1
+                        <p class="small">{{ '{:,.2f}'.format(fund_total1 | float) }} + {{
+                            '{:,.2f}'.format(budget_total1
                             | float) }}</p>
                     </div>
                 </div>
@@ -206,7 +216,9 @@
             <div class="total_cost_card_program">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">show_chart</span>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">show_chart</span>
+                        </div>
                         <h3 class="budget_title">Total Cost</h3>
                     </div>
                     <div class="budget_right">
@@ -219,7 +231,9 @@
             <div class="current_budget_card_program">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">query_stats</span>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">query_stats</span>
+                        </div>
                         <h3 class="budget_title">Current Budget</h3>
                     </div>
                     <div class="budget_right">
@@ -240,7 +254,7 @@
 </div>
 
 <!-- for unused budget -->
-<div class="budget_container">
+<div class="budget_container budget_container3">
     <div class="jumbotron">
         <div class="for_filter">
             <h2 style="margin-bottom: 1rem"><b>Unused Budget</b></h2>
@@ -255,12 +269,14 @@
             </div>
 
         </div>
-        <div class="budget_card">
+        <div class="budget_card budget_card3">
             <div class="unused_budget_card_program">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">analytics</span>
-                        <h3 class="budget_title">Total Unused</h3>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">analytics</span>
+                            <h3 class="budget_title">Total Unused</h3>
+                        </div>
                     </div>
                     <div class="budget_right">
                         <h1>{{ '{:,.2f}'.format(total_unused_budget | float) }}</h1>
@@ -270,8 +286,10 @@
             <div class="unused_cost_card_program">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">show_chart</span>
-                        <h3 class="budget_title">Total Cost</h3>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">show_chart</span>
+                            <h3 class="budget_title">Total Cost</h3>
+                        </div>
                     </div>
                     <div class="budget_right">
                         <h1>{{ '{:,.2f}'.format(cost_unused_budget | float) }}</h1>
@@ -281,7 +299,9 @@
             <div class="unused_current_card_program">
                 <div class="budget_details">
                     <div class="budget_left">
-                        <span class="material-symbols-sharp">query_stats</span>
+                        <div class="radius_icon">
+                            <span class="material-symbols-sharp">query_stats</span>
+                        </div>
                         <h3 class="budget_title">Current Unused</h3>
                     </div>
                     <div class="budget_right">
