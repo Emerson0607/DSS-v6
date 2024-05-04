@@ -488,6 +488,31 @@ main .budget_container .modal-body::-webkit-scrollbar-track {
 
 
 
+
+/* design for table */
+main .communityCard1 .table-card table {
+    border-collapse: collapse;
+}
+
+main .communityCard1 .table-card table thead tr {
+    background-color: rgb(228, 234, 255) !important;
+}
+
+main .communityCard1 .table-card table thead tr th {
+    border: none !important;
+    padding: 0.8rem 0.3rem !important;
+}
+
+main .communityCard1 .table-card table thead tr th:first-child {
+    border-top-left-radius: 0.3rem !important;
+    border-bottom-left-radius: 0.3rem !important;
+}
+
+main .communityCard1 .table-card table thead tr th:last-child {
+    border-top-right-radius: 0.3rem !important;
+    border-bottom-right-radius: 0.3rem !important;
+}
+
 /*smaller laptop*/
 @media screen and (max-width: 1200px) {
     .communityCard .budget_container .modal-content {
