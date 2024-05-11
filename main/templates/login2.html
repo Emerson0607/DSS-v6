@@ -15,39 +15,46 @@
         type="image/x-icon">
 </head>
 
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #ffffff;
+        background-image: url('/static/images/CES.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr;
+        align-items: center;
+        justify-items: right;
+    }
+</style>
+
 <body>
-    <div class="login_container">
+    <div class="login-container">
 
-        <div class="login_detail">
-            <img class="cesu_logo" src="/static/images/CESO.png" alt="CESU Logo">
-            <h2>Sign in</h2>
-            <img class="cesu_bg" src="/static/images/CES.png" alt="CESU Logo">
-        </div>
+        <div class="login">
 
-        <div class="login_input">
-
-            <form class="login_form" method="POST" action="{{ url_for('dbModel.login') }}">
-                <div class="input-wrapper">
+            <h2>Login</h2>
+            <form method="POST" action="{{ url_for('dbModel.login') }}">
+                <div class="form-group">
+                    <label for="username" style="color: rgb(85, 85, 85);">Username</label>
                     <input type="text" id="username" name="username" required>
-                    <label for="username" class='placeholder'>Username</label>
                 </div>
-
-                <div class="input-wrapper">
+                <div class="form-group">
+                    <label for="password" style="color: rgb(85, 85, 85);">Password</label>
                     <input type="password" id="password" name="password" required>
-                    <label for="password" class='placeholder'>Password</label>
                 </div>
-                <h5 class="btn_recover" data-bs-toggle="modal" data-bs-target="#mymodal">Forgot Password</h5>
-                <button type="submit" class="login_btn">Login</button>
 
+                <button type="submit" class="btn">Login</button>
                 <!-- Add this code below the form -->
                 <small>
-                    {% with messages = get_flashed_messages(category_filter=['login_error'], with_categories=true)
-                    %}
+                    {% with messages = get_flashed_messages(category_filter=['login_error'], with_categories=true) %}
                     {% if messages %}
                     <div>
                         {% for category, message in messages %}
-                        <div class="flash-login flash-{{ category }}"
-                            style="position: absolute; top: -6rem; left: 1.9rem;">
+                        <div class="flash-login flash-{{ category }}">
                             {{ message }}
                         </div>
                         {% endfor %}
@@ -56,6 +63,8 @@
                     {% endwith %}
                 </small>
             </form>
+
+            <h5 class="btn-recover" data-bs-toggle="modal" data-bs-target="#mymodal">Forgot Password</h5>
 
             <!-- Modal -->
             <div id="mymodal" class="modal" role="dialog">
@@ -66,10 +75,10 @@
                         </div>
                         <div class="modal-body">
                             <form method="post" id="recoveryForm" action="/send_recovery_mail">
-                                <div class="input-wrapper">
-                                    <input type="email" class="form-control" name="email" id="email" required>
-                                    <label for="email" class='placeholder'>Email (gmail)</label>
-
+                                <div class="form-group recover-input">
+                                    <label for="email">Enter your email:</label>
+                                    <input type="email" class="form-control" name="email" id="email"
+                                        placeholder="Enter your email" required>
 
                                 </div>
                                 <button class="btn-submit-recovery" type="submit">Send OTP</button>
@@ -83,38 +92,26 @@
                     </div>
                 </div>
             </div><!--end modal-->
+
+            <div class="reset-password" id="reset-password">
+
+            </div>
         </div>
     </div>
-
+    <div id="loadingScreen"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 9999;">
+        <div
+            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white;">
+            <div>Loading...</div>
+            <!-- You can replace "Loading..." with a spinner or any other loading animation if you prefer -->
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"></script>
-
-
-    <!-- for input animation -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const inputWrappers = document.querySelectorAll('.input-wrapper');
-            inputWrappers.forEach(wrapper => {
-                const input = wrapper.querySelector('input');
-                if (input) {
-                    input.addEventListener('input', function () {
-                        const placeholder = wrapper.querySelector('.placeholder');
-                        if (input.value.trim() !== '') {
-                            placeholder.classList.add('has-value');
-                        } else {
-                            placeholder.classList.remove('has-value');
-                        }
-                    });
-                }
-            });
-        });
-
-    </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var flashes = document.querySelectorAll('.flash-login');
@@ -132,7 +129,6 @@
             });
         });
     </script>
-
     <script>
         //date picker
         flatpickr("#birthday", {
@@ -195,6 +191,8 @@
             }
         });
     </script>
+
+
 
     <!--RETAIN INPUTS-->
     <script>

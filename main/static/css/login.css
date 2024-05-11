@@ -35,62 +35,168 @@
     /* Disable outline */
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    outline: 0;
-    appearance: none;
-    border: 0;
-    text-decoration: none;
-    list-style: none;
-    box-sizing: border-box;
+
+body {
+    display: flex;
+    justify-content: center;
+    /* horizontally center */
+    align-items: center;
+    /* vertically center */
+    height: 90vh;
+    font-family: poppins, sans-serif;
+    background-color: #f4f6ff;
+}
+
+.login_container {
+    width: 70rem;
+    height: 24rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+        ". .";
+    background-color: rgb(255, 255, 255);
+    border-radius: var(--border-radius-3);
 }
 
 
-label {
-    font-weight: 400;
-}
-
-.login-container {
-    width: 25rem;
-    position: fixed;
-}
-
-h2 {
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
-    color: rgb(84, 84, 84);
-}
-
-.login {
-
-    text-align: center;
-    padding: 1rem;
-    max-width: 350px;
-    height: 400px;
-    width: 100%;
-    background-color: #ffffff;
-    box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.3);
-    border-radius: 1rem;
+/* for input animation */
+.login_container .input-wrapper {
+    --padding: 16px;
+    --focus-color: black;
     position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 1.2rem;
+}
+
+.login_container .input-wrapper input {
+    padding: var(--padding);
+    border: 1px solid gray;
+    outline: none;
+    border-radius: 4px;
+    width: 85%;
+    margin: 0 auto;
+    height: 1.5rem;
+}
+
+.login_container .input-wrapper .placeholder {
+    position: absolute;
+    background-color: white;
+    color: gray;
+    left: 2.5rem;
+    padding: 0 4px;
+    transition: all 0.2s ease-in;
+    cursor: auto;
+}
+
+.login_container .input-wrapper input:is(:focus, :valid) {
+    border: 2px solid rgb(57, 169, 57);
 
 }
 
+.login_container .input-wrapper input:is(:focus, :valid)+.placeholder {
+    transform: translatey(calc(-1 * var(--padding) - 13px));
+    font-size: 14px;
+    color: rgb(57, 169, 57);
+}
 
-.form-group {
+
+
+
+
+
+.login_container .login_btn {
+    background-color: rgb(0, 198, 0);
+    color: white;
+    border: none;
+    padding: 0.9rem;
+    cursor: pointer;
+    position: absolute;
+    bottom: -6rem;
+    right: 1.3rem;
+    font-weight: 700;
+    border-radius: 2rem;
+    width: 5rem;
+    letter-spacing: 0.05rem;
+    font-size: .7rem;
+}
+
+.login_container .login_btn:hover {
+    background-color: rgb(4, 168, 4);
+
+}
+
+.login_container .btn_recover {
+    padding: 0.9rem;
+    border-radius: 2rem;
+    font-weight: 300;
+    cursor: pointer;
+    font-size: .7rem;
+    font-weight: 500;
+    position: absolute;
+    bottom: -7.3rem;
+    right: 8rem;
+    letter-spacing: 0.05rem;
+}
+
+.login_container .btn_recover:hover {
+    padding: 0.9rem;
+    background-color: rgb(233, 250, 233);
+    border-radius: 2rem;
+}
+
+
+.login_container .login_form {
+    margin-top: 5rem;
+    position: relative;
+}
+
+
+.login_container .cesu_logo {
+    width: 3.5rem;
+    height: 3.5rem;
+}
+
+.login_container .cesu_bg {
+    width: 90%;
+    height: 40%;
+}
+
+
+.login_container .login_detail {
+    padding: 2rem 0 0 2.5rem;
+
+}
+
+.login_container .login_detail h2 {
+    padding-top: 0;
+    margin-top: 1rem;
+    font-weight: 400;
+    font-size: 2.2rem;
+
+}
+
+.login_container .login_input {
+    padding: 1rem;
+}
+
+
+.login_container .form-group {
     padding-left: 1rem;
     margin-bottom: 15px;
     width: 100%;
 
 }
 
-.form-group label {
+.login_container .form-group label {
     display: block;
     text-align: left;
     margin-left: .5rem;
 }
 
-.form-group input {
+.login_container .form-group input {
     display: block;
     text-align: left;
     width: 90%;
@@ -101,25 +207,10 @@ h2 {
     padding-left: 1rem;
 }
 
-.btn {
-    margin-top: 1rem;
-    background-color: var(--color-kaakbay);
-    color: var(--color-white);
-    padding: 0.4rem 0.4rem;
-    border: none;
-    width: 86%;
-    border-radius: var(--border-radius-1);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    height: 2.5rem;
-}
 
-.btn:hover {
-    background-color: #0f8e18;
-}
 
 /**FOR MODAL**/
-.login-container .modal {
+.login_container .modal {
     display: none;
     position: fixed;
     z-index: 1;
@@ -131,45 +222,38 @@ h2 {
 }
 
 /* Styling for the modal content */
-.login-container .modal-content {
+.login_container .modal-content {
 
     background-color: #fff;
     margin: 5% auto;
-
     padding: 20px;
     border: 1px solid #888;
     border-radius: 7px;
-    width: 80%;
+    width: 30%;
     position: relative;
 
 }
 
-.login-container .modal h4 {
+.login_container .modal h4 {
     margin-top: 1rem;
     font-size: 1.4rem;
+    text-align: center;
+    font-weight: 500 !important;
+
 }
 
 /* Style for the form container */
-.login-container .modal-body {
+.login_container .modal-body {
     padding: 20px;
-    height: 150px;
-    /* Set a maximum height for scrollability */
-    /* Enable vertical scrolling when the content overflows */
+    height: 100px;
     margin-bottom: 4rem;
-}
-
-.login-container .btn-recover {
-    font-weight: 300;
-    cursor: pointer;
-    font-size: .7rem;
-    text-decoration: underline;
-    position: absolute;
-    bottom: 2rem;
-    left: 2.5rem;
 
 }
 
-.login-container .btn-close {
+
+
+
+.login_container .btn-close {
     background-color: #ffffff;
     color: #2a2a2a;
     position: absolute;
@@ -181,74 +265,102 @@ h2 {
 }
 
 
-.login-container .btn-close:hover {
+.login_container .btn-close:hover {
     color: var(--color-danger);
 }
 
-.login-container .btn-submit-recovery {
+.login_container .btn-submit-recovery {
     cursor: pointer;
-    background-color: var(--color-kaakbay);
+    background-color: rgb(3, 177, 3);
     color: white;
     padding: 0.8rem;
-    border-radius: .2rem;
-    width: 12rem;
+    font-weight: 700;
+    border-radius: 2rem;
+    width: 10rem;
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    border: none;
+
+    letter-spacing: 0.05rem;
+    font-size: .7rem;
+
 }
 
-.login-container .recover-input {
-    margin-top: 1rem;
-
-}
-
-.login-container .recover-input input {
-    margin-bottom: 2rem;
-}
-
-.login-container .btn-submit-recovery:hover {
+.login_container .btn-submit-recovery:hover {
     background-color: #0f8e18;
 
 }
 
 
 
-
-/* Between 1080px and 768px */
-@media screen and (max-width: 1080px) and (min-width: 768px) {
-
-    .login-container {
-        width: 90vw;
-    }
-
-    .login {
-        margin-left: 17rem;
-    }
-}
-
 /* mobile */
 @media screen and (max-width: 400px) {
-    .login-container {
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .login {
-        padding-top: 5rem;
-        padding-left: 2rem;
-
-        padding-right: 2rem;
-        max-width: 25rem;
-        height: 100vh;
+    body {
+        display: block;
+        background-color: rgb(255, 255, 255);
         border-radius: 0;
-        box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0);
+
     }
 
-    .login-container .btn-recover {
-        bottom: 5rem;
+    .login_container {
+        width: 100%;
+        height: 98vh;
+        display: grid;
+        /* border: 1px solid black; */
+        grid-template-columns: 1fr !important;
+        grid-template-areas: "." !important;
+        grid-template-rows: 22rem 1fr !important;
     }
 
-    .login-container .btn-submit-recovery {
+    .login_container .login_form {
+        margin-top: 0.1rem !important;
 
-        width: 14rem;
-        margin-left: .5rem;
     }
 
+    .login_container .login_detail {
+        width: 90% !important;
+        margin: 0 auto !important;
+        padding-left: 0rem;
+    }
+
+    .login_container .cesu_bg {
+        width: 100%;
+
+    }
+
+
+    .login_container .btn_recover {
+        left: 0rem;
+        width: max-content;
+
+    }
+
+    .login_container .login_btn {
+        right: 0.5rem;
+    }
+
+    .login_container .placeholder {
+        position: absolute;
+        background-color: white;
+        color: gray;
+        left: 1.5rem;
+        padding: 0 4px;
+        transition: all 0.2s ease-in;
+        cursor: auto;
+    }
+
+
+    .login_container .modal-content {
+        width: 80%;
+        height: 15rem;
+        margin-top: 5rem;
+    }
+
+    .login_container .modal h4 {
+        margin-bottom: 0rem;
+        margin-top: 1.2rem;
+
+    }
 }
