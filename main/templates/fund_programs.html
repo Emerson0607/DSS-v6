@@ -391,11 +391,11 @@
                             var headRow = $("<tr>");
                             headRow.append($("<th>").text("Program"));
                             headRow.append($("<th>").text("Donor Name"));
-                            headRow.append($("<th>").text("Donation"));
+                            headRow.append($("<th>").text("Donation").css("text-align", "center"));
                             if (record.donation_type === "In-Kind") {
-                                headRow.append($("<th>").text("Quantity"));
+                                headRow.append($("<th>").text("Quantity").css("text-align", "center"));
                             }
-                            headRow.append($("<th>").text("Date"));
+                            headRow.append($("<th>").text("Date").css("text-align", "center"));
                             donorTableHead.append(headRow);
 
 
@@ -403,17 +403,17 @@
                                 var row = $("<tr>");
                                 row.append($("<td>").text(record.program));
                                 row.append($("<td>").text(donor.name));
-                                row.append($("<td>").text(donor.donation));
+                                row.append($("<td>").text(donor.donation).css("text-align", "center"));
 
                                 if (record.donation_type == "In-Kind") {
-                                    row.append($("<td>").text(donor.quantity));
+                                    row.append($("<td>").text(donor.quantity).css("text-align", "center"));
                                 }
 
                                 // Format the date string to MM/DD/YYYY format
                                 var date = new Date(donor.date);
                                 var formattedDate = (date.getMonth() + 1) + '-' + date.getDate() + '-' + date.getFullYear();
 
-                                row.append($("<td>").text(formattedDate)); // Append the formatted date string to the table cell
+                                row.append($("<td>").text(formattedDate).css("text-align", "center"));
 
                                 donorTableBody.append(row);
                             });
