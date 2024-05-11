@@ -13,6 +13,58 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link class="favicon" rel="icon" href="{{ url_for('static', filename='images/cesu-icon.ico') }}"
         type="image/x-icon">
+
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            /* horizontally center */
+            align-items: center;
+            /* vertically center */
+            height: 100vh;
+            /* Set height to 100vh to cover the entire viewport height */
+            margin: 0;
+            /* Remove default body margin */
+            font-family: poppins, sans-serif;
+            overflow: hidden;
+            /* Hide overflow to prevent blurred content from showing */
+            position: relative;
+            /* Set position to relative to allow positioning of pseudo-element */
+        }
+
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/static/images/CES.png');
+            background-size: cover;
+
+            background-repeat: no-repeat;
+            /* prevent the background image from repeating */
+            filter: blur(5px);
+            /* Add a blur effect to the background image */
+            z-index: -1;
+            /* Send the pseudo-element behind other content */
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(60, 60, 60, 0.5);
+            /* Semi-transparent black overlay */
+            z-index: -1;
+            /* Send the pseudo-element behind other content */
+        }
+    </style>
 </head>
 
 <body>
@@ -21,7 +73,10 @@
         <div class="login_detail">
             <img class="cesu_logo" src="/static/images/CESO.png" alt="CESU Logo">
             <h2>Sign in</h2>
-            <img class="cesu_bg" src="/static/images/CES.png" alt="CESU Logo">
+            <div class="cesu_acc">
+                <h3>Use your CESU Account</h3>
+                <!-- <img class="cesu_bg" src="/static/images/CES.png" alt="CESU Logo"> -->
+            </div>
         </div>
 
         <div class="login_input">
