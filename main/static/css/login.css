@@ -39,7 +39,7 @@
 
 
 .login_container {
-    width: 70rem;
+    width: 60rem;
     height: 24rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -146,19 +146,18 @@
     height: 3.5rem;
 }
 
-/* .login_container .cesu_bg {
+.login_container .cesu_bg {
     width: 90%;
     height: 40%;
-    display: none;
 
-} */
+}
 
-.cesu_acc h3 {
+/* .cesu_acc h3 {
     font-weight: 400;
     font-size: 1rem;
     margin-top: 0;
     color: rgb(48, 48, 48);
-}
+} */
 
 .login_container .login_detail {
     padding: 2rem 0 0 2.5rem;
@@ -219,7 +218,6 @@
 
 /* Styling for the modal content */
 .login_container .modal-content {
-
     background-color: #fff;
     margin: 5% auto;
     padding: 20px;
@@ -245,6 +243,7 @@
     margin-bottom: 4rem;
 
 }
+
 
 
 
@@ -307,7 +306,7 @@
         /* border: 1px solid black; */
         grid-template-columns: 1fr !important;
         grid-template-areas: "." !important;
-        grid-template-rows: 15rem 1fr !important;
+        grid-template-rows: 20rem 1fr !important;
         border-radius: 0 !important;
         border: none;
     }
@@ -323,10 +322,9 @@
         padding-left: 0rem;
     }
 
-    /* .login_container .cesu_bg {
-        width: 100%;
-
-    } */
+    .login_container .cesu_bg {
+        width: 98%;
+    }
 
 
     .login_container .btn_recover {
