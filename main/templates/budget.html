@@ -106,7 +106,7 @@
                         <h4 class="modal-title">Budget Details</h4>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="upload-form">
                             <div class="budget_top">
                                 <div class="form-group">
                                     <label>Total</label>
@@ -385,6 +385,11 @@
         <!--end add modal account-->
         <span class="swipe-indicator swipe">&#8592; Swipe Left or Right &#8594;</span>
     </div> <!--end jumbotron-->
+</div>
+
+
+<div id="loading-screen" style="display: none;">
+    <div class="loader_animation"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -786,6 +791,7 @@
 
 </script>
 
+<!-- for date picker -->
 <script>
     //date picker
     var startDateInput;
@@ -862,5 +868,6 @@
         });
     }
 </script>
+
 
 {% endblock %}

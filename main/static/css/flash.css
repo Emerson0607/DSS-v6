@@ -29,7 +29,6 @@
 }
 
 .flash-login {
-
     padding: 10px;
     border-radius: 5px;
     font-weight: bold;
@@ -54,6 +53,7 @@
     width: 100%;
     text-align: center;
 }
+
 
 .flash-add_community,
 .flash-edit_account,

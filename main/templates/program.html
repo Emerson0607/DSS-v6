@@ -23,6 +23,16 @@
         </form>
     </div>
 </div>
+<div id="loading-screen" style="display: none;">
+    <div class="loader_animation"></div>
+</div>
+
+<script>
+    $('#upload-form').on('submit', function () {
+        document.getElementById('loading-screen').style.display = 'flex';
+    });
+
+</script>
 <script>
     // Function to store result data in localStorage
     function storeResultData(data) {
@@ -37,6 +47,7 @@
 
     // Function to display result data on the page
     function displayResultData(data) {
+
         $('#result-container').html(data);
     }
 

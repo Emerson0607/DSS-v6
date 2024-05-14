@@ -81,5 +81,18 @@ $(document).ready(function() {
             'opacity': '0'
         });
     });
+
+    // Handle login form submission
+    $('#upload-form').on('submit', function () {
+        document.getElementById('loading-screen').style.display = 'flex';
+    });
+
+    $('#upload-form1').on('submit', function () {
+        document.getElementById('loading-screen').style.display = 'flex';
+    });
+
+    $('.upload_loading').on('submit', function () {
+        document.getElementById('loading-screen').style.display = 'flex';
+    });
 });
  

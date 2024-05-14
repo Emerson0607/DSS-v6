@@ -251,6 +251,10 @@
     </div>
 </div>
 
+<div id="loading-screen" style="display: none;">
+    <div class="loader_animation"></div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
@@ -686,5 +690,14 @@
             ]
         });
     }
+</script>
+
+
+<!-- for loading screen -->
+<script>
+    // Handle login form submission
+    $('#upload-form').on('submit', function () {
+        document.getElementById('loading-screen').style.display = 'flex';
+    });
 </script>
 {% endblock %}

@@ -349,7 +349,7 @@ main .communityCard .table-card table thead tr {
 
 main .communityCard .table-card table thead tr th {
     border: none !important;
-    padding: 0.8rem 1rem !important;
+    padding: 0.5rem 1rem !important;
 }
 
 main .communityCard .table-card table thead tr th:first-child {
