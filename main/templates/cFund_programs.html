@@ -412,7 +412,11 @@
                             // Calculate total donation if donation type is "Cash"
                             if (record.donation_type === 'Cash') {
                                 // Remove commas from donation values and then sum them up
-                                var totalDonation = record.donors.reduce((total, donor) => total + parseFloat(donor.donation.replace(/,/g, '')), 0);
+                                var totalDonation = record.donors.reduce((total, donor) => {
+                                    // Ensure donation is a string before replacing commas and parsing
+                                    var donationAmount = parseFloat(String(donor.donation).replace(/,/g, ''));
+                                    return total + donationAmount;
+                                }, 0);
 
                                 // Format the total donation with commas
                                 var formattedTotalDonation = totalDonation.toLocaleString('en-US', { maximumFractionDigits: 2 });
@@ -420,6 +424,7 @@
                                 insightsDiv.find("#total-donation").remove(); // Remove existing total donation element if any
                                 insightsDiv.find(".jumbotron").append("<h3 id='total-donation'>Total Donation: " + formattedTotalDonation + "</h3>");
                             }
+
 
 
                         }

@@ -207,19 +207,62 @@ def programWithCSV():
             print("Top most common pairs in the last two columns:")
             for pair, count in most_common_pairs:
                 print(f"{pair}: {count} occurrences")
+            # top_program_subprogram = []
+
+            # # Iterate through the top 3 most common pairs
+            # for idx, (pair, count) in enumerate(most_common_pairs[:3], start=1):
+            #     program_value = pair[0]
+            #     subprogram_value = pair[1]
+                
+            #     # Append the program, subprogram, and quantity to the list
+            #     top_program_subprogram.append({
+            #         f"program": program_value,
+            #         f"subprogram": subprogram_value,
+            #         f"quantity": count
+            #     })
+            # Initialize a set to store unique programs
+            unique_programs = set()
             top_program_subprogram = []
 
-            # Iterate through the top 3 most common pairs
-            for idx, (pair, count) in enumerate(most_common_pairs[:3], start=1):
+            # Iterate through the top pairs
+            for idx, (pair, count) in enumerate(most_common_pairs, start=1):
                 program_value = pair[0]
                 subprogram_value = pair[1]
-                
-                # Append the program, subprogram, and quantity to the list
-                top_program_subprogram.append({
-                    f"program": program_value,
-                    f"subprogram": subprogram_value,
-                    f"quantity": count
-                })
+
+                # Check if the program is not already in the set of unique programs and we have less than 3 unique programs
+                if program_value not in unique_programs and len(top_program_subprogram) < 3:
+                    # Append the program, subprogram, and quantity to the list
+                    top_program_subprogram.append({
+                        f"program": program_value,
+                        f"subprogram": subprogram_value,
+                        f"quantity": count
+                    })
+
+                    # Add the program to the set of unique programs
+                    unique_programs.add(program_value)
+
+            # If we have less than 3 unique programs, fill the remaining slots with programs from the most common pairs
+            while len(top_program_subprogram) < 3 and most_common_pairs:
+                pair, count = most_common_pairs.pop(0)
+                program_value = pair[0]
+                subprogram_value = pair[1]
+
+                # Check if the program is not already in the set of unique programs
+                if program_value not in unique_programs:
+                    # Append the program, subprogram, and quantity to the list
+                    top_program_subprogram.append({
+                        f"program": program_value,
+                        f"subprogram": subprogram_value,
+                        f"quantity": count
+                    })
+
+                    # Add the program to the set of unique programs
+                    unique_programs.add(program_value)
+
+                # Break the loop if we have found 3 unique programs
+                if len(top_program_subprogram) == 3:
+                    break
+
 
             # Print or use the top 3 pairs
             for pair_info in top_program_subprogram:
@@ -434,19 +477,67 @@ def cProgramWithCSV():
             print("Top most common pairs in the last two columns:")
             for pair, count in most_common_pairs:
                 print(f"{pair}: {count} occurrences")
+            # top_program_subprogram = []
+
+            # # Iterate through the top 3 most common pairs
+            # for idx, (pair, count) in enumerate(most_common_pairs[:3], start=1):
+            #     program_value = pair[0]
+            #     subprogram_value = pair[1]
+                
+            #     # Append the program, subprogram, and quantity to the list
+            #     top_program_subprogram.append({
+            #         f"program": program_value,
+            #         f"subprogram": subprogram_value,
+            #         f"quantity": count
+            #     })
+            
+            
+            # Initialize a set to store unique programs
+            unique_programs = set()
             top_program_subprogram = []
 
-            # Iterate through the top 3 most common pairs
-            for idx, (pair, count) in enumerate(most_common_pairs[:3], start=1):
+            # Iterate through the top pairs
+            for idx, (pair, count) in enumerate(most_common_pairs, start=1):
                 program_value = pair[0]
                 subprogram_value = pair[1]
-                
-                # Append the program, subprogram, and quantity to the list
-                top_program_subprogram.append({
-                    f"program": program_value,
-                    f"subprogram": subprogram_value,
-                    f"quantity": count
-                })
+
+                # Check if the program is not already in the set of unique programs and we have less than 3 unique programs
+                if program_value not in unique_programs and len(top_program_subprogram) < 3:
+                    # Append the program, subprogram, and quantity to the list
+                    top_program_subprogram.append({
+                        f"program": program_value,
+                        f"subprogram": subprogram_value,
+                        f"quantity": count
+                    })
+
+                    # Add the program to the set of unique programs
+                    unique_programs.add(program_value)
+
+            # If we have less than 3 unique programs, fill the remaining slots with programs from the most common pairs
+            while len(top_program_subprogram) < 3 and most_common_pairs:
+                pair, count = most_common_pairs.pop(0)
+                program_value = pair[0]
+                subprogram_value = pair[1]
+
+                # Check if the program is not already in the set of unique programs
+                if program_value not in unique_programs:
+                    # Append the program, subprogram, and quantity to the list
+                    top_program_subprogram.append({
+                        f"program": program_value,
+                        f"subprogram": subprogram_value,
+                        f"quantity": count
+                    })
+
+                    # Add the program to the set of unique programs
+                    unique_programs.add(program_value)
+
+                # Break the loop if we have found 3 unique programs
+                if len(top_program_subprogram) == 3:
+                    break
+
+            
+            
+            
 
             # Print or use the top 3 pairs
             for pair_info in top_program_subprogram:
