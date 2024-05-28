@@ -30,6 +30,25 @@
     --box-shadow: 0 2rem 3rem var(--color-light);
 }
 
+.computer1 {
+    background-color: red !important;
+}
+
+.wc1 {}
+
+.health_and_safety1 {}
+
+.source_environment1 {}
+
+.rubric1 {}
+
+.flood1 {}
+
+.settings_accessibility1 {}
+
+.compare1 {}
+
+
 
 /* Remove the blue background color on autofill */
 input:-webkit-autofill {

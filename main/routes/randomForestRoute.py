@@ -21,6 +21,7 @@ randomForest_Route = Blueprint('randomForest', __name__)
 model_path_cesu = 'trained_modelCESU7.pkl'
 sub_model_path = 'subprogram7.pkl'
 
+
 #comments
 
 model = joblib.load(model_path_cesu)
