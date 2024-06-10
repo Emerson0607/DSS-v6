@@ -21,9 +21,6 @@ randomForest_Route = Blueprint('randomForest', __name__)
 model_path_cesu = 'trained_modelCESU7.pkl'
 sub_model_path = 'subprogram7.pkl'
 
-
-#comments
-
 model = joblib.load(model_path_cesu)
 model2 = joblib.load(sub_model_path)
 
@@ -133,13 +130,10 @@ def programWithCSV():
             }
 
             if not columns_with_strings.empty:
-                # Encoding dictionaries
                 encoding_dict_kasarian = {'Lalake': 0, 'Babae': 1}
                 encoding_dict_edad = {'17-below': 0, '18-24': 1, '25-34': 2, '35-44': 3, '45-54': 4, '55-64': 5, '65-Above': 6}
                 encoding_dict_antas = {'Hindi nakapagtapos ng Elementarya':0, 'Elementarya':1, 'Hindi nakapagtapos ng Sekundarya':2, 'Sekundarya':3, 'Kolehiyo':4, 'Hindi nakapagtapos ng Kolehiyo':5, 'Masters Degree':6, 'Doctorate Degree':7, 'Hindi nakapag-aral':8}
                 encoding_dict_uri = {'May Trabaho': 1, 'Walang Trabaho': 0}
-
-                # Endcoding dictionaries
                 endcoding_dict_Pangedukasyon = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Pangkultura = {'Oo':1, 'Hindi': 0}
                 endcoding_dict_Pangkabuhayan = {'Oo':1, 'Hindi': 0}
@@ -191,81 +185,46 @@ def programWithCSV():
 
             last_two_columns = df.iloc[:, -2:]
 
-            # Initialize a Counter to count pairs of values
             pair_counter = Counter()
             
-            # Iterate through each row
             for index, row in last_two_columns.iterrows():
-                # Concatenate the values from the last two columns
                 pair = tuple(row)
-                # Count the occurrence of the pair
                 pair_counter[pair] += 1
 
-            # Find the most common pairs
             most_common_pairs = pair_counter.most_common()
 
-            # Pass the most common pairs to the template or print them
-            print("Top most common pairs in the last two columns:")
             for pair, count in most_common_pairs:
                 print(f"{pair}: {count} occurrences")
-            # top_program_subprogram = []
-
-            # # Iterate through the top 3 most common pairs
-            # for idx, (pair, count) in enumerate(most_common_pairs[:3], start=1):
-            #     program_value = pair[0]
-            #     subprogram_value = pair[1]
                 
-            #     # Append the program, subprogram, and quantity to the list
-            #     top_program_subprogram.append({
-            #         f"program": program_value,
-            #         f"subprogram": subprogram_value,
-            #         f"quantity": count
-            #     })
-            # Initialize a set to store unique programs
             unique_programs = set()
             top_program_subprogram = []
 
-            # Iterate through the top pairs
             for idx, (pair, count) in enumerate(most_common_pairs, start=1):
                 program_value = pair[0]
                 subprogram_value = pair[1]
-
-                # Check if the program is not already in the set of unique programs and we have less than 3 unique programs
                 if program_value not in unique_programs and len(top_program_subprogram) < 3:
-                    # Append the program, subprogram, and quantity to the list
                     top_program_subprogram.append({
                         f"program": program_value,
                         f"subprogram": subprogram_value,
                         f"quantity": count
                     })
-
-                    # Add the program to the set of unique programs
                     unique_programs.add(program_value)
-
-            # If we have less than 3 unique programs, fill the remaining slots with programs from the most common pairs
+                    
             while len(top_program_subprogram) < 3 and most_common_pairs:
                 pair, count = most_common_pairs.pop(0)
                 program_value = pair[0]
                 subprogram_value = pair[1]
 
-                # Check if the program is not already in the set of unique programs
                 if program_value not in unique_programs:
-                    # Append the program, subprogram, and quantity to the list
                     top_program_subprogram.append({
                         f"program": program_value,
                         f"subprogram": subprogram_value,
                         f"quantity": count
                     })
-
-                    # Add the program to the set of unique programs
                     unique_programs.add(program_value)
-
-                # Break the loop if we have found 3 unique programs
                 if len(top_program_subprogram) == 3:
                     break
 
-
-            # Print or use the top 3 pairs
             for pair_info in top_program_subprogram:
                 print(pair_info)
 
@@ -298,7 +257,6 @@ def programWithCSV():
                 "Teknolohiya": Teknolohiya_counts.get(1, 0)
             }
 
-            # Find the category with the highest count
             max_category = max(category_counts, key=category_counts.get)
             highest_count = category_counts[max_category]
 
@@ -319,7 +277,6 @@ def programWithCSV():
             else:
                 program_ces = "Gender Development" 
 
-            # Define a dictionary to map encoded program values to program names
             program_mapping = {
                 0: 'Literacy',
                 1: 'Socio-economic',
@@ -371,8 +328,6 @@ def programWithCSV():
             top3_subprogram=top3_subprogram,
             top3_occurrences=top3_occurrences
             )
-
-        
     return render_template("program.html")
 
 #for coordinator side
